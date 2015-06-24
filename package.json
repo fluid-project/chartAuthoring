@@ -27,7 +27,7 @@
   "repository": "git://github.com/fluid-project/chartAuthoring.git",
   "main": "",
   "engines": {
-    "node": ">=0.1.9"
+    "node": ">=0.10.0"
   },
   "devDependencies": {
     "grunt": "~0.4.2",
