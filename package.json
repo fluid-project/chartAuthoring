@@ -1,0 +1,37 @@
+{
+  "name": "chartAuthoring",
+  "description": "A tool for authoring accessible charts for the web.",
+  "version": "0.1.0-SNAPSHOT",
+  "author": "Fluid Project",
+  "bugs": "https://issues.fluidproject.org/browse/FLOE/component/11615",
+  "homepage": "http://www.fluidproject.org/",
+  "dependencies": {},
+  "licenses": [
+    {
+      "type": "BSD-3-Clause",
+      "url": "http://www.opensource.org/licenses/BSD-3-Clause"
+    },
+    {
+      "type": "ECL-2.0",
+      "url": "http://www.opensource.org/licenses/ECL-2.0"
+    }
+  ],
+  "keywords": [
+    "chart",
+    "authoring",
+    "web",
+    "fluid",
+    "infusion",
+    "sonfication"
+  ],
+  "repository": "git://github.com/fluid-project/chartAuthoring.git",
+  "main": "",
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.5",
+    "grunt-contrib-jshint": "~0.9.0",
+    "grunt-jsonlint": "1.0.4"
+  }
+}
