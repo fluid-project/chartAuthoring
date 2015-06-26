@@ -25,5 +25,11 @@
 
     "browser": true,
     "jquery": true,
-    "worker": true
+    "worker": true,
+
+    "globals": {
+        "fluid": true,
+        "gpii": true,
+        "jqUnit": true
+    }
 }
