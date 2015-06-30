@@ -69,7 +69,7 @@ https://github.com/gpii/universal/LICENSE.txt
         modules: [{
             name: "Tests the value entry component",
             tests: [{
-                expect: 11,
+                expect: 8,
                 name: "Test Init",
                 type: "test",
                 func: "gpii.tests.chartAuthoring.valueEntryTester.testRendering",
@@ -78,21 +78,30 @@ https://github.com/gpii/universal/LICENSE.txt
         }]
     });
 
+    gpii.tests.chartAuthoring.valueEntryTester.verifyInput = function (elmName, elm, expected) {
+        jqUnit.assertEquals("The " + elmName + " value has been set", expected, elm.val());
+    };
+
+    gpii.tests.chartAuthoring.valueEntryTester.verifyPercentage = function (elm, expected) {
+        jqUnit.assertEquals("The percentage has been set", expected, elm.text());
+    };
+
     gpii.tests.chartAuthoring.valueEntryTester.testRendering = function (that) {
         jqUnit.assertValue("The component should have been initialized.", that);
-        fluid.each(that.options.selectors, function (sel, selName) {
-            jqUnit.exists("The '" + selName + "' element exists.", that.locate(selName));
-        });
-        jqUnit.assertEquals("The input value has been set", that.model.value || "", that.locate("input").val());
-        jqUnit.assertEquals("The input placholder has been set", that.options.strings.inputPlaceholder, that.locate("input").attr("placeholder"));
+        var input = that.locate("input");
+        var percentage = that.locate("percentage");
+        var description = that.locate("description");
 
-        jqUnit.assertEquals("The percentage has been set", "%", that.locate("percentage").text());
+        gpii.tests.chartAuthoring.valueEntryTester.verifyInput("input", input, that.model.value || "");
+        jqUnit.assertEquals("The input placholder has been set", that.options.strings.inputPlaceholder, input.attr("placeholder"));
 
-        jqUnit.assertEquals("the description text has been set", that.model.description || "", that.locate("description").val());
-        jqUnit.assertEquals("The description placholder has been set", that.options.strings.descriptionPlacholder, that.locate("description").attr("placeholder"));
-        jqUnit.assertEquals("The description's max length should be set", that.options.descriptionMaxLength, that.locate("description").attr("maxlength"));
-        var descriptionSize = parseInt(that.locate("description").attr("size"), 10);
-        jqUnit.assertTrue("The description's size should be set to a size that will accomodate the maximum description and the placholder text.", descriptionSize >= that.options.descriptionMaxLength && descriptionSize >= that.options.strings.descriptionPlacholder.length);
+        gpii.tests.chartAuthoring.valueEntryTester.verifyPercentage(percentage, "%");
+
+        gpii.tests.chartAuthoring.valueEntryTester.verifyInput("description", description, that.model.description || "");
+        jqUnit.assertEquals("The description placholder has been set", that.options.strings.descriptionPlacholder, description.attr("placeholder"));
+        jqUnit.assertEquals("The description's max length should be set", that.options.descriptionMaxLength, description.attr("maxlength"));
+        var descriptionSize = parseInt(description.attr("size"), 10);
+        jqUnit.assertTrue("The description's size should be set to a size that will accommodate the maximum description and the placeholder text.", descriptionSize >= that.options.descriptionMaxLength && descriptionSize >= that.options.strings.descriptionPlacholder.length);
     };
 
     $(document).ready(function () {
