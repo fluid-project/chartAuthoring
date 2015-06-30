@@ -66,6 +66,11 @@ https://github.com/gpii/universal/LICENSE.txt
 
     fluid.defaults("gpii.tests.chartAuthoring.valueEntryTester", {
         gradeNames: ["fluid.test.testCaseHolder", "autoInit"],
+        testOptions: {
+            inputChange: "Input Name",
+            descriptionChange: "Description of Input",
+            domChange: "New Name"
+        },
         modules: [{
             name: "Tests the value entry component",
             tests: [{
@@ -74,6 +79,38 @@ https://github.com/gpii/universal/LICENSE.txt
                 type: "test",
                 func: "gpii.tests.chartAuthoring.valueEntryTester.testRendering",
                 args: ["{valueEntry}"]
+            }, {
+                expect: 2,
+                name: "Change Model",
+                sequence: [{
+                    func: "{valueEntry}.applier.change",
+                    args: ["input", "{that}.options.testOptions.inputChange"]
+                }, {
+                    listener: "gpii.tests.chartAuthoring.valueEntryTester.verifyInput",
+                    args: ["input", "{valueEntry}.dom.input", "{that}.options.testOptions.inputChange"],
+                    spec: {path: "input", priority: "last"},
+                    changeEvent: "{valueEntry}.applier.modelChanged"
+                }, {
+                    func: "{valueEntry}.applier.change",
+                    args: ["description", "{that}.options.testOptions.descriptionChange"]
+                }, {
+                    listener: "gpii.tests.chartAuthoring.valueEntryTester.verifyInput",
+                    args: ["description", "{valueEntry}.dom.description", "{that}.options.testOptions.descriptionChange"],
+                    spec: {path: "description", priority: "last"},
+                    changeEvent: "{valueEntry}.applier.modelChanged"
+                }]
+            }, {
+                expect: 1,
+                name: "Change Input",
+                sequence: [{
+                    func: "gpii.tests.utils.triggerChangeEvent",
+                    args: ["{valueEntry}.dom.input", "{that}.options.testOptions.domChange"]
+                }, {
+                    listener: "jqUnit.assertEquals",
+                    args: ["model.input shoudl have been updated", "{that}.options.testOptions.domChange", "{valueEntry}.model.input"],
+                    spec: {path: "input", priority: "last"},
+                    changeEvent: "{valueEntry}.applier.modelChanged"
+                }]
             }]
         }]
     });

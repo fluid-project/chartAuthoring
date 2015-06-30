@@ -24,12 +24,16 @@ https://github.com/gpii/universal/LICENSE.txt
             descriptionPlacholder: "Description (max of 30 characters)",
             percentage: "%percentage%"
         },
-        descriptionMaxLength: 30,
         model: {
             value: "",
             description: "",
             total: ""
         },
+        bindings: {
+            input: "input",
+            description: "description"
+        },
+        descriptionMaxLength: 30,
         invokers: {
             calculatePercentage: {
                 funcName: "gpii.chartAuthoring.valueEntry.calculatePercentage",
