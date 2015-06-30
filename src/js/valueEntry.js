@@ -12,14 +12,8 @@ https://github.com/gpii/universal/LICENSE.txt
 
     "use strict";
 
-    /*
-    <input type="text" class="gpiic-ca-valueEntry-valueInput">
-    <span class="gpiic-ca-valueEntry-percentage"></span>
-    <input type="text" class="gpiic-ca-valueEntry-description">
-    */
-
     fluid.defaults("gpii.chartAuthoring.valueEntry", {
-        gradeNames: ["fluid.viewRelayComponent", "autoInit"],
+        gradeNames: ["fluid.viewRelayComponent", "gpii.chartAuthoring.valueBinding", "autoInit"],
         selectors: {
             input: ".gpiic-ca-valueEntry-input",
             percentage: ".gpiic-ca-valueEntry-percentage",
@@ -27,7 +21,24 @@ https://github.com/gpii/universal/LICENSE.txt
         },
         strings: {
             inputPlaceholder: "Value",
-            descriptionPlacholder: "Description (max of 30 characters)"
+            descriptionPlacholder: "Description (max of 30 characters)",
+            percentage: "%percentage%"
+        },
+        descriptionMaxLength: 30,
+        model: {
+            value: "",
+            description: "",
+            total: ""
+        },
+        invokers: {
+            calculatePercentage: {
+                funcName: "gpii.chartAuthoring.valueEntry.calculatePercentage",
+                args: ["{that}.model.value", "{that}.model.total"]
+            },
+            setPercentage: {
+                funcName: "gpii.chartAuthoring.valueEntry.setPercentage",
+                args: ["{that}", "{that}.calculatePercentage"]
+            }
         },
         listeners: {
             "onCreate.setInputAttrs": {
@@ -52,7 +63,25 @@ https://github.com/gpii/universal/LICENSE.txt
                 }
             }
         },
-        descriptionMaxLength: 30
+        modelListeners: {
+            "value": "{that}.setPercentage",
+            "total": "{that}.setPercentage"
+        }
     });
+
+    gpii.chartAuthoring.valueEntry.calculatePercentage = function (value, total) {
+        value = parseInt(value, 10) || 0;
+        total = parseInt(total, 10) || 1;
+        return (value / total) * 100;
+    };
+
+    gpii.chartAuthoring.valueEntry.setPercentage = function (that, calculatePercentageFn) {
+        var elm = that.locate("percentage");
+        // only output a percentage if the value has been specified.
+        var percentage = that.model.value ? calculatePercentageFn() : "";
+
+        var output = fluid.stringTemplate(that.options.strings.percentage, {percentage: percentage});
+        elm.text(output);
+    };
 
 })(jQuery, fluid);
