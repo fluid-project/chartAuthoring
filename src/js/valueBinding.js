@@ -13,22 +13,34 @@ https://github.com/gpii/universal/LICENSE.txt
     "use strict";
 
     fluid.defaults("gpii.chartAuthoring.valueBinding", {
-        gradeNames: ["fluid.viewRelayComponent", "autoInit", "{that}.generateModelConnectionGrade"],
+        gradeNames: ["fluid.viewRelayComponent", "autoInit", "{that}.generateModelListenersConnectionGrade"],
         bindings: {},
         invokers: {
-            generateModelConnectionGrade: {
-                funcName: "gpii.chartAuthoring.valueBinding.generateModelConnectionGrade",
+            generateModelListenersConnectionGrade: {
+                funcName: "gpii.chartAuthoring.valueBinding.generateModelListenersConnectionGrade",
                 args: ["{that}.options.bindings", "gpii.chartAuthoring.valueBinding.updateDOM"]
             }
+        },
+        listeners: {
+            "onCreate.bindDOMChange": "gpii.chartAuthoring.valueBinding.bindDOMChange"
         }
     });
+
+    gpii.chartAuthoring.valueBinding.bindDOMChange = function (that) {
+        fluid.each(that.options.bindings, function (modelPath, selector) {
+            var elm = that.locate(selector);
+            elm.on("change", function () {
+                that.applier.change(modelPath, elm.val());
+            });
+        });
+    };
 
     gpii.chartAuthoring.valueBinding.updateDOM = function (elm, value) {
         elm = $(elm);
         elm[elm.is("input") ? "val" : "text"](value);
     };
 
-    gpii.chartAuthoring.valueBinding.generateModelConnectionGrade = function (bindings, handlerName) {
+    gpii.chartAuthoring.valueBinding.generateModelListenersConnectionGrade = function (bindings, handlerName) {
         var gradeName = "gpii.valueBindingModelConnections." + fluid.allocateGuid();
         var modelListeners = {};
 

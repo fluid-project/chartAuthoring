@@ -55,7 +55,7 @@ https://github.com/gpii/universal/LICENSE.txt
                 args: ["{valueBinding}"]
             }, {
                 expect: 4,
-                name: "Update DOM from the Model",
+                name: "Update DOM from Model",
                 sequence: [{
                     func: "{valueBinding}.applier.change",
                     args: ["val1", "label"]
@@ -78,6 +78,23 @@ https://github.com/gpii/universal/LICENSE.txt
                         val1: "label",
                         nested: {
                             val2: "input"
+                        }
+                    }],
+                    spec: {path: "nested.val2", priority: "last"},
+                    changeEvent: "{valueBinding}.applier.modelChanged"
+                }]
+            }, {
+                expect: 2,
+                name: "Update Model from DOM",
+                sequence: [{
+                    func: "gpii.tests.utils.triggerChangeEvent",
+                    args: ["{valueBinding}.dom.bidirectional", "updated input value"]
+                }, {
+                    listener: "gpii.tests.chartAuthoring.valueBindingTester.verifyValueBinding",
+                    args: ["{valueBinding}", {
+                        val1: "label",
+                        nested: {
+                            val2: "updated input value"
                         }
                     }],
                     spec: {path: "nested.val2", priority: "last"},
