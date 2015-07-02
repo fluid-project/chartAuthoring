@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Data Entry Panel Tests</title>
+
+        <link rel="stylesheet" media="screen" href="../lib/infusion/lib/qunit/css/qunit.css" />
+
+        <script src="../lib/infusion/lib/qunit/js/qunit.js"></script>
+        <script src="../../src/lib/infusion/infusion-custom.js"></script>
+        <script src="../lib/infusion/test-core/jqUnit/js/jqUnit.js"></script>
+        <script src="../lib/infusion/test-core/jqUnit/js/jqUnit-browser.js"></script>
+        <script src="../lib/infusion/test-core/utils/js/IoCTestUtils.js"></script>
+
+        <script src="../../src/js/valueBinding.js"></script>
+        <script src="../../src/js/dataEntry.js"></script>
+        <script src="../../src/js/dataEntryPanel.js"></script>
+        <script src="../js/dataEntryPanelTests.js"></script>
+    </head>
+
+    <body id="body">
+        <h1 id="qunit-header">Data Entry Panel Tests</h1>
+        <h2 id="qunit-banner"></h2>
+        <div id="qunit-testrunner-toolbar"></div>
+        <h2 id="qunit-userAgent"></h2>
+        <ol id="qunit-tests"></ol>
+
+        <!-- Test HTML -->
+        <div class="gpiic-ca-dataEntryPanel">
+            <h2 class="gpiic-ca-dataEntryPanel-title">Panel Title</h2>
+            <p class="gpiic-ca-dataEntryPanel-description">Description</p>
+            <form>
+                <label class="gpiic-ca-dataEntryPanel-nameLabel", for="gpiic-ca-dataEntryPanel-name">Chart name label</label><span>:</span>
+                <input id="gpiic-ca-dataEntryPanel-name" class="gpiic-ca-dataEntryPanel-name" type="text" placeholder="">
+                <fieldset>
+                    <legend class="gpiic-ca-dataEntryPanel-dataEntryLabel">Entry</legend>
+                    <ul>
+                        <li class="gpiic-ca-dataEntryPanel-dataEntry"></li>
+                    </ul>
+                    <span class="gpiic-ca-dataEntryPanel-totalValue">Value</span>
+                    <span class="gpiic-ca-dataEntryPanel-totalPercentage">%</span>
+                    <span class="gpiic-ca-dataEntryPanel-totalLabel">Total</span>
+                </fieldset>
+            </form>
+        </div>
+    </body>
+</html>
