@@ -12,12 +12,12 @@ https://github.com/gpii/universal/LICENSE.txt
 
     "use strict";
 
-    fluid.defaults("gpii.chartAuthoring.valueEntry", {
+    fluid.defaults("gpii.chartAuthoring.dataEntry", {
         gradeNames: ["fluid.viewRelayComponent", "gpii.chartAuthoring.valueBinding", "autoInit"],
         selectors: {
-            input: ".gpiic-ca-valueEntry-input",
-            percentage: ".gpiic-ca-valueEntry-percentage",
-            description: ".gpiic-ca-valueEntry-description"
+            input: ".gpiic-ca-dataEntry-input",
+            percentage: ".gpiic-ca-dataEntry-percentage",
+            description: ".gpiic-ca-dataEntry-description"
         },
         strings: {
             inputPlaceholder: "Value",
@@ -36,11 +36,11 @@ https://github.com/gpii/universal/LICENSE.txt
         descriptionMaxLength: 30,
         invokers: {
             calculatePercentage: {
-                funcName: "gpii.chartAuthoring.valueEntry.calculatePercentage",
+                funcName: "gpii.chartAuthoring.dataEntry.calculatePercentage",
                 args: ["{that}.model.value", "{that}.model.total"]
             },
             setPercentage: {
-                funcName: "gpii.chartAuthoring.valueEntry.setPercentage",
+                funcName: "gpii.chartAuthoring.dataEntry.setPercentage",
                 args: ["{that}", "{that}.calculatePercentage"]
             }
         },
@@ -73,13 +73,13 @@ https://github.com/gpii/universal/LICENSE.txt
         }
     });
 
-    gpii.chartAuthoring.valueEntry.calculatePercentage = function (value, total) {
+    gpii.chartAuthoring.dataEntry.calculatePercentage = function (value, total) {
         value = parseInt(value, 10) || 0;
         total = parseInt(total, 10) || 1;
         return (value / total) * 100;
     };
 
-    gpii.chartAuthoring.valueEntry.setPercentage = function (that, calculatePercentageFn) {
+    gpii.chartAuthoring.dataEntry.setPercentage = function (that, calculatePercentageFn) {
         var elm = that.locate("percentage");
         // only output a percentage if the value has been specified.
         var percentage = that.model.value ? calculatePercentageFn() : "";
