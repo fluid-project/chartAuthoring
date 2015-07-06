@@ -42,7 +42,7 @@ https://github.com/gpii/universal/LICENSE.txt
     };
 
     //TODO: consider refactoring this into a general function that returns a default value if a condition isn't met.
-    // Used to provide a default value if a model or someother value had not been set.
+    // Used to provide a default value if a model or some other value had not been set.
     gpii.chartAuthoring.percentage.percentageIfValue = function (percentage, value, defPercentage) {
         defPercentage = defPercentage || "";
         return !fluid.isValue(value) ? defPercentage : gpii.chartAuthoring.percentage.retrieveVal(percentage);

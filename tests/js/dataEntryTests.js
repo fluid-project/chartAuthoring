@@ -12,41 +12,6 @@ https://github.com/gpii/universal/LICENSE.txt
 
     "use strict";
 
-    fluid.registerNamespace("gpii.tests.calculatePercentage");
-
-    gpii.tests.calculatePercentage.inputs = [undefined, null, NaN, false, true, function () {}, {}, ["array"], "", "string", 2.2, "2.2", 0, "0", 50, "50", 100, "100"];
-    gpii.tests.calculatePercentage.outputs = [
-        // undefined, null, NaN, false, true, function, {}, [], "", "string", 2.2, "2.2", 0, "0", 50, "50", 100, "100"]
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 200, 0, 0, 5000, 5000, 10000, 10000], // total === undefined
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 200, 0, 0, 5000, 5000, 10000, 10000], // total === null
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 200, 0, 0, 5000, 5000, 10000, 10000], // total === NaN
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 200, 0, 0, 5000, 5000, 10000, 10000], // total === false
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 200, 0, 0, 5000, 5000, 10000, 10000], // total === true
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 200, 0, 0, 5000, 5000, 10000, 10000], // total === function () {}
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 200, 0, 0, 5000, 5000, 10000, 10000], // total === {}
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 200, 0, 0, 5000, 5000, 10000, 10000], // total === []
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 200, 0, 0, 5000, 5000, 10000, 10000], // total === ""
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 200, 0, 0, 5000, 5000, 10000, 10000], // total === "string"
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 2500, 2500, 5000, 5000], // total === 2.2
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 2500, 2500, 5000, 5000], // total === "2.2"
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 200, 0, 0, 5000, 5000, 10000, 10000], // total === 0
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 200, 200, 0, 0, 5000, 5000, 10000, 10000], // total === "0"
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 100, 100, 200, 200], // total === 50
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 4, 0, 0, 100, 100, 200, 200], // total === "50"
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 50, 50, 100, 100], // total === 100
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 2, 0, 0, 50, 50, 100, 100] // total === "100"
-    ];
-
-    jqUnit.test("Test gpii.chartAuthoring.dataEntry.calculatePercentage", function () {
-        fluid.each(gpii.tests.calculatePercentage.inputs, function (total, totalIdx) {
-            fluid.each(gpii.tests.calculatePercentage.inputs, function (value, valIdx) {
-                var actual = gpii.chartAuthoring.dataEntry.calculatePercentage(value, total);
-                var expected = gpii.tests.calculatePercentage.outputs[totalIdx][valIdx];
-                jqUnit.assertEquals("The percentate for value: " + value + " total: " + total + " should be calculated as " + expected, expected, actual);
-            });
-        });
-    });
-
     fluid.defaults("gpii.tests.chartAuthoring.dataEntry", {
         gradeNames: ["gpii.chartAuthoring.dataEntry", "autoInit"]
     });

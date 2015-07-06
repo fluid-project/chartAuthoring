@@ -25,7 +25,7 @@ https://github.com/gpii/universal/LICENSE.txt
             percentage: "%percentage%"
         },
         model: {
-            value: "",
+            value: null,
             description: "",
             total: ""
         },
@@ -36,12 +36,16 @@ https://github.com/gpii/universal/LICENSE.txt
         descriptionMaxLength: 30,
         invokers: {
             calculatePercentage: {
-                funcName: "gpii.chartAuthoring.dataEntry.calculatePercentage",
+                funcName: "gpii.chartAuthoring.percentage.calculate",
                 args: ["{that}.model.value", "{that}.model.total"]
             },
+            getPercentageToRender: {
+                funcName: "gpii.chartAuthoring.percentage.percentageIfValue",
+                args: ["{that}.calculatePercentage", "{that}.model.value", ""]
+            },
             setPercentage: {
-                funcName: "gpii.chartAuthoring.dataEntry.setPercentage",
-                args: ["{that}", "{that}.calculatePercentage"]
+                funcName: "gpii.chartAuthoring.percentage.render",
+                args: ["{that}.dom.percentage", "{that}.getPercentageToRender", "{that}.options.strings.percentage"]
             }
         },
         listeners: {
@@ -72,20 +76,5 @@ https://github.com/gpii/universal/LICENSE.txt
             "total": "{that}.setPercentage"
         }
     });
-
-    gpii.chartAuthoring.dataEntry.calculatePercentage = function (value, total) {
-        value = parseInt(value, 10) || 0;
-        total = parseInt(total, 10) || 1;
-        return (value / total) * 100;
-    };
-
-    gpii.chartAuthoring.dataEntry.setPercentage = function (that, calculatePercentageFn) {
-        var elm = that.locate("percentage");
-        // only output a percentage if the value has been specified.
-        var percentage = that.model.value ? calculatePercentageFn() : "";
-
-        var output = fluid.stringTemplate(that.options.strings.percentage, {percentage: percentage});
-        elm.text(output);
-    };
 
 })(jQuery, fluid);
