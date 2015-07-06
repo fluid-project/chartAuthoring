@@ -80,7 +80,7 @@ https://github.com/gpii/universal/LICENSE.txt
     gpii.tests.chartAuthoring.dataEntryPanelTester.verifyTotalOutput = function (that, expected) {
         jqUnit.assertEquals("The total label should be set", expected.label, that.locate("totalLabel").text());
         jqUnit.assertEquals("The total value should be set", expected.value, that.locate("totalValue").text());
-        jqUnit.assertEquals("The total perenctage should be set", expected.percentage, that.locate("totalPercentage").text());
+        jqUnit.assertEquals("The total percentage should be set", expected.percentage, that.locate("totalPercentage").text());
     };
 
     $(document).ready(function () {

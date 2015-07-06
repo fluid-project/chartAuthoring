@@ -54,9 +54,18 @@ https://github.com/gpii/universal/LICENSE.txt
             totalPercentage: "%percentage%",
             totalLabel: "Total"
         },
+        model: {
+            totals: {}
+        },
         chartNameMaxLength: 30,
         listeners: {
             "onCreate.renderPanel": "gpii.chartAuthoring.dataEntryPanel.renderPanel"
+        },
+        modelListeners: {
+            "totals": {
+                listener: "gpii.chartAuthoring.dataEntryPanel.renderTotals",
+                args: ["{that}"]
+            }
         }
     });
 
@@ -74,13 +83,14 @@ https://github.com/gpii/universal/LICENSE.txt
 
         that.locate("dataEntryLabel").text(that.options.strings.dataEntryLabel);
         that.locate("totalLabel").text(that.options.strings.totalLabel);
+    };
 
-        // TODO: Move the setting of the totals to a separate method that can be called by a
-        // modelListener
-        //TODO: only set the emptyTotalValue if model.total = 0,
-        that.locate("totalValue").text(that.options.strings.emptyTotalValue);
-        // TODO: set percentage based on model value
-        that.locate("totalPercentage").text("%");
+    gpii.chartAuthoring.dataEntryPanel.renderTotals = function (that) {
+        var totalToRender = gpii.chartAuthoring.percentage.percentageIfValue(that.model.totals.value, that.model.totals.value, that.options.strings.emptyTotalValue);
+        that.locate("totalValue").text(totalToRender);
+
+        var percentage = gpii.chartAuthoring.percentage.percentageIfValue(that.model.totals.percentage, that.model.totals.value, "");
+        gpii.chartAuthoring.percentage.render(that.locate("totalPercentage"), percentage, that.options.strings.totalPercentage);
     };
 
 })(jQuery, fluid);
