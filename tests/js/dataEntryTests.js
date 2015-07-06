@@ -37,7 +37,7 @@ https://github.com/gpii/universal/LICENSE.txt
             domChange: "New Name"
         },
         modules: [{
-            name: "Tests the value entry component",
+            name: "Tests the data entry component",
             tests: [{
                 expect: 8,
                 name: "Test Init",

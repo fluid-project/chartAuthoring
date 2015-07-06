@@ -31,8 +31,19 @@ https://github.com/gpii/universal/LICENSE.txt
 
     fluid.defaults("gpii.tests.chartAuthoring.dataEntryPanelTester", {
         gradeNames: ["fluid.test.testCaseHolder", "autoInit"],
+        testOptions: {
+            totalsChanged: {
+                value: 10,
+                percentage: 100
+            },
+            totalsExpected: {
+                value: 10,
+                percentage: "100%",
+                label: "{dataEntryPanel}.options.strings.totalLabel"
+            }
+        },
         modules: [{
-            name: "Tests the value entry component",
+            name: "Tests the data entry panel component",
             tests: [{
                 expect: 1,
                 name: "Test Init",
@@ -45,6 +56,18 @@ https://github.com/gpii/universal/LICENSE.txt
                 type: "test",
                 func: "gpii.tests.chartAuthoring.dataEntryPanelTester.testRendering",
                 args: ["{dataEntryPanel}"]
+            }, {
+                name: "Model Changed Sequence",
+                expect: 3,
+                sequence: [{
+                    func: "{dataEntryPanel}.applier.change",
+                    args: ["totals", "{that}.options.testOptions.totalsChanged"]
+                }, {
+                    listener: "gpii.tests.chartAuthoring.dataEntryPanelTester.verifyTotalOutput",
+                    args: ["{dataEntryPanel}", "{that}.options.testOptions.totalsExpected"],
+                    spec: {path: "totals", priority: "last"},
+                    changeEvent: "{dataEntryPanel}.applier.modelChanged"
+                }]
             }]
         }]
     });
