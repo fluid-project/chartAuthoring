@@ -13,7 +13,10 @@ https://github.com/gpii/universal/LICENSE.txt
     "use strict";
 
     fluid.defaults("gpii.tests.chartAuthoring.dataEntry", {
-        gradeNames: ["gpii.chartAuthoring.dataEntry", "autoInit"]
+        gradeNames: ["gpii.chartAuthoring.dataEntry", "autoInit"],
+        model: {
+            total: 100
+        }
     });
 
     fluid.defaults("gpii.tests.chartAuthoring.dataEntryTest", {
@@ -32,9 +35,9 @@ https://github.com/gpii/universal/LICENSE.txt
     fluid.defaults("gpii.tests.chartAuthoring.dataEntryTester", {
         gradeNames: ["fluid.test.testCaseHolder", "autoInit"],
         testOptions: {
-            inputChange: "Input Name",
+            valueChange: 65,
             descriptionChange: "Description of Input",
-            domChange: "New Name"
+            domChange: 50
         },
         modules: [{
             name: "Tests the data entry component",
@@ -45,15 +48,18 @@ https://github.com/gpii/universal/LICENSE.txt
                 func: "gpii.tests.chartAuthoring.dataEntryTester.testRendering",
                 args: ["{dataEntry}"]
             }, {
-                expect: 2,
+                expect: 3,
                 name: "Change Model",
                 sequence: [{
                     func: "{dataEntry}.applier.change",
-                    args: ["input", "{that}.options.testOptions.inputChange"]
+                    args: ["value", "{that}.options.testOptions.valueChange"]
                 }, {
-                    listener: "gpii.tests.chartAuthoring.dataEntryTester.verifyInput",
-                    args: ["input", "{dataEntry}.dom.input", "{that}.options.testOptions.inputChange"],
-                    spec: {path: "input", priority: "last"},
+                    listener: "gpii.tests.chartAuthoring.dataEntryTester.verifyEntry",
+                    args: ["{dataEntry}", {
+                        value: "{that}.options.testOptions.valueChange",
+                        percentage: "65%"
+                    }],
+                    spec: {path: "value", priority: "last"},
                     changeEvent: "{dataEntry}.applier.modelChanged"
                 }, {
                     func: "{dataEntry}.applier.change",
@@ -72,8 +78,8 @@ https://github.com/gpii/universal/LICENSE.txt
                     args: ["{dataEntry}.dom.input", "{that}.options.testOptions.domChange"]
                 }, {
                     listener: "jqUnit.assertEquals",
-                    args: ["model.input shoudl have been updated", "{that}.options.testOptions.domChange", "{dataEntry}.model.input"],
-                    spec: {path: "input", priority: "last"},
+                    args: ["model.input shoudl have been updated", "{that}.options.testOptions.domChange", "{dataEntry}.model.value"],
+                    spec: {path: "value", priority: "last"},
                     changeEvent: "{dataEntry}.applier.modelChanged"
                 }]
             }]
@@ -86,6 +92,11 @@ https://github.com/gpii/universal/LICENSE.txt
 
     gpii.tests.chartAuthoring.dataEntryTester.verifyPercentage = function (elm, expected) {
         jqUnit.assertEquals("The percentage has been set", expected, elm.text());
+    };
+
+    gpii.tests.chartAuthoring.dataEntryTester.verifyEntry = function (that, expected) {
+        gpii.tests.chartAuthoring.dataEntryTester.verifyInput("input", that.locate("input"), expected.value);
+        gpii.tests.chartAuthoring.dataEntryTester.verifyPercentage(that.locate("percentage"), expected.percentage);
     };
 
     gpii.tests.chartAuthoring.dataEntryTester.testRendering = function (that) {

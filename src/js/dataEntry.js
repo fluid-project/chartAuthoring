@@ -27,21 +27,30 @@ https://github.com/gpii/universal/LICENSE.txt
         model: {
             value: null,
             description: "",
+            // perecentage: float
             total: ""
         },
+        modelRelay: {
+            source: "",
+            target: "percentage",
+            singleTransform: {
+                type: "fluid.transforms.free",
+                args: [
+                    "{that}.model.value",
+                    "{that}.model.total"
+                ],
+                func: "gpii.chartAuthoring.percentage.calculate"
+            }
+        },
         bindings: {
-            input: "input",
+            input: "value",
             description: "description"
         },
         descriptionMaxLength: 30,
         invokers: {
-            calculatePercentage: {
-                funcName: "gpii.chartAuthoring.percentage.calculate",
-                args: ["{that}.model.value", "{that}.model.total"]
-            },
             getPercentageToRender: {
                 funcName: "gpii.chartAuthoring.percentage.percentageIfValue",
-                args: ["{that}.calculatePercentage", "{that}.model.value", ""]
+                args: ["{that}.model.percentage", "{that}.model.value", ""]
             },
             setPercentage: {
                 funcName: "gpii.chartAuthoring.percentage.render",
