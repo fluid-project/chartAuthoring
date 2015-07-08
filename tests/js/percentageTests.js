@@ -50,7 +50,7 @@ https://github.com/gpii/universal/LICENSE.txt
 
     fluid.registerNamespace("gpii.tests.retrieveVal");
 
-    gpii.tests.retrieveVal.perenctages = [
+    gpii.tests.retrieveVal.percentages = [
         "10.5",
         10.5,
         "10",
@@ -61,11 +61,11 @@ https://github.com/gpii/universal/LICENSE.txt
         function () {return 10;}
     ];
 
-    gpii.tests.retrieveVal.perenctages = ["10.5", 10.5, "10", 10, "10.5", 10.5, "10", 10];
+    gpii.tests.retrieveVal.percentages = ["10.5", 10.5, "10", 10, "10.5", 10.5, "10", 10];
 
     jqUnit.test("Test gpii.chartAuthoring.percentage.retrieveVal", function () {
-        fluid.each(gpii.tests.retrieveVal.perenctages, function (percentage, idx) {
-            jqUnit.assertEquals("The value should have been retrieved correctly", gpii.tests.retrieveVal.perenctages[idx], gpii.chartAuthoring.percentage.retrieveVal(percentage));
+        fluid.each(gpii.tests.retrieveVal.percentages, function (percentage, idx) {
+            jqUnit.assertEquals("The value should have been retrieved correctly", gpii.tests.retrieveVal.percentages[idx], gpii.chartAuthoring.percentage.retrieveVal(percentage));
         });
     });
 
@@ -81,7 +81,7 @@ https://github.com/gpii/universal/LICENSE.txt
     jqUnit.test("Test gpii.chartAuthoring.percentage.render", function () {
         var elm = $(".renderPerencentage-test");
         fluid.each(gpii.tests.renderPerencentage.templates, function (template, templateIdx) {
-            fluid.each(gpii.tests.retrieveVal.perenctages, function (percentage, perIdx) {
+            fluid.each(gpii.tests.retrieveVal.percentages, function (percentage, perIdx) {
                 // make sure the text is reset
                 elm.text("");
 
@@ -113,7 +113,7 @@ https://github.com/gpii/universal/LICENSE.txt
 
     jqUnit.test("Test gpii.chartAuthoring.percentage.percentageIfValue", function () {
         fluid.each(gpii.tests.percentagesIfValue.values, function (value, valIdx) {
-            fluid.each(gpii.tests.retrieveVal.perenctages, function (percentage, perIdx) {
+            fluid.each(gpii.tests.retrieveVal.percentages, function (percentage, perIdx) {
                 var expected = gpii.tests.percentagesIfValue.outputs[valIdx][perIdx];
                 var actual = gpii.chartAuthoring.percentage.percentageIfValue(percentage, value);
                 jqUnit.assertEquals("The expected percentage is returned", expected, actual);
