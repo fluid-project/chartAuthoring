@@ -12,6 +12,41 @@ https://github.com/gpii/universal/LICENSE.txt
 
     "use strict";
 
+    fluid.registerNamespace("gpii.tests.chartAuthoring.dataEntries");
+
+    gpii.tests.chartAuthoring.dataEntries.ints = {
+        "ints1": {value: 0},
+        "ints2": {value: 1},
+        "ints3": {value: "1"}
+    };
+
+    gpii.tests.chartAuthoring.dataEntries.floats = {
+        "floats1": {value: 2.2},
+        "floats2": {value: "2.2"}
+    };
+
+    gpii.tests.chartAuthoring.dataEntries.invalid = {
+        "invalid1": {value: null},
+        "invalid2": {value: ""},
+        "invalid3": {}
+    };
+
+    gpii.tests.chartAuthoring.dataEntries.mixed = $.extend(true, {}, gpii.tests.chartAuthoring.dataEntries.ints, gpii.tests.chartAuthoring.dataEntries.floats, gpii.tests.chartAuthoring.dataEntries.invalid);
+
+    gpii.tests.chartAuthoring.expectedSums = {
+        ints: 2,
+        floats: 4.4,
+        invalid: undefined,
+        mixed: 6.4
+    };
+
+    jqUnit.test("Test gpii.chartAuthoring.dataEntryPanel.sumDataEntries", function () {
+        fluid.each(gpii.tests.chartAuthoring.dataEntries, function (entries, type) {
+            var sum = gpii.chartAuthoring.dataEntryPanel.sumDataEntries(entries);
+            jqUnit.assertEquals("The '" + type + "' data entries should have been summed correctly", gpii.tests.chartAuthoring.expectedSums[type], sum);
+        });
+    });
+
     fluid.defaults("gpii.tests.chartAuthoring.dataEntryPanel", {
         gradeNames: ["gpii.chartAuthoring.dataEntryPanel", "autoInit"]
     });

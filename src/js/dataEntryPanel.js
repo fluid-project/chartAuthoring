@@ -55,9 +55,31 @@ https://github.com/gpii/universal/LICENSE.txt
             totalLabel: "Total"
         },
         model: {
-            totals: {}
+            totals: {
+                // total: number,
+                // percentage: number
+            },
+            dataEntries: {
+                // "uuid": {
+                //
+                // }
+            }
         },
+        // TODO: add a model relay for summing data entries.
+        modelRelay: {
+            source: "",
+            target: "total",
+            singleTransform: {
+                type: "fluid.transforms.free",
+                args: ["{that}.model.dataEntries"],
+                func: "gpii.chartAuthoring.dataEntryPanel.sumDataEntries"
+            }
+        },
+        numDataEntryFields: 5,
         chartNameMaxLength: 30,
+        events: {
+            createDataEntryField: null
+        },
         listeners: {
             "onCreate.renderPanel": "gpii.chartAuthoring.dataEntryPanel.renderPanel"
         },
@@ -91,6 +113,20 @@ https://github.com/gpii/universal/LICENSE.txt
 
         var percentage = gpii.chartAuthoring.percentage.percentageIfValue(that.model.totals.percentage, that.model.totals.value, "");
         gpii.chartAuthoring.percentage.render(that.locate("totalPercentage"), percentage, that.options.strings.totalPercentage);
+    };
+
+    gpii.chartAuthoring.dataEntryPanel.sumDataEntries = function (dataEntries) {
+        var entryKeys = fluid.keys(dataEntries);
+
+        return fluid.accumulate(entryKeys, function (entryKey, currentValue) {
+            var valToAdd = parseFloat(dataEntries[entryKey].value);
+
+            if (fluid.isValue(valToAdd) && !isNaN(valToAdd)) {
+                return valToAdd + (currentValue || 0);
+            } else {
+                return currentValue;
+            }
+        });
     };
 
 })(jQuery, fluid);
