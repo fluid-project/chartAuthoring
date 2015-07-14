@@ -15,9 +15,12 @@ https://github.com/gpii/universal/LICENSE.txt
     fluid.registerNamespace("gpii.chartAuthoring.percentage");
 
     gpii.chartAuthoring.percentage.calculate = function (value, total) {
-        value = parseFloat(value, 10) || 0;
-        total = parseFloat(total, 10) || 1;
-        return (value / total) * 100;
+        value = parseFloat(value, 10);
+        total = parseFloat(total, 10);
+
+        if (!isNaN(value) && !isNaN(total)) {
+            return !total ? 0 : (value / total) * 100;
+        }
     };
 
     gpii.chartAuthoring.percentage.retrieveVal = function (val) {

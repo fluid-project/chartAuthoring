@@ -55,7 +55,7 @@ https://github.com/gpii/universal/LICENSE.txt
             totalLabel: "Total"
         },
         model: {
-            totals: {
+            total: {
                 // total: number,
                 // percentage: number
             },
@@ -66,15 +66,26 @@ https://github.com/gpii/universal/LICENSE.txt
             }
         },
         // TODO: add a model relay for summing data entries.
-        modelRelay: {
-            source: "",
-            target: "total",
+        modelRelay: [{
+            source: "dataEntries",
+            target: "total.value",
             singleTransform: {
                 type: "fluid.transforms.free",
                 args: ["{that}.model.dataEntries"],
                 func: "gpii.chartAuthoring.dataEntryPanel.sumDataEntries"
             }
-        },
+        }, {
+            source: "total.value",
+            target: "total.percentage",
+            singleTransform: {
+                type: "fluid.transforms.free",
+                args: [
+                    "{that}.model.total.value",
+                    "{that}.model.total.value"
+                ],
+                func: "gpii.chartAuthoring.percentage.calculate"
+            }
+        }],
         numDataEntryFields: 5,
         chartNameMaxLength: 30,
         events: {
@@ -84,7 +95,7 @@ https://github.com/gpii/universal/LICENSE.txt
             "onCreate.renderPanel": "gpii.chartAuthoring.dataEntryPanel.renderPanel"
         },
         modelListeners: {
-            "totals": {
+            "total": {
                 listener: "gpii.chartAuthoring.dataEntryPanel.renderTotals",
                 args: ["{that}"]
             }
@@ -108,10 +119,10 @@ https://github.com/gpii/universal/LICENSE.txt
     };
 
     gpii.chartAuthoring.dataEntryPanel.renderTotals = function (that) {
-        var totalToRender = gpii.chartAuthoring.percentage.percentageIfValue(that.model.totals.value, that.model.totals.value, that.options.strings.emptyTotalValue);
+        var totalToRender = gpii.chartAuthoring.percentage.percentageIfValue(that.model.total.value, that.model.total.value, that.options.strings.emptyTotalValue);
         that.locate("totalValue").text(totalToRender);
 
-        var percentage = gpii.chartAuthoring.percentage.percentageIfValue(that.model.totals.percentage, that.model.totals.value, "");
+        var percentage = gpii.chartAuthoring.percentage.percentageIfValue(that.model.total.percentage, that.model.total.value, "");
         gpii.chartAuthoring.percentage.render(that.locate("totalPercentage"), percentage, that.options.strings.totalPercentage);
     };
 

@@ -68,8 +68,7 @@ https://github.com/gpii/universal/LICENSE.txt
         gradeNames: ["fluid.test.testCaseHolder", "autoInit"],
         testOptions: {
             totalsChanged: {
-                value: 10,
-                percentage: 100
+                value: 10
             },
             totalsExpected: {
                 value: 10,
@@ -96,11 +95,11 @@ https://github.com/gpii/universal/LICENSE.txt
                 expect: 3,
                 sequence: [{
                     func: "{dataEntryPanel}.applier.change",
-                    args: ["totals", "{that}.options.testOptions.totalsChanged"]
+                    args: ["total", "{that}.options.testOptions.totalsChanged"]
                 }, {
                     listener: "gpii.tests.chartAuthoring.dataEntryPanelTester.verifyTotalOutput",
                     args: ["{dataEntryPanel}", "{that}.options.testOptions.totalsExpected"],
-                    spec: {path: "totals", priority: "last"},
+                    spec: {path: "total", priority: "last"},
                     changeEvent: "{dataEntryPanel}.applier.modelChanged"
                 }]
             }]

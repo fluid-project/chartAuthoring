@@ -17,24 +17,24 @@ https://github.com/gpii/universal/LICENSE.txt
     gpii.tests.calculatePercentage.inputs = [undefined, null, NaN, false, true, function () {}, {}, ["array"], "", "string", 2.2, "2.2", 0, "0", 50, "50", 100, "100"];
     gpii.tests.calculatePercentage.outputs = [
         // undefined, null, NaN, false, true, function, {}, [], "", "string", 2.2, "2.2", 0, "0", 50, "50", 100, "100"]
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 220, 220, 0, 0, 5000, 5000, 10000, 10000], // total === undefined
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 220, 220, 0, 0, 5000, 5000, 10000, 10000], // total === null
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 220, 220, 0, 0, 5000, 5000, 10000, 10000], // total === NaN
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 220, 220, 0, 0, 5000, 5000, 10000, 10000], // total === false
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 220, 220, 0, 0, 5000, 5000, 10000, 10000], // total === true
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 220, 220, 0, 0, 5000, 5000, 10000, 10000], // total === function () {}
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 220, 220, 0, 0, 5000, 5000, 10000, 10000], // total === {}
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 220, 220, 0, 0, 5000, 5000, 10000, 10000], // total === []
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 220, 220, 0, 0, 5000, 5000, 10000, 10000], // total === ""
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 220, 220, 0, 0, 5000, 5000, 10000, 10000], // total === "string"
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 2272.7272727272725, 2272.7272727272725, 4545.454545454545, 4545.454545454545], // total === 2.2
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100, 100, 0, 0, 2272.7272727272725, 2272.7272727272725, 4545.454545454545, 4545.454545454545], // total === "2.2"
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 220, 220, 0, 0, 5000, 5000, 10000, 10000], // total === 0
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 220, 220, 0, 0, 5000, 5000, 10000, 10000], // total === "0"
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4.4, 4.4, 0, 0, 100, 100, 200, 200], // total === 50
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4.4, 4.4, 0, 0, 100, 100, 200, 200], // total === "50"
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2.2, 2.2, 0, 0, 50, 50, 100, 100], // total === 100
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2.2, 2.2, 0, 0, 50, 50, 100, 100] // total === "100"
+        [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined], // total === undefined
+        [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined], // total === null
+        [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined], // total === NaN
+        [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined], // total === false
+        [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined], // total === true
+        [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined], // total === function () {}
+        [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined], // total === {}
+        [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined], // total === []
+        [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined], // total === ""
+        [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined], // total === "string"
+        [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 100, 100, 0, 0, 2272.7272727272725, 2272.7272727272725, 4545.454545454545, 4545.454545454545], // total === 2.2
+        [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 100, 100, 0, 0, 2272.7272727272725, 2272.7272727272725, 4545.454545454545, 4545.454545454545], // total === "2.2"
+        [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 0, 0, 0, 0, 0, 0, 0, 0], // total === 0
+        [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 0, 0, 0, 0, 0, 0, 0, 0], // total === "0"
+        [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 4.4, 4.4, 0, 0, 100, 100, 200, 200], // total === 50
+        [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 4.4, 4.4, 0, 0, 100, 100, 200, 200], // total === "50"
+        [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 2.2, 2.2, 0, 0, 50, 50, 100, 100], // total === 100
+        [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 2.2, 2.2, 0, 0, 50, 50, 100, 100] // total === "100"
     ];
 
     jqUnit.test("Test gpii.chartAuthoring.percentage.calculate", function () {
