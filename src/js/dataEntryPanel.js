@@ -64,15 +64,29 @@ https://github.com/gpii/universal/LICENSE.txt
                 }
             }
         },
+        dynamicComponents: {
+            dataEntry: {
+                createOnEvent: "createDataEntryField",
+                // type: "gpii.chartAuthoring.dataEntry",
+                type: "fluid.standardRelayComponent",
+                options: {
+                    gradeNames: ["{that}.generateModelRelaysConnectionGrade"],
+                    invokers: {
+                        "generateModelRelaysConnectionGrade": {
+                            funcName: "gpii.chartAuthoring.dataEntryPanel.generateModelRelaysConnectionGrade",
+                            args: ["{that}.nickName", "{that}.id", ["dataEntries"]]
+                        }
+                    }
+                }
+            }
+        },
         model: {
             total: {
                 // total: number,
                 // percentage: number
             },
             dataEntries: {
-                // "uuid": {
-                //
-                // }
+                // "dataEntryComponent-uuid": {}
             }
         },
         // TODO: add a model relay for summing data entries.
@@ -116,6 +130,29 @@ https://github.com/gpii/universal/LICENSE.txt
             }
         }
     });
+
+    gpii.chartAuthoring.dataEntryPanel.generateModelRelaysConnectionGrade = function (nickName, id) {
+        var gradeName = "gpii.chartAuthoring.dataEntryPanel.modelRelayConnections." + fluid.allocateGuid();
+        var modelPathBase = "{dataEntryPanel}.model.dataEntries." + nickName + "-" + id + ".";
+
+        fluid.defaults(gradeName, {
+            model: {
+                value: modelPathBase + "value",
+                percentage: modelPathBase + "percentage",
+                description: modelPathBase + "description"
+            },
+            modelRelay: {
+                source: "{dataEntryPanel}.model.total.value",
+                target: "total",
+                backward: "never",
+                singleTransform: {
+                    type: "fluid.transforms.identity"
+                }
+            }
+        });
+
+        return gradeName;
+    };
 
     gpii.chartAuthoring.dataEntryPanel.append = function (container, template) {
         template = $(template).clone();
