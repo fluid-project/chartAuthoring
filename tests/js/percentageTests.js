@@ -16,7 +16,8 @@ https://github.com/gpii/universal/LICENSE.txt
 
     gpii.tests.calculatePercentage.inputs = [undefined, null, NaN, false, true, function () {}, {}, ["array"], "", "string", 2.2, "2.2", 0, "0", 50, "50", 100, "100"];
     gpii.tests.calculatePercentage.outputs = [
-        // undefined, null, NaN, false, true, function, {}, [], "", "string", 2.2, "2.2", 0, "0", 50, "50", 100, "100"]
+        // value:
+        // undefined, null,     NaN,      false,     true,      function,  {},        [],        "",        "string",  2.2,       "2.2",     0,         "0",       50,       "50",       100,       "100"]
         [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined], // total === undefined
         [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined], // total === null
         [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined], // total === NaN
