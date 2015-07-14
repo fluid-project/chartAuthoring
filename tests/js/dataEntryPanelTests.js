@@ -85,7 +85,7 @@ https://github.com/gpii/universal/LICENSE.txt
                 func: "jqUnit.assertValue",
                 args: ["The component should have been initialized.", "{dataEntryPanel}"]
             }, {
-                expect: 10,
+                expect: 11,
                 name: "Test Initial Rendering",
                 type: "test",
                 func: "gpii.tests.chartAuthoring.dataEntryPanelTester.testRendering",
@@ -126,6 +126,7 @@ https://github.com/gpii/universal/LICENSE.txt
         jqUnit.assertEquals("The data entry label should be set", that.options.strings.dataEntryLabel, dataEntryLabel.text());
 
         //TODO: Test creation of dataEntry components
+        jqUnit.assertEquals("There should be " + that.options.numDataEntryFields + " added", that.options.numDataEntryFields, that.locate("dataEntry").length);
 
         gpii.tests.chartAuthoring.dataEntryPanelTester.verifyTotalOutput(that, {
             label: that.options.strings.totalLabel,

@@ -40,6 +40,8 @@ https://github.com/gpii/universal/LICENSE.txt
             chartNameLabel: ".gpiic-ca-dataEntryPanel-nameLabel",
             chartName: ".gpiic-ca-dataEntryPanel-name",
             dataEntryLabel: ".gpiic-ca-dataEntryPanel-dataEntryLabel",
+            dataEntries: ".gpiic-ca-dataEntryPanel-dataEntries",
+            dataEntry: ".gpiic-ca-dataEntryPanel-dataEntry",
             totalValue: ".gpiic-ca-dataEntryPanel-totalValue",
             totalPercentage: ".gpiic-ca-dataEntryPanel-totalPercentage",
             totalLabel: ".gpiic-ca-dataEntryPanel-totalLabel"
@@ -53,6 +55,14 @@ https://github.com/gpii/universal/LICENSE.txt
             emptyTotalValue: "Value",
             totalPercentage: "%percentage%",
             totalLabel: "Total"
+        },
+        members: {
+            dataEntryContainerTemplate: {
+                expander: {
+                    "this": "{that}.dom.dataEntry",
+                    "method": "remove"
+                }
+            }
         },
         model: {
             total: {
@@ -92,7 +102,12 @@ https://github.com/gpii/universal/LICENSE.txt
             createDataEntryField: null
         },
         listeners: {
-            "onCreate.renderPanel": "gpii.chartAuthoring.dataEntryPanel.renderPanel"
+            "onCreate.renderPanel": "gpii.chartAuthoring.dataEntryPanel.renderPanel",
+            "createDataEntryField.appendContainer": {
+                funcName: "gpii.chartAuthoring.dataEntryPanel.append",
+                args: ["{that}.dom.dataEntries", "{that}.dataEntryContainerTemplate"],
+                "priority": "first"
+            }
         },
         modelListeners: {
             "total": {
@@ -101,6 +116,11 @@ https://github.com/gpii/universal/LICENSE.txt
             }
         }
     });
+
+    gpii.chartAuthoring.dataEntryPanel.append = function (container, template) {
+        template = $(template).clone();
+        container.append(template);
+    };
 
     gpii.chartAuthoring.dataEntryPanel.renderPanel = function (that) {
         that.locate("panelTitle").text(that.options.strings.panelTitle);
@@ -116,6 +136,10 @@ https://github.com/gpii/universal/LICENSE.txt
 
         that.locate("dataEntryLabel").text(that.options.strings.dataEntryLabel);
         that.locate("totalLabel").text(that.options.strings.totalLabel);
+
+        for (var i = 1; i <= that.options.numDataEntryFields; i++) {
+            that.events.createDataEntryField.fire();
+        }
     };
 
     gpii.chartAuthoring.dataEntryPanel.renderTotals = function (that) {
