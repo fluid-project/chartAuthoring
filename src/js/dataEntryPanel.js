@@ -68,7 +68,8 @@ https://github.com/gpii/universal/LICENSE.txt
             dataEntry: {
                 createOnEvent: "createDataEntryField",
                 // type: "gpii.chartAuthoring.dataEntry",
-                type: "fluid.standardRelayComponent",
+                type: "fluid.viewRelayComponent",
+                container: "{arguments}.0",
                 options: {
                     gradeNames: ["{that}.generateModelRelaysConnectionGrade"],
                     invokers: {
@@ -116,12 +117,7 @@ https://github.com/gpii/universal/LICENSE.txt
             createDataEntryField: null
         },
         listeners: {
-            "onCreate.renderPanel": "gpii.chartAuthoring.dataEntryPanel.renderPanel",
-            "createDataEntryField.appendContainer": {
-                funcName: "gpii.chartAuthoring.dataEntryPanel.append",
-                args: ["{that}.dom.dataEntries", "{that}.dataEntryContainerTemplate"],
-                "priority": "first"
-            }
+            "onCreate.renderPanel": "gpii.chartAuthoring.dataEntryPanel.renderPanel"
         },
         modelListeners: {
             "total": {
@@ -157,6 +153,7 @@ https://github.com/gpii/universal/LICENSE.txt
     gpii.chartAuthoring.dataEntryPanel.append = function (container, template) {
         template = $(template).clone();
         container.append(template);
+        return template;
     };
 
     gpii.chartAuthoring.dataEntryPanel.renderPanel = function (that) {
@@ -175,7 +172,8 @@ https://github.com/gpii/universal/LICENSE.txt
         that.locate("totalLabel").text(that.options.strings.totalLabel);
 
         for (var i = 1; i <= that.options.numDataEntryFields; i++) {
-            that.events.createDataEntryField.fire();
+            var deCont = gpii.chartAuthoring.dataEntryPanel.append(that.locate("dataEntries"), that.dataEntryContainerTemplate);
+            that.events.createDataEntryField.fire(deCont);
         }
     };
 

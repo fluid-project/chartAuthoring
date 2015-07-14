@@ -47,6 +47,16 @@ https://github.com/gpii/universal/LICENSE.txt
         });
     });
 
+    jqUnit.test("Test gpii.chartAuthoring.dataEntryPanel.append", function () {
+        var container = $(".appendtest");
+        var template = "<span class='appendtest-appended'>Appended</span>";
+
+        gpii.chartAuthoring.dataEntryPanel.append(container, template);
+        gpii.chartAuthoring.dataEntryPanel.append(container, $(template));
+
+        jqUnit.assertEquals("The elments should be appendend to the container", 2, container.find(".appendtest-appended").length);
+    });
+
     fluid.defaults("gpii.tests.chartAuthoring.dataEntryPanel", {
         gradeNames: ["gpii.chartAuthoring.dataEntryPanel", "autoInit"]
     });
