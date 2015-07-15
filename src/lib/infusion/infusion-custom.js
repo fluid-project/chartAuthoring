@@ -1,4 +1,4 @@
-/*! infusion - v2.0.0-SNAPSHOT Tuesday, June 23rd, 2015, 1:30:11 PM*/
+/*! infusion - v2.0.0-SNAPSHOT Tuesday, July 14th, 2015, 4:06:08 PM*/
 /*!
  * jQuery JavaScript Library v1.11.0
  * http://jquery.com/
@@ -25652,6 +25652,10975 @@ fluid_2_0 = fluid_2_0 || {};
             expandConfig.threadLocal = threadLocal;
             return expandEntry(entry);
         };
+    };
+
+})(jQuery, fluid_2_0);
+;/*
+Copyright 2008-2009 University of Toronto
+Copyright 2010-2011 OCAD University
+Copyright 2011 Lucendo Development Ltd.
+
+Licensed under the Educational Community License (ECL), Version 2.0 or the New
+BSD license. You may not use this file except in compliance with one these
+Licenses.
+
+You may obtain a copy of the ECL 2.0 License and BSD License at
+https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
+*/
+
+var fluid_2_0 = fluid_2_0 || {};
+
+(function ($, fluid) {
+    "use strict";
+
+    fluid.registerNamespace("fluid.enhance");
+
+    // Feature Detection Functions
+    fluid.enhance.isBrowser = function () {
+        return typeof(window) !== "undefined" && window.document;
+    };
+    fluid.enhance.supportsBinaryXHR = function () {
+        return window.FormData || (window.XMLHttpRequest && window.XMLHttpRequest.prototype && window.XMLHttpRequest.prototype.sendAsBinary);
+    };
+    fluid.enhance.supportsFormData = function () {
+        return !!window.FormData;
+    };
+
+    /*
+     * An object to hold the results of the progressive enhancement checks.
+     * Keys represent the key into the static environment
+     * Values represent the result of the check
+     */
+    // unsupported, NON-API value
+    fluid.enhance.checked = {};
+
+    /*
+     * The segment separator used by fluid.enhance.typeToKey
+     */
+    // unsupported, NON-API value
+    fluid.enhance.sep = "--";
+
+    /*
+     * Converts a type tag name to one that is safe to use as a key in an object, by replacing all of the "."
+     * with the separator specified at fluid.enhance.sep
+     */
+    // unsupported, NON-API function
+    fluid.enhance.typeToKey = function (typeName) {
+        return typeName.replace(/[.]/gi, fluid.enhance.sep);
+    };
+
+    /*
+     * Takes an object of key/value pairs where the key will be the key in the static environment and the value is a function or function name to run.
+     * {staticEnvKey: "progressiveCheckFunc"}
+     * Note that the function will not be run if its result is already recorded.
+     */
+    fluid.enhance.check = function (stuffToCheck) {
+        fluid.each(stuffToCheck, function (val, key) {
+            var staticKey = fluid.enhance.typeToKey(key);
+
+            if (fluid.enhance.checked[staticKey] === undefined) {
+                var results = typeof(val) === "boolean" ? val :
+                    (typeof(val) === "string" ? fluid.invokeGlobalFunction(val) : val());
+
+                fluid.enhance.checked[staticKey] = !!results;
+
+                if (results) {
+                    fluid.staticEnvironment[staticKey] = fluid.typeTag(key);
+                }
+            }
+        });
+    };
+
+    /*
+     * forgets a single item based on the typeName
+     */
+    fluid.enhance.forget = function (typeName) {
+        var key = fluid.enhance.typeToKey(typeName);
+
+        if (fluid.enhance.checked[key] !== undefined) {
+            delete fluid.staticEnvironment[key];
+            delete fluid.enhance.checked[key];
+        }
+    };
+
+    /*
+     * forgets all of the keys added by fluid.enhance.check
+     */
+    fluid.enhance.forgetAll = function () {
+        fluid.each(fluid.enhance.checked, function (val, key) {
+            fluid.enhance.forget(key);
+        });
+    };
+
+    fluid.defaults("fluid.progressiveChecker", {
+        gradeNames: ["fluid.typeFount", "fluid.littleComponent", "autoInit", "{that}.check"],
+        checks: [], // [{"feature": "{IoC Expression}", "contextName": "context.name"}]
+        defaultContextName: undefined,
+        invokers: {
+            check: {
+                funcName: "fluid.progressiveChecker.check",
+                args: ["{that}.options.checks", "{that}.options.defaultContextName"]
+            }
+        }
+    });
+
+    fluid.progressiveChecker.check = function (checks, defaultContextName) {
+        return fluid.find(checks, function(check) {
+            if (check.feature) {
+                return check.contextName;
+            }
+        }, defaultContextName);
+    };
+
+    fluid.progressiveChecker.forComponent = function (that, componentName) {
+        var defaults = fluid.defaults(componentName);
+        var expanded = fluid.expandOptions(fluid.copy(defaults.progressiveCheckerOptions), that);
+        var checkTag = fluid.progressiveChecker.check(expanded.checks, expanded.defaultContextName);
+        var horizon = componentName + ".progressiveCheck";
+        return [horizon, checkTag];
+    };
+
+    fluid.defaults("fluid.progressiveCheckerForComponent", {
+        gradeNames: ["fluid.typeFount", "fluid.littleComponent", "autoInit", "{that}.check"],
+        invokers: {
+            check: {
+                funcName: "fluid.progressiveChecker.forComponent",
+                args: ["{that}", "{that}.options.componentName"]
+            }
+        }
+        // componentName
+    });
+
+
+
+    fluid.enhance.check({
+        "fluid.browser" : "fluid.enhance.isBrowser"
+    });
+
+    /**********************************************************
+     * This code runs immediately upon inclusion of this file *
+     **********************************************************/
+
+    // Use JavaScript to hide any markup that is specifically in place for cases when JavaScript is off.
+    // Note: the use of fl-ProgEnhance-basic is deprecated, and replaced by fl-progEnhance-basic.
+    // It is included here for backward compatibility only.
+    // Distinguish the standalone jQuery from the real one so that this can be included in IoC standalone tests
+    if (fluid.enhance.isBrowser() && $.fn) {
+        $("head").append("<style type='text/css'>.fl-progEnhance-basic, .fl-ProgEnhance-basic { display: none; } .fl-progEnhance-enhanced, .fl-ProgEnhance-enhanced { display: block; }</style>");
+    }
+
+})(jQuery, fluid_2_0);
+;/*
+Copyright 2011 OCAD University
+Copyright 2011 Lucendo Development Ltd.
+
+Licensed under the Educational Community License (ECL), Version 2.0 or the New
+BSD license. You may not use this file except in compliance with one these
+Licenses.
+
+You may obtain a copy of the ECL 2.0 License and BSD License at
+https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
+*/
+
+var fluid_2_0 = fluid_2_0 || {};
+
+(function ($, fluid) {
+    "use strict";
+    /**********************
+     * Sliding Panel *
+     *********************/
+
+    fluid.defaults("fluid.slidingPanel", {
+        gradeNames: ["fluid.viewComponent", "autoInit"],
+        selectors: {
+            panel: ".flc-slidingPanel-panel",
+            toggleButton: ".flc-slidingPanel-toggleButton",
+            toggleButtonLabel: ".flc-slidingPanel-toggleButton"
+        },
+        strings: {
+            showText: "show",
+            hideText: "hide"
+        },
+        events: {
+            onPanelHide: null,
+            onPanelShow: null,
+            afterPanelHide: null,
+            afterPanelShow: null
+        },
+        listeners: {
+            "onCreate.bindClick": {
+                "this": "{that}.dom.toggleButton",
+                "method": "click",
+                "args": ["{that}.togglePanel"]
+            },
+            "onCreate.bindModelChange": {
+                listener: "{that}.applier.modelChanged.addListener",
+                args: ["isShowing", "{that}.refreshView"]
+            },
+            "onCreate.setInitialState": {
+                listener: "{that}.refreshView"
+            },
+            "onPanelHide.setText": {
+                "this": "{that}.dom.toggleButtonLabel",
+                "method": "text",
+                "args": ["{that}.options.strings.showText"],
+                "priority": "first"
+            },
+            "onPanelShow.setText": {
+                "this": "{that}.dom.toggleButtonLabel",
+                "method": "text",
+                "args": ["{that}.options.strings.hideText"],
+                "priority": "first"
+            },
+            "onPanelHide.operate": {
+                listener: "{that}.operateHide"
+            },
+            "onPanelShow.operate": {
+                listener: "{that}.operateShow"
+            }
+        },
+        invokers: {
+            operateHide: {
+                "this": "{that}.dom.panel",
+                "method": "slideUp",
+                "args": ["{that}.options.animationDurations.hide", "{that}.events.afterPanelHide.fire"]
+            },
+            operateShow: {
+                "this": "{that}.dom.panel",
+                "method": "slideDown",
+                "args": ["{that}.options.animationDurations.show", "{that}.events.afterPanelShow.fire"]
+            },
+            hidePanel: {
+                func: "{that}.applier.requestChange",
+                args: ["isShowing", false]
+            },
+            showPanel: {
+                func: "{that}.applier.requestChange",
+                args: ["isShowing", true]
+            },
+            togglePanel: {
+                funcName: "fluid.slidingPanel.togglePanel",
+                args: ["{that}"]
+            },
+            refreshView: {
+                funcName: "fluid.slidingPanel.refreshView",
+                args: ["{that}"]
+            }
+        },
+        model: {
+            isShowing: false
+        },
+        animationDurations: {
+            hide: 400,
+            show: 400
+        }
+    });
+
+    fluid.slidingPanel.togglePanel = function (that) {
+        that.applier.requestChange("isShowing", !that.model.isShowing);
+    };
+
+    fluid.slidingPanel.refreshView = function (that) {
+        that.events[that.model.isShowing ? "onPanelShow" : "onPanelHide"].fire();
+    };
+
+})(jQuery, fluid_2_0);
+;/*!
+ * jQuery UI Draggable 1.10.4
+ * http://jqueryui.com
+ *
+ * Copyright 2014 jQuery Foundation and other contributors
+ * Released under the MIT license.
+ * http://jquery.org/license
+ *
+ * http://api.jqueryui.com/draggable/
+ *
+ * Depends:
+ *	jquery.ui.core.js
+ *	jquery.ui.mouse.js
+ *	jquery.ui.widget.js
+ */
+(function( $, undefined ) {
+
+$.widget("ui.draggable", $.ui.mouse, {
+	version: "1.10.4",
+	widgetEventPrefix: "drag",
+	options: {
+		addClasses: true,
+		appendTo: "parent",
+		axis: false,
+		connectToSortable: false,
+		containment: false,
+		cursor: "auto",
+		cursorAt: false,
+		grid: false,
+		handle: false,
+		helper: "original",
+		iframeFix: false,
+		opacity: false,
+		refreshPositions: false,
+		revert: false,
+		revertDuration: 500,
+		scope: "default",
+		scroll: true,
+		scrollSensitivity: 20,
+		scrollSpeed: 20,
+		snap: false,
+		snapMode: "both",
+		snapTolerance: 20,
+		stack: false,
+		zIndex: false,
+
+		// callbacks
+		drag: null,
+		start: null,
+		stop: null
+	},
+	_create: function() {
+
+		if (this.options.helper === "original" && !(/^(?:r|a|f)/).test(this.element.css("position"))) {
+			this.element[0].style.position = "relative";
+		}
+		if (this.options.addClasses){
+			this.element.addClass("ui-draggable");
+		}
+		if (this.options.disabled){
+			this.element.addClass("ui-draggable-disabled");
+		}
+
+		this._mouseInit();
+
+	},
+
+	_destroy: function() {
+		this.element.removeClass( "ui-draggable ui-draggable-dragging ui-draggable-disabled" );
+		this._mouseDestroy();
+	},
+
+	_mouseCapture: function(event) {
+
+		var o = this.options;
+
+		// among others, prevent a drag on a resizable-handle
+		if (this.helper || o.disabled || $(event.target).closest(".ui-resizable-handle").length > 0) {
+			return false;
+		}
+
+		//Quit if we're not on a valid handle
+		this.handle = this._getHandle(event);
+		if (!this.handle) {
+			return false;
+		}
+
+		$(o.iframeFix === true ? "iframe" : o.iframeFix).each(function() {
+			$("<div class='ui-draggable-iframeFix' style='background: #fff;'></div>")
+			.css({
+				width: this.offsetWidth+"px", height: this.offsetHeight+"px",
+				position: "absolute", opacity: "0.001", zIndex: 1000
+			})
+			.css($(this).offset())
+			.appendTo("body");
+		});
+
+		return true;
+
+	},
+
+	_mouseStart: function(event) {
+
+		var o = this.options;
+
+		//Create and append the visible helper
+		this.helper = this._createHelper(event);
+
+		this.helper.addClass("ui-draggable-dragging");
+
+		//Cache the helper size
+		this._cacheHelperProportions();
+
+		//If ddmanager is used for droppables, set the global draggable
+		if($.ui.ddmanager) {
+			$.ui.ddmanager.current = this;
+		}
+
+		/*
+		 * - Position generation -
+		 * This block generates everything position related - it's the core of draggables.
+		 */
+
+		//Cache the margins of the original element
+		this._cacheMargins();
+
+		//Store the helper's css position
+		this.cssPosition = this.helper.css( "position" );
+		this.scrollParent = this.helper.scrollParent();
+		this.offsetParent = this.helper.offsetParent();
+		this.offsetParentCssPosition = this.offsetParent.css( "position" );
+
+		//The element's absolute position on the page minus margins
+		this.offset = this.positionAbs = this.element.offset();
+		this.offset = {
+			top: this.offset.top - this.margins.top,
+			left: this.offset.left - this.margins.left
+		};
+
+		//Reset scroll cache
+		this.offset.scroll = false;
+
+		$.extend(this.offset, {
+			click: { //Where the click happened, relative to the element
+				left: event.pageX - this.offset.left,
+				top: event.pageY - this.offset.top
+			},
+			parent: this._getParentOffset(),
+			relative: this._getRelativeOffset() //This is a relative to absolute position minus the actual position calculation - only used for relative positioned helper
+		});
+
+		//Generate the original position
+		this.originalPosition = this.position = this._generatePosition(event);
+		this.originalPageX = event.pageX;
+		this.originalPageY = event.pageY;
+
+		//Adjust the mouse offset relative to the helper if "cursorAt" is supplied
+		(o.cursorAt && this._adjustOffsetFromHelper(o.cursorAt));
+
+		//Set a containment if given in the options
+		this._setContainment();
+
+		//Trigger event + callbacks
+		if(this._trigger("start", event) === false) {
+			this._clear();
+			return false;
+		}
+
+		//Recache the helper size
+		this._cacheHelperProportions();
+
+		//Prepare the droppable offsets
+		if ($.ui.ddmanager && !o.dropBehaviour) {
+			$.ui.ddmanager.prepareOffsets(this, event);
+		}
+
+
+		this._mouseDrag(event, true); //Execute the drag once - this causes the helper not to be visible before getting its correct position
+
+		//If the ddmanager is used for droppables, inform the manager that dragging has started (see #5003)
+		if ( $.ui.ddmanager ) {
+			$.ui.ddmanager.dragStart(this, event);
+		}
+
+		return true;
+	},
+
+	_mouseDrag: function(event, noPropagation) {
+		// reset any necessary cached properties (see #5009)
+		if ( this.offsetParentCssPosition === "fixed" ) {
+			this.offset.parent = this._getParentOffset();
+		}
+
+		//Compute the helpers position
+		this.position = this._generatePosition(event);
+		this.positionAbs = this._convertPositionTo("absolute");
+
+		//Call plugins and callbacks and use the resulting position if something is returned
+		if (!noPropagation) {
+			var ui = this._uiHash();
+			if(this._trigger("drag", event, ui) === false) {
+				this._mouseUp({});
+				return false;
+			}
+			this.position = ui.position;
+		}
+
+		if(!this.options.axis || this.options.axis !== "y") {
+			this.helper[0].style.left = this.position.left+"px";
+		}
+		if(!this.options.axis || this.options.axis !== "x") {
+			this.helper[0].style.top = this.position.top+"px";
+		}
+		if($.ui.ddmanager) {
+			$.ui.ddmanager.drag(this, event);
+		}
+
+		return false;
+	},
+
+	_mouseStop: function(event) {
+
+		//If we are using droppables, inform the manager about the drop
+		var that = this,
+			dropped = false;
+		if ($.ui.ddmanager && !this.options.dropBehaviour) {
+			dropped = $.ui.ddmanager.drop(this, event);
+		}
+
+		//if a drop comes from outside (a sortable)
+		if(this.dropped) {
+			dropped = this.dropped;
+			this.dropped = false;
+		}
+
+		//if the original element is no longer in the DOM don't bother to continue (see #8269)
+		if ( this.options.helper === "original" && !$.contains( this.element[ 0 ].ownerDocument, this.element[ 0 ] ) ) {
+			return false;
+		}
+
+		if((this.options.revert === "invalid" && !dropped) || (this.options.revert === "valid" && dropped) || this.options.revert === true || ($.isFunction(this.options.revert) && this.options.revert.call(this.element, dropped))) {
+			$(this.helper).animate(this.originalPosition, parseInt(this.options.revertDuration, 10), function() {
+				if(that._trigger("stop", event) !== false) {
+					that._clear();
+				}
+			});
+		} else {
+			if(this._trigger("stop", event) !== false) {
+				this._clear();
+			}
+		}
+
+		return false;
+	},
+
+	_mouseUp: function(event) {
+		//Remove frame helpers
+		$("div.ui-draggable-iframeFix").each(function() {
+			this.parentNode.removeChild(this);
+		});
+
+		//If the ddmanager is used for droppables, inform the manager that dragging has stopped (see #5003)
+		if( $.ui.ddmanager ) {
+			$.ui.ddmanager.dragStop(this, event);
+		}
+
+		return $.ui.mouse.prototype._mouseUp.call(this, event);
+	},
+
+	cancel: function() {
+
+		if(this.helper.is(".ui-draggable-dragging")) {
+			this._mouseUp({});
+		} else {
+			this._clear();
+		}
+
+		return this;
+
+	},
+
+	_getHandle: function(event) {
+		return this.options.handle ?
+			!!$( event.target ).closest( this.element.find( this.options.handle ) ).length :
+			true;
+	},
+
+	_createHelper: function(event) {
+
+		var o = this.options,
+			helper = $.isFunction(o.helper) ? $(o.helper.apply(this.element[0], [event])) : (o.helper === "clone" ? this.element.clone().removeAttr("id") : this.element);
+
+		if(!helper.parents("body").length) {
+			helper.appendTo((o.appendTo === "parent" ? this.element[0].parentNode : o.appendTo));
+		}
+
+		if(helper[0] !== this.element[0] && !(/(fixed|absolute)/).test(helper.css("position"))) {
+			helper.css("position", "absolute");
+		}
+
+		return helper;
+
+	},
+
+	_adjustOffsetFromHelper: function(obj) {
+		if (typeof obj === "string") {
+			obj = obj.split(" ");
+		}
+		if ($.isArray(obj)) {
+			obj = {left: +obj[0], top: +obj[1] || 0};
+		}
+		if ("left" in obj) {
+			this.offset.click.left = obj.left + this.margins.left;
+		}
+		if ("right" in obj) {
+			this.offset.click.left = this.helperProportions.width - obj.right + this.margins.left;
+		}
+		if ("top" in obj) {
+			this.offset.click.top = obj.top + this.margins.top;
+		}
+		if ("bottom" in obj) {
+			this.offset.click.top = this.helperProportions.height - obj.bottom + this.margins.top;
+		}
+	},
+
+	_getParentOffset: function() {
+
+		//Get the offsetParent and cache its position
+		var po = this.offsetParent.offset();
+
+		// This is a special case where we need to modify a offset calculated on start, since the following happened:
+		// 1. The position of the helper is absolute, so it's position is calculated based on the next positioned parent
+		// 2. The actual offset parent is a child of the scroll parent, and the scroll parent isn't the document, which means that
+		//    the scroll is included in the initial calculation of the offset of the parent, and never recalculated upon drag
+		if(this.cssPosition === "absolute" && this.scrollParent[0] !== document && $.contains(this.scrollParent[0], this.offsetParent[0])) {
+			po.left += this.scrollParent.scrollLeft();
+			po.top += this.scrollParent.scrollTop();
+		}
+
+		//This needs to be actually done for all browsers, since pageX/pageY includes this information
+		//Ugly IE fix
+		if((this.offsetParent[0] === document.body) ||
+			(this.offsetParent[0].tagName && this.offsetParent[0].tagName.toLowerCase() === "html" && $.ui.ie)) {
+			po = { top: 0, left: 0 };
+		}
+
+		return {
+			top: po.top + (parseInt(this.offsetParent.css("borderTopWidth"),10) || 0),
+			left: po.left + (parseInt(this.offsetParent.css("borderLeftWidth"),10) || 0)
+		};
+
+	},
+
+	_getRelativeOffset: function() {
+
+		if(this.cssPosition === "relative") {
+			var p = this.element.position();
+			return {
+				top: p.top - (parseInt(this.helper.css("top"),10) || 0) + this.scrollParent.scrollTop(),
+				left: p.left - (parseInt(this.helper.css("left"),10) || 0) + this.scrollParent.scrollLeft()
+			};
+		} else {
+			return { top: 0, left: 0 };
+		}
+
+	},
+
+	_cacheMargins: function() {
+		this.margins = {
+			left: (parseInt(this.element.css("marginLeft"),10) || 0),
+			top: (parseInt(this.element.css("marginTop"),10) || 0),
+			right: (parseInt(this.element.css("marginRight"),10) || 0),
+			bottom: (parseInt(this.element.css("marginBottom"),10) || 0)
+		};
+	},
+
+	_cacheHelperProportions: function() {
+		this.helperProportions = {
+			width: this.helper.outerWidth(),
+			height: this.helper.outerHeight()
+		};
+	},
+
+	_setContainment: function() {
+
+		var over, c, ce,
+			o = this.options;
+
+		if ( !o.containment ) {
+			this.containment = null;
+			return;
+		}
+
+		if ( o.containment === "window" ) {
+			this.containment = [
+				$( window ).scrollLeft() - this.offset.relative.left - this.offset.parent.left,
+				$( window ).scrollTop() - this.offset.relative.top - this.offset.parent.top,
+				$( window ).scrollLeft() + $( window ).width() - this.helperProportions.width - this.margins.left,
+				$( window ).scrollTop() + ( $( window ).height() || document.body.parentNode.scrollHeight ) - this.helperProportions.height - this.margins.top
+			];
+			return;
+		}
+
+		if ( o.containment === "document") {
+			this.containment = [
+				0,
+				0,
+				$( document ).width() - this.helperProportions.width - this.margins.left,
+				( $( document ).height() || document.body.parentNode.scrollHeight ) - this.helperProportions.height - this.margins.top
+			];
+			return;
+		}
+
+		if ( o.containment.constructor === Array ) {
+			this.containment = o.containment;
+			return;
+		}
+
+		if ( o.containment === "parent" ) {
+			o.containment = this.helper[ 0 ].parentNode;
+		}
+
+		c = $( o.containment );
+		ce = c[ 0 ];
+
+		if( !ce ) {
+			return;
+		}
+
+		over = c.css( "overflow" ) !== "hidden";
+
+		this.containment = [
+			( parseInt( c.css( "borderLeftWidth" ), 10 ) || 0 ) + ( parseInt( c.css( "paddingLeft" ), 10 ) || 0 ),
+			( parseInt( c.css( "borderTopWidth" ), 10 ) || 0 ) + ( parseInt( c.css( "paddingTop" ), 10 ) || 0 ) ,
+			( over ? Math.max( ce.scrollWidth, ce.offsetWidth ) : ce.offsetWidth ) - ( parseInt( c.css( "borderRightWidth" ), 10 ) || 0 ) - ( parseInt( c.css( "paddingRight" ), 10 ) || 0 ) - this.helperProportions.width - this.margins.left - this.margins.right,
+			( over ? Math.max( ce.scrollHeight, ce.offsetHeight ) : ce.offsetHeight ) - ( parseInt( c.css( "borderBottomWidth" ), 10 ) || 0 ) - ( parseInt( c.css( "paddingBottom" ), 10 ) || 0 ) - this.helperProportions.height - this.margins.top  - this.margins.bottom
+		];
+		this.relative_container = c;
+	},
+
+	_convertPositionTo: function(d, pos) {
+
+		if(!pos) {
+			pos = this.position;
+		}
+
+		var mod = d === "absolute" ? 1 : -1,
+			scroll = this.cssPosition === "absolute" && !( this.scrollParent[ 0 ] !== document && $.contains( this.scrollParent[ 0 ], this.offsetParent[ 0 ] ) ) ? this.offsetParent : this.scrollParent;
+
+		//Cache the scroll
+		if (!this.offset.scroll) {
+			this.offset.scroll = {top : scroll.scrollTop(), left : scroll.scrollLeft()};
+		}
+
+		return {
+			top: (
+				pos.top	+																// The absolute mouse position
+				this.offset.relative.top * mod +										// Only for relative positioned nodes: Relative offset from element to offset parent
+				this.offset.parent.top * mod -										// The offsetParent's offset without borders (offset + border)
+				( ( this.cssPosition === "fixed" ? -this.scrollParent.scrollTop() : this.offset.scroll.top ) * mod )
+			),
+			left: (
+				pos.left +																// The absolute mouse position
+				this.offset.relative.left * mod +										// Only for relative positioned nodes: Relative offset from element to offset parent
+				this.offset.parent.left * mod	-										// The offsetParent's offset without borders (offset + border)
+				( ( this.cssPosition === "fixed" ? -this.scrollParent.scrollLeft() : this.offset.scroll.left ) * mod )
+			)
+		};
+
+	},
+
+	_generatePosition: function(event) {
+
+		var containment, co, top, left,
+			o = this.options,
+			scroll = this.cssPosition === "absolute" && !( this.scrollParent[ 0 ] !== document && $.contains( this.scrollParent[ 0 ], this.offsetParent[ 0 ] ) ) ? this.offsetParent : this.scrollParent,
+			pageX = event.pageX,
+			pageY = event.pageY;
+
+		//Cache the scroll
+		if (!this.offset.scroll) {
+			this.offset.scroll = {top : scroll.scrollTop(), left : scroll.scrollLeft()};
+		}
+
+		/*
+		 * - Position constraining -
+		 * Constrain the position to a mix of grid, containment.
+		 */
+
+		// If we are not dragging yet, we won't check for options
+		if ( this.originalPosition ) {
+			if ( this.containment ) {
+				if ( this.relative_container ){
+					co = this.relative_container.offset();
+					containment = [
+						this.containment[ 0 ] + co.left,
+						this.containment[ 1 ] + co.top,
+						this.containment[ 2 ] + co.left,
+						this.containment[ 3 ] + co.top
+					];
+				}
+				else {
+					containment = this.containment;
+				}
+
+				if(event.pageX - this.offset.click.left < containment[0]) {
+					pageX = containment[0] + this.offset.click.left;
+				}
+				if(event.pageY - this.offset.click.top < containment[1]) {
+					pageY = containment[1] + this.offset.click.top;
+				}
+				if(event.pageX - this.offset.click.left > containment[2]) {
+					pageX = containment[2] + this.offset.click.left;
+				}
+				if(event.pageY - this.offset.click.top > containment[3]) {
+					pageY = containment[3] + this.offset.click.top;
+				}
+			}
+
+			if(o.grid) {
+				//Check for grid elements set to 0 to prevent divide by 0 error causing invalid argument errors in IE (see ticket #6950)
+				top = o.grid[1] ? this.originalPageY + Math.round((pageY - this.originalPageY) / o.grid[1]) * o.grid[1] : this.originalPageY;
+				pageY = containment ? ((top - this.offset.click.top >= containment[1] || top - this.offset.click.top > containment[3]) ? top : ((top - this.offset.click.top >= containment[1]) ? top - o.grid[1] : top + o.grid[1])) : top;
+
+				left = o.grid[0] ? this.originalPageX + Math.round((pageX - this.originalPageX) / o.grid[0]) * o.grid[0] : this.originalPageX;
+				pageX = containment ? ((left - this.offset.click.left >= containment[0] || left - this.offset.click.left > containment[2]) ? left : ((left - this.offset.click.left >= containment[0]) ? left - o.grid[0] : left + o.grid[0])) : left;
+			}
+
+		}
+
+		return {
+			top: (
+				pageY -																	// The absolute mouse position
+				this.offset.click.top	-												// Click offset (relative to the element)
+				this.offset.relative.top -												// Only for relative positioned nodes: Relative offset from element to offset parent
+				this.offset.parent.top +												// The offsetParent's offset without borders (offset + border)
+				( this.cssPosition === "fixed" ? -this.scrollParent.scrollTop() : this.offset.scroll.top )
+			),
+			left: (
+				pageX -																	// The absolute mouse position
+				this.offset.click.left -												// Click offset (relative to the element)
+				this.offset.relative.left -												// Only for relative positioned nodes: Relative offset from element to offset parent
+				this.offset.parent.left +												// The offsetParent's offset without borders (offset + border)
+				( this.cssPosition === "fixed" ? -this.scrollParent.scrollLeft() : this.offset.scroll.left )
+			)
+		};
+
+	},
+
+	_clear: function() {
+		this.helper.removeClass("ui-draggable-dragging");
+		if(this.helper[0] !== this.element[0] && !this.cancelHelperRemoval) {
+			this.helper.remove();
+		}
+		this.helper = null;
+		this.cancelHelperRemoval = false;
+	},
+
+	// From now on bulk stuff - mainly helpers
+
+	_trigger: function(type, event, ui) {
+		ui = ui || this._uiHash();
+		$.ui.plugin.call(this, type, [event, ui]);
+		//The absolute position has to be recalculated after plugins
+		if(type === "drag") {
+			this.positionAbs = this._convertPositionTo("absolute");
+		}
+		return $.Widget.prototype._trigger.call(this, type, event, ui);
+	},
+
+	plugins: {},
+
+	_uiHash: function() {
+		return {
+			helper: this.helper,
+			position: this.position,
+			originalPosition: this.originalPosition,
+			offset: this.positionAbs
+		};
+	}
+
+});
+
+$.ui.plugin.add("draggable", "connectToSortable", {
+	start: function(event, ui) {
+
+		var inst = $(this).data("ui-draggable"), o = inst.options,
+			uiSortable = $.extend({}, ui, { item: inst.element });
+		inst.sortables = [];
+		$(o.connectToSortable).each(function() {
+			var sortable = $.data(this, "ui-sortable");
+			if (sortable && !sortable.options.disabled) {
+				inst.sortables.push({
+					instance: sortable,
+					shouldRevert: sortable.options.revert
+				});
+				sortable.refreshPositions();	// Call the sortable's refreshPositions at drag start to refresh the containerCache since the sortable container cache is used in drag and needs to be up to date (this will ensure it's initialised as well as being kept in step with any changes that might have happened on the page).
+				sortable._trigger("activate", event, uiSortable);
+			}
+		});
+
+	},
+	stop: function(event, ui) {
+
+		//If we are still over the sortable, we fake the stop event of the sortable, but also remove helper
+		var inst = $(this).data("ui-draggable"),
+			uiSortable = $.extend({}, ui, { item: inst.element });
+
+		$.each(inst.sortables, function() {
+			if(this.instance.isOver) {
+
+				this.instance.isOver = 0;
+
+				inst.cancelHelperRemoval = true; //Don't remove the helper in the draggable instance
+				this.instance.cancelHelperRemoval = false; //Remove it in the sortable instance (so sortable plugins like revert still work)
+
+				//The sortable revert is supported, and we have to set a temporary dropped variable on the draggable to support revert: "valid/invalid"
+				if(this.shouldRevert) {
+					this.instance.options.revert = this.shouldRevert;
+				}
+
+				//Trigger the stop of the sortable
+				this.instance._mouseStop(event);
+
+				this.instance.options.helper = this.instance.options._helper;
+
+				//If the helper has been the original item, restore properties in the sortable
+				if(inst.options.helper === "original") {
+					this.instance.currentItem.css({ top: "auto", left: "auto" });
+				}
+
+			} else {
+				this.instance.cancelHelperRemoval = false; //Remove the helper in the sortable instance
+				this.instance._trigger("deactivate", event, uiSortable);
+			}
+
+		});
+
+	},
+	drag: function(event, ui) {
+
+		var inst = $(this).data("ui-draggable"), that = this;
+
+		$.each(inst.sortables, function() {
+
+			var innermostIntersecting = false,
+				thisSortable = this;
+
+			//Copy over some variables to allow calling the sortable's native _intersectsWith
+			this.instance.positionAbs = inst.positionAbs;
+			this.instance.helperProportions = inst.helperProportions;
+			this.instance.offset.click = inst.offset.click;
+
+			if(this.instance._intersectsWith(this.instance.containerCache)) {
+				innermostIntersecting = true;
+				$.each(inst.sortables, function () {
+					this.instance.positionAbs = inst.positionAbs;
+					this.instance.helperProportions = inst.helperProportions;
+					this.instance.offset.click = inst.offset.click;
+					if (this !== thisSortable &&
+						this.instance._intersectsWith(this.instance.containerCache) &&
+						$.contains(thisSortable.instance.element[0], this.instance.element[0])
+					) {
+						innermostIntersecting = false;
+					}
+					return innermostIntersecting;
+				});
+			}
+
+
+			if(innermostIntersecting) {
+				//If it intersects, we use a little isOver variable and set it once, so our move-in stuff gets fired only once
+				if(!this.instance.isOver) {
+
+					this.instance.isOver = 1;
+					//Now we fake the start of dragging for the sortable instance,
+					//by cloning the list group item, appending it to the sortable and using it as inst.currentItem
+					//We can then fire the start event of the sortable with our passed browser event, and our own helper (so it doesn't create a new one)
+					this.instance.currentItem = $(that).clone().removeAttr("id").appendTo(this.instance.element).data("ui-sortable-item", true);
+					this.instance.options._helper = this.instance.options.helper; //Store helper option to later restore it
+					this.instance.options.helper = function() { return ui.helper[0]; };
+
+					event.target = this.instance.currentItem[0];
+					this.instance._mouseCapture(event, true);
+					this.instance._mouseStart(event, true, true);
+
+					//Because the browser event is way off the new appended portlet, we modify a couple of variables to reflect the changes
+					this.instance.offset.click.top = inst.offset.click.top;
+					this.instance.offset.click.left = inst.offset.click.left;
+					this.instance.offset.parent.left -= inst.offset.parent.left - this.instance.offset.parent.left;
+					this.instance.offset.parent.top -= inst.offset.parent.top - this.instance.offset.parent.top;
+
+					inst._trigger("toSortable", event);
+					inst.dropped = this.instance.element; //draggable revert needs that
+					//hack so receive/update callbacks work (mostly)
+					inst.currentItem = inst.element;
+					this.instance.fromOutside = inst;
+
+				}
+
+				//Provided we did all the previous steps, we can fire the drag event of the sortable on every draggable drag, when it intersects with the sortable
+				if(this.instance.currentItem) {
+					this.instance._mouseDrag(event);
+				}
+
+			} else {
+
+				//If it doesn't intersect with the sortable, and it intersected before,
+				//we fake the drag stop of the sortable, but make sure it doesn't remove the helper by using cancelHelperRemoval
+				if(this.instance.isOver) {
+
+					this.instance.isOver = 0;
+					this.instance.cancelHelperRemoval = true;
+
+					//Prevent reverting on this forced stop
+					this.instance.options.revert = false;
+
+					// The out event needs to be triggered independently
+					this.instance._trigger("out", event, this.instance._uiHash(this.instance));
+
+					this.instance._mouseStop(event, true);
+					this.instance.options.helper = this.instance.options._helper;
+
+					//Now we remove our currentItem, the list group clone again, and the placeholder, and animate the helper back to it's original size
+					this.instance.currentItem.remove();
+					if(this.instance.placeholder) {
+						this.instance.placeholder.remove();
+					}
+
+					inst._trigger("fromSortable", event);
+					inst.dropped = false; //draggable revert needs that
+				}
+
+			}
+
+		});
+
+	}
+});
+
+$.ui.plugin.add("draggable", "cursor", {
+	start: function() {
+		var t = $("body"), o = $(this).data("ui-draggable").options;
+		if (t.css("cursor")) {
+			o._cursor = t.css("cursor");
+		}
+		t.css("cursor", o.cursor);
+	},
+	stop: function() {
+		var o = $(this).data("ui-draggable").options;
+		if (o._cursor) {
+			$("body").css("cursor", o._cursor);
+		}
+	}
+});
+
+$.ui.plugin.add("draggable", "opacity", {
+	start: function(event, ui) {
+		var t = $(ui.helper), o = $(this).data("ui-draggable").options;
+		if(t.css("opacity")) {
+			o._opacity = t.css("opacity");
+		}
+		t.css("opacity", o.opacity);
+	},
+	stop: function(event, ui) {
+		var o = $(this).data("ui-draggable").options;
+		if(o._opacity) {
+			$(ui.helper).css("opacity", o._opacity);
+		}
+	}
+});
+
+$.ui.plugin.add("draggable", "scroll", {
+	start: function() {
+		var i = $(this).data("ui-draggable");
+		if(i.scrollParent[0] !== document && i.scrollParent[0].tagName !== "HTML") {
+			i.overflowOffset = i.scrollParent.offset();
+		}
+	},
+	drag: function( event ) {
+
+		var i = $(this).data("ui-draggable"), o = i.options, scrolled = false;
+
+		if(i.scrollParent[0] !== document && i.scrollParent[0].tagName !== "HTML") {
+
+			if(!o.axis || o.axis !== "x") {
+				if((i.overflowOffset.top + i.scrollParent[0].offsetHeight) - event.pageY < o.scrollSensitivity) {
+					i.scrollParent[0].scrollTop = scrolled = i.scrollParent[0].scrollTop + o.scrollSpeed;
+				} else if(event.pageY - i.overflowOffset.top < o.scrollSensitivity) {
+					i.scrollParent[0].scrollTop = scrolled = i.scrollParent[0].scrollTop - o.scrollSpeed;
+				}
+			}
+
+			if(!o.axis || o.axis !== "y") {
+				if((i.overflowOffset.left + i.scrollParent[0].offsetWidth) - event.pageX < o.scrollSensitivity) {
+					i.scrollParent[0].scrollLeft = scrolled = i.scrollParent[0].scrollLeft + o.scrollSpeed;
+				} else if(event.pageX - i.overflowOffset.left < o.scrollSensitivity) {
+					i.scrollParent[0].scrollLeft = scrolled = i.scrollParent[0].scrollLeft - o.scrollSpeed;
+				}
+			}
+
+		} else {
+
+			if(!o.axis || o.axis !== "x") {
+				if(event.pageY - $(document).scrollTop() < o.scrollSensitivity) {
+					scrolled = $(document).scrollTop($(document).scrollTop() - o.scrollSpeed);
+				} else if($(window).height() - (event.pageY - $(document).scrollTop()) < o.scrollSensitivity) {
+					scrolled = $(document).scrollTop($(document).scrollTop() + o.scrollSpeed);
+				}
+			}
+
+			if(!o.axis || o.axis !== "y") {
+				if(event.pageX - $(document).scrollLeft() < o.scrollSensitivity) {
+					scrolled = $(document).scrollLeft($(document).scrollLeft() - o.scrollSpeed);
+				} else if($(window).width() - (event.pageX - $(document).scrollLeft()) < o.scrollSensitivity) {
+					scrolled = $(document).scrollLeft($(document).scrollLeft() + o.scrollSpeed);
+				}
+			}
+
+		}
+
+		if(scrolled !== false && $.ui.ddmanager && !o.dropBehaviour) {
+			$.ui.ddmanager.prepareOffsets(i, event);
+		}
+
+	}
+});
+
+$.ui.plugin.add("draggable", "snap", {
+	start: function() {
+
+		var i = $(this).data("ui-draggable"),
+			o = i.options;
+
+		i.snapElements = [];
+
+		$(o.snap.constructor !== String ? ( o.snap.items || ":data(ui-draggable)" ) : o.snap).each(function() {
+			var $t = $(this),
+				$o = $t.offset();
+			if(this !== i.element[0]) {
+				i.snapElements.push({
+					item: this,
+					width: $t.outerWidth(), height: $t.outerHeight(),
+					top: $o.top, left: $o.left
+				});
+			}
+		});
+
+	},
+	drag: function(event, ui) {
+
+		var ts, bs, ls, rs, l, r, t, b, i, first,
+			inst = $(this).data("ui-draggable"),
+			o = inst.options,
+			d = o.snapTolerance,
+			x1 = ui.offset.left, x2 = x1 + inst.helperProportions.width,
+			y1 = ui.offset.top, y2 = y1 + inst.helperProportions.height;
+
+		for (i = inst.snapElements.length - 1; i >= 0; i--){
+
+			l = inst.snapElements[i].left;
+			r = l + inst.snapElements[i].width;
+			t = inst.snapElements[i].top;
+			b = t + inst.snapElements[i].height;
+
+			if ( x2 < l - d || x1 > r + d || y2 < t - d || y1 > b + d || !$.contains( inst.snapElements[ i ].item.ownerDocument, inst.snapElements[ i ].item ) ) {
+				if(inst.snapElements[i].snapping) {
+					(inst.options.snap.release && inst.options.snap.release.call(inst.element, event, $.extend(inst._uiHash(), { snapItem: inst.snapElements[i].item })));
+				}
+				inst.snapElements[i].snapping = false;
+				continue;
+			}
+
+			if(o.snapMode !== "inner") {
+				ts = Math.abs(t - y2) <= d;
+				bs = Math.abs(b - y1) <= d;
+				ls = Math.abs(l - x2) <= d;
+				rs = Math.abs(r - x1) <= d;
+				if(ts) {
+					ui.position.top = inst._convertPositionTo("relative", { top: t - inst.helperProportions.height, left: 0 }).top - inst.margins.top;
+				}
+				if(bs) {
+					ui.position.top = inst._convertPositionTo("relative", { top: b, left: 0 }).top - inst.margins.top;
+				}
+				if(ls) {
+					ui.position.left = inst._convertPositionTo("relative", { top: 0, left: l - inst.helperProportions.width }).left - inst.margins.left;
+				}
+				if(rs) {
+					ui.position.left = inst._convertPositionTo("relative", { top: 0, left: r }).left - inst.margins.left;
+				}
+			}
+
+			first = (ts || bs || ls || rs);
+
+			if(o.snapMode !== "outer") {
+				ts = Math.abs(t - y1) <= d;
+				bs = Math.abs(b - y2) <= d;
+				ls = Math.abs(l - x1) <= d;
+				rs = Math.abs(r - x2) <= d;
+				if(ts) {
+					ui.position.top = inst._convertPositionTo("relative", { top: t, left: 0 }).top - inst.margins.top;
+				}
+				if(bs) {
+					ui.position.top = inst._convertPositionTo("relative", { top: b - inst.helperProportions.height, left: 0 }).top - inst.margins.top;
+				}
+				if(ls) {
+					ui.position.left = inst._convertPositionTo("relative", { top: 0, left: l }).left - inst.margins.left;
+				}
+				if(rs) {
+					ui.position.left = inst._convertPositionTo("relative", { top: 0, left: r - inst.helperProportions.width }).left - inst.margins.left;
+				}
+			}
+
+			if(!inst.snapElements[i].snapping && (ts || bs || ls || rs || first)) {
+				(inst.options.snap.snap && inst.options.snap.snap.call(inst.element, event, $.extend(inst._uiHash(), { snapItem: inst.snapElements[i].item })));
+			}
+			inst.snapElements[i].snapping = (ts || bs || ls || rs || first);
+
+		}
+
+	}
+});
+
+$.ui.plugin.add("draggable", "stack", {
+	start: function() {
+		var min,
+			o = this.data("ui-draggable").options,
+			group = $.makeArray($(o.stack)).sort(function(a,b) {
+				return (parseInt($(a).css("zIndex"),10) || 0) - (parseInt($(b).css("zIndex"),10) || 0);
+			});
+
+		if (!group.length) { return; }
+
+		min = parseInt($(group[0]).css("zIndex"), 10) || 0;
+		$(group).each(function(i) {
+			$(this).css("zIndex", min + i);
+		});
+		this.css("zIndex", (min + group.length));
+	}
+});
+
+$.ui.plugin.add("draggable", "zIndex", {
+	start: function(event, ui) {
+		var t = $(ui.helper), o = $(this).data("ui-draggable").options;
+		if(t.css("zIndex")) {
+			o._zIndex = t.css("zIndex");
+		}
+		t.css("zIndex", o.zIndex);
+	},
+	stop: function(event, ui) {
+		var o = $(this).data("ui-draggable").options;
+		if(o._zIndex) {
+			$(ui.helper).css("zIndex", o._zIndex);
+		}
+	}
+});
+
+})(jQuery);
+;/*!
+ * jQuery UI Resizable 1.10.4
+ * http://jqueryui.com
+ *
+ * Copyright 2014 jQuery Foundation and other contributors
+ * Released under the MIT license.
+ * http://jquery.org/license
+ *
+ * http://api.jqueryui.com/resizable/
+ *
+ * Depends:
+ *	jquery.ui.core.js
+ *	jquery.ui.mouse.js
+ *	jquery.ui.widget.js
+ */
+(function( $, undefined ) {
+
+function num(v) {
+	return parseInt(v, 10) || 0;
+}
+
+function isNumber(value) {
+	return !isNaN(parseInt(value, 10));
+}
+
+$.widget("ui.resizable", $.ui.mouse, {
+	version: "1.10.4",
+	widgetEventPrefix: "resize",
+	options: {
+		alsoResize: false,
+		animate: false,
+		animateDuration: "slow",
+		animateEasing: "swing",
+		aspectRatio: false,
+		autoHide: false,
+		containment: false,
+		ghost: false,
+		grid: false,
+		handles: "e,s,se",
+		helper: false,
+		maxHeight: null,
+		maxWidth: null,
+		minHeight: 10,
+		minWidth: 10,
+		// See #7960
+		zIndex: 90,
+
+		// callbacks
+		resize: null,
+		start: null,
+		stop: null
+	},
+	_create: function() {
+
+		var n, i, handle, axis, hname,
+			that = this,
+			o = this.options;
+		this.element.addClass("ui-resizable");
+
+		$.extend(this, {
+			_aspectRatio: !!(o.aspectRatio),
+			aspectRatio: o.aspectRatio,
+			originalElement: this.element,
+			_proportionallyResizeElements: [],
+			_helper: o.helper || o.ghost || o.animate ? o.helper || "ui-resizable-helper" : null
+		});
+
+		//Wrap the element if it cannot hold child nodes
+		if(this.element[0].nodeName.match(/canvas|textarea|input|select|button|img/i)) {
+
+			//Create a wrapper element and set the wrapper to the new current internal element
+			this.element.wrap(
+				$("<div class='ui-wrapper' style='overflow: hidden;'></div>").css({
+					position: this.element.css("position"),
+					width: this.element.outerWidth(),
+					height: this.element.outerHeight(),
+					top: this.element.css("top"),
+					left: this.element.css("left")
+				})
+			);
+
+			//Overwrite the original this.element
+			this.element = this.element.parent().data(
+				"ui-resizable", this.element.data("ui-resizable")
+			);
+
+			this.elementIsWrapper = true;
+
+			//Move margins to the wrapper
+			this.element.css({ marginLeft: this.originalElement.css("marginLeft"), marginTop: this.originalElement.css("marginTop"), marginRight: this.originalElement.css("marginRight"), marginBottom: this.originalElement.css("marginBottom") });
+			this.originalElement.css({ marginLeft: 0, marginTop: 0, marginRight: 0, marginBottom: 0});
+
+			//Prevent Safari textarea resize
+			this.originalResizeStyle = this.originalElement.css("resize");
+			this.originalElement.css("resize", "none");
+
+			//Push the actual element to our proportionallyResize internal array
+			this._proportionallyResizeElements.push(this.originalElement.css({ position: "static", zoom: 1, display: "block" }));
+
+			// avoid IE jump (hard set the margin)
+			this.originalElement.css({ margin: this.originalElement.css("margin") });
+
+			// fix handlers offset
+			this._proportionallyResize();
+
+		}
+
+		this.handles = o.handles || (!$(".ui-resizable-handle", this.element).length ? "e,s,se" : { n: ".ui-resizable-n", e: ".ui-resizable-e", s: ".ui-resizable-s", w: ".ui-resizable-w", se: ".ui-resizable-se", sw: ".ui-resizable-sw", ne: ".ui-resizable-ne", nw: ".ui-resizable-nw" });
+		if(this.handles.constructor === String) {
+
+			if ( this.handles === "all") {
+				this.handles = "n,e,s,w,se,sw,ne,nw";
+			}
+
+			n = this.handles.split(",");
+			this.handles = {};
+
+			for(i = 0; i < n.length; i++) {
+
+				handle = $.trim(n[i]);
+				hname = "ui-resizable-"+handle;
+				axis = $("<div class='ui-resizable-handle " + hname + "'></div>");
+
+				// Apply zIndex to all handles - see #7960
+				axis.css({ zIndex: o.zIndex });
+
+				//TODO : What's going on here?
+				if ("se" === handle) {
+					axis.addClass("ui-icon ui-icon-gripsmall-diagonal-se");
+				}
+
+				//Insert into internal handles object and append to element
+				this.handles[handle] = ".ui-resizable-"+handle;
+				this.element.append(axis);
+			}
+
+		}
+
+		this._renderAxis = function(target) {
+
+			var i, axis, padPos, padWrapper;
+
+			target = target || this.element;
+
+			for(i in this.handles) {
+
+				if(this.handles[i].constructor === String) {
+					this.handles[i] = $(this.handles[i], this.element).show();
+				}
+
+				//Apply pad to wrapper element, needed to fix axis position (textarea, inputs, scrolls)
+				if (this.elementIsWrapper && this.originalElement[0].nodeName.match(/textarea|input|select|button/i)) {
+
+					axis = $(this.handles[i], this.element);
+
+					//Checking the correct pad and border
+					padWrapper = /sw|ne|nw|se|n|s/.test(i) ? axis.outerHeight() : axis.outerWidth();
+
+					//The padding type i have to apply...
+					padPos = [ "padding",
+						/ne|nw|n/.test(i) ? "Top" :
+						/se|sw|s/.test(i) ? "Bottom" :
+						/^e$/.test(i) ? "Right" : "Left" ].join("");
+
+					target.css(padPos, padWrapper);
+
+					this._proportionallyResize();
+
+				}
+
+				//TODO: What's that good for? There's not anything to be executed left
+				if(!$(this.handles[i]).length) {
+					continue;
+				}
+			}
+		};
+
+		//TODO: make renderAxis a prototype function
+		this._renderAxis(this.element);
+
+		this._handles = $(".ui-resizable-handle", this.element)
+			.disableSelection();
+
+		//Matching axis name
+		this._handles.mouseover(function() {
+			if (!that.resizing) {
+				if (this.className) {
+					axis = this.className.match(/ui-resizable-(se|sw|ne|nw|n|e|s|w)/i);
+				}
+				//Axis, default = se
+				that.axis = axis && axis[1] ? axis[1] : "se";
+			}
+		});
+
+		//If we want to auto hide the elements
+		if (o.autoHide) {
+			this._handles.hide();
+			$(this.element)
+				.addClass("ui-resizable-autohide")
+				.mouseenter(function() {
+					if (o.disabled) {
+						return;
+					}
+					$(this).removeClass("ui-resizable-autohide");
+					that._handles.show();
+				})
+				.mouseleave(function(){
+					if (o.disabled) {
+						return;
+					}
+					if (!that.resizing) {
+						$(this).addClass("ui-resizable-autohide");
+						that._handles.hide();
+					}
+				});
+		}
+
+		//Initialize the mouse interaction
+		this._mouseInit();
+
+	},
+
+	_destroy: function() {
+
+		this._mouseDestroy();
+
+		var wrapper,
+			_destroy = function(exp) {
+				$(exp).removeClass("ui-resizable ui-resizable-disabled ui-resizable-resizing")
+					.removeData("resizable").removeData("ui-resizable").unbind(".resizable").find(".ui-resizable-handle").remove();
+			};
+
+		//TODO: Unwrap at same DOM position
+		if (this.elementIsWrapper) {
+			_destroy(this.element);
+			wrapper = this.element;
+			this.originalElement.css({
+				position: wrapper.css("position"),
+				width: wrapper.outerWidth(),
+				height: wrapper.outerHeight(),
+				top: wrapper.css("top"),
+				left: wrapper.css("left")
+			}).insertAfter( wrapper );
+			wrapper.remove();
+		}
+
+		this.originalElement.css("resize", this.originalResizeStyle);
+		_destroy(this.originalElement);
+
+		return this;
+	},
+
+	_mouseCapture: function(event) {
+		var i, handle,
+			capture = false;
+
+		for (i in this.handles) {
+			handle = $(this.handles[i])[0];
+			if (handle === event.target || $.contains(handle, event.target)) {
+				capture = true;
+			}
+		}
+
+		return !this.options.disabled && capture;
+	},
+
+	_mouseStart: function(event) {
+
+		var curleft, curtop, cursor,
+			o = this.options,
+			iniPos = this.element.position(),
+			el = this.element;
+
+		this.resizing = true;
+
+		// bugfix for http://dev.jquery.com/ticket/1749
+		if ( (/absolute/).test( el.css("position") ) ) {
+			el.css({ position: "absolute", top: el.css("top"), left: el.css("left") });
+		} else if (el.is(".ui-draggable")) {
+			el.css({ position: "absolute", top: iniPos.top, left: iniPos.left });
+		}
+
+		this._renderProxy();
+
+		curleft = num(this.helper.css("left"));
+		curtop = num(this.helper.css("top"));
+
+		if (o.containment) {
+			curleft += $(o.containment).scrollLeft() || 0;
+			curtop += $(o.containment).scrollTop() || 0;
+		}
+
+		//Store needed variables
+		this.offset = this.helper.offset();
+		this.position = { left: curleft, top: curtop };
+		this.size = this._helper ? { width: this.helper.width(), height: this.helper.height() } : { width: el.width(), height: el.height() };
+		this.originalSize = this._helper ? { width: el.outerWidth(), height: el.outerHeight() } : { width: el.width(), height: el.height() };
+		this.originalPosition = { left: curleft, top: curtop };
+		this.sizeDiff = { width: el.outerWidth() - el.width(), height: el.outerHeight() - el.height() };
+		this.originalMousePosition = { left: event.pageX, top: event.pageY };
+
+		//Aspect Ratio
+		this.aspectRatio = (typeof o.aspectRatio === "number") ? o.aspectRatio : ((this.originalSize.width / this.originalSize.height) || 1);
+
+		cursor = $(".ui-resizable-" + this.axis).css("cursor");
+		$("body").css("cursor", cursor === "auto" ? this.axis + "-resize" : cursor);
+
+		el.addClass("ui-resizable-resizing");
+		this._propagate("start", event);
+		return true;
+	},
+
+	_mouseDrag: function(event) {
+
+		//Increase performance, avoid regex
+		var data,
+			el = this.helper, props = {},
+			smp = this.originalMousePosition,
+			a = this.axis,
+			prevTop = this.position.top,
+			prevLeft = this.position.left,
+			prevWidth = this.size.width,
+			prevHeight = this.size.height,
+			dx = (event.pageX-smp.left)||0,
+			dy = (event.pageY-smp.top)||0,
+			trigger = this._change[a];
+
+		if (!trigger) {
+			return false;
+		}
+
+		// Calculate the attrs that will be change
+		data = trigger.apply(this, [event, dx, dy]);
+
+		// Put this in the mouseDrag handler since the user can start pressing shift while resizing
+		this._updateVirtualBoundaries(event.shiftKey);
+		if (this._aspectRatio || event.shiftKey) {
+			data = this._updateRatio(data, event);
+		}
+
+		data = this._respectSize(data, event);
+
+		this._updateCache(data);
+
+		// plugins callbacks need to be called first
+		this._propagate("resize", event);
+
+		if (this.position.top !== prevTop) {
+			props.top = this.position.top + "px";
+		}
+		if (this.position.left !== prevLeft) {
+			props.left = this.position.left + "px";
+		}
+		if (this.size.width !== prevWidth) {
+			props.width = this.size.width + "px";
+		}
+		if (this.size.height !== prevHeight) {
+			props.height = this.size.height + "px";
+		}
+		el.css(props);
+
+		if (!this._helper && this._proportionallyResizeElements.length) {
+			this._proportionallyResize();
+		}
+
+		// Call the user callback if the element was resized
+		if ( ! $.isEmptyObject(props) ) {
+			this._trigger("resize", event, this.ui());
+		}
+
+		return false;
+	},
+
+	_mouseStop: function(event) {
+
+		this.resizing = false;
+		var pr, ista, soffseth, soffsetw, s, left, top,
+			o = this.options, that = this;
+
+		if(this._helper) {
+
+			pr = this._proportionallyResizeElements;
+			ista = pr.length && (/textarea/i).test(pr[0].nodeName);
+			soffseth = ista && $.ui.hasScroll(pr[0], "left") /* TODO - jump height */ ? 0 : that.sizeDiff.height;
+			soffsetw = ista ? 0 : that.sizeDiff.width;
+
+			s = { width: (that.helper.width()  - soffsetw), height: (that.helper.height() - soffseth) };
+			left = (parseInt(that.element.css("left"), 10) + (that.position.left - that.originalPosition.left)) || null;
+			top = (parseInt(that.element.css("top"), 10) + (that.position.top - that.originalPosition.top)) || null;
+
+			if (!o.animate) {
+				this.element.css($.extend(s, { top: top, left: left }));
+			}
+
+			that.helper.height(that.size.height);
+			that.helper.width(that.size.width);
+
+			if (this._helper && !o.animate) {
+				this._proportionallyResize();
+			}
+		}
+
+		$("body").css("cursor", "auto");
+
+		this.element.removeClass("ui-resizable-resizing");
+
+		this._propagate("stop", event);
+
+		if (this._helper) {
+			this.helper.remove();
+		}
+
+		return false;
+
+	},
+
+	_updateVirtualBoundaries: function(forceAspectRatio) {
+		var pMinWidth, pMaxWidth, pMinHeight, pMaxHeight, b,
+			o = this.options;
+
+		b = {
+			minWidth: isNumber(o.minWidth) ? o.minWidth : 0,
+			maxWidth: isNumber(o.maxWidth) ? o.maxWidth : Infinity,
+			minHeight: isNumber(o.minHeight) ? o.minHeight : 0,
+			maxHeight: isNumber(o.maxHeight) ? o.maxHeight : Infinity
+		};
+
+		if(this._aspectRatio || forceAspectRatio) {
+			// We want to create an enclosing box whose aspect ration is the requested one
+			// First, compute the "projected" size for each dimension based on the aspect ratio and other dimension
+			pMinWidth = b.minHeight * this.aspectRatio;
+			pMinHeight = b.minWidth / this.aspectRatio;
+			pMaxWidth = b.maxHeight * this.aspectRatio;
+			pMaxHeight = b.maxWidth / this.aspectRatio;
+
+			if(pMinWidth > b.minWidth) {
+				b.minWidth = pMinWidth;
+			}
+			if(pMinHeight > b.minHeight) {
+				b.minHeight = pMinHeight;
+			}
+			if(pMaxWidth < b.maxWidth) {
+				b.maxWidth = pMaxWidth;
+			}
+			if(pMaxHeight < b.maxHeight) {
+				b.maxHeight = pMaxHeight;
+			}
+		}
+		this._vBoundaries = b;
+	},
+
+	_updateCache: function(data) {
+		this.offset = this.helper.offset();
+		if (isNumber(data.left)) {
+			this.position.left = data.left;
+		}
+		if (isNumber(data.top)) {
+			this.position.top = data.top;
+		}
+		if (isNumber(data.height)) {
+			this.size.height = data.height;
+		}
+		if (isNumber(data.width)) {
+			this.size.width = data.width;
+		}
+	},
+
+	_updateRatio: function( data ) {
+
+		var cpos = this.position,
+			csize = this.size,
+			a = this.axis;
+
+		if (isNumber(data.height)) {
+			data.width = (data.height * this.aspectRatio);
+		} else if (isNumber(data.width)) {
+			data.height = (data.width / this.aspectRatio);
+		}
+
+		if (a === "sw") {
+			data.left = cpos.left + (csize.width - data.width);
+			data.top = null;
+		}
+		if (a === "nw") {
+			data.top = cpos.top + (csize.height - data.height);
+			data.left = cpos.left + (csize.width - data.width);
+		}
+
+		return data;
+	},
+
+	_respectSize: function( data ) {
+
+		var o = this._vBoundaries,
+			a = this.axis,
+			ismaxw = isNumber(data.width) && o.maxWidth && (o.maxWidth < data.width), ismaxh = isNumber(data.height) && o.maxHeight && (o.maxHeight < data.height),
+			isminw = isNumber(data.width) && o.minWidth && (o.minWidth > data.width), isminh = isNumber(data.height) && o.minHeight && (o.minHeight > data.height),
+			dw = this.originalPosition.left + this.originalSize.width,
+			dh = this.position.top + this.size.height,
+			cw = /sw|nw|w/.test(a), ch = /nw|ne|n/.test(a);
+		if (isminw) {
+			data.width = o.minWidth;
+		}
+		if (isminh) {
+			data.height = o.minHeight;
+		}
+		if (ismaxw) {
+			data.width = o.maxWidth;
+		}
+		if (ismaxh) {
+			data.height = o.maxHeight;
+		}
+
+		if (isminw && cw) {
+			data.left = dw - o.minWidth;
+		}
+		if (ismaxw && cw) {
+			data.left = dw - o.maxWidth;
+		}
+		if (isminh && ch) {
+			data.top = dh - o.minHeight;
+		}
+		if (ismaxh && ch) {
+			data.top = dh - o.maxHeight;
+		}
+
+		// fixing jump error on top/left - bug #2330
+		if (!data.width && !data.height && !data.left && data.top) {
+			data.top = null;
+		} else if (!data.width && !data.height && !data.top && data.left) {
+			data.left = null;
+		}
+
+		return data;
+	},
+
+	_proportionallyResize: function() {
+
+		if (!this._proportionallyResizeElements.length) {
+			return;
+		}
+
+		var i, j, borders, paddings, prel,
+			element = this.helper || this.element;
+
+		for ( i=0; i < this._proportionallyResizeElements.length; i++) {
+
+			prel = this._proportionallyResizeElements[i];
+
+			if (!this.borderDif) {
+				this.borderDif = [];
+				borders = [prel.css("borderTopWidth"), prel.css("borderRightWidth"), prel.css("borderBottomWidth"), prel.css("borderLeftWidth")];
+				paddings = [prel.css("paddingTop"), prel.css("paddingRight"), prel.css("paddingBottom"), prel.css("paddingLeft")];
+
+				for ( j = 0; j < borders.length; j++ ) {
+					this.borderDif[ j ] = ( parseInt( borders[ j ], 10 ) || 0 ) + ( parseInt( paddings[ j ], 10 ) || 0 );
+				}
+			}
+
+			prel.css({
+				height: (element.height() - this.borderDif[0] - this.borderDif[2]) || 0,
+				width: (element.width() - this.borderDif[1] - this.borderDif[3]) || 0
+			});
+
+		}
+
+	},
+
+	_renderProxy: function() {
+
+		var el = this.element, o = this.options;
+		this.elementOffset = el.offset();
+
+		if(this._helper) {
+
+			this.helper = this.helper || $("<div style='overflow:hidden;'></div>");
+
+			this.helper.addClass(this._helper).css({
+				width: this.element.outerWidth() - 1,
+				height: this.element.outerHeight() - 1,
+				position: "absolute",
+				left: this.elementOffset.left +"px",
+				top: this.elementOffset.top +"px",
+				zIndex: ++o.zIndex //TODO: Don't modify option
+			});
+
+			this.helper
+				.appendTo("body")
+				.disableSelection();
+
+		} else {
+			this.helper = this.element;
+		}
+
+	},
+
+	_change: {
+		e: function(event, dx) {
+			return { width: this.originalSize.width + dx };
+		},
+		w: function(event, dx) {
+			var cs = this.originalSize, sp = this.originalPosition;
+			return { left: sp.left + dx, width: cs.width - dx };
+		},
+		n: function(event, dx, dy) {
+			var cs = this.originalSize, sp = this.originalPosition;
+			return { top: sp.top + dy, height: cs.height - dy };
+		},
+		s: function(event, dx, dy) {
+			return { height: this.originalSize.height + dy };
+		},
+		se: function(event, dx, dy) {
+			return $.extend(this._change.s.apply(this, arguments), this._change.e.apply(this, [event, dx, dy]));
+		},
+		sw: function(event, dx, dy) {
+			return $.extend(this._change.s.apply(this, arguments), this._change.w.apply(this, [event, dx, dy]));
+		},
+		ne: function(event, dx, dy) {
+			return $.extend(this._change.n.apply(this, arguments), this._change.e.apply(this, [event, dx, dy]));
+		},
+		nw: function(event, dx, dy) {
+			return $.extend(this._change.n.apply(this, arguments), this._change.w.apply(this, [event, dx, dy]));
+		}
+	},
+
+	_propagate: function(n, event) {
+		$.ui.plugin.call(this, n, [event, this.ui()]);
+		(n !== "resize" && this._trigger(n, event, this.ui()));
+	},
+
+	plugins: {},
+
+	ui: function() {
+		return {
+			originalElement: this.originalElement,
+			element: this.element,
+			helper: this.helper,
+			position: this.position,
+			size: this.size,
+			originalSize: this.originalSize,
+			originalPosition: this.originalPosition
+		};
+	}
+
+});
+
+/*
+ * Resizable Extensions
+ */
+
+$.ui.plugin.add("resizable", "animate", {
+
+	stop: function( event ) {
+		var that = $(this).data("ui-resizable"),
+			o = that.options,
+			pr = that._proportionallyResizeElements,
+			ista = pr.length && (/textarea/i).test(pr[0].nodeName),
+			soffseth = ista && $.ui.hasScroll(pr[0], "left") /* TODO - jump height */ ? 0 : that.sizeDiff.height,
+			soffsetw = ista ? 0 : that.sizeDiff.width,
+			style = { width: (that.size.width - soffsetw), height: (that.size.height - soffseth) },
+			left = (parseInt(that.element.css("left"), 10) + (that.position.left - that.originalPosition.left)) || null,
+			top = (parseInt(that.element.css("top"), 10) + (that.position.top - that.originalPosition.top)) || null;
+
+		that.element.animate(
+			$.extend(style, top && left ? { top: top, left: left } : {}), {
+				duration: o.animateDuration,
+				easing: o.animateEasing,
+				step: function() {
+
+					var data = {
+						width: parseInt(that.element.css("width"), 10),
+						height: parseInt(that.element.css("height"), 10),
+						top: parseInt(that.element.css("top"), 10),
+						left: parseInt(that.element.css("left"), 10)
+					};
+
+					if (pr && pr.length) {
+						$(pr[0]).css({ width: data.width, height: data.height });
+					}
+
+					// propagating resize, and updating values for each animation step
+					that._updateCache(data);
+					that._propagate("resize", event);
+
+				}
+			}
+		);
+	}
+
+});
+
+$.ui.plugin.add("resizable", "containment", {
+
+	start: function() {
+		var element, p, co, ch, cw, width, height,
+			that = $(this).data("ui-resizable"),
+			o = that.options,
+			el = that.element,
+			oc = o.containment,
+			ce = (oc instanceof $) ? oc.get(0) : (/parent/.test(oc)) ? el.parent().get(0) : oc;
+
+		if (!ce) {
+			return;
+		}
+
+		that.containerElement = $(ce);
+
+		if (/document/.test(oc) || oc === document) {
+			that.containerOffset = { left: 0, top: 0 };
+			that.containerPosition = { left: 0, top: 0 };
+
+			that.parentData = {
+				element: $(document), left: 0, top: 0,
+				width: $(document).width(), height: $(document).height() || document.body.parentNode.scrollHeight
+			};
+		}
+
+		// i'm a node, so compute top, left, right, bottom
+		else {
+			element = $(ce);
+			p = [];
+			$([ "Top", "Right", "Left", "Bottom" ]).each(function(i, name) { p[i] = num(element.css("padding" + name)); });
+
+			that.containerOffset = element.offset();
+			that.containerPosition = element.position();
+			that.containerSize = { height: (element.innerHeight() - p[3]), width: (element.innerWidth() - p[1]) };
+
+			co = that.containerOffset;
+			ch = that.containerSize.height;
+			cw = that.containerSize.width;
+			width = ($.ui.hasScroll(ce, "left") ? ce.scrollWidth : cw );
+			height = ($.ui.hasScroll(ce) ? ce.scrollHeight : ch);
+
+			that.parentData = {
+				element: ce, left: co.left, top: co.top, width: width, height: height
+			};
+		}
+	},
+
+	resize: function( event ) {
+		var woset, hoset, isParent, isOffsetRelative,
+			that = $(this).data("ui-resizable"),
+			o = that.options,
+			co = that.containerOffset, cp = that.position,
+			pRatio = that._aspectRatio || event.shiftKey,
+			cop = { top:0, left:0 }, ce = that.containerElement;
+
+		if (ce[0] !== document && (/static/).test(ce.css("position"))) {
+			cop = co;
+		}
+
+		if (cp.left < (that._helper ? co.left : 0)) {
+			that.size.width = that.size.width + (that._helper ? (that.position.left - co.left) : (that.position.left - cop.left));
+			if (pRatio) {
+				that.size.height = that.size.width / that.aspectRatio;
+			}
+			that.position.left = o.helper ? co.left : 0;
+		}
+
+		if (cp.top < (that._helper ? co.top : 0)) {
+			that.size.height = that.size.height + (that._helper ? (that.position.top - co.top) : that.position.top);
+			if (pRatio) {
+				that.size.width = that.size.height * that.aspectRatio;
+			}
+			that.position.top = that._helper ? co.top : 0;
+		}
+
+		that.offset.left = that.parentData.left+that.position.left;
+		that.offset.top = that.parentData.top+that.position.top;
+
+		woset = Math.abs( (that._helper ? that.offset.left - cop.left : (that.offset.left - cop.left)) + that.sizeDiff.width );
+		hoset = Math.abs( (that._helper ? that.offset.top - cop.top : (that.offset.top - co.top)) + that.sizeDiff.height );
+
+		isParent = that.containerElement.get(0) === that.element.parent().get(0);
+		isOffsetRelative = /relative|absolute/.test(that.containerElement.css("position"));
+
+		if ( isParent && isOffsetRelative ) {
+			woset -= Math.abs( that.parentData.left );
+		}
+
+		if (woset + that.size.width >= that.parentData.width) {
+			that.size.width = that.parentData.width - woset;
+			if (pRatio) {
+				that.size.height = that.size.width / that.aspectRatio;
+			}
+		}
+
+		if (hoset + that.size.height >= that.parentData.height) {
+			that.size.height = that.parentData.height - hoset;
+			if (pRatio) {
+				that.size.width = that.size.height * that.aspectRatio;
+			}
+		}
+	},
+
+	stop: function(){
+		var that = $(this).data("ui-resizable"),
+			o = that.options,
+			co = that.containerOffset,
+			cop = that.containerPosition,
+			ce = that.containerElement,
+			helper = $(that.helper),
+			ho = helper.offset(),
+			w = helper.outerWidth() - that.sizeDiff.width,
+			h = helper.outerHeight() - that.sizeDiff.height;
+
+		if (that._helper && !o.animate && (/relative/).test(ce.css("position"))) {
+			$(this).css({ left: ho.left - cop.left - co.left, width: w, height: h });
+		}
+
+		if (that._helper && !o.animate && (/static/).test(ce.css("position"))) {
+			$(this).css({ left: ho.left - cop.left - co.left, width: w, height: h });
+		}
+
+	}
+});
+
+$.ui.plugin.add("resizable", "alsoResize", {
+
+	start: function () {
+		var that = $(this).data("ui-resizable"),
+			o = that.options,
+			_store = function (exp) {
+				$(exp).each(function() {
+					var el = $(this);
+					el.data("ui-resizable-alsoresize", {
+						width: parseInt(el.width(), 10), height: parseInt(el.height(), 10),
+						left: parseInt(el.css("left"), 10), top: parseInt(el.css("top"), 10)
+					});
+				});
+			};
+
+		if (typeof(o.alsoResize) === "object" && !o.alsoResize.parentNode) {
+			if (o.alsoResize.length) { o.alsoResize = o.alsoResize[0]; _store(o.alsoResize); }
+			else { $.each(o.alsoResize, function (exp) { _store(exp); }); }
+		}else{
+			_store(o.alsoResize);
+		}
+	},
+
+	resize: function (event, ui) {
+		var that = $(this).data("ui-resizable"),
+			o = that.options,
+			os = that.originalSize,
+			op = that.originalPosition,
+			delta = {
+				height: (that.size.height - os.height) || 0, width: (that.size.width - os.width) || 0,
+				top: (that.position.top - op.top) || 0, left: (that.position.left - op.left) || 0
+			},
+
+			_alsoResize = function (exp, c) {
+				$(exp).each(function() {
+					var el = $(this), start = $(this).data("ui-resizable-alsoresize"), style = {},
+						css = c && c.length ? c : el.parents(ui.originalElement[0]).length ? ["width", "height"] : ["width", "height", "top", "left"];
+
+					$.each(css, function (i, prop) {
+						var sum = (start[prop]||0) + (delta[prop]||0);
+						if (sum && sum >= 0) {
+							style[prop] = sum || null;
+						}
+					});
+
+					el.css(style);
+				});
+			};
+
+		if (typeof(o.alsoResize) === "object" && !o.alsoResize.nodeType) {
+			$.each(o.alsoResize, function (exp, c) { _alsoResize(exp, c); });
+		}else{
+			_alsoResize(o.alsoResize);
+		}
+	},
+
+	stop: function () {
+		$(this).removeData("resizable-alsoresize");
+	}
+});
+
+$.ui.plugin.add("resizable", "ghost", {
+
+	start: function() {
+
+		var that = $(this).data("ui-resizable"), o = that.options, cs = that.size;
+
+		that.ghost = that.originalElement.clone();
+		that.ghost
+			.css({ opacity: 0.25, display: "block", position: "relative", height: cs.height, width: cs.width, margin: 0, left: 0, top: 0 })
+			.addClass("ui-resizable-ghost")
+			.addClass(typeof o.ghost === "string" ? o.ghost : "");
+
+		that.ghost.appendTo(that.helper);
+
+	},
+
+	resize: function(){
+		var that = $(this).data("ui-resizable");
+		if (that.ghost) {
+			that.ghost.css({ position: "relative", height: that.size.height, width: that.size.width });
+		}
+	},
+
+	stop: function() {
+		var that = $(this).data("ui-resizable");
+		if (that.ghost && that.helper) {
+			that.helper.get(0).removeChild(that.ghost.get(0));
+		}
+	}
+
+});
+
+$.ui.plugin.add("resizable", "grid", {
+
+	resize: function() {
+		var that = $(this).data("ui-resizable"),
+			o = that.options,
+			cs = that.size,
+			os = that.originalSize,
+			op = that.originalPosition,
+			a = that.axis,
+			grid = typeof o.grid === "number" ? [o.grid, o.grid] : o.grid,
+			gridX = (grid[0]||1),
+			gridY = (grid[1]||1),
+			ox = Math.round((cs.width - os.width) / gridX) * gridX,
+			oy = Math.round((cs.height - os.height) / gridY) * gridY,
+			newWidth = os.width + ox,
+			newHeight = os.height + oy,
+			isMaxWidth = o.maxWidth && (o.maxWidth < newWidth),
+			isMaxHeight = o.maxHeight && (o.maxHeight < newHeight),
+			isMinWidth = o.minWidth && (o.minWidth > newWidth),
+			isMinHeight = o.minHeight && (o.minHeight > newHeight);
+
+		o.grid = grid;
+
+		if (isMinWidth) {
+			newWidth = newWidth + gridX;
+		}
+		if (isMinHeight) {
+			newHeight = newHeight + gridY;
+		}
+		if (isMaxWidth) {
+			newWidth = newWidth - gridX;
+		}
+		if (isMaxHeight) {
+			newHeight = newHeight - gridY;
+		}
+
+		if (/^(se|s|e)$/.test(a)) {
+			that.size.width = newWidth;
+			that.size.height = newHeight;
+		} else if (/^(ne)$/.test(a)) {
+			that.size.width = newWidth;
+			that.size.height = newHeight;
+			that.position.top = op.top - oy;
+		} else if (/^(sw)$/.test(a)) {
+			that.size.width = newWidth;
+			that.size.height = newHeight;
+			that.position.left = op.left - ox;
+		} else {
+			if ( newHeight - gridY > 0 ) {
+				that.size.height = newHeight;
+				that.position.top = op.top - oy;
+			} else {
+				that.size.height = gridY;
+				that.position.top = op.top + os.height - gridY;
+			}
+			if ( newWidth - gridX > 0 ) {
+				that.size.width = newWidth;
+				that.position.left = op.left - ox;
+			} else {
+				that.size.width = gridX;
+				that.position.left = op.left + os.width - gridX;
+			}
+		}
+	}
+
+});
+
+})(jQuery);
+;/*!
+ * jQuery UI Button 1.10.4
+ * http://jqueryui.com
+ *
+ * Copyright 2014 jQuery Foundation and other contributors
+ * Released under the MIT license.
+ * http://jquery.org/license
+ *
+ * http://api.jqueryui.com/button/
+ *
+ * Depends:
+ *	jquery.ui.core.js
+ *	jquery.ui.widget.js
+ */
+(function( $, undefined ) {
+
+var lastActive,
+	baseClasses = "ui-button ui-widget ui-state-default ui-corner-all",
+	typeClasses = "ui-button-icons-only ui-button-icon-only ui-button-text-icons ui-button-text-icon-primary ui-button-text-icon-secondary ui-button-text-only",
+	formResetHandler = function() {
+		var form = $( this );
+		setTimeout(function() {
+			form.find( ":ui-button" ).button( "refresh" );
+		}, 1 );
+	},
+	radioGroup = function( radio ) {
+		var name = radio.name,
+			form = radio.form,
+			radios = $( [] );
+		if ( name ) {
+			name = name.replace( /'/g, "\\'" );
+			if ( form ) {
+				radios = $( form ).find( "[name='" + name + "']" );
+			} else {
+				radios = $( "[name='" + name + "']", radio.ownerDocument )
+					.filter(function() {
+						return !this.form;
+					});
+			}
+		}
+		return radios;
+	};
+
+$.widget( "ui.button", {
+	version: "1.10.4",
+	defaultElement: "<button>",
+	options: {
+		disabled: null,
+		text: true,
+		label: null,
+		icons: {
+			primary: null,
+			secondary: null
+		}
+	},
+	_create: function() {
+		this.element.closest( "form" )
+			.unbind( "reset" + this.eventNamespace )
+			.bind( "reset" + this.eventNamespace, formResetHandler );
+
+		if ( typeof this.options.disabled !== "boolean" ) {
+			this.options.disabled = !!this.element.prop( "disabled" );
+		} else {
+			this.element.prop( "disabled", this.options.disabled );
+		}
+
+		this._determineButtonType();
+		this.hasTitle = !!this.buttonElement.attr( "title" );
+
+		var that = this,
+			options = this.options,
+			toggleButton = this.type === "checkbox" || this.type === "radio",
+			activeClass = !toggleButton ? "ui-state-active" : "";
+
+		if ( options.label === null ) {
+			options.label = (this.type === "input" ? this.buttonElement.val() : this.buttonElement.html());
+		}
+
+		this._hoverable( this.buttonElement );
+
+		this.buttonElement
+			.addClass( baseClasses )
+			.attr( "role", "button" )
+			.bind( "mouseenter" + this.eventNamespace, function() {
+				if ( options.disabled ) {
+					return;
+				}
+				if ( this === lastActive ) {
+					$( this ).addClass( "ui-state-active" );
+				}
+			})
+			.bind( "mouseleave" + this.eventNamespace, function() {
+				if ( options.disabled ) {
+					return;
+				}
+				$( this ).removeClass( activeClass );
+			})
+			.bind( "click" + this.eventNamespace, function( event ) {
+				if ( options.disabled ) {
+					event.preventDefault();
+					event.stopImmediatePropagation();
+				}
+			});
+
+		// Can't use _focusable() because the element that receives focus
+		// and the element that gets the ui-state-focus class are different
+		this._on({
+			focus: function() {
+				this.buttonElement.addClass( "ui-state-focus" );
+			},
+			blur: function() {
+				this.buttonElement.removeClass( "ui-state-focus" );
+			}
+		});
+
+		if ( toggleButton ) {
+			this.element.bind( "change" + this.eventNamespace, function() {
+				that.refresh();
+			});
+		}
+
+		if ( this.type === "checkbox" ) {
+			this.buttonElement.bind( "click" + this.eventNamespace, function() {
+				if ( options.disabled ) {
+					return false;
+				}
+			});
+		} else if ( this.type === "radio" ) {
+			this.buttonElement.bind( "click" + this.eventNamespace, function() {
+				if ( options.disabled ) {
+					return false;
+				}
+				$( this ).addClass( "ui-state-active" );
+				that.buttonElement.attr( "aria-pressed", "true" );
+
+				var radio = that.element[ 0 ];
+				radioGroup( radio )
+					.not( radio )
+					.map(function() {
+						return $( this ).button( "widget" )[ 0 ];
+					})
+					.removeClass( "ui-state-active" )
+					.attr( "aria-pressed", "false" );
+			});
+		} else {
+			this.buttonElement
+				.bind( "mousedown" + this.eventNamespace, function() {
+					if ( options.disabled ) {
+						return false;
+					}
+					$( this ).addClass( "ui-state-active" );
+					lastActive = this;
+					that.document.one( "mouseup", function() {
+						lastActive = null;
+					});
+				})
+				.bind( "mouseup" + this.eventNamespace, function() {
+					if ( options.disabled ) {
+						return false;
+					}
+					$( this ).removeClass( "ui-state-active" );
+				})
+				.bind( "keydown" + this.eventNamespace, function(event) {
+					if ( options.disabled ) {
+						return false;
+					}
+					if ( event.keyCode === $.ui.keyCode.SPACE || event.keyCode === $.ui.keyCode.ENTER ) {
+						$( this ).addClass( "ui-state-active" );
+					}
+				})
+				// see #8559, we bind to blur here in case the button element loses
+				// focus between keydown and keyup, it would be left in an "active" state
+				.bind( "keyup" + this.eventNamespace + " blur" + this.eventNamespace, function() {
+					$( this ).removeClass( "ui-state-active" );
+				});
+
+			if ( this.buttonElement.is("a") ) {
+				this.buttonElement.keyup(function(event) {
+					if ( event.keyCode === $.ui.keyCode.SPACE ) {
+						// TODO pass through original event correctly (just as 2nd argument doesn't work)
+						$( this ).click();
+					}
+				});
+			}
+		}
+
+		// TODO: pull out $.Widget's handling for the disabled option into
+		// $.Widget.prototype._setOptionDisabled so it's easy to proxy and can
+		// be overridden by individual plugins
+		this._setOption( "disabled", options.disabled );
+		this._resetButton();
+	},
+
+	_determineButtonType: function() {
+		var ancestor, labelSelector, checked;
+
+		if ( this.element.is("[type=checkbox]") ) {
+			this.type = "checkbox";
+		} else if ( this.element.is("[type=radio]") ) {
+			this.type = "radio";
+		} else if ( this.element.is("input") ) {
+			this.type = "input";
+		} else {
+			this.type = "button";
+		}
+
+		if ( this.type === "checkbox" || this.type === "radio" ) {
+			// we don't search against the document in case the element
+			// is disconnected from the DOM
+			ancestor = this.element.parents().last();
+			labelSelector = "label[for='" + this.element.attr("id") + "']";
+			this.buttonElement = ancestor.find( labelSelector );
+			if ( !this.buttonElement.length ) {
+				ancestor = ancestor.length ? ancestor.siblings() : this.element.siblings();
+				this.buttonElement = ancestor.filter( labelSelector );
+				if ( !this.buttonElement.length ) {
+					this.buttonElement = ancestor.find( labelSelector );
+				}
+			}
+			this.element.addClass( "ui-helper-hidden-accessible" );
+
+			checked = this.element.is( ":checked" );
+			if ( checked ) {
+				this.buttonElement.addClass( "ui-state-active" );
+			}
+			this.buttonElement.prop( "aria-pressed", checked );
+		} else {
+			this.buttonElement = this.element;
+		}
+	},
+
+	widget: function() {
+		return this.buttonElement;
+	},
+
+	_destroy: function() {
+		this.element
+			.removeClass( "ui-helper-hidden-accessible" );
+		this.buttonElement
+			.removeClass( baseClasses + " ui-state-active " + typeClasses )
+			.removeAttr( "role" )
+			.removeAttr( "aria-pressed" )
+			.html( this.buttonElement.find(".ui-button-text").html() );
+
+		if ( !this.hasTitle ) {
+			this.buttonElement.removeAttr( "title" );
+		}
+	},
+
+	_setOption: function( key, value ) {
+		this._super( key, value );
+		if ( key === "disabled" ) {
+			this.element.prop( "disabled", !!value );
+			if ( value ) {
+				this.buttonElement.removeClass( "ui-state-focus" );
+			}
+			return;
+		}
+		this._resetButton();
+	},
+
+	refresh: function() {
+		//See #8237 & #8828
+		var isDisabled = this.element.is( "input, button" ) ? this.element.is( ":disabled" ) : this.element.hasClass( "ui-button-disabled" );
+
+		if ( isDisabled !== this.options.disabled ) {
+			this._setOption( "disabled", isDisabled );
+		}
+		if ( this.type === "radio" ) {
+			radioGroup( this.element[0] ).each(function() {
+				if ( $( this ).is( ":checked" ) ) {
+					$( this ).button( "widget" )
+						.addClass( "ui-state-active" )
+						.attr( "aria-pressed", "true" );
+				} else {
+					$( this ).button( "widget" )
+						.removeClass( "ui-state-active" )
+						.attr( "aria-pressed", "false" );
+				}
+			});
+		} else if ( this.type === "checkbox" ) {
+			if ( this.element.is( ":checked" ) ) {
+				this.buttonElement
+					.addClass( "ui-state-active" )
+					.attr( "aria-pressed", "true" );
+			} else {
+				this.buttonElement
+					.removeClass( "ui-state-active" )
+					.attr( "aria-pressed", "false" );
+			}
+		}
+	},
+
+	_resetButton: function() {
+		if ( this.type === "input" ) {
+			if ( this.options.label ) {
+				this.element.val( this.options.label );
+			}
+			return;
+		}
+		var buttonElement = this.buttonElement.removeClass( typeClasses ),
+			buttonText = $( "<span></span>", this.document[0] )
+				.addClass( "ui-button-text" )
+				.html( this.options.label )
+				.appendTo( buttonElement.empty() )
+				.text(),
+			icons = this.options.icons,
+			multipleIcons = icons.primary && icons.secondary,
+			buttonClasses = [];
+
+		if ( icons.primary || icons.secondary ) {
+			if ( this.options.text ) {
+				buttonClasses.push( "ui-button-text-icon" + ( multipleIcons ? "s" : ( icons.primary ? "-primary" : "-secondary" ) ) );
+			}
+
+			if ( icons.primary ) {
+				buttonElement.prepend( "<span class='ui-button-icon-primary ui-icon " + icons.primary + "'></span>" );
+			}
+
+			if ( icons.secondary ) {
+				buttonElement.append( "<span class='ui-button-icon-secondary ui-icon " + icons.secondary + "'></span>" );
+			}
+
+			if ( !this.options.text ) {
+				buttonClasses.push( multipleIcons ? "ui-button-icons-only" : "ui-button-icon-only" );
+
+				if ( !this.hasTitle ) {
+					buttonElement.attr( "title", $.trim( buttonText ) );
+				}
+			}
+		} else {
+			buttonClasses.push( "ui-button-text-only" );
+		}
+		buttonElement.addClass( buttonClasses.join( " " ) );
+	}
+});
+
+$.widget( "ui.buttonset", {
+	version: "1.10.4",
+	options: {
+		items: "button, input[type=button], input[type=submit], input[type=reset], input[type=checkbox], input[type=radio], a, :data(ui-button)"
+	},
+
+	_create: function() {
+		this.element.addClass( "ui-buttonset" );
+	},
+
+	_init: function() {
+		this.refresh();
+	},
+
+	_setOption: function( key, value ) {
+		if ( key === "disabled" ) {
+			this.buttons.button( "option", key, value );
+		}
+
+		this._super( key, value );
+	},
+
+	refresh: function() {
+		var rtl = this.element.css( "direction" ) === "rtl";
+
+		this.buttons = this.element.find( this.options.items )
+			.filter( ":ui-button" )
+				.button( "refresh" )
+			.end()
+			.not( ":ui-button" )
+				.button()
+			.end()
+			.map(function() {
+				return $( this ).button( "widget" )[ 0 ];
+			})
+				.removeClass( "ui-corner-all ui-corner-left ui-corner-right" )
+				.filter( ":first" )
+					.addClass( rtl ? "ui-corner-right" : "ui-corner-left" )
+				.end()
+				.filter( ":last" )
+					.addClass( rtl ? "ui-corner-left" : "ui-corner-right" )
+				.end()
+			.end();
+	},
+
+	_destroy: function() {
+		this.element.removeClass( "ui-buttonset" );
+		this.buttons
+			.map(function() {
+				return $( this ).button( "widget" )[ 0 ];
+			})
+				.removeClass( "ui-corner-left ui-corner-right" )
+			.end()
+			.button( "destroy" );
+	}
+});
+
+}( jQuery ) );
+;/*!
+ * jQuery UI Dialog 1.10.4
+ * http://jqueryui.com
+ *
+ * Copyright 2014 jQuery Foundation and other contributors
+ * Released under the MIT license.
+ * http://jquery.org/license
+ *
+ * http://api.jqueryui.com/dialog/
+ *
+ * Depends:
+ *	jquery.ui.core.js
+ *	jquery.ui.widget.js
+ *  jquery.ui.button.js
+ *	jquery.ui.draggable.js
+ *	jquery.ui.mouse.js
+ *	jquery.ui.position.js
+ *	jquery.ui.resizable.js
+ */
+(function( $, undefined ) {
+
+var sizeRelatedOptions = {
+		buttons: true,
+		height: true,
+		maxHeight: true,
+		maxWidth: true,
+		minHeight: true,
+		minWidth: true,
+		width: true
+	},
+	resizableRelatedOptions = {
+		maxHeight: true,
+		maxWidth: true,
+		minHeight: true,
+		minWidth: true
+	};
+
+$.widget( "ui.dialog", {
+	version: "1.10.4",
+	options: {
+		appendTo: "body",
+		autoOpen: true,
+		buttons: [],
+		closeOnEscape: true,
+		closeText: "close",
+		dialogClass: "",
+		draggable: true,
+		hide: null,
+		height: "auto",
+		maxHeight: null,
+		maxWidth: null,
+		minHeight: 150,
+		minWidth: 150,
+		modal: false,
+		position: {
+			my: "center",
+			at: "center",
+			of: window,
+			collision: "fit",
+			// Ensure the titlebar is always visible
+			using: function( pos ) {
+				var topOffset = $( this ).css( pos ).offset().top;
+				if ( topOffset < 0 ) {
+					$( this ).css( "top", pos.top - topOffset );
+				}
+			}
+		},
+		resizable: true,
+		show: null,
+		title: null,
+		width: 300,
+
+		// callbacks
+		beforeClose: null,
+		close: null,
+		drag: null,
+		dragStart: null,
+		dragStop: null,
+		focus: null,
+		open: null,
+		resize: null,
+		resizeStart: null,
+		resizeStop: null
+	},
+
+	_create: function() {
+		this.originalCss = {
+			display: this.element[0].style.display,
+			width: this.element[0].style.width,
+			minHeight: this.element[0].style.minHeight,
+			maxHeight: this.element[0].style.maxHeight,
+			height: this.element[0].style.height
+		};
+		this.originalPosition = {
+			parent: this.element.parent(),
+			index: this.element.parent().children().index( this.element )
+		};
+		this.originalTitle = this.element.attr("title");
+		this.options.title = this.options.title || this.originalTitle;
+
+		this._createWrapper();
+
+		this.element
+			.show()
+			.removeAttr("title")
+			.addClass("ui-dialog-content ui-widget-content")
+			.appendTo( this.uiDialog );
+
+		this._createTitlebar();
+		this._createButtonPane();
+
+		if ( this.options.draggable && $.fn.draggable ) {
+			this._makeDraggable();
+		}
+		if ( this.options.resizable && $.fn.resizable ) {
+			this._makeResizable();
+		}
+
+		this._isOpen = false;
+	},
+
+	_init: function() {
+		if ( this.options.autoOpen ) {
+			this.open();
+		}
+	},
+
+	_appendTo: function() {
+		var element = this.options.appendTo;
+		if ( element && (element.jquery || element.nodeType) ) {
+			return $( element );
+		}
+		return this.document.find( element || "body" ).eq( 0 );
+	},
+
+	_destroy: function() {
+		var next,
+			originalPosition = this.originalPosition;
+
+		this._destroyOverlay();
+
+		this.element
+			.removeUniqueId()
+			.removeClass("ui-dialog-content ui-widget-content")
+			.css( this.originalCss )
+			// Without detaching first, the following becomes really slow
+			.detach();
+
+		this.uiDialog.stop( true, true ).remove();
+
+		if ( this.originalTitle ) {
+			this.element.attr( "title", this.originalTitle );
+		}
+
+		next = originalPosition.parent.children().eq( originalPosition.index );
+		// Don't try to place the dialog next to itself (#8613)
+		if ( next.length && next[0] !== this.element[0] ) {
+			next.before( this.element );
+		} else {
+			originalPosition.parent.append( this.element );
+		}
+	},
+
+	widget: function() {
+		return this.uiDialog;
+	},
+
+	disable: $.noop,
+	enable: $.noop,
+
+	close: function( event ) {
+		var activeElement,
+			that = this;
+
+		if ( !this._isOpen || this._trigger( "beforeClose", event ) === false ) {
+			return;
+		}
+
+		this._isOpen = false;
+		this._destroyOverlay();
+
+		if ( !this.opener.filter(":focusable").focus().length ) {
+
+			// support: IE9
+			// IE9 throws an "Unspecified error" accessing document.activeElement from an <iframe>
+			try {
+				activeElement = this.document[ 0 ].activeElement;
+
+				// Support: IE9, IE10
+				// If the <body> is blurred, IE will switch windows, see #4520
+				if ( activeElement && activeElement.nodeName.toLowerCase() !== "body" ) {
+
+					// Hiding a focused element doesn't trigger blur in WebKit
+					// so in case we have nothing to focus on, explicitly blur the active element
+					// https://bugs.webkit.org/show_bug.cgi?id=47182
+					$( activeElement ).blur();
+				}
+			} catch ( error ) {}
+		}
+
+		this._hide( this.uiDialog, this.options.hide, function() {
+			that._trigger( "close", event );
+		});
+	},
+
+	isOpen: function() {
+		return this._isOpen;
+	},
+
+	moveToTop: function() {
+		this._moveToTop();
+	},
+
+	_moveToTop: function( event, silent ) {
+		var moved = !!this.uiDialog.nextAll(":visible").insertBefore( this.uiDialog ).length;
+		if ( moved && !silent ) {
+			this._trigger( "focus", event );
+		}
+		return moved;
+	},
+
+	open: function() {
+		var that = this;
+		if ( this._isOpen ) {
+			if ( this._moveToTop() ) {
+				this._focusTabbable();
+			}
+			return;
+		}
+
+		this._isOpen = true;
+		this.opener = $( this.document[0].activeElement );
+
+		this._size();
+		this._position();
+		this._createOverlay();
+		this._moveToTop( null, true );
+		this._show( this.uiDialog, this.options.show, function() {
+			that._focusTabbable();
+			that._trigger("focus");
+		});
+
+		this._trigger("open");
+	},
+
+	_focusTabbable: function() {
+		// Set focus to the first match:
+		// 1. First element inside the dialog matching [autofocus]
+		// 2. Tabbable element inside the content element
+		// 3. Tabbable element inside the buttonpane
+		// 4. The close button
+		// 5. The dialog itself
+		var hasFocus = this.element.find("[autofocus]");
+		if ( !hasFocus.length ) {
+			hasFocus = this.element.find(":tabbable");
+		}
+		if ( !hasFocus.length ) {
+			hasFocus = this.uiDialogButtonPane.find(":tabbable");
+		}
+		if ( !hasFocus.length ) {
+			hasFocus = this.uiDialogTitlebarClose.filter(":tabbable");
+		}
+		if ( !hasFocus.length ) {
+			hasFocus = this.uiDialog;
+		}
+		hasFocus.eq( 0 ).focus();
+	},
+
+	_keepFocus: function( event ) {
+		function checkFocus() {
+			var activeElement = this.document[0].activeElement,
+				isActive = this.uiDialog[0] === activeElement ||
+					$.contains( this.uiDialog[0], activeElement );
+			if ( !isActive ) {
+				this._focusTabbable();
+			}
+		}
+		event.preventDefault();
+		checkFocus.call( this );
+		// support: IE
+		// IE <= 8 doesn't prevent moving focus even with event.preventDefault()
+		// so we check again later
+		this._delay( checkFocus );
+	},
+
+	_createWrapper: function() {
+		this.uiDialog = $("<div>")
+			.addClass( "ui-dialog ui-widget ui-widget-content ui-corner-all ui-front " +
+				this.options.dialogClass )
+			.hide()
+			.attr({
+				// Setting tabIndex makes the div focusable
+				tabIndex: -1,
+				role: "dialog"
+			})
+			.appendTo( this._appendTo() );
+
+		this._on( this.uiDialog, {
+			keydown: function( event ) {
+				if ( this.options.closeOnEscape && !event.isDefaultPrevented() && event.keyCode &&
+						event.keyCode === $.ui.keyCode.ESCAPE ) {
+					event.preventDefault();
+					this.close( event );
+					return;
+				}
+
+				// prevent tabbing out of dialogs
+				if ( event.keyCode !== $.ui.keyCode.TAB ) {
+					return;
+				}
+				var tabbables = this.uiDialog.find(":tabbable"),
+					first = tabbables.filter(":first"),
+					last  = tabbables.filter(":last");
+
+				if ( ( event.target === last[0] || event.target === this.uiDialog[0] ) && !event.shiftKey ) {
+					first.focus( 1 );
+					event.preventDefault();
+				} else if ( ( event.target === first[0] || event.target === this.uiDialog[0] ) && event.shiftKey ) {
+					last.focus( 1 );
+					event.preventDefault();
+				}
+			},
+			mousedown: function( event ) {
+				if ( this._moveToTop( event ) ) {
+					this._focusTabbable();
+				}
+			}
+		});
+
+		// We assume that any existing aria-describedby attribute means
+		// that the dialog content is marked up properly
+		// otherwise we brute force the content as the description
+		if ( !this.element.find("[aria-describedby]").length ) {
+			this.uiDialog.attr({
+				"aria-describedby": this.element.uniqueId().attr("id")
+			});
+		}
+	},
+
+	_createTitlebar: function() {
+		var uiDialogTitle;
+
+		this.uiDialogTitlebar = $("<div>")
+			.addClass("ui-dialog-titlebar ui-widget-header ui-corner-all ui-helper-clearfix")
+			.prependTo( this.uiDialog );
+		this._on( this.uiDialogTitlebar, {
+			mousedown: function( event ) {
+				// Don't prevent click on close button (#8838)
+				// Focusing a dialog that is partially scrolled out of view
+				// causes the browser to scroll it into view, preventing the click event
+				if ( !$( event.target ).closest(".ui-dialog-titlebar-close") ) {
+					// Dialog isn't getting focus when dragging (#8063)
+					this.uiDialog.focus();
+				}
+			}
+		});
+
+		// support: IE
+		// Use type="button" to prevent enter keypresses in textboxes from closing the
+		// dialog in IE (#9312)
+		this.uiDialogTitlebarClose = $( "<button type='button'></button>" )
+			.button({
+				label: this.options.closeText,
+				icons: {
+					primary: "ui-icon-closethick"
+				},
+				text: false
+			})
+			.addClass("ui-dialog-titlebar-close")
+			.appendTo( this.uiDialogTitlebar );
+		this._on( this.uiDialogTitlebarClose, {
+			click: function( event ) {
+				event.preventDefault();
+				this.close( event );
+			}
+		});
+
+		uiDialogTitle = $("<span>")
+			.uniqueId()
+			.addClass("ui-dialog-title")
+			.prependTo( this.uiDialogTitlebar );
+		this._title( uiDialogTitle );
+
+		this.uiDialog.attr({
+			"aria-labelledby": uiDialogTitle.attr("id")
+		});
+	},
+
+	_title: function( title ) {
+		if ( !this.options.title ) {
+			title.html("&#160;");
+		}
+		title.text( this.options.title );
+	},
+
+	_createButtonPane: function() {
+		this.uiDialogButtonPane = $("<div>")
+			.addClass("ui-dialog-buttonpane ui-widget-content ui-helper-clearfix");
+
+		this.uiButtonSet = $("<div>")
+			.addClass("ui-dialog-buttonset")
+			.appendTo( this.uiDialogButtonPane );
+
+		this._createButtons();
+	},
+
+	_createButtons: function() {
+		var that = this,
+			buttons = this.options.buttons;
+
+		// if we already have a button pane, remove it
+		this.uiDialogButtonPane.remove();
+		this.uiButtonSet.empty();
+
+		if ( $.isEmptyObject( buttons ) || ($.isArray( buttons ) && !buttons.length) ) {
+			this.uiDialog.removeClass("ui-dialog-buttons");
+			return;
+		}
+
+		$.each( buttons, function( name, props ) {
+			var click, buttonOptions;
+			props = $.isFunction( props ) ?
+				{ click: props, text: name } :
+				props;
+			// Default to a non-submitting button
+			props = $.extend( { type: "button" }, props );
+			// Change the context for the click callback to be the main element
+			click = props.click;
+			props.click = function() {
+				click.apply( that.element[0], arguments );
+			};
+			buttonOptions = {
+				icons: props.icons,
+				text: props.showText
+			};
+			delete props.icons;
+			delete props.showText;
+			$( "<button></button>", props )
+				.button( buttonOptions )
+				.appendTo( that.uiButtonSet );
+		});
+		this.uiDialog.addClass("ui-dialog-buttons");
+		this.uiDialogButtonPane.appendTo( this.uiDialog );
+	},
+
+	_makeDraggable: function() {
+		var that = this,
+			options = this.options;
+
+		function filteredUi( ui ) {
+			return {
+				position: ui.position,
+				offset: ui.offset
+			};
+		}
+
+		this.uiDialog.draggable({
+			cancel: ".ui-dialog-content, .ui-dialog-titlebar-close",
+			handle: ".ui-dialog-titlebar",
+			containment: "document",
+			start: function( event, ui ) {
+				$( this ).addClass("ui-dialog-dragging");
+				that._blockFrames();
+				that._trigger( "dragStart", event, filteredUi( ui ) );
+			},
+			drag: function( event, ui ) {
+				that._trigger( "drag", event, filteredUi( ui ) );
+			},
+			stop: function( event, ui ) {
+				options.position = [
+					ui.position.left - that.document.scrollLeft(),
+					ui.position.top - that.document.scrollTop()
+				];
+				$( this ).removeClass("ui-dialog-dragging");
+				that._unblockFrames();
+				that._trigger( "dragStop", event, filteredUi( ui ) );
+			}
+		});
+	},
+
+	_makeResizable: function() {
+		var that = this,
+			options = this.options,
+			handles = options.resizable,
+			// .ui-resizable has position: relative defined in the stylesheet
+			// but dialogs have to use absolute or fixed positioning
+			position = this.uiDialog.css("position"),
+			resizeHandles = typeof handles === "string" ?
+				handles	:
+				"n,e,s,w,se,sw,ne,nw";
+
+		function filteredUi( ui ) {
+			return {
+				originalPosition: ui.originalPosition,
+				originalSize: ui.originalSize,
+				position: ui.position,
+				size: ui.size
+			};
+		}
+
+		this.uiDialog.resizable({
+			cancel: ".ui-dialog-content",
+			containment: "document",
+			alsoResize: this.element,
+			maxWidth: options.maxWidth,
+			maxHeight: options.maxHeight,
+			minWidth: options.minWidth,
+			minHeight: this._minHeight(),
+			handles: resizeHandles,
+			start: function( event, ui ) {
+				$( this ).addClass("ui-dialog-resizing");
+				that._blockFrames();
+				that._trigger( "resizeStart", event, filteredUi( ui ) );
+			},
+			resize: function( event, ui ) {
+				that._trigger( "resize", event, filteredUi( ui ) );
+			},
+			stop: function( event, ui ) {
+				options.height = $( this ).height();
+				options.width = $( this ).width();
+				$( this ).removeClass("ui-dialog-resizing");
+				that._unblockFrames();
+				that._trigger( "resizeStop", event, filteredUi( ui ) );
+			}
+		})
+		.css( "position", position );
+	},
+
+	_minHeight: function() {
+		var options = this.options;
+
+		return options.height === "auto" ?
+			options.minHeight :
+			Math.min( options.minHeight, options.height );
+	},
+
+	_position: function() {
+		// Need to show the dialog to get the actual offset in the position plugin
+		var isVisible = this.uiDialog.is(":visible");
+		if ( !isVisible ) {
+			this.uiDialog.show();
+		}
+		this.uiDialog.position( this.options.position );
+		if ( !isVisible ) {
+			this.uiDialog.hide();
+		}
+	},
+
+	_setOptions: function( options ) {
+		var that = this,
+			resize = false,
+			resizableOptions = {};
+
+		$.each( options, function( key, value ) {
+			that._setOption( key, value );
+
+			if ( key in sizeRelatedOptions ) {
+				resize = true;
+			}
+			if ( key in resizableRelatedOptions ) {
+				resizableOptions[ key ] = value;
+			}
+		});
+
+		if ( resize ) {
+			this._size();
+			this._position();
+		}
+		if ( this.uiDialog.is(":data(ui-resizable)") ) {
+			this.uiDialog.resizable( "option", resizableOptions );
+		}
+	},
+
+	_setOption: function( key, value ) {
+		var isDraggable, isResizable,
+			uiDialog = this.uiDialog;
+
+		if ( key === "dialogClass" ) {
+			uiDialog
+				.removeClass( this.options.dialogClass )
+				.addClass( value );
+		}
+
+		if ( key === "disabled" ) {
+			return;
+		}
+
+		this._super( key, value );
+
+		if ( key === "appendTo" ) {
+			this.uiDialog.appendTo( this._appendTo() );
+		}
+
+		if ( key === "buttons" ) {
+			this._createButtons();
+		}
+
+		if ( key === "closeText" ) {
+			this.uiDialogTitlebarClose.button({
+				// Ensure that we always pass a string
+				label: "" + value
+			});
+		}
+
+		if ( key === "draggable" ) {
+			isDraggable = uiDialog.is(":data(ui-draggable)");
+			if ( isDraggable && !value ) {
+				uiDialog.draggable("destroy");
+			}
+
+			if ( !isDraggable && value ) {
+				this._makeDraggable();
+			}
+		}
+
+		if ( key === "position" ) {
+			this._position();
+		}
+
+		if ( key === "resizable" ) {
+			// currently resizable, becoming non-resizable
+			isResizable = uiDialog.is(":data(ui-resizable)");
+			if ( isResizable && !value ) {
+				uiDialog.resizable("destroy");
+			}
+
+			// currently resizable, changing handles
+			if ( isResizable && typeof value === "string" ) {
+				uiDialog.resizable( "option", "handles", value );
+			}
+
+			// currently non-resizable, becoming resizable
+			if ( !isResizable && value !== false ) {
+				this._makeResizable();
+			}
+		}
+
+		if ( key === "title" ) {
+			this._title( this.uiDialogTitlebar.find(".ui-dialog-title") );
+		}
+	},
+
+	_size: function() {
+		// If the user has resized the dialog, the .ui-dialog and .ui-dialog-content
+		// divs will both have width and height set, so we need to reset them
+		var nonContentHeight, minContentHeight, maxContentHeight,
+			options = this.options;
+
+		// Reset content sizing
+		this.element.show().css({
+			width: "auto",
+			minHeight: 0,
+			maxHeight: "none",
+			height: 0
+		});
+
+		if ( options.minWidth > options.width ) {
+			options.width = options.minWidth;
+		}
+
+		// reset wrapper sizing
+		// determine the height of all the non-content elements
+		nonContentHeight = this.uiDialog.css({
+				height: "auto",
+				width: options.width
+			})
+			.outerHeight();
+		minContentHeight = Math.max( 0, options.minHeight - nonContentHeight );
+		maxContentHeight = typeof options.maxHeight === "number" ?
+			Math.max( 0, options.maxHeight - nonContentHeight ) :
+			"none";
+
+		if ( options.height === "auto" ) {
+			this.element.css({
+				minHeight: minContentHeight,
+				maxHeight: maxContentHeight,
+				height: "auto"
+			});
+		} else {
+			this.element.height( Math.max( 0, options.height - nonContentHeight ) );
+		}
+
+		if (this.uiDialog.is(":data(ui-resizable)") ) {
+			this.uiDialog.resizable( "option", "minHeight", this._minHeight() );
+		}
+	},
+
+	_blockFrames: function() {
+		this.iframeBlocks = this.document.find( "iframe" ).map(function() {
+			var iframe = $( this );
+
+			return $( "<div>" )
+				.css({
+					position: "absolute",
+					width: iframe.outerWidth(),
+					height: iframe.outerHeight()
+				})
+				.appendTo( iframe.parent() )
+				.offset( iframe.offset() )[0];
+		});
+	},
+
+	_unblockFrames: function() {
+		if ( this.iframeBlocks ) {
+			this.iframeBlocks.remove();
+			delete this.iframeBlocks;
+		}
+	},
+
+	_allowInteraction: function( event ) {
+		if ( $( event.target ).closest(".ui-dialog").length ) {
+			return true;
+		}
+
+		// TODO: Remove hack when datepicker implements
+		// the .ui-front logic (#8989)
+		return !!$( event.target ).closest(".ui-datepicker").length;
+	},
+
+	_createOverlay: function() {
+		if ( !this.options.modal ) {
+			return;
+		}
+
+		var that = this,
+			widgetFullName = this.widgetFullName;
+		if ( !$.ui.dialog.overlayInstances ) {
+			// Prevent use of anchors and inputs.
+			// We use a delay in case the overlay is created from an
+			// event that we're going to be cancelling. (#2804)
+			this._delay(function() {
+				// Handle .dialog().dialog("close") (#4065)
+				if ( $.ui.dialog.overlayInstances ) {
+					this.document.bind( "focusin.dialog", function( event ) {
+						if ( !that._allowInteraction( event ) ) {
+							event.preventDefault();
+							$(".ui-dialog:visible:last .ui-dialog-content")
+								.data( widgetFullName )._focusTabbable();
+						}
+					});
+				}
+			});
+		}
+
+		this.overlay = $("<div>")
+			.addClass("ui-widget-overlay ui-front")
+			.appendTo( this._appendTo() );
+		this._on( this.overlay, {
+			mousedown: "_keepFocus"
+		});
+		$.ui.dialog.overlayInstances++;
+	},
+
+	_destroyOverlay: function() {
+		if ( !this.options.modal ) {
+			return;
+		}
+
+		if ( this.overlay ) {
+			$.ui.dialog.overlayInstances--;
+
+			if ( !$.ui.dialog.overlayInstances ) {
+				this.document.unbind( "focusin.dialog" );
+			}
+			this.overlay.remove();
+			this.overlay = null;
+		}
+	}
+});
+
+$.ui.dialog.overlayInstances = 0;
+
+// DEPRECATED
+if ( $.uiBackCompat !== false ) {
+	// position option with array notation
+	// just override with old implementation
+	$.widget( "ui.dialog", $.ui.dialog, {
+		_position: function() {
+			var position = this.options.position,
+				myAt = [],
+				offset = [ 0, 0 ],
+				isVisible;
+
+			if ( position ) {
+				if ( typeof position === "string" || (typeof position === "object" && "0" in position ) ) {
+					myAt = position.split ? position.split(" ") : [ position[0], position[1] ];
+					if ( myAt.length === 1 ) {
+						myAt[1] = myAt[0];
+					}
+
+					$.each( [ "left", "top" ], function( i, offsetPosition ) {
+						if ( +myAt[ i ] === myAt[ i ] ) {
+							offset[ i ] = myAt[ i ];
+							myAt[ i ] = offsetPosition;
+						}
+					});
+
+					position = {
+						my: myAt[0] + (offset[0] < 0 ? offset[0] : "+" + offset[0]) + " " +
+							myAt[1] + (offset[1] < 0 ? offset[1] : "+" + offset[1]),
+						at: myAt.join(" ")
+					};
+				}
+
+				position = $.extend( {}, $.ui.dialog.prototype.options.position, position );
+			} else {
+				position = $.ui.dialog.prototype.options.position;
+			}
+
+			// need to show the dialog to get the actual offset in the position plugin
+			isVisible = this.uiDialog.is(":visible");
+			if ( !isVisible ) {
+				this.uiDialog.show();
+			}
+			this.uiDialog.position( position );
+			if ( !isVisible ) {
+				this.uiDialog.hide();
+			}
+		}
+	});
+}
+
+}( jQuery ) );
+;/*!
+ * jQuery UI Slider 1.10.4
+ * http://jqueryui.com
+ *
+ * Copyright 2014 jQuery Foundation and other contributors
+ * Released under the MIT license.
+ * http://jquery.org/license
+ *
+ * http://api.jqueryui.com/slider/
+ *
+ * Depends:
+ *	jquery.ui.core.js
+ *	jquery.ui.mouse.js
+ *	jquery.ui.widget.js
+ */
+(function( $, undefined ) {
+
+// number of pages in a slider
+// (how many times can you page up/down to go through the whole range)
+var numPages = 5;
+
+$.widget( "ui.slider", $.ui.mouse, {
+	version: "1.10.4",
+	widgetEventPrefix: "slide",
+
+	options: {
+		animate: false,
+		distance: 0,
+		max: 100,
+		min: 0,
+		orientation: "horizontal",
+		range: false,
+		step: 1,
+		value: 0,
+		values: null,
+
+		// callbacks
+		change: null,
+		slide: null,
+		start: null,
+		stop: null
+	},
+
+	_create: function() {
+		this._keySliding = false;
+		this._mouseSliding = false;
+		this._animateOff = true;
+		this._handleIndex = null;
+		this._detectOrientation();
+		this._mouseInit();
+
+		this.element
+			.addClass( "ui-slider" +
+				" ui-slider-" + this.orientation +
+				" ui-widget" +
+				" ui-widget-content" +
+				" ui-corner-all");
+
+		this._refresh();
+		this._setOption( "disabled", this.options.disabled );
+
+		this._animateOff = false;
+	},
+
+	_refresh: function() {
+		this._createRange();
+		this._createHandles();
+		this._setupEvents();
+		this._refreshValue();
+	},
+
+	_createHandles: function() {
+		var i, handleCount,
+			options = this.options,
+			existingHandles = this.element.find( ".ui-slider-handle" ).addClass( "ui-state-default ui-corner-all" ),
+			handle = "<a class='ui-slider-handle ui-state-default ui-corner-all' href='#'></a>",
+			handles = [];
+
+		handleCount = ( options.values && options.values.length ) || 1;
+
+		if ( existingHandles.length > handleCount ) {
+			existingHandles.slice( handleCount ).remove();
+			existingHandles = existingHandles.slice( 0, handleCount );
+		}
+
+		for ( i = existingHandles.length; i < handleCount; i++ ) {
+			handles.push( handle );
+		}
+
+		this.handles = existingHandles.add( $( handles.join( "" ) ).appendTo( this.element ) );
+
+		this.handle = this.handles.eq( 0 );
+
+		this.handles.each(function( i ) {
+			$( this ).data( "ui-slider-handle-index", i );
+		});
+	},
+
+	_createRange: function() {
+		var options = this.options,
+			classes = "";
+
+		if ( options.range ) {
+			if ( options.range === true ) {
+				if ( !options.values ) {
+					options.values = [ this._valueMin(), this._valueMin() ];
+				} else if ( options.values.length && options.values.length !== 2 ) {
+					options.values = [ options.values[0], options.values[0] ];
+				} else if ( $.isArray( options.values ) ) {
+					options.values = options.values.slice(0);
+				}
+			}
+
+			if ( !this.range || !this.range.length ) {
+				this.range = $( "<div></div>" )
+					.appendTo( this.element );
+
+				classes = "ui-slider-range" +
+				// note: this isn't the most fittingly semantic framework class for this element,
+				// but worked best visually with a variety of themes
+				" ui-widget-header ui-corner-all";
+			} else {
+				this.range.removeClass( "ui-slider-range-min ui-slider-range-max" )
+					// Handle range switching from true to min/max
+					.css({
+						"left": "",
+						"bottom": ""
+					});
+			}
+
+			this.range.addClass( classes +
+				( ( options.range === "min" || options.range === "max" ) ? " ui-slider-range-" + options.range : "" ) );
+		} else {
+			if ( this.range ) {
+				this.range.remove();
+			}
+			this.range = null;
+		}
+	},
+
+	_setupEvents: function() {
+		var elements = this.handles.add( this.range ).filter( "a" );
+		this._off( elements );
+		this._on( elements, this._handleEvents );
+		this._hoverable( elements );
+		this._focusable( elements );
+	},
+
+	_destroy: function() {
+		this.handles.remove();
+		if ( this.range ) {
+			this.range.remove();
+		}
+
+		this.element
+			.removeClass( "ui-slider" +
+				" ui-slider-horizontal" +
+				" ui-slider-vertical" +
+				" ui-widget" +
+				" ui-widget-content" +
+				" ui-corner-all" );
+
+		this._mouseDestroy();
+	},
+
+	_mouseCapture: function( event ) {
+		var position, normValue, distance, closestHandle, index, allowed, offset, mouseOverHandle,
+			that = this,
+			o = this.options;
+
+		if ( o.disabled ) {
+			return false;
+		}
+
+		this.elementSize = {
+			width: this.element.outerWidth(),
+			height: this.element.outerHeight()
+		};
+		this.elementOffset = this.element.offset();
+
+		position = { x: event.pageX, y: event.pageY };
+		normValue = this._normValueFromMouse( position );
+		distance = this._valueMax() - this._valueMin() + 1;
+		this.handles.each(function( i ) {
+			var thisDistance = Math.abs( normValue - that.values(i) );
+			if (( distance > thisDistance ) ||
+				( distance === thisDistance &&
+					(i === that._lastChangedValue || that.values(i) === o.min ))) {
+				distance = thisDistance;
+				closestHandle = $( this );
+				index = i;
+			}
+		});
+
+		allowed = this._start( event, index );
+		if ( allowed === false ) {
+			return false;
+		}
+		this._mouseSliding = true;
+
+		this._handleIndex = index;
+
+		closestHandle
+			.addClass( "ui-state-active" )
+			.focus();
+
+		offset = closestHandle.offset();
+		mouseOverHandle = !$( event.target ).parents().addBack().is( ".ui-slider-handle" );
+		this._clickOffset = mouseOverHandle ? { left: 0, top: 0 } : {
+			left: event.pageX - offset.left - ( closestHandle.width() / 2 ),
+			top: event.pageY - offset.top -
+				( closestHandle.height() / 2 ) -
+				( parseInt( closestHandle.css("borderTopWidth"), 10 ) || 0 ) -
+				( parseInt( closestHandle.css("borderBottomWidth"), 10 ) || 0) +
+				( parseInt( closestHandle.css("marginTop"), 10 ) || 0)
+		};
+
+		if ( !this.handles.hasClass( "ui-state-hover" ) ) {
+			this._slide( event, index, normValue );
+		}
+		this._animateOff = true;
+		return true;
+	},
+
+	_mouseStart: function() {
+		return true;
+	},
+
+	_mouseDrag: function( event ) {
+		var position = { x: event.pageX, y: event.pageY },
+			normValue = this._normValueFromMouse( position );
+
+		this._slide( event, this._handleIndex, normValue );
+
+		return false;
+	},
+
+	_mouseStop: function( event ) {
+		this.handles.removeClass( "ui-state-active" );
+		this._mouseSliding = false;
+
+		this._stop( event, this._handleIndex );
+		this._change( event, this._handleIndex );
+
+		this._handleIndex = null;
+		this._clickOffset = null;
+		this._animateOff = false;
+
+		return false;
+	},
+
+	_detectOrientation: function() {
+		this.orientation = ( this.options.orientation === "vertical" ) ? "vertical" : "horizontal";
+	},
+
+	_normValueFromMouse: function( position ) {
+		var pixelTotal,
+			pixelMouse,
+			percentMouse,
+			valueTotal,
+			valueMouse;
+
+		if ( this.orientation === "horizontal" ) {
+			pixelTotal = this.elementSize.width;
+			pixelMouse = position.x - this.elementOffset.left - ( this._clickOffset ? this._clickOffset.left : 0 );
+		} else {
+			pixelTotal = this.elementSize.height;
+			pixelMouse = position.y - this.elementOffset.top - ( this._clickOffset ? this._clickOffset.top : 0 );
+		}
+
+		percentMouse = ( pixelMouse / pixelTotal );
+		if ( percentMouse > 1 ) {
+			percentMouse = 1;
+		}
+		if ( percentMouse < 0 ) {
+			percentMouse = 0;
+		}
+		if ( this.orientation === "vertical" ) {
+			percentMouse = 1 - percentMouse;
+		}
+
+		valueTotal = this._valueMax() - this._valueMin();
+		valueMouse = this._valueMin() + percentMouse * valueTotal;
+
+		return this._trimAlignValue( valueMouse );
+	},
+
+	_start: function( event, index ) {
+		var uiHash = {
+			handle: this.handles[ index ],
+			value: this.value()
+		};
+		if ( this.options.values && this.options.values.length ) {
+			uiHash.value = this.values( index );
+			uiHash.values = this.values();
+		}
+		return this._trigger( "start", event, uiHash );
+	},
+
+	_slide: function( event, index, newVal ) {
+		var otherVal,
+			newValues,
+			allowed;
+
+		if ( this.options.values && this.options.values.length ) {
+			otherVal = this.values( index ? 0 : 1 );
+
+			if ( ( this.options.values.length === 2 && this.options.range === true ) &&
+					( ( index === 0 && newVal > otherVal) || ( index === 1 && newVal < otherVal ) )
+				) {
+				newVal = otherVal;
+			}
+
+			if ( newVal !== this.values( index ) ) {
+				newValues = this.values();
+				newValues[ index ] = newVal;
+				// A slide can be canceled by returning false from the slide callback
+				allowed = this._trigger( "slide", event, {
+					handle: this.handles[ index ],
+					value: newVal,
+					values: newValues
+				} );
+				otherVal = this.values( index ? 0 : 1 );
+				if ( allowed !== false ) {
+					this.values( index, newVal );
+				}
+			}
+		} else {
+			if ( newVal !== this.value() ) {
+				// A slide can be canceled by returning false from the slide callback
+				allowed = this._trigger( "slide", event, {
+					handle: this.handles[ index ],
+					value: newVal
+				} );
+				if ( allowed !== false ) {
+					this.value( newVal );
+				}
+			}
+		}
+	},
+
+	_stop: function( event, index ) {
+		var uiHash = {
+			handle: this.handles[ index ],
+			value: this.value()
+		};
+		if ( this.options.values && this.options.values.length ) {
+			uiHash.value = this.values( index );
+			uiHash.values = this.values();
+		}
+
+		this._trigger( "stop", event, uiHash );
+	},
+
+	_change: function( event, index ) {
+		if ( !this._keySliding && !this._mouseSliding ) {
+			var uiHash = {
+				handle: this.handles[ index ],
+				value: this.value()
+			};
+			if ( this.options.values && this.options.values.length ) {
+				uiHash.value = this.values( index );
+				uiHash.values = this.values();
+			}
+
+			//store the last changed value index for reference when handles overlap
+			this._lastChangedValue = index;
+
+			this._trigger( "change", event, uiHash );
+		}
+	},
+
+	value: function( newValue ) {
+		if ( arguments.length ) {
+			this.options.value = this._trimAlignValue( newValue );
+			this._refreshValue();
+			this._change( null, 0 );
+			return;
+		}
+
+		return this._value();
+	},
+
+	values: function( index, newValue ) {
+		var vals,
+			newValues,
+			i;
+
+		if ( arguments.length > 1 ) {
+			this.options.values[ index ] = this._trimAlignValue( newValue );
+			this._refreshValue();
+			this._change( null, index );
+			return;
+		}
+
+		if ( arguments.length ) {
+			if ( $.isArray( arguments[ 0 ] ) ) {
+				vals = this.options.values;
+				newValues = arguments[ 0 ];
+				for ( i = 0; i < vals.length; i += 1 ) {
+					vals[ i ] = this._trimAlignValue( newValues[ i ] );
+					this._change( null, i );
+				}
+				this._refreshValue();
+			} else {
+				if ( this.options.values && this.options.values.length ) {
+					return this._values( index );
+				} else {
+					return this.value();
+				}
+			}
+		} else {
+			return this._values();
+		}
+	},
+
+	_setOption: function( key, value ) {
+		var i,
+			valsLength = 0;
+
+		if ( key === "range" && this.options.range === true ) {
+			if ( value === "min" ) {
+				this.options.value = this._values( 0 );
+				this.options.values = null;
+			} else if ( value === "max" ) {
+				this.options.value = this._values( this.options.values.length-1 );
+				this.options.values = null;
+			}
+		}
+
+		if ( $.isArray( this.options.values ) ) {
+			valsLength = this.options.values.length;
+		}
+
+		$.Widget.prototype._setOption.apply( this, arguments );
+
+		switch ( key ) {
+			case "orientation":
+				this._detectOrientation();
+				this.element
+					.removeClass( "ui-slider-horizontal ui-slider-vertical" )
+					.addClass( "ui-slider-" + this.orientation );
+				this._refreshValue();
+				break;
+			case "value":
+				this._animateOff = true;
+				this._refreshValue();
+				this._change( null, 0 );
+				this._animateOff = false;
+				break;
+			case "values":
+				this._animateOff = true;
+				this._refreshValue();
+				for ( i = 0; i < valsLength; i += 1 ) {
+					this._change( null, i );
+				}
+				this._animateOff = false;
+				break;
+			case "min":
+			case "max":
+				this._animateOff = true;
+				this._refreshValue();
+				this._animateOff = false;
+				break;
+			case "range":
+				this._animateOff = true;
+				this._refresh();
+				this._animateOff = false;
+				break;
+		}
+	},
+
+	//internal value getter
+	// _value() returns value trimmed by min and max, aligned by step
+	_value: function() {
+		var val = this.options.value;
+		val = this._trimAlignValue( val );
+
+		return val;
+	},
+
+	//internal values getter
+	// _values() returns array of values trimmed by min and max, aligned by step
+	// _values( index ) returns single value trimmed by min and max, aligned by step
+	_values: function( index ) {
+		var val,
+			vals,
+			i;
+
+		if ( arguments.length ) {
+			val = this.options.values[ index ];
+			val = this._trimAlignValue( val );
+
+			return val;
+		} else if ( this.options.values && this.options.values.length ) {
+			// .slice() creates a copy of the array
+			// this copy gets trimmed by min and max and then returned
+			vals = this.options.values.slice();
+			for ( i = 0; i < vals.length; i+= 1) {
+				vals[ i ] = this._trimAlignValue( vals[ i ] );
+			}
+
+			return vals;
+		} else {
+			return [];
+		}
+	},
+
+	// returns the step-aligned value that val is closest to, between (inclusive) min and max
+	_trimAlignValue: function( val ) {
+		if ( val <= this._valueMin() ) {
+			return this._valueMin();
+		}
+		if ( val >= this._valueMax() ) {
+			return this._valueMax();
+		}
+		var step = ( this.options.step > 0 ) ? this.options.step : 1,
+			valModStep = (val - this._valueMin()) % step,
+			alignValue = val - valModStep;
+
+		if ( Math.abs(valModStep) * 2 >= step ) {
+			alignValue += ( valModStep > 0 ) ? step : ( -step );
+		}
+
+		// Since JavaScript has problems with large floats, round
+		// the final value to 5 digits after the decimal point (see #4124)
+		return parseFloat( alignValue.toFixed(5) );
+	},
+
+	_valueMin: function() {
+		return this.options.min;
+	},
+
+	_valueMax: function() {
+		return this.options.max;
+	},
+
+	_refreshValue: function() {
+		var lastValPercent, valPercent, value, valueMin, valueMax,
+			oRange = this.options.range,
+			o = this.options,
+			that = this,
+			animate = ( !this._animateOff ) ? o.animate : false,
+			_set = {};
+
+		if ( this.options.values && this.options.values.length ) {
+			this.handles.each(function( i ) {
+				valPercent = ( that.values(i) - that._valueMin() ) / ( that._valueMax() - that._valueMin() ) * 100;
+				_set[ that.orientation === "horizontal" ? "left" : "bottom" ] = valPercent + "%";
+				$( this ).stop( 1, 1 )[ animate ? "animate" : "css" ]( _set, o.animate );
+				if ( that.options.range === true ) {
+					if ( that.orientation === "horizontal" ) {
+						if ( i === 0 ) {
+							that.range.stop( 1, 1 )[ animate ? "animate" : "css" ]( { left: valPercent + "%" }, o.animate );
+						}
+						if ( i === 1 ) {
+							that.range[ animate ? "animate" : "css" ]( { width: ( valPercent - lastValPercent ) + "%" }, { queue: false, duration: o.animate } );
+						}
+					} else {
+						if ( i === 0 ) {
+							that.range.stop( 1, 1 )[ animate ? "animate" : "css" ]( { bottom: ( valPercent ) + "%" }, o.animate );
+						}
+						if ( i === 1 ) {
+							that.range[ animate ? "animate" : "css" ]( { height: ( valPercent - lastValPercent ) + "%" }, { queue: false, duration: o.animate } );
+						}
+					}
+				}
+				lastValPercent = valPercent;
+			});
+		} else {
+			value = this.value();
+			valueMin = this._valueMin();
+			valueMax = this._valueMax();
+			valPercent = ( valueMax !== valueMin ) ?
+					( value - valueMin ) / ( valueMax - valueMin ) * 100 :
+					0;
+			_set[ this.orientation === "horizontal" ? "left" : "bottom" ] = valPercent + "%";
+			this.handle.stop( 1, 1 )[ animate ? "animate" : "css" ]( _set, o.animate );
+
+			if ( oRange === "min" && this.orientation === "horizontal" ) {
+				this.range.stop( 1, 1 )[ animate ? "animate" : "css" ]( { width: valPercent + "%" }, o.animate );
+			}
+			if ( oRange === "max" && this.orientation === "horizontal" ) {
+				this.range[ animate ? "animate" : "css" ]( { width: ( 100 - valPercent ) + "%" }, { queue: false, duration: o.animate } );
+			}
+			if ( oRange === "min" && this.orientation === "vertical" ) {
+				this.range.stop( 1, 1 )[ animate ? "animate" : "css" ]( { height: valPercent + "%" }, o.animate );
+			}
+			if ( oRange === "max" && this.orientation === "vertical" ) {
+				this.range[ animate ? "animate" : "css" ]( { height: ( 100 - valPercent ) + "%" }, { queue: false, duration: o.animate } );
+			}
+		}
+	},
+
+	_handleEvents: {
+		keydown: function( event ) {
+			var allowed, curVal, newVal, step,
+				index = $( event.target ).data( "ui-slider-handle-index" );
+
+			switch ( event.keyCode ) {
+				case $.ui.keyCode.HOME:
+				case $.ui.keyCode.END:
+				case $.ui.keyCode.PAGE_UP:
+				case $.ui.keyCode.PAGE_DOWN:
+				case $.ui.keyCode.UP:
+				case $.ui.keyCode.RIGHT:
+				case $.ui.keyCode.DOWN:
+				case $.ui.keyCode.LEFT:
+					event.preventDefault();
+					if ( !this._keySliding ) {
+						this._keySliding = true;
+						$( event.target ).addClass( "ui-state-active" );
+						allowed = this._start( event, index );
+						if ( allowed === false ) {
+							return;
+						}
+					}
+					break;
+			}
+
+			step = this.options.step;
+			if ( this.options.values && this.options.values.length ) {
+				curVal = newVal = this.values( index );
+			} else {
+				curVal = newVal = this.value();
+			}
+
+			switch ( event.keyCode ) {
+				case $.ui.keyCode.HOME:
+					newVal = this._valueMin();
+					break;
+				case $.ui.keyCode.END:
+					newVal = this._valueMax();
+					break;
+				case $.ui.keyCode.PAGE_UP:
+					newVal = this._trimAlignValue( curVal + ( (this._valueMax() - this._valueMin()) / numPages ) );
+					break;
+				case $.ui.keyCode.PAGE_DOWN:
+					newVal = this._trimAlignValue( curVal - ( (this._valueMax() - this._valueMin()) / numPages ) );
+					break;
+				case $.ui.keyCode.UP:
+				case $.ui.keyCode.RIGHT:
+					if ( curVal === this._valueMax() ) {
+						return;
+					}
+					newVal = this._trimAlignValue( curVal + step );
+					break;
+				case $.ui.keyCode.DOWN:
+				case $.ui.keyCode.LEFT:
+					if ( curVal === this._valueMin() ) {
+						return;
+					}
+					newVal = this._trimAlignValue( curVal - step );
+					break;
+			}
+
+			this._slide( event, index, newVal );
+		},
+		click: function( event ) {
+			event.preventDefault();
+		},
+		keyup: function( event ) {
+			var index = $( event.target ).data( "ui-slider-handle-index" );
+
+			if ( this._keySliding ) {
+				this._keySliding = false;
+				this._stop( event, index );
+				this._change( event, index );
+				$( event.target ).removeClass( "ui-state-active" );
+			}
+		}
+	}
+
+});
+
+}(jQuery));
+;/*!
+ * jQuery UI Tabs 1.10.4
+ * http://jqueryui.com
+ *
+ * Copyright 2014 jQuery Foundation and other contributors
+ * Released under the MIT license.
+ * http://jquery.org/license
+ *
+ * http://api.jqueryui.com/tabs/
+ *
+ * Depends:
+ *	jquery.ui.core.js
+ *	jquery.ui.widget.js
+ */
+(function( $, undefined ) {
+
+var tabId = 0,
+	rhash = /#.*$/;
+
+function getNextTabId() {
+	return ++tabId;
+}
+
+function isLocal( anchor ) {
+	// support: IE7
+	// IE7 doesn't normalize the href property when set via script (#9317)
+	anchor = anchor.cloneNode( false );
+
+	return anchor.hash.length > 1 &&
+		decodeURIComponent( anchor.href.replace( rhash, "" ) ) ===
+			decodeURIComponent( location.href.replace( rhash, "" ) );
+}
+
+$.widget( "ui.tabs", {
+	version: "1.10.4",
+	delay: 300,
+	options: {
+		active: null,
+		collapsible: false,
+		event: "click",
+		heightStyle: "content",
+		hide: null,
+		show: null,
+
+		// callbacks
+		activate: null,
+		beforeActivate: null,
+		beforeLoad: null,
+		load: null
+	},
+
+	_create: function() {
+		var that = this,
+			options = this.options;
+
+		this.running = false;
+
+		this.element
+			.addClass( "ui-tabs ui-widget ui-widget-content ui-corner-all" )
+			.toggleClass( "ui-tabs-collapsible", options.collapsible )
+			// Prevent users from focusing disabled tabs via click
+			.delegate( ".ui-tabs-nav > li", "mousedown" + this.eventNamespace, function( event ) {
+				if ( $( this ).is( ".ui-state-disabled" ) ) {
+					event.preventDefault();
+				}
+			})
+			// support: IE <9
+			// Preventing the default action in mousedown doesn't prevent IE
+			// from focusing the element, so if the anchor gets focused, blur.
+			// We don't have to worry about focusing the previously focused
+			// element since clicking on a non-focusable element should focus
+			// the body anyway.
+			.delegate( ".ui-tabs-anchor", "focus" + this.eventNamespace, function() {
+				if ( $( this ).closest( "li" ).is( ".ui-state-disabled" ) ) {
+					this.blur();
+				}
+			});
+
+		this._processTabs();
+		options.active = this._initialActive();
+
+		// Take disabling tabs via class attribute from HTML
+		// into account and update option properly.
+		if ( $.isArray( options.disabled ) ) {
+			options.disabled = $.unique( options.disabled.concat(
+				$.map( this.tabs.filter( ".ui-state-disabled" ), function( li ) {
+					return that.tabs.index( li );
+				})
+			) ).sort();
+		}
+
+		// check for length avoids error when initializing empty list
+		if ( this.options.active !== false && this.anchors.length ) {
+			this.active = this._findActive( options.active );
+		} else {
+			this.active = $();
+		}
+
+		this._refresh();
+
+		if ( this.active.length ) {
+			this.load( options.active );
+		}
+	},
+
+	_initialActive: function() {
+		var active = this.options.active,
+			collapsible = this.options.collapsible,
+			locationHash = location.hash.substring( 1 );
+
+		if ( active === null ) {
+			// check the fragment identifier in the URL
+			if ( locationHash ) {
+				this.tabs.each(function( i, tab ) {
+					if ( $( tab ).attr( "aria-controls" ) === locationHash ) {
+						active = i;
+						return false;
+					}
+				});
+			}
+
+			// check for a tab marked active via a class
+			if ( active === null ) {
+				active = this.tabs.index( this.tabs.filter( ".ui-tabs-active" ) );
+			}
+
+			// no active tab, set to false
+			if ( active === null || active === -1 ) {
+				active = this.tabs.length ? 0 : false;
+			}
+		}
+
+		// handle numbers: negative, out of range
+		if ( active !== false ) {
+			active = this.tabs.index( this.tabs.eq( active ) );
+			if ( active === -1 ) {
+				active = collapsible ? false : 0;
+			}
+		}
+
+		// don't allow collapsible: false and active: false
+		if ( !collapsible && active === false && this.anchors.length ) {
+			active = 0;
+		}
+
+		return active;
+	},
+
+	_getCreateEventData: function() {
+		return {
+			tab: this.active,
+			panel: !this.active.length ? $() : this._getPanelForTab( this.active )
+		};
+	},
+
+	_tabKeydown: function( event ) {
+		var focusedTab = $( this.document[0].activeElement ).closest( "li" ),
+			selectedIndex = this.tabs.index( focusedTab ),
+			goingForward = true;
+
+		if ( this._handlePageNav( event ) ) {
+			return;
+		}
+
+		switch ( event.keyCode ) {
+			case $.ui.keyCode.RIGHT:
+			case $.ui.keyCode.DOWN:
+				selectedIndex++;
+				break;
+			case $.ui.keyCode.UP:
+			case $.ui.keyCode.LEFT:
+				goingForward = false;
+				selectedIndex--;
+				break;
+			case $.ui.keyCode.END:
+				selectedIndex = this.anchors.length - 1;
+				break;
+			case $.ui.keyCode.HOME:
+				selectedIndex = 0;
+				break;
+			case $.ui.keyCode.SPACE:
+				// Activate only, no collapsing
+				event.preventDefault();
+				clearTimeout( this.activating );
+				this._activate( selectedIndex );
+				return;
+			case $.ui.keyCode.ENTER:
+				// Toggle (cancel delayed activation, allow collapsing)
+				event.preventDefault();
+				clearTimeout( this.activating );
+				// Determine if we should collapse or activate
+				this._activate( selectedIndex === this.options.active ? false : selectedIndex );
+				return;
+			default:
+				return;
+		}
+
+		// Focus the appropriate tab, based on which key was pressed
+		event.preventDefault();
+		clearTimeout( this.activating );
+		selectedIndex = this._focusNextTab( selectedIndex, goingForward );
+
+		// Navigating with control key will prevent automatic activation
+		if ( !event.ctrlKey ) {
+			// Update aria-selected immediately so that AT think the tab is already selected.
+			// Otherwise AT may confuse the user by stating that they need to activate the tab,
+			// but the tab will already be activated by the time the announcement finishes.
+			focusedTab.attr( "aria-selected", "false" );
+			this.tabs.eq( selectedIndex ).attr( "aria-selected", "true" );
+
+			this.activating = this._delay(function() {
+				this.option( "active", selectedIndex );
+			}, this.delay );
+		}
+	},
+
+	_panelKeydown: function( event ) {
+		if ( this._handlePageNav( event ) ) {
+			return;
+		}
+
+		// Ctrl+up moves focus to the current tab
+		if ( event.ctrlKey && event.keyCode === $.ui.keyCode.UP ) {
+			event.preventDefault();
+			this.active.focus();
+		}
+	},
+
+	// Alt+page up/down moves focus to the previous/next tab (and activates)
+	_handlePageNav: function( event ) {
+		if ( event.altKey && event.keyCode === $.ui.keyCode.PAGE_UP ) {
+			this._activate( this._focusNextTab( this.options.active - 1, false ) );
+			return true;
+		}
+		if ( event.altKey && event.keyCode === $.ui.keyCode.PAGE_DOWN ) {
+			this._activate( this._focusNextTab( this.options.active + 1, true ) );
+			return true;
+		}
+	},
+
+	_findNextTab: function( index, goingForward ) {
+		var lastTabIndex = this.tabs.length - 1;
+
+		function constrain() {
+			if ( index > lastTabIndex ) {
+				index = 0;
+			}
+			if ( index < 0 ) {
+				index = lastTabIndex;
+			}
+			return index;
+		}
+
+		while ( $.inArray( constrain(), this.options.disabled ) !== -1 ) {
+			index = goingForward ? index + 1 : index - 1;
+		}
+
+		return index;
+	},
+
+	_focusNextTab: function( index, goingForward ) {
+		index = this._findNextTab( index, goingForward );
+		this.tabs.eq( index ).focus();
+		return index;
+	},
+
+	_setOption: function( key, value ) {
+		if ( key === "active" ) {
+			// _activate() will handle invalid values and update this.options
+			this._activate( value );
+			return;
+		}
+
+		if ( key === "disabled" ) {
+			// don't use the widget factory's disabled handling
+			this._setupDisabled( value );
+			return;
+		}
+
+		this._super( key, value);
+
+		if ( key === "collapsible" ) {
+			this.element.toggleClass( "ui-tabs-collapsible", value );
+			// Setting collapsible: false while collapsed; open first panel
+			if ( !value && this.options.active === false ) {
+				this._activate( 0 );
+			}
+		}
+
+		if ( key === "event" ) {
+			this._setupEvents( value );
+		}
+
+		if ( key === "heightStyle" ) {
+			this._setupHeightStyle( value );
+		}
+	},
+
+	_tabId: function( tab ) {
+		return tab.attr( "aria-controls" ) || "ui-tabs-" + getNextTabId();
+	},
+
+	_sanitizeSelector: function( hash ) {
+		return hash ? hash.replace( /[!"$%&'()*+,.\/:;<=>?@\[\]\^`{|}~]/g, "\\$&" ) : "";
+	},
+
+	refresh: function() {
+		var options = this.options,
+			lis = this.tablist.children( ":has(a[href])" );
+
+		// get disabled tabs from class attribute from HTML
+		// this will get converted to a boolean if needed in _refresh()
+		options.disabled = $.map( lis.filter( ".ui-state-disabled" ), function( tab ) {
+			return lis.index( tab );
+		});
+
+		this._processTabs();
+
+		// was collapsed or no tabs
+		if ( options.active === false || !this.anchors.length ) {
+			options.active = false;
+			this.active = $();
+		// was active, but active tab is gone
+		} else if ( this.active.length && !$.contains( this.tablist[ 0 ], this.active[ 0 ] ) ) {
+			// all remaining tabs are disabled
+			if ( this.tabs.length === options.disabled.length ) {
+				options.active = false;
+				this.active = $();
+			// activate previous tab
+			} else {
+				this._activate( this._findNextTab( Math.max( 0, options.active - 1 ), false ) );
+			}
+		// was active, active tab still exists
+		} else {
+			// make sure active index is correct
+			options.active = this.tabs.index( this.active );
+		}
+
+		this._refresh();
+	},
+
+	_refresh: function() {
+		this._setupDisabled( this.options.disabled );
+		this._setupEvents( this.options.event );
+		this._setupHeightStyle( this.options.heightStyle );
+
+		this.tabs.not( this.active ).attr({
+			"aria-selected": "false",
+			tabIndex: -1
+		});
+		this.panels.not( this._getPanelForTab( this.active ) )
+			.hide()
+			.attr({
+				"aria-expanded": "false",
+				"aria-hidden": "true"
+			});
+
+		// Make sure one tab is in the tab order
+		if ( !this.active.length ) {
+			this.tabs.eq( 0 ).attr( "tabIndex", 0 );
+		} else {
+			this.active
+				.addClass( "ui-tabs-active ui-state-active" )
+				.attr({
+					"aria-selected": "true",
+					tabIndex: 0
+				});
+			this._getPanelForTab( this.active )
+				.show()
+				.attr({
+					"aria-expanded": "true",
+					"aria-hidden": "false"
+				});
+		}
+	},
+
+	_processTabs: function() {
+		var that = this;
+
+		this.tablist = this._getList()
+			.addClass( "ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all" )
+			.attr( "role", "tablist" );
+
+		this.tabs = this.tablist.find( "> li:has(a[href])" )
+			.addClass( "ui-state-default ui-corner-top" )
+			.attr({
+				role: "tab",
+				tabIndex: -1
+			});
+
+		this.anchors = this.tabs.map(function() {
+				return $( "a", this )[ 0 ];
+			})
+			.addClass( "ui-tabs-anchor" )
+			.attr({
+				role: "presentation",
+				tabIndex: -1
+			});
+
+		this.panels = $();
+
+		this.anchors.each(function( i, anchor ) {
+			var selector, panel, panelId,
+				anchorId = $( anchor ).uniqueId().attr( "id" ),
+				tab = $( anchor ).closest( "li" ),
+				originalAriaControls = tab.attr( "aria-controls" );
+
+			// inline tab
+			if ( isLocal( anchor ) ) {
+				selector = anchor.hash;
+				panel = that.element.find( that._sanitizeSelector( selector ) );
+			// remote tab
+			} else {
+				panelId = that._tabId( tab );
+				selector = "#" + panelId;
+				panel = that.element.find( selector );
+				if ( !panel.length ) {
+					panel = that._createPanel( panelId );
+					panel.insertAfter( that.panels[ i - 1 ] || that.tablist );
+				}
+				panel.attr( "aria-live", "polite" );
+			}
+
+			if ( panel.length) {
+				that.panels = that.panels.add( panel );
+			}
+			if ( originalAriaControls ) {
+				tab.data( "ui-tabs-aria-controls", originalAriaControls );
+			}
+			tab.attr({
+				"aria-controls": selector.substring( 1 ),
+				"aria-labelledby": anchorId
+			});
+			panel.attr( "aria-labelledby", anchorId );
+		});
+
+		this.panels
+			.addClass( "ui-tabs-panel ui-widget-content ui-corner-bottom" )
+			.attr( "role", "tabpanel" );
+	},
+
+	// allow overriding how to find the list for rare usage scenarios (#7715)
+	_getList: function() {
+		return this.tablist || this.element.find( "ol,ul" ).eq( 0 );
+	},
+
+	_createPanel: function( id ) {
+		return $( "<div>" )
+			.attr( "id", id )
+			.addClass( "ui-tabs-panel ui-widget-content ui-corner-bottom" )
+			.data( "ui-tabs-destroy", true );
+	},
+
+	_setupDisabled: function( disabled ) {
+		if ( $.isArray( disabled ) ) {
+			if ( !disabled.length ) {
+				disabled = false;
+			} else if ( disabled.length === this.anchors.length ) {
+				disabled = true;
+			}
+		}
+
+		// disable tabs
+		for ( var i = 0, li; ( li = this.tabs[ i ] ); i++ ) {
+			if ( disabled === true || $.inArray( i, disabled ) !== -1 ) {
+				$( li )
+					.addClass( "ui-state-disabled" )
+					.attr( "aria-disabled", "true" );
+			} else {
+				$( li )
+					.removeClass( "ui-state-disabled" )
+					.removeAttr( "aria-disabled" );
+			}
+		}
+
+		this.options.disabled = disabled;
+	},
+
+	_setupEvents: function( event ) {
+		var events = {
+			click: function( event ) {
+				event.preventDefault();
+			}
+		};
+		if ( event ) {
+			$.each( event.split(" "), function( index, eventName ) {
+				events[ eventName ] = "_eventHandler";
+			});
+		}
+
+		this._off( this.anchors.add( this.tabs ).add( this.panels ) );
+		this._on( this.anchors, events );
+		this._on( this.tabs, { keydown: "_tabKeydown" } );
+		this._on( this.panels, { keydown: "_panelKeydown" } );
+
+		this._focusable( this.tabs );
+		this._hoverable( this.tabs );
+	},
+
+	_setupHeightStyle: function( heightStyle ) {
+		var maxHeight,
+			parent = this.element.parent();
+
+		if ( heightStyle === "fill" ) {
+			maxHeight = parent.height();
+			maxHeight -= this.element.outerHeight() - this.element.height();
+
+			this.element.siblings( ":visible" ).each(function() {
+				var elem = $( this ),
+					position = elem.css( "position" );
+
+				if ( position === "absolute" || position === "fixed" ) {
+					return;
+				}
+				maxHeight -= elem.outerHeight( true );
+			});
+
+			this.element.children().not( this.panels ).each(function() {
+				maxHeight -= $( this ).outerHeight( true );
+			});
+
+			this.panels.each(function() {
+				$( this ).height( Math.max( 0, maxHeight -
+					$( this ).innerHeight() + $( this ).height() ) );
+			})
+			.css( "overflow", "auto" );
+		} else if ( heightStyle === "auto" ) {
+			maxHeight = 0;
+			this.panels.each(function() {
+				maxHeight = Math.max( maxHeight, $( this ).height( "" ).height() );
+			}).height( maxHeight );
+		}
+	},
+
+	_eventHandler: function( event ) {
+		var options = this.options,
+			active = this.active,
+			anchor = $( event.currentTarget ),
+			tab = anchor.closest( "li" ),
+			clickedIsActive = tab[ 0 ] === active[ 0 ],
+			collapsing = clickedIsActive && options.collapsible,
+			toShow = collapsing ? $() : this._getPanelForTab( tab ),
+			toHide = !active.length ? $() : this._getPanelForTab( active ),
+			eventData = {
+				oldTab: active,
+				oldPanel: toHide,
+				newTab: collapsing ? $() : tab,
+				newPanel: toShow
+			};
+
+		event.preventDefault();
+
+		if ( tab.hasClass( "ui-state-disabled" ) ||
+				// tab is already loading
+				tab.hasClass( "ui-tabs-loading" ) ||
+				// can't switch durning an animation
+				this.running ||
+				// click on active header, but not collapsible
+				( clickedIsActive && !options.collapsible ) ||
+				// allow canceling activation
+				( this._trigger( "beforeActivate", event, eventData ) === false ) ) {
+			return;
+		}
+
+		options.active = collapsing ? false : this.tabs.index( tab );
+
+		this.active = clickedIsActive ? $() : tab;
+		if ( this.xhr ) {
+			this.xhr.abort();
+		}
+
+		if ( !toHide.length && !toShow.length ) {
+			$.error( "jQuery UI Tabs: Mismatching fragment identifier." );
+		}
+
+		if ( toShow.length ) {
+			this.load( this.tabs.index( tab ), event );
+		}
+		this._toggle( event, eventData );
+	},
+
+	// handles show/hide for selecting tabs
+	_toggle: function( event, eventData ) {
+		var that = this,
+			toShow = eventData.newPanel,
+			toHide = eventData.oldPanel;
+
+		this.running = true;
+
+		function complete() {
+			that.running = false;
+			that._trigger( "activate", event, eventData );
+		}
+
+		function show() {
+			eventData.newTab.closest( "li" ).addClass( "ui-tabs-active ui-state-active" );
+
+			if ( toShow.length && that.options.show ) {
+				that._show( toShow, that.options.show, complete );
+			} else {
+				toShow.show();
+				complete();
+			}
+		}
+
+		// start out by hiding, then showing, then completing
+		if ( toHide.length && this.options.hide ) {
+			this._hide( toHide, this.options.hide, function() {
+				eventData.oldTab.closest( "li" ).removeClass( "ui-tabs-active ui-state-active" );
+				show();
+			});
+		} else {
+			eventData.oldTab.closest( "li" ).removeClass( "ui-tabs-active ui-state-active" );
+			toHide.hide();
+			show();
+		}
+
+		toHide.attr({
+			"aria-expanded": "false",
+			"aria-hidden": "true"
+		});
+		eventData.oldTab.attr( "aria-selected", "false" );
+		// If we're switching tabs, remove the old tab from the tab order.
+		// If we're opening from collapsed state, remove the previous tab from the tab order.
+		// If we're collapsing, then keep the collapsing tab in the tab order.
+		if ( toShow.length && toHide.length ) {
+			eventData.oldTab.attr( "tabIndex", -1 );
+		} else if ( toShow.length ) {
+			this.tabs.filter(function() {
+				return $( this ).attr( "tabIndex" ) === 0;
+			})
+			.attr( "tabIndex", -1 );
+		}
+
+		toShow.attr({
+			"aria-expanded": "true",
+			"aria-hidden": "false"
+		});
+		eventData.newTab.attr({
+			"aria-selected": "true",
+			tabIndex: 0
+		});
+	},
+
+	_activate: function( index ) {
+		var anchor,
+			active = this._findActive( index );
+
+		// trying to activate the already active panel
+		if ( active[ 0 ] === this.active[ 0 ] ) {
+			return;
+		}
+
+		// trying to collapse, simulate a click on the current active header
+		if ( !active.length ) {
+			active = this.active;
+		}
+
+		anchor = active.find( ".ui-tabs-anchor" )[ 0 ];
+		this._eventHandler({
+			target: anchor,
+			currentTarget: anchor,
+			preventDefault: $.noop
+		});
+	},
+
+	_findActive: function( index ) {
+		return index === false ? $() : this.tabs.eq( index );
+	},
+
+	_getIndex: function( index ) {
+		// meta-function to give users option to provide a href string instead of a numerical index.
+		if ( typeof index === "string" ) {
+			index = this.anchors.index( this.anchors.filter( "[href$='" + index + "']" ) );
+		}
+
+		return index;
+	},
+
+	_destroy: function() {
+		if ( this.xhr ) {
+			this.xhr.abort();
+		}
+
+		this.element.removeClass( "ui-tabs ui-widget ui-widget-content ui-corner-all ui-tabs-collapsible" );
+
+		this.tablist
+			.removeClass( "ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all" )
+			.removeAttr( "role" );
+
+		this.anchors
+			.removeClass( "ui-tabs-anchor" )
+			.removeAttr( "role" )
+			.removeAttr( "tabIndex" )
+			.removeUniqueId();
+
+		this.tabs.add( this.panels ).each(function() {
+			if ( $.data( this, "ui-tabs-destroy" ) ) {
+				$( this ).remove();
+			} else {
+				$( this )
+					.removeClass( "ui-state-default ui-state-active ui-state-disabled " +
+						"ui-corner-top ui-corner-bottom ui-widget-content ui-tabs-active ui-tabs-panel" )
+					.removeAttr( "tabIndex" )
+					.removeAttr( "aria-live" )
+					.removeAttr( "aria-busy" )
+					.removeAttr( "aria-selected" )
+					.removeAttr( "aria-labelledby" )
+					.removeAttr( "aria-hidden" )
+					.removeAttr( "aria-expanded" )
+					.removeAttr( "role" );
+			}
+		});
+
+		this.tabs.each(function() {
+			var li = $( this ),
+				prev = li.data( "ui-tabs-aria-controls" );
+			if ( prev ) {
+				li
+					.attr( "aria-controls", prev )
+					.removeData( "ui-tabs-aria-controls" );
+			} else {
+				li.removeAttr( "aria-controls" );
+			}
+		});
+
+		this.panels.show();
+
+		if ( this.options.heightStyle !== "content" ) {
+			this.panels.css( "height", "" );
+		}
+	},
+
+	enable: function( index ) {
+		var disabled = this.options.disabled;
+		if ( disabled === false ) {
+			return;
+		}
+
+		if ( index === undefined ) {
+			disabled = false;
+		} else {
+			index = this._getIndex( index );
+			if ( $.isArray( disabled ) ) {
+				disabled = $.map( disabled, function( num ) {
+					return num !== index ? num : null;
+				});
+			} else {
+				disabled = $.map( this.tabs, function( li, num ) {
+					return num !== index ? num : null;
+				});
+			}
+		}
+		this._setupDisabled( disabled );
+	},
+
+	disable: function( index ) {
+		var disabled = this.options.disabled;
+		if ( disabled === true ) {
+			return;
+		}
+
+		if ( index === undefined ) {
+			disabled = true;
+		} else {
+			index = this._getIndex( index );
+			if ( $.inArray( index, disabled ) !== -1 ) {
+				return;
+			}
+			if ( $.isArray( disabled ) ) {
+				disabled = $.merge( [ index ], disabled ).sort();
+			} else {
+				disabled = [ index ];
+			}
+		}
+		this._setupDisabled( disabled );
+	},
+
+	load: function( index, event ) {
+		index = this._getIndex( index );
+		var that = this,
+			tab = this.tabs.eq( index ),
+			anchor = tab.find( ".ui-tabs-anchor" ),
+			panel = this._getPanelForTab( tab ),
+			eventData = {
+				tab: tab,
+				panel: panel
+			};
+
+		// not remote
+		if ( isLocal( anchor[ 0 ] ) ) {
+			return;
+		}
+
+		this.xhr = $.ajax( this._ajaxSettings( anchor, event, eventData ) );
+
+		// support: jQuery <1.8
+		// jQuery <1.8 returns false if the request is canceled in beforeSend,
+		// but as of 1.8, $.ajax() always returns a jqXHR object.
+		if ( this.xhr && this.xhr.statusText !== "canceled" ) {
+			tab.addClass( "ui-tabs-loading" );
+			panel.attr( "aria-busy", "true" );
+
+			this.xhr
+				.success(function( response ) {
+					// support: jQuery <1.8
+					// http://bugs.jquery.com/ticket/11778
+					setTimeout(function() {
+						panel.html( response );
+						that._trigger( "load", event, eventData );
+					}, 1 );
+				})
+				.complete(function( jqXHR, status ) {
+					// support: jQuery <1.8
+					// http://bugs.jquery.com/ticket/11778
+					setTimeout(function() {
+						if ( status === "abort" ) {
+							that.panels.stop( false, true );
+						}
+
+						tab.removeClass( "ui-tabs-loading" );
+						panel.removeAttr( "aria-busy" );
+
+						if ( jqXHR === that.xhr ) {
+							delete that.xhr;
+						}
+					}, 1 );
+				});
+		}
+	},
+
+	_ajaxSettings: function( anchor, event, eventData ) {
+		var that = this;
+		return {
+			url: anchor.attr( "href" ),
+			beforeSend: function( jqXHR, settings ) {
+				return that._trigger( "beforeLoad", event,
+					$.extend( { jqXHR : jqXHR, ajaxSettings: settings }, eventData ) );
+			}
+		};
+	},
+
+	_getPanelForTab: function( tab ) {
+		var id = $( tab ).attr( "aria-controls" );
+		return this.element.find( this._sanitizeSelector( "#" + id ) );
+	}
+});
+
+})( jQuery );
+;/*!
+ * jQuery UI Tooltip 1.10.4
+ * http://jqueryui.com
+ *
+ * Copyright 2014 jQuery Foundation and other contributors
+ * Released under the MIT license.
+ * http://jquery.org/license
+ *
+ * http://api.jqueryui.com/tooltip/
+ *
+ * Depends:
+ *	jquery.ui.core.js
+ *	jquery.ui.widget.js
+ *	jquery.ui.position.js
+ */
+(function( $ ) {
+
+var increments = 0;
+
+function addDescribedBy( elem, id ) {
+	var describedby = (elem.attr( "aria-describedby" ) || "").split( /\s+/ );
+	describedby.push( id );
+	elem
+		.data( "ui-tooltip-id", id )
+		.attr( "aria-describedby", $.trim( describedby.join( " " ) ) );
+}
+
+function removeDescribedBy( elem ) {
+	var id = elem.data( "ui-tooltip-id" ),
+		describedby = (elem.attr( "aria-describedby" ) || "").split( /\s+/ ),
+		index = $.inArray( id, describedby );
+	if ( index !== -1 ) {
+		describedby.splice( index, 1 );
+	}
+
+	elem.removeData( "ui-tooltip-id" );
+	describedby = $.trim( describedby.join( " " ) );
+	if ( describedby ) {
+		elem.attr( "aria-describedby", describedby );
+	} else {
+		elem.removeAttr( "aria-describedby" );
+	}
+}
+
+$.widget( "ui.tooltip", {
+	version: "1.10.4",
+	options: {
+		content: function() {
+			// support: IE<9, Opera in jQuery <1.7
+			// .text() can't accept undefined, so coerce to a string
+			var title = $( this ).attr( "title" ) || "";
+			// Escape title, since we're going from an attribute to raw HTML
+			return $( "<a>" ).text( title ).html();
+		},
+		hide: true,
+		// Disabled elements have inconsistent behavior across browsers (#8661)
+		items: "[title]:not([disabled])",
+		position: {
+			my: "left top+15",
+			at: "left bottom",
+			collision: "flipfit flip"
+		},
+		show: true,
+		tooltipClass: null,
+		track: false,
+
+		// callbacks
+		close: null,
+		open: null
+	},
+
+	_create: function() {
+		this._on({
+			mouseover: "open",
+			focusin: "open"
+		});
+
+		// IDs of generated tooltips, needed for destroy
+		this.tooltips = {};
+		// IDs of parent tooltips where we removed the title attribute
+		this.parents = {};
+
+		if ( this.options.disabled ) {
+			this._disable();
+		}
+	},
+
+	_setOption: function( key, value ) {
+		var that = this;
+
+		if ( key === "disabled" ) {
+			this[ value ? "_disable" : "_enable" ]();
+			this.options[ key ] = value;
+			// disable element style changes
+			return;
+		}
+
+		this._super( key, value );
+
+		if ( key === "content" ) {
+			$.each( this.tooltips, function( id, element ) {
+				that._updateContent( element );
+			});
+		}
+	},
+
+	_disable: function() {
+		var that = this;
+
+		// close open tooltips
+		$.each( this.tooltips, function( id, element ) {
+			var event = $.Event( "blur" );
+			event.target = event.currentTarget = element[0];
+			that.close( event, true );
+		});
+
+		// remove title attributes to prevent native tooltips
+		this.element.find( this.options.items ).addBack().each(function() {
+			var element = $( this );
+			if ( element.is( "[title]" ) ) {
+				element
+					.data( "ui-tooltip-title", element.attr( "title" ) )
+					.attr( "title", "" );
+			}
+		});
+	},
+
+	_enable: function() {
+		// restore title attributes
+		this.element.find( this.options.items ).addBack().each(function() {
+			var element = $( this );
+			if ( element.data( "ui-tooltip-title" ) ) {
+				element.attr( "title", element.data( "ui-tooltip-title" ) );
+			}
+		});
+	},
+
+	open: function( event ) {
+		var that = this,
+			target = $( event ? event.target : this.element )
+				// we need closest here due to mouseover bubbling,
+				// but always pointing at the same event target
+				.closest( this.options.items );
+
+		// No element to show a tooltip for or the tooltip is already open
+		if ( !target.length || target.data( "ui-tooltip-id" ) ) {
+			return;
+		}
+
+		if ( target.attr( "title" ) ) {
+			target.data( "ui-tooltip-title", target.attr( "title" ) );
+		}
+
+		target.data( "ui-tooltip-open", true );
+
+		// kill parent tooltips, custom or native, for hover
+		if ( event && event.type === "mouseover" ) {
+			target.parents().each(function() {
+				var parent = $( this ),
+					blurEvent;
+				if ( parent.data( "ui-tooltip-open" ) ) {
+					blurEvent = $.Event( "blur" );
+					blurEvent.target = blurEvent.currentTarget = this;
+					that.close( blurEvent, true );
+				}
+				if ( parent.attr( "title" ) ) {
+					parent.uniqueId();
+					that.parents[ this.id ] = {
+						element: this,
+						title: parent.attr( "title" )
+					};
+					parent.attr( "title", "" );
+				}
+			});
+		}
+
+		this._updateContent( target, event );
+	},
+
+	_updateContent: function( target, event ) {
+		var content,
+			contentOption = this.options.content,
+			that = this,
+			eventType = event ? event.type : null;
+
+		if ( typeof contentOption === "string" ) {
+			return this._open( event, target, contentOption );
+		}
+
+		content = contentOption.call( target[0], function( response ) {
+			// ignore async response if tooltip was closed already
+			if ( !target.data( "ui-tooltip-open" ) ) {
+				return;
+			}
+			// IE may instantly serve a cached response for ajax requests
+			// delay this call to _open so the other call to _open runs first
+			that._delay(function() {
+				// jQuery creates a special event for focusin when it doesn't
+				// exist natively. To improve performance, the native event
+				// object is reused and the type is changed. Therefore, we can't
+				// rely on the type being correct after the event finished
+				// bubbling, so we set it back to the previous value. (#8740)
+				if ( event ) {
+					event.type = eventType;
+				}
+				this._open( event, target, response );
+			});
+		});
+		if ( content ) {
+			this._open( event, target, content );
+		}
+	},
+
+	_open: function( event, target, content ) {
+		var tooltip, events, delayedShow,
+			positionOption = $.extend( {}, this.options.position );
+
+		if ( !content ) {
+			return;
+		}
+
+		// Content can be updated multiple times. If the tooltip already
+		// exists, then just update the content and bail.
+		tooltip = this._find( target );
+		if ( tooltip.length ) {
+			tooltip.find( ".ui-tooltip-content" ).html( content );
+			return;
+		}
+
+		// if we have a title, clear it to prevent the native tooltip
+		// we have to check first to avoid defining a title if none exists
+		// (we don't want to cause an element to start matching [title])
+		//
+		// We use removeAttr only for key events, to allow IE to export the correct
+		// accessible attributes. For mouse events, set to empty string to avoid
+		// native tooltip showing up (happens only when removing inside mouseover).
+		if ( target.is( "[title]" ) ) {
+			if ( event && event.type === "mouseover" ) {
+				target.attr( "title", "" );
+			} else {
+				target.removeAttr( "title" );
+			}
+		}
+
+		tooltip = this._tooltip( target );
+		addDescribedBy( target, tooltip.attr( "id" ) );
+		tooltip.find( ".ui-tooltip-content" ).html( content );
+
+		function position( event ) {
+			positionOption.of = event;
+			if ( tooltip.is( ":hidden" ) ) {
+				return;
+			}
+			tooltip.position( positionOption );
+		}
+		if ( this.options.track && event && /^mouse/.test( event.type ) ) {
+			this._on( this.document, {
+				mousemove: position
+			});
+			// trigger once to override element-relative positioning
+			position( event );
+		} else {
+			tooltip.position( $.extend({
+				of: target
+			}, this.options.position ) );
+		}
+
+		tooltip.hide();
+
+		this._show( tooltip, this.options.show );
+		// Handle tracking tooltips that are shown with a delay (#8644). As soon
+		// as the tooltip is visible, position the tooltip using the most recent
+		// event.
+		if ( this.options.show && this.options.show.delay ) {
+			delayedShow = this.delayedShow = setInterval(function() {
+				if ( tooltip.is( ":visible" ) ) {
+					position( positionOption.of );
+					clearInterval( delayedShow );
+				}
+			}, $.fx.interval );
+		}
+
+		this._trigger( "open", event, { tooltip: tooltip } );
+
+		events = {
+			keyup: function( event ) {
+				if ( event.keyCode === $.ui.keyCode.ESCAPE ) {
+					var fakeEvent = $.Event(event);
+					fakeEvent.currentTarget = target[0];
+					this.close( fakeEvent, true );
+				}
+			},
+			remove: function() {
+				this._removeTooltip( tooltip );
+			}
+		};
+		if ( !event || event.type === "mouseover" ) {
+			events.mouseleave = "close";
+		}
+		if ( !event || event.type === "focusin" ) {
+			events.focusout = "close";
+		}
+		this._on( true, target, events );
+	},
+
+	close: function( event ) {
+		var that = this,
+			target = $( event ? event.currentTarget : this.element ),
+			tooltip = this._find( target );
+
+		// disabling closes the tooltip, so we need to track when we're closing
+		// to avoid an infinite loop in case the tooltip becomes disabled on close
+		if ( this.closing ) {
+			return;
+		}
+
+		// Clear the interval for delayed tracking tooltips
+		clearInterval( this.delayedShow );
+
+		// only set title if we had one before (see comment in _open())
+		if ( target.data( "ui-tooltip-title" ) ) {
+			target.attr( "title", target.data( "ui-tooltip-title" ) );
+		}
+
+		removeDescribedBy( target );
+
+		tooltip.stop( true );
+		this._hide( tooltip, this.options.hide, function() {
+			that._removeTooltip( $( this ) );
+		});
+
+		target.removeData( "ui-tooltip-open" );
+		this._off( target, "mouseleave focusout keyup" );
+		// Remove 'remove' binding only on delegated targets
+		if ( target[0] !== this.element[0] ) {
+			this._off( target, "remove" );
+		}
+		this._off( this.document, "mousemove" );
+
+		if ( event && event.type === "mouseleave" ) {
+			$.each( this.parents, function( id, parent ) {
+				$( parent.element ).attr( "title", parent.title );
+				delete that.parents[ id ];
+			});
+		}
+
+		this.closing = true;
+		this._trigger( "close", event, { tooltip: tooltip } );
+		this.closing = false;
+	},
+
+	_tooltip: function( element ) {
+		var id = "ui-tooltip-" + increments++,
+			tooltip = $( "<div>" )
+				.attr({
+					id: id,
+					role: "tooltip"
+				})
+				.addClass( "ui-tooltip ui-widget ui-corner-all ui-widget-content " +
+					( this.options.tooltipClass || "" ) );
+		$( "<div>" )
+			.addClass( "ui-tooltip-content" )
+			.appendTo( tooltip );
+		tooltip.appendTo( this.document[0].body );
+		this.tooltips[ id ] = element;
+		return tooltip;
+	},
+
+	_find: function( target ) {
+		var id = target.data( "ui-tooltip-id" );
+		return id ? $( "#" + id ) : $();
+	},
+
+	_removeTooltip: function( tooltip ) {
+		tooltip.remove();
+		delete this.tooltips[ tooltip.attr( "id" ) ];
+	},
+
+	_destroy: function() {
+		var that = this;
+
+		// close open tooltips
+		$.each( this.tooltips, function( id, element ) {
+			// Delegate to close method to handle common cleanup
+			var event = $.Event( "blur" );
+			event.target = event.currentTarget = element[0];
+			that.close( event, true );
+
+			// Remove immediately; destroying an open tooltip doesn't use the
+			// hide animation
+			$( "#" + id ).remove();
+
+			// Restore the title
+			if ( element.data( "ui-tooltip-title" ) ) {
+				element.attr( "title", element.data( "ui-tooltip-title" ) );
+				element.removeData( "ui-tooltip-title" );
+			}
+		});
+	}
+});
+
+}( jQuery ) );
+;/*!
+ * jQuery UI Touch Punch 0.2.2
+ *
+ * Copyright 2011, Dave Furfero
+ * Dual licensed under the MIT or GPL Version 2 licenses.
+ *
+ * Depends:
+ *  jquery.ui.widget.js
+ *  jquery.ui.mouse.js
+ */
+(function ($) {
+
+  // Detect touch support
+  $.support.touch = 'ontouchend' in document;
+
+  // Ignore browsers without touch support
+  if (!$.support.touch) {
+    return;
+  }
+
+  var mouseProto = $.ui.mouse.prototype,
+      _mouseInit = mouseProto._mouseInit,
+      touchHandled;
+
+  /**
+   * Simulate a mouse event based on a corresponding touch event
+   * @param {Object} event A touch event
+   * @param {String} simulatedType The corresponding mouse event
+   */
+  function simulateMouseEvent (event, simulatedType) {
+
+    // Ignore multi-touch events
+    if (event.originalEvent.touches.length > 1) {
+      return;
+    }
+
+    event.preventDefault();
+
+    var touch = event.originalEvent.changedTouches[0],
+        simulatedEvent = document.createEvent('MouseEvents');
+    
+    // Initialize the simulated mouse event using the touch event's coordinates
+    simulatedEvent.initMouseEvent(
+      simulatedType,    // type
+      true,             // bubbles                    
+      true,             // cancelable                 
+      window,           // view                       
+      1,                // detail                     
+      touch.screenX,    // screenX                    
+      touch.screenY,    // screenY                    
+      touch.clientX,    // clientX                    
+      touch.clientY,    // clientY                    
+      false,            // ctrlKey                    
+      false,            // altKey                     
+      false,            // shiftKey                   
+      false,            // metaKey                    
+      0,                // button                     
+      null              // relatedTarget              
+    );
+
+    // Dispatch the simulated event to the target element
+    event.target.dispatchEvent(simulatedEvent);
+  }
+
+  /**
+   * Handle the jQuery UI widget's touchstart events
+   * @param {Object} event The widget element's touchstart event
+   */
+  mouseProto._touchStart = function (event) {
+
+    var self = this;
+
+    // Ignore the event if another widget is already being handled
+    if (touchHandled || !self._mouseCapture(event.originalEvent.changedTouches[0])) {
+      return;
+    }
+
+    // Set the flag to prevent other widgets from inheriting the touch event
+    touchHandled = true;
+
+    // Track movement to determine if interaction was a click
+    self._touchMoved = false;
+
+    // Simulate the mouseover event
+    simulateMouseEvent(event, 'mouseover');
+
+    // Simulate the mousemove event
+    simulateMouseEvent(event, 'mousemove');
+
+    // Simulate the mousedown event
+    simulateMouseEvent(event, 'mousedown');
+  };
+
+  /**
+   * Handle the jQuery UI widget's touchmove events
+   * @param {Object} event The document's touchmove event
+   */
+  mouseProto._touchMove = function (event) {
+
+    // Ignore event if not handled
+    if (!touchHandled) {
+      return;
+    }
+
+    // Interaction was not a click
+    this._touchMoved = true;
+
+    // Simulate the mousemove event
+    simulateMouseEvent(event, 'mousemove');
+  };
+
+  /**
+   * Handle the jQuery UI widget's touchend events
+   * @param {Object} event The document's touchend event
+   */
+  mouseProto._touchEnd = function (event) {
+
+    // Ignore event if not handled
+    if (!touchHandled) {
+      return;
+    }
+
+    // Simulate the mouseup event
+    simulateMouseEvent(event, 'mouseup');
+
+    // Simulate the mouseout event
+    simulateMouseEvent(event, 'mouseout');
+
+    // If the touch interaction did not move, it should trigger a click
+    if (!this._touchMoved) {
+
+      // Simulate the click event
+      simulateMouseEvent(event, 'click');
+    }
+
+    // Unset the flag to allow other widgets to inherit the touch event
+    touchHandled = false;
+  };
+
+  /**
+   * A duck punch of the $.ui.mouse _mouseInit method to support touch events.
+   * This method extends the widget with bound touch event handlers that
+   * translate touch events to mouse events and pass them to the widget's
+   * original mouse event handling methods.
+   */
+  mouseProto._mouseInit = function () {
+    
+    var self = this;
+
+    // Delegate the touch handlers to the widget's element
+    self.element
+      .bind('touchstart', $.proxy(self, '_touchStart'))
+      .bind('touchmove', $.proxy(self, '_touchMove'))
+      .bind('touchend', $.proxy(self, '_touchEnd'));
+
+    // Call the original $.ui.mouse init method
+    _mouseInit.call(self);
+  };
+
+})(jQuery);;/*
+Copyright 2013 OCAD University
+
+Licensed under the Educational Community License (ECL), Version 2.0 or the New
+BSD license. You may not use this file except in compliance with one these
+Licenses.
+
+You may obtain a copy of the ECL 2.0 License and BSD License at
+https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
+*/
+
+var fluid_2_0 = fluid_2_0 || {};
+
+(function ($, fluid) {
+    "use strict";
+
+    /********************
+     * Textfield Slider *
+     ********************/
+
+    fluid.defaults("fluid.textfieldSlider", {
+        gradeNames: ["fluid.viewRelayComponent", "autoInit"],
+        components: {
+            textfield: {
+                type: "fluid.textfieldSlider.textfield",
+                container: "{textfieldSlider}.dom.textfield",
+                options: {
+                    model: "{textfieldSlider}.model",
+                    range: "{textfieldSlider}.options.range"
+                }
+            },
+            slider: {
+                type: "fluid.slider",
+                container: "{textfieldSlider}.dom.slider",
+                options: {
+                    model: "{fluid.textfieldSlider}.model",
+                    range: "{fluid.textfieldSlider}.options.range",
+                    sliderOptions: "{fluid.textfieldSlider}.options.sliderOptions"
+                }
+            }
+        },
+        selectors: {
+            textfield: ".flc-textfieldSlider-field",
+            slider: ".flc-textfieldSlider-slider"
+        },
+        model: {
+            value: null
+        },
+        modelRelay: {
+            target: "value",
+            singleTransform: {
+                type: "fluid.transforms.limitRange",
+                input: "{that}.model.value",
+                min: "{that}.options.range.min",
+                max: "{that}.options.range.max"
+            }
+        },
+        range: {
+            min: 0,
+            max: 100
+        },
+        sliderOptions: {
+            orientation: "horizontal",
+            step: 1.0
+        }
+    });
+
+    fluid.defaults("fluid.textfieldSlider.textfield", {
+        gradeNames: ["fluid.viewRelayComponent", "autoInit"],
+        range: {}, // should be used to specify the min, max range e.g. {min: 0, max: 100}
+        modelRelay: {
+            target: "value",
+            singleTransform: {
+                type: "fluid.transforms.stringToNumber",
+                input: "{that}.model.stringValue"
+            }
+        },
+        modelListeners: {
+            value: {
+                "this": "{that}.container",
+                "method": "val",
+                args: ["{change}.value"]
+            },
+            // TODO: This listener is to deal with the issue that, when the input field receives a invalid input such as a string value,
+            // ignore it and populate the field with the previous value.
+            // This is an area in which UX has spilled over into our model configuration, which to some extent we should try to prevent.
+            // Whenever we receive a "change" event or some other similar checkpoint, if these updates occurred any faster, the user would
+            // be infuriated by being unable to type into the field. This situation doesn't occur at the moment because the change event is
+            // only fired when users leave the input feild. At the very least, we need to give a namespace to this listener - unfortunately
+            // the current dataBinding implementation will ignore it. Having this listener here represents an interaction decision rather
+            // than an implementation decision. This issue needs to be revisited.
+            stringValue: {
+                "this": "{that}.container",
+                "method": "val",
+                args: ["{that}.model.value"]
+            }
+        },
+        listeners: {
+            "onCreate.bindChangeEvt": {
+                "this": "{that}.container",
+                "method": "change",
+                "args": ["{that}.setModel"]
+            }
+        },
+        invokers: {
+            setModel: {
+                changePath: "stringValue",
+                value: "{arguments}.0.target.value"
+            }
+        }
+    });
+
+    fluid.defaults("fluid.slider", {
+        gradeNames: ["fluid.viewRelayComponent", "autoInit"],
+        range: {}, // should be used to specify the min, max range e.g. {min: 0, max: 100}
+        selectors: {
+            thumb: ".ui-slider-handle"
+        },
+        members: {
+            combinedSliderOptions: {
+                expander: {
+                    funcName: "fluid.slider.combineSliderOptions",
+                    args: ["{that}"]
+                }
+            },
+            slider: {
+                expander: {
+                    "this": "{that}.container",
+                    method: "slider",
+                    args: ["{that}.combinedSliderOptions"]
+                }
+            }
+        },
+        invokers: {
+            setSliderValue: {
+                "this": "{that}.slider",
+                "method": "slider",
+                args: ["value", "{arguments}.0"]
+            },
+            setSliderAria: {
+                "this": "{that}.dom.thumb",
+                "method": "attr",
+                args: ["aria-valuenow", "{arguments}.0"]
+            },
+            setModel: {
+                changePath: "value",
+                value: "{arguments}.1.value"
+            }
+        },
+        listeners: {
+            // This can be removed once the jQuery UI slider has built in ARIA
+            "onCreate.initSliderAria": {
+                "this": "{that}.dom.thumb",
+                method: "attr",
+                args: [{
+                    role: "slider",
+                    "aria-valuenow": "{that}.combinedSliderOptions.value",
+                    "aria-valuemin": "{that}.combinedSliderOptions.min",
+                    "aria-valuemax": "{that}.combinedSliderOptions.max"
+                }]
+            },
+            "onCreate.bindSlideEvt": {
+                "this": "{that}.slider",
+                "method": "bind",
+                "args": ["slide", "{that}.setModel"]
+            }
+        },
+        modelListeners: {
+            "value": [{
+                listener: "{that}.setSliderValue",
+                args: ["{change}.value"]
+            }, {
+                listener: "{that}.setSliderAria",
+                args: ["{change}.value"]
+            }]
+        }
+    });
+
+    fluid.slider.combineSliderOptions = function (that) {
+        return $.extend(true, {}, that.options.sliderOptions, that.model, that.options.range);
+    };
+
+})(jQuery, fluid_2_0);
+;/*
+Copyright 2011-2015 OCAD University
+Copyright 2011 Lucendo Development Ltd.
+
+Licensed under the Educational Community License (ECL), Version 2.0 or the New
+BSD license. You may not use this file except in compliance with one these
+Licenses.
+
+You may obtain a copy of the ECL 2.0 License and BSD License at
+https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
+*/
+
+var fluid_2_0 = fluid_2_0 || {};
+
+(function ($, fluid) {
+    "use strict";
+
+    /******
+    * ToC *
+    *******/
+    fluid.registerNamespace("fluid.tableOfContents");
+
+
+    fluid.tableOfContents.insertAnchor = function (name, element, anchorClass) {
+       // In order to resolve FLUID-4453, we need to make sure that the owner document is correctly
+       // taken from the target element (the preview may be in an iframe)
+        var anchor = $("<a></a>", element.ownerDocument);
+        anchor.prop({
+            "class": anchorClass,
+            name: name,
+            id: name
+        });
+        anchor.insertBefore(element);
+    };
+
+    fluid.tableOfContents.headingTextToAnchorInfo = function (heading, guidFunc) {
+        var guid = guidFunc();
+
+        var anchorInfo = {
+            id: guid,
+            url: "#" + guid
+        };
+
+        return anchorInfo;
+    };
+
+    fluid.tableOfContents.locateHeadings = function (that) {
+        var headings = that.locate("headings");
+
+        fluid.each(that.options.ignoreForToC, function (sel) {
+            headings = headings.not(sel).not(sel + " :header");
+        });
+
+        return headings;
+    };
+
+    fluid.tableOfContents.refreshView = function (that) {
+        var headings = that.locateHeadings();
+
+        // remove existing toc anchors from the the DOM, before adding any new ones.
+        that.locate("tocAnchors").remove();
+
+        that.anchorInfo = fluid.transform(headings, function (heading) {
+            var info = that.headingTextToAnchorInfo(heading);
+            that.insertAnchor(info.id, heading, that.options.anchorClass);
+            return info;
+        });
+
+        var headingsModel = that.modelBuilder.assembleModel(headings, that.anchorInfo);
+        that.applier.requestChange("", headingsModel);
+
+        that.events.onRefresh.fire();
+    };
+
+    fluid.defaults("fluid.tableOfContents", {
+        gradeNames: ["fluid.viewComponent", "autoInit"],
+        components: {
+            levels: {
+                type: "fluid.tableOfContents.levels",
+                createOnEvent: "onCreate",
+                container: "{tableOfContents}.dom.tocContainer",
+                options: {
+                    model: {
+                        headings: "{tableOfContents}.model"
+                    },
+                    events: {
+                        afterRender: "{tableOfContents}.events.afterRender"
+                    },
+                    listeners: {
+                        "{tableOfContents}.events.onRefresh": "{that}.refreshView"
+                    },
+                    strings: "{tableOfContents}.options.strings"
+                }
+            },
+            modelBuilder: {
+                type: "fluid.tableOfContents.modelBuilder"
+            }
+        },
+        model: [],
+        invokers: {
+            headingTextToAnchorInfo: {
+                funcName: "fluid.tableOfContents.headingTextToAnchorInfo",
+                args: ["{arguments}.0", "{that}.generateGUID"]
+            },
+            insertAnchor: "fluid.tableOfContents.insertAnchor",
+            generateGUID: "fluid.allocateSimpleId",
+            locateHeadings: {
+                funcName: "fluid.tableOfContents.locateHeadings",
+                args: ["{that}"]
+            },
+            refreshView: {
+                funcName: "fluid.tableOfContents.refreshView",
+                args: ["{that}"]
+            },
+            // TODO: is it weird to have hide and show on a component?
+            hide: {
+                "this": "{that}.dom.tocContainer",
+                "method": "hide"
+            },
+            show: {
+                "this": "{that}.dom.tocContainer",
+                "method": "show"
+            }
+        },
+        strings: {
+            tocHeader: "Table of Contents"
+        },
+        selectors: {
+            headings: ":header:visible",
+            tocContainer: ".flc-toc-tocContainer",
+            tocAnchors: ".flc-toc-anchors"
+        },
+        ignoreForToC: {
+            tocContainer: "{that}.options.selectors.tocContainer"
+        },
+        anchorClass: "flc-toc-anchors",
+        events: {
+            onRefresh: null,
+            afterRender: null,
+            onReady: {
+                events: {
+                    "onCreate": "onCreate",
+                    "afterRender": "afterRender"
+                },
+                args: ["{that}"]
+            }
+        },
+        listeners: {
+            "onCreate.refreshView": "{that}.refreshView"
+        }
+    });
+
+
+    /*******************
+    * ToC ModelBuilder *
+    ********************/
+    fluid.registerNamespace("fluid.tableOfContents.modelBuilder");
+
+    fluid.tableOfContents.modelBuilder.toModel = function (headingInfo, modelLevelFn) {
+        var headings = fluid.copy(headingInfo);
+        var buildModelLevel = function (headings, level) {
+            var modelLevel = [];
+            while (headings.length > 0) {
+                var heading = headings[0];
+                if (heading.level < level) {
+                    break;
+                }
+                if (heading.level > level) {
+                    var subHeadings = buildModelLevel(headings, level + 1);
+                    if (modelLevel.length > 0) {
+                        modelLevel[modelLevel.length - 1].headings = subHeadings;
+                    } else {
+                        modelLevel = modelLevelFn(modelLevel, subHeadings);
+                    }
+                }
+                if (heading.level === level) {
+                    modelLevel.push(heading);
+                    headings.shift();
+                }
+            }
+            return modelLevel;
+        };
+        return buildModelLevel(headings, 1);
+    };
+
+    fluid.tableOfContents.modelBuilder.gradualModelLevelFn = function (modelLevel, subHeadings) {
+        // Clone the subHeadings because we don't want to modify the reference of the subHeadings.
+        // the reference will affect the equality condition in generateTree(), resulting an unwanted tree.
+        var subHeadingsClone = fluid.copy(subHeadings);
+        subHeadingsClone[0].level--;
+        return subHeadingsClone;
+    };
+
+    fluid.tableOfContents.modelBuilder.skippedModelLevelFn = function (modelLevel, subHeadings) {
+        modelLevel.push({headings: subHeadings});
+        return modelLevel;
+    };
+
+    fluid.tableOfContents.modelBuilder.finalInit = function (that) {
+
+        that.convertToHeadingObjects = function (headings, anchorInfo) {
+            headings = $(headings);
+            return fluid.transform(headings, function (heading, index) {
+                return {
+                    level: that.headingCalculator.getHeadingLevel(heading),
+                    text: $(heading).text(),
+                    url: anchorInfo[index].url
+                };
+            });
+        };
+
+        that.assembleModel = function (headings, anchorInfo) {
+            var headingInfo = that.convertToHeadingObjects(headings, anchorInfo);
+            return that.toModel(headingInfo);
+        };
+    };
+
+    fluid.defaults("fluid.tableOfContents.modelBuilder", {
+        gradeNames: ["fluid.littleComponent", "autoInit"],
+        finalInitFunction: "fluid.tableOfContents.modelBuilder.finalInit",
+        components: {
+            headingCalculator: {
+                type: "fluid.tableOfContents.modelBuilder.headingCalculator"
+            }
+        },
+        invokers: {
+            toModel: {
+                funcName: "fluid.tableOfContents.modelBuilder.toModel",
+                args: ["{arguments}.0", "{modelBuilder}.modelLevelFn"]
+            },
+            modelLevelFn: "fluid.tableOfContents.modelBuilder.gradualModelLevelFn"
+        }
+    });
+
+    /*************************************
+    * ToC ModelBuilder headingCalculator *
+    **************************************/
+    fluid.registerNamespace("fluid.tableOfContents.modelBuilder.headingCalculator");
+
+    fluid.tableOfContents.modelBuilder.headingCalculator.finalInit = function (that) {
+        that.getHeadingLevel = function (heading) {
+            return $.inArray(heading.tagName, that.options.levels) + 1;
+        };
+    };
+
+    fluid.defaults("fluid.tableOfContents.modelBuilder.headingCalculator", {
+        gradeNames: ["fluid.littleComponent", "autoInit"],
+        finalInitFunction: "fluid.tableOfContents.modelBuilder.headingCalculator.finalInit",
+        levels: ["H1", "H2", "H3", "H4", "H5", "H6"]
+    });
+
+    /*************
+    * ToC Levels *
+    **************/
+    fluid.registerNamespace("fluid.tableOfContents.levels");
+
+    fluid.tableOfContents.levels.finalInit = function (that) {
+        fluid.fetchResources(that.options.resources, function () {
+            that.container.append(that.options.resources.template.resourceText);
+            that.refreshView();
+        });
+    };
+
+    /**
+     * Create an object model based on the type and ID.  The object should contain an
+     * ID that maps the selectors (ie. level1:), and the object should contain a children
+     * @param   string      Accepted values are: level, items
+     * @param   int         The current level which is used here as the ID.
+     */
+    fluid.tableOfContents.levels.objModel = function (type, ID) {
+        var objModel = {
+            ID: type + ID + ":",
+            children: []
+        };
+        return objModel;
+    };
+
+    /**
+     * Configure item object when item object has no text, uri, level in it.
+     * defaults to add a decorator to hide the bullets.
+     */
+    fluid.tableOfContents.levels.handleEmptyItemObj = function (itemObj) {
+        itemObj.decorators = [{
+            type: "addClass",
+            classes: "fl-tableOfContents-hide-bullet"
+        }];
+    };
+
+    /**
+     * @param   Object  that.model, the model with all the headings, it should be in the format of {headings: [...]}
+     * @param   int     the current level we want to generate the tree for.  default to 1 if not defined.
+     * @return  Object  A tree that looks like {children: [{ID: x, subTree:[...]}, ...]}
+     */
+    fluid.tableOfContents.levels.generateTree = function (headingsModel, currentLevel) {
+        currentLevel = currentLevel || 0;
+        var levelObj = fluid.tableOfContents.levels.objModel("level", currentLevel);
+
+        // FLUID-4352, run generateTree if there are headings in the model.
+        if (headingsModel.headings.length === 0) {
+            return currentLevel ? [] : {children: []};
+        }
+
+        // base case: level is 0, returns {children:[generateTree(nextLevel)]}
+        // purpose is to wrap the first level with a children object.
+        if (currentLevel === 0) {
+            var tree = {
+                children: [
+                    fluid.tableOfContents.levels.generateTree(headingsModel, currentLevel + 1)
+                ]
+            };
+            return tree;
+        }
+
+        // Loop through the heading array, which can have multiple headings on the same level
+        $.each(headingsModel.headings, function (index, model) {
+            var itemObj = fluid.tableOfContents.levels.objModel("items", currentLevel);
+            var linkObj = {
+                ID: "link" + currentLevel,
+                target: model.url,
+                linktext: model.text
+            };
+
+            // If level is undefined, then add decorator to it, otherwise add the links to it.
+            if (!model.level) {
+                fluid.tableOfContents.levels.handleEmptyItemObj(itemObj);
+            } else {
+                itemObj.children.push(linkObj);
+            }
+            // If there are sub-headings, go into the next level recursively
+            if (model.headings) {
+                itemObj.children.push(fluid.tableOfContents.levels.generateTree(model, currentLevel + 1));
+            }
+            // At this point, the itemObj should be in a tree format with sub-headings children
+            levelObj.children.push(itemObj);
+        });
+        return levelObj;
+    };
+
+    /**
+     * @return  Object  Returned produceTree must be in {headings: [trees]}
+     */
+    fluid.tableOfContents.levels.produceTree = function (that) {
+        var tree = fluid.tableOfContents.levels.generateTree(that.model);
+        // Add the header to the tree
+        tree.children.push({
+            ID: "tocHeader",
+            messagekey: "tocHeader"
+        });
+        return tree;
+    };
+
+    fluid.defaults("fluid.tableOfContents.levels", {
+        gradeNames: ["fluid.rendererComponent", "autoInit"],
+        finalInitFunction: "fluid.tableOfContents.levels.finalInit",
+        produceTree: "fluid.tableOfContents.levels.produceTree",
+        strings: {
+            tocHeader: "Table of Contents"
+        },
+        selectors: {
+            tocHeader: ".flc-toc-header",
+            level1: ".flc-toc-levels-level1",
+            level2: ".flc-toc-levels-level2",
+            level3: ".flc-toc-levels-level3",
+            level4: ".flc-toc-levels-level4",
+            level5: ".flc-toc-levels-level5",
+            level6: ".flc-toc-levels-level6",
+            items1: ".flc-toc-levels-items1",
+            items2: ".flc-toc-levels-items2",
+            items3: ".flc-toc-levels-items3",
+            items4: ".flc-toc-levels-items4",
+            items5: ".flc-toc-levels-items5",
+            items6: ".flc-toc-levels-items6",
+            link1: ".flc-toc-levels-link1",
+            link2: ".flc-toc-levels-link2",
+            link3: ".flc-toc-levels-link3",
+            link4: ".flc-toc-levels-link4",
+            link5: ".flc-toc-levels-link5",
+            link6: ".flc-toc-levels-link6"
+        },
+        repeatingSelectors: ["level1", "level2", "level3", "level4", "level5", "level6", "items1", "items2", "items3", "items4", "items5", "items6"],
+        model: {
+            headings: [] // [text: heading, url: linkURL, headings: [ an array of subheadings in the same format]
+        },
+        resources: {
+            template: {
+                forceCache: true,
+                url: "../html/TableOfContents.html"
+            }
+        },
+        rendererFnOptions: {
+            noexpand: true
+        },
+        rendererOptions: {
+            debugMode: false
+        }
+
+    });
+
+})(jQuery, fluid_2_0);
+;/*
+Copyright 2015 OCAD University
+
+Licensed under the Educational Community License (ECL), Version 2.0 or the New
+BSD license. You may not use this file except in compliance with one these
+Licenses.
+
+You may obtain a copy of the ECL 2.0 License and BSD License at
+https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
+*/
+
+// Declare dependencies
+/* global speechSynthesis, SpeechSynthesisUtterance*/
+
+var fluid_2_0 = fluid_2_0 || {};
+
+(function ($, fluid) {
+    "use strict";
+
+    fluid.registerNamespace("fluid.textToSpeech");
+
+    /******************************************************************************************* *
+     * fluid.textToSpeech provides a wrapper around the SpeechSynthesis Interface                *
+     * from the Web Speech API ( https://dvcs.w3.org/hg/speech-api/raw-file/tip/speechapi.html ) *
+     *********************************************************************************************/
+
+    fluid.textToSpeech.isSupported = function () {
+        return !!(window && window.speechSynthesis);
+    };
+
+    fluid.defaults("fluid.textToSpeech", {
+        gradeNames: ["fluid.standardRelayComponent", "autoInit"],
+        events: {
+            onStart: null,
+            onStop: null,
+            onPause: null,
+            onResume: null,
+            onError: null,
+            onSpeechQueued: null
+        },
+        members: {
+            queue: []
+        },
+        // Model paths: speaking, pending, paused, utteranceOpts
+        model: {
+            // Changes to the utteranceOpts will only text that is queued after the change.
+            // All of these options can be overriden in the queueSpeech method by passing in
+            // options directly there. It is useful in cases where a single instance needs to be
+            // spoken with different options (e.g. single text in a different language.)
+            utteranceOpts: {
+                // text: "", // text to synthesize. avoid as it will override any other text passed in
+                // lang: "", // the language of the synthesized text
+                // voiceURI: "" // a uri pointing at a voice synthesizer to use. If not set, will use the default one provided by the browser
+                // volume: 1, // a value between 0 and 1
+                // rate: 1, // a value from 0.1 to 10 although different synthesizers may have a smaller range
+                // pitch: 1, // a value from 0 to 2
+            }
+        },
+        modelListeners: {
+            "speaking": {
+                listener: "fluid.textToSpeech.speak",
+                args: ["{that}", "{change}.value"]
+            },
+            "paused": {
+                listener: "fluid.textToSpeech.pause",
+                args: ["{that}", "{change}.value"]
+            }
+        },
+        invokers: {
+            queueSpeech: {
+                funcName: "fluid.textToSpeech.queueSpeech",
+                args: ["{that}", "{arguments}.0", "{arguments}.1", "{arguments}.2"]
+            },
+            cancel: {
+                funcName: "fluid.textToSpeech.cancel",
+                args: ["{that}"]
+            },
+            pause: {
+                "this": "speechSynthesis",
+                "method": "pause"
+            },
+            resume: {
+                "this": "speechSynthesis",
+                "method": "resume"
+            },
+            getVoices: {
+                "this": "speechSynthesis",
+                "method": "getVoices"
+            },
+            handleStart: {
+                funcName: "fluid.textToSpeech.handleStart",
+                args: ["{that}"]
+            },
+            handleEnd: {
+                funcName: "fluid.textToSpeech.handleEnd",
+                args: ["{that}"]
+            },
+            handleError: "{that}.events.onError.fire",
+            handlePause: {
+                changePath: "paused",
+                value: true
+            },
+            handleResume: {
+                changePath: "paused",
+                value: false
+            }
+        }
+    });
+
+    fluid.textToSpeech.speak = function (that, speaking) {
+        that.events[speaking ? "onStart" : "onStop"].fire();
+    };
+
+    fluid.textToSpeech.pause = function (that, paused) {
+        if (paused) {
+            that.events.onPause.fire();
+        } else if (that.model.speaking) {
+            that.events.onResume.fire();
+        }
+    };
+
+    fluid.textToSpeech.handleStart = function (that) {
+        that.queue.shift();
+        that.applier.change("speaking", true);
+
+        if (that.queue.length) {
+            that.applier.change("pending", true);
+        }
+    };
+
+    fluid.textToSpeech.handleEnd = function (that) {
+        var resetValues = {
+            speaking: false,
+            pending: false,
+            paused: false
+        };
+
+        if (!that.queue.length) {
+            var newModel = $.extend({}, that.model, resetValues);
+            that.applier.change("", newModel);
+        }
+    };
+
+    fluid.textToSpeech.queueSpeech = function (that, text, interrupt, options) {
+        if (interrupt) {
+            that.cancel();
+        }
+
+        var errorFn = function () {
+            that.handleError(text);
+        };
+
+        var toSpeak = new SpeechSynthesisUtterance(text);
+        var eventBinding = {
+            onstart: that.handleStart,
+            onend: that.handleEnd,
+            onerror: errorFn,
+            onpause: that.handlePause,
+            onresume: that.handleResume
+        };
+        $.extend(toSpeak, that.model.utteranceOpts, options, eventBinding);
+
+        that.queue.push(text);
+        that.events.onSpeechQueued.fire(text);
+        speechSynthesis.speak(toSpeak);
+    };
+
+    fluid.textToSpeech.cancel = function (that) {
+        that.queue = [];
+        speechSynthesis.cancel();
+    };
+
+})(jQuery, fluid_2_0);
+;/*
+    json2.js
+    2007-11-06
+
+    Public Domain
+
+    No warranty expressed or implied. Use at your own risk.
+
+    See http://www.JSON.org/js.html
+
+    This file creates a global JSON object containing two methods:
+
+        JSON.stringify(value, whitelist)
+            value       any JavaScript value, usually an object or array.
+
+            whitelist   an optional that determines how object values are
+                        stringified.
+
+            This method produces a JSON text from a JavaScript value.
+            There are three possible ways to stringify an object, depending
+            on the optional whitelist parameter.
+
+            If an object has a toJSON method, then the toJSON() method will be
+            called. The value returned from the toJSON method will be
+            stringified.
+
+            Otherwise, if the optional whitelist parameter is an array, then
+            the elements of the array will be used to select members of the
+            object for stringification.
+
+            Otherwise, if there is no whitelist parameter, then all of the
+            members of the object will be stringified.
+
+            Values that do not have JSON representaions, such as undefined or
+            functions, will not be serialized. Such values in objects will be
+            dropped, in arrays will be replaced with null. JSON.stringify()
+            returns undefined. Dates will be stringified as quoted ISO dates.
+
+            Example:
+
+            var text = JSON.stringify(['e', {pluribus: 'unum'}]);
+            // text is '["e",{"pluribus":"unum"}]'
+
+        JSON.parse(text, filter)
+            This method parses a JSON text to produce an object or
+            array. It can throw a SyntaxError exception.
+
+            The optional filter parameter is a function that can filter and
+            transform the results. It receives each of the keys and values, and
+            its return value is used instead of the original value. If it
+            returns what it received, then structure is not modified. If it
+            returns undefined then the member is deleted.
+
+            Example:
+
+            // Parse the text. If a key contains the string 'date' then
+            // convert the value to a date.
+
+            myData = JSON.parse(text, function (key, value) {
+                return key.indexOf('date') >= 0 ? new Date(value) : value;
+            });
+
+    This is a reference implementation. You are free to copy, modify, or
+    redistribute.
+
+    Use your own copy. It is extremely unwise to load third party
+    code into your pages.
+*/
+
+/*jslint evil: true */
+/*extern JSON */
+
+if (!this.JSON) {
+
+    JSON = function () {
+
+        function f(n) {    // Format integers to have at least two digits.
+            return n < 10 ? '0' + n : n;
+        }
+
+        Date.prototype.toJSON = function () {
+
+// Eventually, this method will be based on the date.toISOString method.
+
+            return this.getUTCFullYear()   + '-' +
+                 f(this.getUTCMonth() + 1) + '-' +
+                 f(this.getUTCDate())      + 'T' +
+                 f(this.getUTCHours())     + ':' +
+                 f(this.getUTCMinutes())   + ':' +
+                 f(this.getUTCSeconds())   + 'Z';
+        };
+
+
+        var m = {    // table of character substitutions
+            '\b': '\\b',
+            '\t': '\\t',
+            '\n': '\\n',
+            '\f': '\\f',
+            '\r': '\\r',
+            '"' : '\\"',
+            '\\': '\\\\'
+        };
+
+        function stringify(value, whitelist) {
+            var a,          // The array holding the partial texts.
+                i,          // The loop counter.
+                k,          // The member key.
+                l,          // Length.
+                r = /["\\\x00-\x1f\x7f-\x9f]/g,
+                v;          // The member value.
+
+            switch (typeof value) {
+            case 'string':
+
+// If the string contains no control characters, no quote characters, and no
+// backslash characters, then we can safely slap some quotes around it.
+// Otherwise we must also replace the offending characters with safe sequences.
+
+                return r.test(value) ?
+                    '"' + value.replace(r, function (a) {
+                        var c = m[a];
+                        if (c) {
+                            return c;
+                        }
+                        c = a.charCodeAt();
+                        return '\\u00' + Math.floor(c / 16).toString(16) +
+                                                   (c % 16).toString(16);
+                    }) + '"' :
+                    '"' + value + '"';
+
+            case 'number':
+
+// JSON numbers must be finite. Encode non-finite numbers as null.
+
+                return isFinite(value) ? String(value) : 'null';
+
+            case 'boolean':
+            case 'null':
+                return String(value);
+
+            case 'object':
+
+// Due to a specification blunder in ECMAScript,
+// typeof null is 'object', so watch out for that case.
+
+                if (!value) {
+                    return 'null';
+                }
+
+// If the object has a toJSON method, call it, and stringify the result.
+
+                if (typeof value.toJSON === 'function') {
+                    return stringify(value.toJSON());
+                }
+                a = [];
+                if (typeof value.length === 'number' &&
+                        !(value.propertyIsEnumerable('length'))) {
+
+// The object is an array. Stringify every element. Use null as a placeholder
+// for non-JSON values.
+
+                    l = value.length;
+                    for (i = 0; i < l; i += 1) {
+                        a.push(stringify(value[i], whitelist) || 'null');
+                    }
+
+// Join all of the elements together and wrap them in brackets.
+
+                    return '[' + a.join(',') + ']';
+                }
+                if (whitelist) {
+
+// If a whitelist (array of keys) is provided, use it to select the components
+// of the object.
+
+                    l = whitelist.length;
+                    for (i = 0; i < l; i += 1) {
+                        k = whitelist[i];
+                        if (typeof k === 'string') {
+                            v = stringify(value[k], whitelist);
+                            if (v) {
+                                a.push(stringify(k) + ':' + v);
+                            }
+                        }
+                    }
+                } else {
+
+// Otherwise, iterate through all of the keys in the object.
+
+                    for (k in value) {
+                        if (typeof k === 'string') {
+                            v = stringify(value[k], whitelist);
+                            if (v) {
+                                a.push(stringify(k) + ':' + v);
+                            }
+                        }
+                    }
+                }
+
+// Join all of the member texts together and wrap them in braces.
+
+                return '{' + a.join(',') + '}';
+            }
+        }
+
+        return {
+            stringify: stringify,
+            parse: function (text, filter) {
+                var j;
+
+                function walk(k, v) {
+                    var i, n;
+                    if (v && typeof v === 'object') {
+                        for (i in v) {
+                            if (Object.prototype.hasOwnProperty.apply(v, [i])) {
+                                n = walk(i, v[i]);
+                                if (n !== undefined) {
+                                    v[i] = n;
+                                }
+                            }
+                        }
+                    }
+                    return filter(k, v);
+                }
+
+
+// Parsing happens in three stages. In the first stage, we run the text against
+// regular expressions that look for non-JSON patterns. We are especially
+// concerned with '()' and 'new' because they can cause invocation, and '='
+// because it can cause mutation. But just to be safe, we want to reject all
+// unexpected forms.
+
+// We split the first stage into 4 regexp operations in order to work around
+// crippling inefficiencies in IE's and Safari's regexp engines. First we
+// replace all backslash pairs with '@' (a non-JSON character). Second, we
+// replace all simple value tokens with ']' characters. Third, we delete all
+// open brackets that follow a colon or comma or that begin the text. Finally,
+// we look to see that the remaining characters are only whitespace or ']' or
+// ',' or ':' or '{' or '}'. If that is so, then the text is safe for eval.
+
+                if (/^[\],:{}\s]*$/.test(text.replace(/\\./g, '@').
+replace(/"[^"\\\n\r]*"|true|false|null|-?\d+(?:\.\d*)?(:?[eE][+\-]?\d+)?/g, ']').
+replace(/(?:^|:|,)(?:\s*\[)+/g, ''))) {
+
+// In the second stage we use the eval function to compile the text into a
+// JavaScript structure. The '{' operator is subject to a syntactic ambiguity
+// in JavaScript: it can begin a block or an object literal. We wrap the text
+// in parens to eliminate the ambiguity.
+
+                    j = eval('(' + text + ')');
+
+// In the optional third stage, we recursively walk the new structure, passing
+// each name/value pair to a filter function for possible transformation.
+
+                    return typeof filter === 'function' ? walk('', j) : j;
+                }
+
+// If the text is not JSON parseable, then a SyntaxError is thrown.
+
+                throw new SyntaxError('parseJSON');
+            }
+        };
+    }();
+}
+;/*
+Copyright 2009-2010 University of Cambridge
+Copyright 2011 Lucendo Development Ltd.
+
+Licensed under the Educational Community License (ECL), Version 2.0 or the New
+BSD license. You may not use this file except in compliance with one these
+Licenses.
+
+You may obtain a copy of the ECL 2.0 License and BSD License at
+https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
+*/
+
+var fluid_2_0 = fluid_2_0 || {};
+
+(function ($, fluid) {
+    "use strict";
+
+    /** URL utilities salvaged from kettle - these should go into core framework **/
+
+    fluid.registerNamespace("fluid.url");
+
+    fluid.url.generateDepth = function(depth) {
+        return fluid.generate(depth, "../").join("");
+    };
+
+    fluid.url.parsePathInfo = function (pathInfo) {
+        var togo = {};
+        var segs = pathInfo.split("/");
+        if (segs.length > 0) {
+            var top = segs.length - 1;
+            var dotpos = segs[top].indexOf(".");
+            if (dotpos !== -1) {
+                togo.extension = segs[top].substring(dotpos + 1);
+                segs[top] = segs[top].substring(0, dotpos);
+            }
+        }
+        togo.pathInfo = segs;
+        return togo;
+    };
+
+    fluid.url.parsePathInfoTrim = function (pathInfo) {
+        var togo = fluid.url.parsePathInfo(pathInfo);
+        if (togo.pathInfo[togo.pathInfo.length - 1] === "") {
+            togo.pathInfo.length--;
+        }
+        return togo;
+    };
+
+    /** Collapse the array of segments into a URL path, starting at the specified
+     * segment index - this will not terminate with a slash, unless the final segment
+     * is the empty string
+     */
+    fluid.url.collapseSegs = function(segs, from, to) {
+        var togo = "";
+        if (from === undefined) {
+            from = 0;
+        }
+        if (to === undefined) {
+            to = segs.length;
+        }
+        for (var i = from; i < to - 1; ++ i) {
+            togo += segs[i] + "/";
+        }
+        if (to > from) { // TODO: bug in Kettle version
+            togo += segs[to - 1];
+        }
+        return togo;
+    };
+
+    fluid.url.makeRelPath = function(parsed, index) {
+        var togo = fluid.kettle.collapseSegs(parsed.pathInfo, index);
+        if (parsed.extension) {
+            togo += "." + parsed.extension;
+        }
+        return togo;
+    };
+
+    /** Canonicalise IN PLACE the supplied segment array derived from parsing a
+     * pathInfo structure. Warning, this destructively modifies the argument.
+     */
+    fluid.url.cononocolosePath = function(pathInfo) {
+        var consume = 0;
+        for (var i = 0; i < pathInfo.length; ++ i) {
+            if (pathInfo[i] === "..") {
+                ++consume;
+            }
+            else if (consume !== 0) {
+                pathInfo.splice(i - consume*2, consume*2);
+                i -= consume * 2;
+                consume = 0;
+            }
+        }
+        return pathInfo;
+    };
+
+    // parseUri 1.2.2
+    // (c) Steven Levithan <stevenlevithan.com>
+    // MIT License
+
+    fluid.url.parseUri = function (str) {
+        var o  = fluid.url.parseUri.options,
+          m   = o.parser[o.strictMode ? "strict" : "loose"].exec(str),
+          uri = {},
+          i   = 14;
+
+        while (i--) { uri[o.key[i]] = m[i] || ""; }
+
+        uri[o.q.name] = {};
+        uri[o.key[12]].replace(o.q.parser, function ($0, $1, $2) {
+            if ($1) { uri[o.q.name][$1] = $2; }
+        });
+
+        return uri;
+    };
+
+    fluid.url.parseUri.options = {
+        strictMode: true,
+        key: ["source","protocol","authority","userInfo","user","password","host","port","relative","path","directory","file","query","anchor"],
+        q:   {
+            name:   "queryKey",
+            parser: /(?:^|&)([^&=]*)=?([^&]*)/g
+        },
+        parser: {
+            strict: /^(?:([^:\/?#]+):)?(?:\/\/((?:(([^:@]*)(?::([^:@]*))?)?@)?([^:\/?#]*)(?::(\d*))?))?((((?:[^?#\/]*\/)*)([^?#]*))(?:\?([^#]*))?(?:#(.*))?)/,
+            loose:  /^(?:(?![^:@]+:[^:@\/]*@)([^:\/?#.]+):)?(?:\/\/)?((?:(([^:@]*)(?::([^:@]*))?)?@)?([^:\/?#]*)(?::(\d*))?)(((\/(?:[^?#](?![^?#\/]*\.[^?#\/.]+(?:[?#]|$)))*\/?)?([^?#\/]*))(?:\?([^#]*))?(?:#(.*))?)/
+        }
+    };
+
+    fluid.url.parseSegs = function(url) {
+        var parsed = fluid.url.parseUri(url);
+        var parsedSegs = fluid.url.parsePathInfoTrim(parsed.directory);
+        return parsedSegs.pathInfo;
+    };
+
+    fluid.url.isAbsoluteUrl = function(url) {
+        var parseRel = fluid.url.parseUri(url);
+        return (parseRel.host || parseRel.protocol || parseRel.directory.charAt(0) === "/");
+    };
+
+    fluid.url.computeRelativePrefix = function(outerLocation, iframeLocation, relPath) {
+        if (fluid.url.isAbsoluteUrl(relPath)) {
+            return relPath;
+        }
+        var relSegs = fluid.url.parsePathInfo(relPath).pathInfo;
+        var parsedOuter = fluid.url.parseSegs(outerLocation);
+        var parsedRel = parsedOuter.concat(relSegs);
+        fluid.url.cononocolosePath(parsedRel);
+        var parsedInner = fluid.url.parseSegs(iframeLocation);
+        var seg = 0;
+        for (; seg < parsedRel.length; ++ seg) {
+            if (parsedRel[seg] !== parsedInner[seg]) { break; }
+        }
+        var excess = parsedInner.length - seg;
+        var back = fluid.url.generateDepth(excess);
+        var front = fluid.url.collapseSegs(parsedRel, seg);
+        return back + front;
+    };
+
+})(jQuery, fluid_2_0);
+;/*
+Copyright 2009 University of Toronto
+Copyright 2011-2013 OCAD University
+
+Licensed under the Educational Community License (ECL), Version 2.0 or the New
+BSD license. You may not use this file except in compliance with one these
+Licenses.
+
+You may obtain a copy of the ECL 2.0 License and BSD License at
+https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
+*/
+
+var fluid_2_0 = fluid_2_0 || {};
+
+(function ($, fluid) {
+    "use strict";
+
+    /**
+     * A Generic data source grade that defines an API for getting and setting
+     * data.
+     */
+    fluid.defaults("fluid.prefs.dataSource", {
+        gradeNames: ["fluid.littleComponent"],
+        invokers: {
+            get: "fluid.prefs.dataSource.get",
+            set: "fluid.prefs.dataSource.set"
+        }
+    });
+
+    /****************
+     * Cookie Store *
+     ****************/
+
+    /**
+     * SettingsStore Subcomponent that uses a cookie for persistence.
+     * @param {Object} options
+     */
+    fluid.defaults("fluid.cookieStore", {
+        gradeNames: ["fluid.prefs.dataSource", "autoInit"],
+        cookie: {
+            name: "fluid-ui-settings",
+            path: "/",
+            expires: ""
+        }
+    });
+
+    fluid.demands("fluid.prefs.dataSource.get", "fluid.cookieStore", {
+        funcName: "fluid.cookieStore.get",
+        args: "{that}.options.cookie.name"
+    });
+
+    fluid.demands("fluid.prefs.dataSource.set", "fluid.cookieStore", {
+        funcName: "fluid.cookieStore.set",
+        args: ["{arguments}.0", "{that}.options.cookie"]
+    });
+
+    /**
+     * Retrieve and return the value of the cookie
+     */
+    fluid.cookieStore.get = function (cookieName) {
+        var cookie = document.cookie;
+        if (cookie.length <= 0) {
+            return;
+        }
+
+        var cookiePrefix = cookieName + "=";
+        var startIndex = cookie.indexOf(cookiePrefix);
+        if (startIndex < 0) {
+            return;
+        }
+
+        startIndex = startIndex + cookiePrefix.length;
+        var endIndex = cookie.indexOf(";", startIndex);
+        if (endIndex < startIndex) {
+            endIndex = cookie.length;
+        }
+
+        var retObj = JSON.parse(decodeURIComponent(cookie.substring(startIndex, endIndex)));
+        return retObj;
+    };
+
+    /**
+     * Assembles the cookie string
+     * @param {Object} cookie settings
+     */
+    fluid.cookieStore.assembleCookie = function (cookieOptions) {
+        var cookieStr = cookieOptions.name + "=" + cookieOptions.data;
+
+        if (cookieOptions.expires) {
+            cookieStr += "; expires=" + cookieOptions.expires;
+        }
+
+        if (cookieOptions.path) {
+            cookieStr += "; path=" + cookieOptions.path;
+        }
+
+        return cookieStr;
+    };
+
+    /**
+     * Saves the settings into a cookie
+     * @param {Object} settings
+     * @param {Object} cookieOptions
+     */
+    fluid.cookieStore.set = function (settings, cookieOptions) {
+        cookieOptions.data = encodeURIComponent(JSON.stringify(settings));
+        document.cookie = fluid.cookieStore.assembleCookie(cookieOptions);
+    };
+
+
+    /**************
+     * Temp Store *
+     **************/
+
+    /**
+     * SettingsStore Subcomponent that doesn't do persistence.
+     * @param {Object} options
+     */
+    fluid.defaults("fluid.tempStore", {
+        gradeNames: ["fluid.prefs.dataSource", "fluid.modelRelayComponent", "autoInit"]
+    });
+
+    fluid.demands("fluid.prefs.dataSource.get", "fluid.tempStore", {
+        funcName: "fluid.identity",
+        args: "{that}.model"
+    });
+
+    fluid.demands("fluid.prefs.dataSource.set", "fluid.tempStore", {
+        funcName: "fluid.tempStore.set",
+        args: ["{arguments}.0", "{that}.applier"]
+    });
+
+    fluid.tempStore.set = function (settings, applier) {
+        applier.fireChangeRequest({path: "", type: "DELETE"});
+        applier.change("", settings);
+    };
+
+    fluid.defaults("fluid.globalSettingsStore", {
+        gradeNames: ["autoInit", "fluid.littleComponent"],
+        components: {
+            settingsStore: {
+                type: "fluid.prefs.store"
+            }
+        }
+    });
+
+    fluid.globalSettingsStore.finalInit = function (that) {
+        fluid.staticEnvironment.settingsStore = that.settingsStore;
+    };
+
+    fluid.demands("fluid.prefs.store", ["fluid.globalSettingsStore"], {
+        funcName: "fluid.cookieStore"
+    });
+
+})(jQuery, fluid_2_0);
+;/*
+Copyright 2009 University of Toronto
+Copyright 2010-2011 OCAD University
+Copyright 2011 Lucendo Development Ltd.
+
+Licensed under the Educational Community License (ECL), Version 2.0 or the New
+BSD license. You may not use this file except in compliance with one these
+Licenses.
+
+You may obtain a copy of the ECL 2.0 License and BSD License at
+https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
+*/
+
+var fluid_2_0 = fluid_2_0 || {};
+
+(function ($, fluid) {
+    "use strict";
+
+    /*******************************************************************************
+     * Root Model                                                                  *
+     *                                                                             *
+     * Holds the default values for enactors and panel model values                *
+     *******************************************************************************/
+
+    fluid.defaults("fluid.prefs.initialModel", {
+        gradeNames: ["fluid.littleComponent", "autoInit"],
+        members: {
+            // TODO: This information is supposed to be generated from the JSON
+            // schema describing various preferences. For now it's kept in top
+            // level prefsEditor to avoid further duplication.
+            initialModel: {}
+        }
+    });
+
+    /***********************************************
+     * UI Enhancer                                 *
+     *                                             *
+     * Transforms the page based on user settings. *
+     ***********************************************/
+
+    fluid.defaults("fluid.uiEnhancer", {
+        gradeNames: ["fluid.viewRelayComponent", "autoInit"],
+        invokers: {
+            updateModel: {
+                func: "{that}.applier.change",
+                args: ["", "{arguments}.0"]
+            }
+        }
+    });
+
+    /********************************************************************************
+     * PageEnhancer                                                                 *
+     *                                                                              *
+     * A UIEnhancer wrapper that concerns itself with the entire page.              *
+     *                                                                              *
+     * "originalEnhancerOptions" is a grade component to keep track of the original *
+     * uiEnhancer user options                                                      *
+     ********************************************************************************/
+    fluid.defaults("fluid.pageEnhancer", {
+        gradeNames: ["fluid.eventedComponent", "fluid.originalEnhancerOptions", "fluid.prefs.initialModel", "fluid.prefs.settingsGetter", "autoInit"],
+        components: {
+            uiEnhancer: {
+                type: "fluid.uiEnhancer",
+                container: "body"
+            }
+        },
+        distributeOptions: {
+            source: "{that}.options.uiEnhancer",
+            target: "{that > uiEnhancer}.options"
+        },
+        invokers: {
+            init: {
+                funcName: "fluid.pageEnhancer.init",
+                args: "{that}"
+            }
+        },
+        listeners: {
+            onCreate: [{
+                listener: "{that}.init"
+            }]
+        }
+    });
+
+    fluid.pageEnhancer.init = function (that) {
+        that.options.originalUserOptions = $.extend(true, that.uiEnhancer.options, fluid.copy(that.options.uiEnhancer));
+        fluid.staticEnvironment.originalEnhancerOptions = that;
+        that.uiEnhancer.updateModel(that.getSettings());
+        fluid.staticEnvironment.uiEnhancer = that.uiEnhancer;
+    };
+
+})(jQuery, fluid_2_0);
+;/*
+Copyright 2009 University of Toronto
+Copyright 2010-2015 OCAD University
+Copyright 2011 Lucendo Development Ltd.
+
+Licensed under the Educational Community License (ECL), Version 2.0 or the New
+BSD license. You may not use this file except in compliance with one these
+Licenses.
+
+You may obtain a copy of the ECL 2.0 License and BSD License at
+https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
+*/
+
+var fluid_2_0 = fluid_2_0 || {};
+
+(function ($, fluid) {
+    "use strict";
+
+    /*****************************
+     * Preferences Editor Loader *
+     *****************************/
+
+    /**
+     * An Preferences Editor top-level component that reflects the collaboration between prefsEditor, templateLoader and messageLoader.
+     * This component is the only Preferences Editor component that is intended to be called by the outside world.
+     *
+     * @param {Object} options
+     */
+    fluid.defaults("fluid.prefs.prefsEditorLoader", {
+        gradeNames: ["fluid.viewRelayComponent", "fluid.prefs.settingsGetter", "fluid.prefs.initialModel", "autoInit"],
+        defaultLocale: "en",
+        members: {
+            settings: {
+                expander: {
+                    funcName: "fluid.prefs.prefsEditorLoader.getCompleteSettings",
+                    args: ["{that}.initialModel", "{that}.getSettings"]
+                }
+            }
+        },
+        components: {
+            prefsEditor: {
+                priority: "last",
+                type: "fluid.prefs.prefsEditor",
+                createOnEvent: "onCreatePrefsEditorReady",
+                options: {
+                    members: {
+                        initialModel: "{prefsEditorLoader}.initialModel"
+                    },
+                    invokers: {
+                        getSettings: "{prefsEditorLoader}.getSettings"
+                    }
+                }
+            },
+            templateLoader: {
+                type: "fluid.prefs.resourceLoader",
+                options: {
+                    events: {
+                        onResourcesLoaded: "{prefsEditorLoader}.events.onPrefsEditorTemplatesLoaded"
+                    }
+                }
+            },
+            messageLoader: {
+                type: "fluid.prefs.resourceLoader",
+                options: {
+                    defaultLocale: "{prefsEditorLoader}.options.defaultLocale",
+                    locale: "{prefsEditorLoader}.settings.locale",
+                    resourceOptions: {
+                        dataType: "json"
+                    },
+                    events: {
+                        onResourcesLoaded: "{prefsEditorLoader}.events.onPrefsEditorMessagesLoaded"
+                    }
+                }
+            }
+        },
+        events: {
+            onPrefsEditorTemplatesLoaded: null,
+            onPrefsEditorMessagesLoaded: null,
+            onCreatePrefsEditorReady: {
+                events: {
+                    templateLoaded: "onPrefsEditorTemplatesLoaded",
+                    prefsEditorMessagesLoaded: "onPrefsEditorMessagesLoaded"
+                }
+            }
+        },
+        distributeOptions: [{
+            source: "{that}.options.templateLoader",
+            removeSource: true,
+            target: "{that > templateLoader}.options"
+        }, {
+            source: "{that}.options.messageLoader",
+            removeSource: true,
+            target: "{that > messageLoader}.options"
+        }, {
+            source: "{that}.options.terms",
+            target: "{that > templateLoader}.options.terms"
+        }, {
+            source: "{that}.options.terms",
+            target: "{that > messageLoader}.options.terms"
+        }, {
+            source: "{that}.options.prefsEditor",
+            removeSource: true,
+            target: "{that > prefsEditor}.options"
+        }]
+    });
+
+    fluid.prefs.prefsEditorLoader.getCompleteSettings = function (initialModel, getSettingsFunc) {
+        var savedSettings = getSettingsFunc();
+        return $.extend(true, {}, initialModel, savedSettings);
+    };
+
+    // TODO: This mixin grade appears to be supplied manually by various test cases but no longer appears in
+    // the main configuration. We should remove the need for users to supply this - also the use of "defaultPanels" in fact
+    // refers to "starter panels"
+    fluid.defaults("fluid.prefs.transformDefaultPanelsOptions", {
+        // Do not supply "fluid.prefs.inline" here, since when this is used as a mixin for separatedPanel, it ends up displacing the
+        // more refined type of the prefsEditorLoader
+        gradeNames: ["fluid.viewRelayComponent", "autoInit"],
+        distributeOptions: [{
+            source: "{that}.options.textSize",
+            removeSource: true,
+            target: "{that textSize}.options"
+        }, {
+            source: "{that}.options.lineSpace",
+            removeSource: true,
+            target: "{that lineSpace}.options"
+        }, {
+            source: "{that}.options.textFont",
+            removeSource: true,
+            target: "{that textFont}.options"
+        }, {
+            source: "{that}.options.contrast",
+            removeSource: true,
+            target: "{that contrast}.options"
+        }, {
+            source: "{that}.options.layoutControls",
+            removeSource: true,
+            target: "{that layoutControls}.options"
+        }, {
+            source: "{that}.options.linksControls",
+            removeSource: true,
+            target: "{that linksControls}.options"
+        }]
+    });
+
+    /**************************************
+     * Preferences Editor Resource Loader *
+     **************************************/
+
+    /**
+     * A configurable component to allow users to set either the location of their own templates
+     * or the templates that are relative to the path defined in the Preferences Editor template
+     * path component.
+     *
+     * @param {Object} options
+     */
+
+    fluid.defaults("fluid.prefs.resourceLoader", {
+        gradeNames: ["fluid.eventedComponent", "autoInit"],
+        listeners: {
+            "onCreate.loadResources": {
+                listener: "fluid.prefs.resourceLoader.loadResources",
+                args: ["{that}", {expander: {func: "{that}.resolveResources"}}]
+            }
+        },
+        defaultLocale: null,
+        locale: null,
+        terms: {},  // Must be supplied by integrators
+        resources: {},  // Must be supplied by integrators
+        resourceOptions: {},
+        // Unsupported, non-API option
+        invokers: {
+            transformURL: {
+                funcName: "fluid.stringTemplate",
+                args: ["{arguments}.0", "{that}.options.terms"]
+            },
+            resolveResources: {
+                funcName: "fluid.prefs.resourceLoader.resolveResources",
+                args: "{that}"
+            }
+        },
+        events: {
+            onResourcesLoaded: null
+        }
+    });
+
+    fluid.prefs.resourceLoader.resolveResources = function (that) {
+        var mapped = fluid.transform(that.options.resources, that.transformURL);
+
+        return fluid.transform(mapped, function (url) {
+            var resourceSpec = {url: url, forceCache: true, options: that.options.resourceOptions};
+            return $.extend(resourceSpec, fluid.filterKeys(that.options, ["defaultLocale", "locale"]));
+        });
+    };
+
+    fluid.prefs.resourceLoader.loadResources = function (that, resources) {
+        fluid.fetchResources(resources, function () {
+            that.resources = resources;
+            that.events.onResourcesLoaded.fire(resources);
+        });
+    };
+
+    /**********************
+     * Preferences Editor *
+     **********************/
+
+    fluid.defaults("fluid.prefs.settingsGetter", {
+        gradeNames: ["fluid.littleComponent", "autoInit"],
+        members: {
+            getSettings: "{settingsStore}.get"
+        }
+    });
+
+    fluid.defaults("fluid.prefs.settingsSetter", {
+        gradeNames: ["fluid.littleComponent", "autoInit"],
+        invokers: {
+            setSettings: {
+                funcName: "fluid.prefs.settingsSetter.setSettings",
+                args: ["{arguments}.0", "{settingsStore}.set"]
+            }
+        }
+    });
+
+    fluid.prefs.settingsSetter.setSettings = function (model, set) {
+        var userSettings = fluid.copy(model);
+        set(userSettings);
+    };
+
+    fluid.defaults("fluid.prefs.uiEnhancerRelay", {
+        gradeNames: ["autoInit", "fluid.modelRelayComponent"],
+        listeners: {
+            onCreate: "{that}.addListener",
+            onDestroy: "{that}.removeListener"
+        },
+        events: {
+            updateEnhancerModel: "{fluid.prefs.prefsEditor}.events.onUpdateEnhancerModel"
+        },
+        invokers: {
+            addListener: {
+                funcName: "fluid.prefs.uiEnhancerRelay.addListener",
+                args: ["{that}.events.updateEnhancerModel", "{that}.updateEnhancerModel"]
+            },
+            removeListener: {
+                funcName: "fluid.prefs.uiEnhancerRelay.removeListener",
+                args: ["{that}.events.updateEnhancerModel", "{that}.updateEnhancerModel"]
+            },
+            updateEnhancerModel: {
+                funcName: "fluid.prefs.uiEnhancerRelay.updateEnhancerModel",
+                args: ["{uiEnhancer}", "{fluid.prefs.prefsEditor}.model"]
+            }
+        }
+    });
+
+    fluid.prefs.uiEnhancerRelay.addListener = function (modelChanged, listener) {
+        modelChanged.addListener(listener);
+    };
+
+    fluid.prefs.uiEnhancerRelay.removeListener = function (modelChanged, listener) {
+        modelChanged.removeListener(listener);
+    };
+
+    fluid.prefs.uiEnhancerRelay.updateEnhancerModel = function (uiEnhancer, newModel) {
+        uiEnhancer.updateModel(newModel);
+    };
+
+    /**
+     * A component that works in conjunction with the UI Enhancer component
+     * to allow users to set personal user interface preferences. The Preferences Editor component provides a user
+     * interface for setting and saving personal preferences, and the UI Enhancer component carries out the
+     * work of applying those preferences to the user interface.
+     *
+     * @param {Object} container
+     * @param {Object} options
+     */
+    fluid.defaults("fluid.prefs.prefsEditor", {
+        gradeNames: ["fluid.viewRelayComponent", "fluid.prefs.settingsSetter", "autoInit"],
+        invokers: {
+            /**
+             * Updates the change applier and fires modelChanged on subcomponent fluid.prefs.controls
+             *
+             * @param {Object} newModel
+             * @param {Object} source
+             */
+            fetch: {
+                funcName: "fluid.prefs.prefsEditor.fetch",
+                args: ["{that}"]
+            },
+            applyChanges: {
+                funcName: "fluid.prefs.prefsEditor.applyChanges",
+                args: ["{that}"]
+            },
+            save: {
+                funcName: "fluid.prefs.prefsEditor.save",
+                args: ["{that}"]
+            },
+            saveAndApply: {
+                funcName: "fluid.prefs.prefsEditor.saveAndApply",
+                args: ["{that}"]
+            },
+            reset: {
+                funcName: "fluid.prefs.prefsEditor.reset",
+                args: ["{that}"]
+            },
+            cancel: {
+                funcName: "fluid.prefs.prefsEditor.cancel",
+                args: ["{that}"]
+            }
+        },
+        selectors: {
+            cancel: ".flc-prefsEditor-cancel",
+            reset: ".flc-prefsEditor-reset",
+            save: ".flc-prefsEditor-save",
+            previewFrame : ".flc-prefsEditor-preview-frame"
+        },
+        events: {
+            onSave: null,
+            onCancel: null,
+            onReset: null,
+            onAutoSave: null,
+            modelChanged: null,
+            onPrefsEditorRefresh: null,
+            onUpdateEnhancerModel: null,
+            onPrefsEditorMarkupReady: null,
+            onReady: null
+        },
+        listeners: {
+            onCreate: "fluid.prefs.prefsEditor.init",
+            onAutoSave: "{that}.save"
+        },
+        modelListeners: {
+            "": [{
+                listener: "fluid.prefs.prefsEditor.handleAutoSave",
+                args: ["{that}"]
+            }, {
+                listener: "{that}.events.modelChanged.fire",
+                args: ["{change}.value"]
+            }]
+        },
+        resources: {
+            template: "{templateLoader}.resources.prefsEditor"
+        },
+        autoSave: false
+    });
+
+    /**
+     * Refresh PrefsEditor
+     */
+    fluid.prefs.prefsEditor.applyChanges = function (that) {
+        that.events.onUpdateEnhancerModel.fire();
+    };
+
+    fluid.prefs.prefsEditor.fetch = function (that) {
+        var completeModel = that.getSettings();
+        completeModel = $.extend(true, {}, that.initialModel, completeModel);
+        // TODO: This may not be completely effective if the root model is smaller than
+        // the current one. Given our previous discoveries re "model shrinkage"
+        // (http://issues.fluidproject.org/browse/FLUID-5585 ), the proper thing to do here
+        // is to apply a DELETE to the root before putting in the new model. And this should
+        // be done within a transaction in order to avoid notifying the tree more than necessary.
+        // However, the transactional model of the changeApplier is going to change radically
+        // soon (http://wiki.fluidproject.org/display/fluid/New+New+Notes+on+the+ChangeApplier)
+        // and this implementation doesn't seem to be causing a problem at present so we had
+        // just better leave it the way it is for now.
+        that.applier.change("", completeModel);
+        that.events.onPrefsEditorRefresh.fire();
+        that.applyChanges();
+    };
+
+    /**
+     * Saves the current model and fires onSave
+     */
+    fluid.prefs.prefsEditor.save = function (that) {
+        var savedSelections = fluid.copy(that.model);
+
+        fluid.each(savedSelections, function (value, key) {
+            if (fluid.get(that.initialModel, key) === value) {
+                delete savedSelections[key];
+            }
+        });
+        that.events.onSave.fire(savedSelections);
+        that.setSettings(savedSelections);
+    };
+
+    fluid.prefs.prefsEditor.saveAndApply = function (that) {
+        that.save();
+        that.events.onPrefsEditorRefresh.fire();
+        that.applyChanges();
+    };
+
+    /**
+     * Resets the selections to the integrator's defaults and fires onReset
+     */
+    fluid.prefs.prefsEditor.reset = function (that) {
+        that.applier.change("", fluid.copy(that.initialModel));
+        that.events.onPrefsEditorRefresh.fire();
+        that.events.onReset.fire(that);
+    };
+
+    /**
+     * Resets the selections to the last saved selections and fires onCancel
+     */
+    fluid.prefs.prefsEditor.cancel = function (that) {
+        that.events.onCancel.fire();
+        that.fetch();
+    };
+
+    // called once markup is applied to the document containing tab component roots
+    fluid.prefs.prefsEditor.finishInit = function (that) {
+        var bindHandlers = function (that) {
+            var saveButton = that.locate("save");
+            if (saveButton.length > 0) {
+                saveButton.click(that.saveAndApply);
+                var form = fluid.findForm(saveButton);
+                $(form).submit(function () {
+                    that.saveAndApply();
+                });
+            }
+            that.locate("reset").click(that.reset);
+            that.locate("cancel").click(that.cancel);
+        };
+
+        that.container.append(that.options.resources.template.resourceText);
+        bindHandlers(that);
+        // This creates subcomponents - we can find default model afterwards
+        that.events.onPrefsEditorMarkupReady.fire(that);
+
+        that.fetch();
+        that.events.onReady.fire(that);
+    };
+
+    fluid.prefs.prefsEditor.handleAutoSave = function (that) {
+        if (that.options.autoSave) {
+            that.events.onAutoSave.fire();
+        }
+    };
+
+    fluid.prefs.prefsEditor.init = function (that) {
+        // This setTimeout is to ensure that fetching of resources is asynchronous,
+        // and so that component construction does not run ahead of subcomponents for SeparatedPanel
+        // (FLUID-4453 - this may be a replacement for a branch removed for a FLUID-2248 fix)
+        setTimeout(function () {
+            if (!fluid.isDestroyed(that)) {
+                fluid.prefs.prefsEditor.finishInit(that);
+            }
+        }, 1);
+    };
+
+    /******************************
+     * Preferences Editor Preview *
+     ******************************/
+
+    fluid.defaults("fluid.prefs.preview", {
+        gradeNames: ["fluid.viewRelayComponent", "autoInit"],
+        components: {
+            enhancer: {
+                type: "fluid.uiEnhancer",
+                container: "{preview}.enhancerContainer",
+                createOnEvent: "onReady"
+            },
+            // TODO: This is a violation of containment, but we can't use up our allowance of demands
+            // blocks as a result of FLUID-4392
+            templateLoader: "{templateLoader}"
+        },
+        invokers: {
+            updateModel: {
+                funcName: "fluid.prefs.preview.updateModel",
+                args: [
+                    "{preview}",
+                    "{prefsEditor}.model"
+                ]
+            }
+        },
+        finalInitFunction: "fluid.prefs.preview.finalInit",
+        events: {
+            onReady: null
+        },
+        listeners: {
+            "{prefsEditor}.events.modelChanged": "{that}.updateModel",
+            onReady: "{that}.updateModel"
+        },
+        templateUrl: "%prefix/PrefsEditorPreview.html"
+    });
+
+    fluid.prefs.preview.updateModel = function (that, model) {
+        /**
+         * SetTimeout is temp fix for http://issues.fluidproject.org/browse/FLUID-2248
+         */
+        setTimeout(function () {
+            if (that.enhancer) {
+                that.enhancer.updateModel(model);
+            }
+        }, 0);
+    };
+
+    fluid.prefs.preview.finalInit = function (that) {
+        var templateUrl = that.templateLoader.transformURL(that.options.templateUrl);
+        that.container.load(function () {
+            that.enhancerContainer = $("body", that.container.contents());
+            that.events.onReady.fire();
+        });
+        that.container.attr("src", templateUrl);
+    };
+
+})(jQuery, fluid_2_0);
+;/*
+Copyright 2013-2015 OCAD University
+
+Licensed under the Educational Community License (ECL), Version 2.0 or the New
+BSD license. You may not use this file except in compliance with one these
+Licenses.
+
+You may obtain a copy of the ECL 2.0 License and BSD License at
+https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
+*/
+
+var fluid_2_0 = fluid_2_0 || {};
+
+
+(function ($, fluid) {
+    "use strict";
+
+    /**********************
+     * msgLookup grade *
+     **********************/
+
+    fluid.defaults("fluid.prefs.msgLookup", {
+        gradeNames: ["fluid.littleComponent", "autoInit"],
+        members: {
+            msgLookup: {
+                expander: {
+                    funcName: "fluid.prefs.stringLookup",
+                    args: ["{msgResolver}", "{that}.options.stringArrayIndex"]
+                }
+            }
+        },
+        stringArrayIndex: {}
+    });
+
+    fluid.prefs.stringLookup = function (messageResolver, stringArrayIndex) {
+        var that = {id: fluid.allocateGuid()};
+        that.singleLookup = function (value) {
+            var looked = messageResolver.lookup([value]);
+            return fluid.get(looked, "template");
+        };
+        that.multiLookup = function (values) {
+            return fluid.transform(values, function (value) {
+                return that.singleLookup(value);
+            });
+        };
+        that.lookup = function (value) {
+            var values = fluid.get(stringArrayIndex, value) || value;
+            var lookupFn = fluid.isArrayable(values) ? "multiLookup" : "singleLookup";
+            return that[lookupFn](values);
+        };
+        that.resolvePathSegment = that.lookup;
+        return that;
+    };
+
+    /***********************************************
+     * Base grade panel
+     ***********************************************/
+
+    fluid.defaults("fluid.prefs.panel", {
+        gradeNames: ["fluid.rendererRelayComponent", "fluid.prefs.msgLookup", "autoInit"],
+        events: {
+            onDomBind: null
+        },
+        // Any listener that requires a DOM element, should be registered
+        // to the onDomBind listener. By default it is fired by onCreate, but
+        // when used as a subpanel, it will be triggered by the resetDomBinder invoker.
+        listeners: {
+            "onCreate.onDomBind": "{that}.events.onDomBind"
+        },
+        components: {
+            msgResolver: {
+                type: "fluid.messageResolver"
+            }
+        },
+        rendererOptions: {
+            messageLocator: "{msgResolver}.resolve"
+        },
+        distributeOptions: {
+            source: "{that}.options.messageBase",
+            target: "{that > msgResolver}.options.messageBase"
+        }
+    });
+
+    /***************************
+     * Base grade for subpanel *
+     ***************************/
+
+    fluid.defaults("fluid.prefs.subPanel", {
+        gradeNames: ["fluid.prefs.panel", "{that}.getDomBindGrade", "autoInit"],
+        listeners: {
+            "{compositePanel}.events.afterRender": {
+                listener: "{that}.events.afterRender",
+                args: ["{that}"]
+            },
+            // Changing the firing of onDomBind from the onCreate.
+            // This is due to the fact that the rendering process, controlled by the
+            // composite panel, will set/replace the DOM elements.
+            "onCreate.onDomBind": null, // remove listener
+            "afterRender.onDomBind": "{that}.resetDomBinder"
+        },
+        rules: {
+            expander: {
+                func: "fluid.prefs.subPanel.generateRules",
+                args: ["{that}.options.preferenceMap"]
+            }
+        },
+        invokers: {
+            refreshView: "{compositePanel}.refreshView",
+            // resetDomBinder must fire the onDomBind event
+            resetDomBinder: {
+                funcName: "fluid.prefs.subPanel.resetDomBinder",
+                args: ["{that}"]
+            },
+            getDomBindGrade: {
+                funcName: "fluid.prefs.subPanel.getDomBindGrade",
+                args: ["{prefsEditor}"]
+            }
+        },
+        strings: {},
+        parentBundle: "{compositePanel}.messageResolver",
+        renderOnInit: false
+    });
+
+    fluid.defaults("fluid.prefs.subPanel.domBind", {
+        gradeNames: ["fluid.eventedComponent", "autoInit"],
+        listeners: {
+            "onDomBind.domChange": {
+                listener: "{prefsEditor}.events.onSignificantDOMChange"
+            }
+        }
+    });
+
+    fluid.prefs.subPanel.getDomBindGrade = function (prefsEditor) {
+        var hasListener = fluid.get(prefsEditor, "options.events.onSignificantDOMChange") !== undefined;
+        if (hasListener) {
+            return "fluid.prefs.subPanel.domBind";
+        }
+    };
+
+    /*
+     * Since the composite panel manages the rendering of the subpanels
+     * the markup used by subpanels needs to be completely replaced.
+     * The subpanel's container is refereshed to point at the newly
+     * rendered markup, and the domBinder is re-initialized. Once
+     * this is all done, the onDomBind event is fired.
+     */
+    fluid.prefs.subPanel.resetDomBinder = function (that) {
+        // TODO: The line below to find the container jQuery instance was copied from the framework code -
+        // https://github.com/fluid-project/infusion/blob/master/src/framework/core/js/FluidView.js#L145
+        // in order to reset the dom binder when panels are in an iframe.
+        // It can be be eliminated once we have the new renderer.
+        var userJQuery = that.container.constructor;
+        that.container = userJQuery(that.container.selector);
+        fluid.initDomBinder(that, that.options.selectors);
+        that.events.onDomBind.fire(that);
+    };
+
+    fluid.prefs.subPanel.safePrefKey = function (prefKey) {
+        return prefKey.replace(/[.]/g, "_");
+    };
+
+    /*
+     * Generates the model relay rules for a subpanel.
+     * Takes advantage of the fact that compositePanel
+     * uses the preference key (with "." replaced by "_"),
+     * as its model path.
+     */
+    fluid.prefs.subPanel.generateRules = function (preferenceMap) {
+        var rules = {};
+        fluid.each(preferenceMap, function (prefObj, prefKey) {
+            fluid.each(prefObj, function (value, prefRule) {
+                if (prefRule.indexOf("model.") === 0) {
+                    rules[fluid.prefs.subPanel.safePrefKey(prefKey)] = prefRule.slice("model.".length);
+                }
+            });
+        });
+        return rules;
+    };
+
+    /**********************************
+     * Base grade for composite panel *
+     **********************************/
+
+    fluid.registerNamespace("fluid.prefs.compositePanel");
+
+    fluid.prefs.compositePanel.arrayMergePolicy = function (target, source) {
+        target = fluid.makeArray(target);
+        source = fluid.makeArray(source);
+        fluid.each(source, function (selector) {
+            if ($.inArray(selector, target) < 0) {
+                target.push(selector);
+            }
+        });
+        return target;
+    };
+
+    fluid.defaults("fluid.prefs.compositePanel", {
+        gradeNames: ["fluid.prefs.panel", "autoInit", "{that}.getDistributeOptionsGrade", "{that}.getSubPanelLifecycleBindings"],
+        mergePolicy: {
+            subPanelOverrides: "noexpand",
+            selectorsToIgnore: fluid.prefs.compositePanel.arrayMergePolicy
+        },
+        selectors: {}, // requires selectors into the template which will act as the containers for the subpanels
+        selectorsToIgnore: [], // should match the selectors that are used to identify the containers for the subpanels
+        repeatingSelectors: [],
+        events: {
+            initSubPanels: null
+        },
+        listeners: {
+            "onCreate.combineResources": "{that}.combineResources",
+            "onCreate.appendTemplate": {
+                "this": "{that}.container",
+                "method": "append",
+                "args": ["{that}.options.resources.template.resourceText"]
+            },
+            "onCreate.initSubPanels": "{that}.events.initSubPanels",
+            "onCreate.hideInactive": "{that}.hideInactive",
+            "onCreate.surfaceSubpanelRendererSelectors": "{that}.surfaceSubpanelRendererSelectors",
+            "afterRender.hideInactive": "{that}.hideInactive"
+        },
+        invokers: {
+            getDistributeOptionsGrade: {
+                funcName: "fluid.prefs.compositePanel.assembleDistributeOptions",
+                args: ["{that}.options.components"]
+            },
+            getSubPanelLifecycleBindings: {
+                funcName: "fluid.prefs.compositePanel.subPanelLifecycleBindings",
+                args: ["{that}.options.components"]
+            },
+            combineResources: {
+                funcName: "fluid.prefs.compositePanel.combineTemplates",
+                args: ["{that}.options.resources", "{that}.options.selectors"]
+            },
+            surfaceSubpanelRendererSelectors: {
+                funcName: "fluid.prefs.compositePanel.surfaceSubpanelRendererSelectors",
+                args: ["{that}", "{that}.options.components", "{that}.options.selectors"]
+            },
+            produceSubPanelTrees: {
+                funcName: "fluid.prefs.compositePanel.produceSubPanelTrees",
+                args: ["{that}"]
+            },
+            expandProtoTree: {
+                funcName: "fluid.prefs.compositePanel.expandProtoTree",
+                args: ["{that}"]
+            },
+            produceTree: {
+                funcName: "fluid.prefs.compositePanel.produceTree",
+                args: ["{that}"]
+            },
+            hideInactive: {
+                funcName: "fluid.prefs.compositePanel.hideInactive",
+                args: ["{that}"]
+            },
+            handleRenderOnPreference: {
+                funcName: "fluid.prefs.compositePanel.handleRenderOnPreference",
+                args: ["{that}", "{that}.refreshView", "{that}.conditionalCreateEvent", "{arguments}.0", "{arguments}.1", "{arguments}.2"]
+            },
+            conditionalCreateEvent: {
+                funcName: "fluid.prefs.compositePanel.conditionalCreateEvent"
+            }
+        },
+        subPanelOverrides: {
+            gradeNames: ["fluid.prefs.subPanel"]
+        },
+        rendererFnOptions: {
+            noexpand: true,
+            cutpointGenerator: "fluid.prefs.compositePanel.cutpointGenerator",
+            subPanelRepeatingSelectors: {
+                expander: {
+                    funcName: "fluid.prefs.compositePanel.surfaceRepeatingSelectors",
+                    args: ["{that}.options.components"]
+                }
+            }
+        },
+        components: {},
+        resources: {} // template is reserved for the compositePanel's template, the subpanel template should have same key as the selector for its container.
+    });
+
+    /*
+     * Attempts to prefetch a components options before it is instantiated.
+     * Only use in cases where the instatiated component cannot be used.
+     */
+    fluid.prefs.compositePanel.prefetchComponentOptions = function (type, options) {
+        var baseOptions = fluid.getGradedDefaults(type, fluid.get(options, "gradeNames"));
+        return fluid.merge(baseOptions.mergePolicy, baseOptions, options);
+    };
+    /*
+     * Should only be used when fluid.prefs.compositePanel.isActivatePanel cannot.
+     * While this implementation doesn't require an instantiated component, it may in
+     * the process miss some configuration provided by distribute options and demands.
+     */
+    fluid.prefs.compositePanel.isPanel = function (type, options) {
+        var opts = fluid.prefs.compositePanel.prefetchComponentOptions(type, options);
+        return fluid.hasGrade(opts, "fluid.prefs.panel");
+    };
+
+    fluid.prefs.compositePanel.isActivePanel = function (comp) {
+        return comp && fluid.hasGrade(comp.options, "fluid.prefs.panel");
+    };
+
+    /*
+     * Creates a grade containing the distributeOptions rules needed for the subcomponents
+     */
+    fluid.prefs.compositePanel.assembleDistributeOptions = function (components) {
+        var gradeName = "fluid.prefs.compositePanel.distributeOptions_" + fluid.allocateGuid();
+        var distributeOptions = [];
+        var relayOption = {};
+        fluid.each(components, function (componentOptions, componentName) {
+            if (fluid.prefs.compositePanel.isPanel(componentOptions.type, componentOptions.options)) {
+                distributeOptions.push({
+                    source: "{that}.options.subPanelOverrides",
+                    target: "{that > " + componentName + "}.options"
+                });
+            }
+
+            // Construct the model relay btw the composite panel and its subpanels
+            var componentRelayRules = {};
+            var definedOptions = fluid.prefs.compositePanel.prefetchComponentOptions(componentOptions.type, componentOptions.options);
+            var preferenceMap = fluid.get(definedOptions, ["preferenceMap"]);
+            fluid.each(preferenceMap, function (prefObj, prefKey) {
+                fluid.each(prefObj, function (value, prefRule) {
+                    if (prefRule.indexOf("model.") === 0) {
+                        fluid.set(componentRelayRules, prefRule.slice("model.".length), "{compositePanel}.model." + fluid.prefs.subPanel.safePrefKey(prefKey));
+                    }
+                });
+            });
+            relayOption[componentName] = componentRelayRules;
+            distributeOptions.push({
+                source: "{that}.options.relayOption." + componentName,
+                target: "{that > " + componentName + "}.options.model"
+            });
+        });
+        fluid.defaults(gradeName, {
+            gradeNames: ["fluid.littleComponent", "autoInit"],
+            relayOption: relayOption,
+            distributeOptions: distributeOptions
+        });
+        return gradeName;
+    };
+
+    fluid.prefs.compositePanel.conditionalCreateEvent = function (value, createEvent) {
+        if (value) {
+            createEvent();
+        }
+    };
+
+
+    fluid.prefs.compositePanel.handleRenderOnPreference = function (that, refreshViewFunc, conditionalCreateEventFunc, value, createEvent, componentNames) {
+        componentNames = fluid.makeArray(componentNames);
+        conditionalCreateEventFunc(value, createEvent);
+        fluid.each(componentNames, function (componentName) {
+            var comp = that[componentName];
+            if (!value && comp) {
+                comp.destroy();
+            }
+        });
+        refreshViewFunc();
+    };
+
+    fluid.prefs.compositePanel.creationEventName = function (pref) {
+        return "initOn_" + pref;
+    };
+
+    fluid.prefs.compositePanel.generateModelListeners = function (conditionals) {
+        return fluid.transform(conditionals, function (componentNames, pref) {
+            var eventName = fluid.prefs.compositePanel.creationEventName(pref);
+            return {
+                func: "{that}.handleRenderOnPreference",
+                args: ["{change}.value", "{that}.events." + eventName + ".fire", componentNames]
+            };
+        });
+    };
+
+    /*
+     * Creates a grade containing all of the lifecycle binding configuration needed for the subpanels.
+     * This includes the following:
+     * - adding events used to trigger the initialization of the subpanels
+     * - adding the createOnEvent configuration for the subpanels
+     * - binding handlers to model changed events
+     * - binding handlers to afterRender and onCreate
+     */
+    fluid.prefs.compositePanel.subPanelLifecycleBindings = function (components) {
+        var gradeName = "fluid.prefs.compositePanel.subPanelCreationTimingDistibution_" + fluid.allocateGuid();
+        var distributeOptions = [];
+        var subPanelCreationOpts = {
+            "default": "initSubPanels"
+        };
+        var conditionals = {};
+        var listeners = {};
+        var events = {};
+        fluid.each(components, function (componentOptions, componentName) {
+            if (fluid.prefs.compositePanel.isPanel(componentOptions.type, componentOptions.options)) {
+                var creationEventOpt = "default";
+                // would have had renderOnPreference directly sourced from the componentOptions
+                // however, the set of configuration specified there is restricted.
+                var renderOnPreference = fluid.get(componentOptions, "options.renderOnPreference");
+                if (renderOnPreference) {
+                    var pref = fluid.prefs.subPanel.safePrefKey(renderOnPreference);
+                    var onCreateListener = "onCreate." + pref;
+                    creationEventOpt = fluid.prefs.compositePanel.creationEventName(pref);
+                    subPanelCreationOpts[creationEventOpt] = creationEventOpt;
+                    events[creationEventOpt] = null;
+                    conditionals[pref] = conditionals[pref] || [];
+                    conditionals[pref].push(componentName);
+                    listeners[onCreateListener] = {
+                        listener: "{that}.conditionalCreateEvent",
+                        args: ["{that}.model." + pref, "{that}.events." + creationEventOpt + ".fire"]
+                    };
+                }
+                distributeOptions.push({
+                    source: "{that}.options.subPanelCreationOpts." + creationEventOpt,
+                    target: "{that}.options.components." + componentName + ".createOnEvent"
+                });
+            }
+        });
+
+        fluid.defaults(gradeName, {
+            gradeNames: ["fluid.eventedComponent", "autoInit"],
+            events: events,
+            listeners: listeners,
+            modelListeners: fluid.prefs.compositePanel.generateModelListeners(conditionals),
+            subPanelCreationOpts: subPanelCreationOpts,
+            distributeOptions: distributeOptions
+        });
+        return gradeName;
+    };
+
+    /*
+     * Used to hide the containers of inactive sub panels.
+     * This is necessary as the composite panel's template is the one that has their containers and
+     * it would be undesirable to have them visible when their associated panel has not been created.
+     * Also, hiding them allows for the subpanel to initialize, as it requires their container to be present.
+     * The subpanels need to be initialized before rendering, for the produce function to source the rendering
+     * information from it.
+     */
+    fluid.prefs.compositePanel.hideInactive = function (that) {
+        fluid.each(that.options.components, function (componentOpts, componentName) {
+            if(fluid.prefs.compositePanel.isPanel(componentOpts.type, componentOpts.options) && !fluid.prefs.compositePanel.isActivePanel(that[componentName])) {
+                that.locate(componentName).hide();
+            }
+        });
+    };
+
+    /*
+     * Use the renderer directly to combine the templates into a single
+     * template to be used by the components actual rendering.
+     */
+    fluid.prefs.compositePanel.combineTemplates = function (resources, selectors) {
+        var cutpoints = [];
+        var tree = {children: []};
+
+        fluid.each(resources, function (resource, resourceName) {
+            if (resourceName !== "template") {
+                tree.children.push({
+                    ID: resourceName,
+                    markup: resource.resourceText
+                });
+                cutpoints.push({
+                    id: resourceName,
+                    selector: selectors[resourceName]
+                });
+            }
+        });
+
+        var resourceSpec = {
+            base: {
+                resourceText: resources.template.resourceText,
+                href: ".",
+                resourceKey: ".",
+                cutpoints: cutpoints
+            }
+        };
+
+        var templates = fluid.parseTemplates(resourceSpec, ["base"]);
+        var renderer = fluid.renderer(templates, tree, {cutpoints: cutpoints, debugMode: true});
+        resources.template.resourceText = renderer.renderTemplates();
+    };
+
+    fluid.prefs.compositePanel.rebaseSelectorName = function (memberName, selectorName) {
+        return memberName + "_" + selectorName;
+    };
+
+    /*
+     * Surfaces the rendering selectors from the subpanels to the compositePanel,
+     * and scopes them to the subpanel's container.
+     * Since this is used by the cutpoint generator, which only gets run once, we need to
+     * surface all possible subpanel selectors, and not just the active ones.
+     */
+    fluid.prefs.compositePanel.surfaceSubpanelRendererSelectors = function (that, components, selectors) {
+        fluid.each(components, function (compOpts, compName) {
+            if (fluid.prefs.compositePanel.isPanel(compOpts.type, compOpts.options)) {
+                var opts = fluid.prefs.compositePanel.prefetchComponentOptions(compOpts.type, compOpts.options);
+                fluid.each(opts.selectors, function (selector, selName) {
+                    if (!opts.selectorsToIgnore || $.inArray(selName, opts.selectorsToIgnore) < 0) {
+                        fluid.set(selectors,  fluid.prefs.compositePanel.rebaseSelectorName(compName, selName), selectors[compName] + " " + selector);
+                    }
+                });
+            }
+        });
+    };
+
+    fluid.prefs.compositePanel.surfaceRepeatingSelectors = function (components) {
+        var repeatingSelectors = [];
+        fluid.each(components, function (compOpts, compName) {
+            if (fluid.prefs.compositePanel.isPanel(compOpts.type, compOpts.options)) {
+                var opts = fluid.prefs.compositePanel.prefetchComponentOptions(compOpts.type, compOpts.options);
+                var rebasedRepeatingSelectors = fluid.transform(opts.repeatingSelectors, function (selector) {
+                    return fluid.prefs.compositePanel.rebaseSelectorName(compName, selector);
+                });
+                repeatingSelectors = repeatingSelectors.concat(rebasedRepeatingSelectors);
+            }
+        });
+        return repeatingSelectors;
+    };
+
+    fluid.prefs.compositePanel.cutpointGenerator = function (selectors, options) {
+        var opts = {
+            selectorsToIgnore: options.selectorsToIgnore,
+            repeatingSelectors: options.repeatingSelectors.concat(options.subPanelRepeatingSelectors)
+        };
+        return fluid.renderer.selectorsToCutpoints(selectors, opts);
+    };
+
+    fluid.prefs.compositePanel.rebaseID = function (value, memberName) {
+        return memberName + "_" + value;
+    };
+
+    fluid.prefs.compositePanel.rebaseParentRelativeID = function (val, memberName) {
+        var slicePos = "..::".length; // ..:: refers to the parentRelativeID prefix used in the renderer
+        return val.slice(0, slicePos) + fluid.prefs.compositePanel.rebaseID(val.slice(slicePos), memberName);
+    };
+
+    fluid.prefs.compositePanel.rebaseValueBinding = function (value, modelRelayRules) {
+        return fluid.find(modelRelayRules, function (oldModelPath, newModelPath) {
+            if (value === oldModelPath) {
+                return newModelPath;
+            } else if (value.indexOf(oldModelPath) === 0) {
+                return value.replace(oldModelPath, newModelPath);
+            }
+        }) || value;
+    };
+
+    fluid.prefs.compositePanel.rebaseTreeComp = function (msgResolver, model, treeComp, memberName, modelRelayRules) {
+        var rebased = fluid.copy(treeComp);
+
+        if (rebased.ID) {
+            rebased.ID = fluid.prefs.compositePanel.rebaseID(rebased.ID, memberName);
+        }
+
+        if (rebased.children) {
+            rebased.children = fluid.prefs.compositePanel.rebaseTree(msgResolver, model, rebased.children, memberName, modelRelayRules);
+        } else if (rebased.selection) {
+            rebased.selection = fluid.prefs.compositePanel.rebaseTreeComp(msgResolver, model, rebased.selection, memberName, modelRelayRules);
+        } else if (rebased.messagekey) {
+            // converts the "UIMessage" renderer component into a "UIBound"
+            // and passes in the resolved message as the value.
+            rebased.componentType = "UIBound";
+            rebased.value = msgResolver.resolve(rebased.messagekey.value, rebased.messagekey.args);
+            delete rebased.messagekey;
+        } else if (rebased.parentRelativeID) {
+            rebased.parentRelativeID = fluid.prefs.compositePanel.rebaseParentRelativeID(rebased.parentRelativeID, memberName);
+        } else if (rebased.valuebinding) {
+            rebased.valuebinding = fluid.prefs.compositePanel.rebaseValueBinding(rebased.valuebinding, modelRelayRules);
+
+            if (rebased.value) {
+                var modelValue = fluid.get(model, rebased.valuebinding);
+                rebased.value = modelValue !== undefined ? modelValue : rebased.value;
+            }
+        }
+
+        return rebased;
+    };
+
+    fluid.prefs.compositePanel.rebaseTree = function (msgResolver, model, tree, memberName, modelRelayRules) {
+        var rebased;
+
+        if (fluid.isArrayable(tree)) {
+            rebased = fluid.transform(tree, function (treeComp) {
+                return fluid.prefs.compositePanel.rebaseTreeComp(msgResolver, model, treeComp, memberName, modelRelayRules);
+            });
+        } else {
+            rebased = fluid.prefs.compositePanel.rebaseTreeComp(msgResolver, model, tree, memberName, modelRelayRules);
+        }
+
+        return rebased;
+    };
+
+    fluid.prefs.compositePanel.produceTree = function (that) {
+        var produceTreeOption = that.options.produceTree;
+        var ownTree = produceTreeOption ?
+            (typeof (produceTreeOption) === "string" ? fluid.getGlobalValue(produceTreeOption) : produceTreeOption)(that) :
+            that.expandProtoTree();
+        var subPanelTree = that.produceSubPanelTrees();
+        var tree = {
+            children: ownTree.children.concat(subPanelTree.children)
+        };
+        return tree;
+    };
+
+    fluid.prefs.compositePanel.expandProtoTree = function (that) {
+        var expanderOptions = fluid.renderer.modeliseOptions(that.options.expanderOptions, {ELstyle: "${}"}, that);
+        var expander = fluid.renderer.makeProtoExpander(expanderOptions, that);
+        return expander(that.options.protoTree || {});
+    };
+
+    fluid.prefs.compositePanel.produceSubPanelTrees = function (that) {
+        var tree = {children: []};
+        fluid.each(that.options.components, function (options, componentName) {
+            var subPanel = that[componentName];
+            if (fluid.prefs.compositePanel.isActivePanel(subPanel)) {
+                var expanderOptions = fluid.renderer.modeliseOptions(subPanel.options.expanderOptions, {ELstyle: "${}"}, subPanel);
+                var expander = fluid.renderer.makeProtoExpander(expanderOptions, subPanel);
+                var subTree = subPanel.produceTree();
+                subTree = fluid.get(subPanel.options, "rendererFnOptions.noexpand") ? subTree : expander(subTree);
+                var rebasedTree = fluid.prefs.compositePanel.rebaseTree(subPanel.msgResolver, that.model, subTree, componentName, subPanel.options.rules);
+                tree.children = tree.children.concat(rebasedTree.children);
+            }
+        });
+        return tree;
+    };
+
+    /********************************************************************************
+     * The grade that contains the connections between a panel and the prefs editor *
+     ********************************************************************************/
+
+    fluid.defaults("fluid.prefs.prefsEditorConnections", {
+        gradeNames: ["fluid.eventedComponent", "autoInit"],
+        listeners: {
+            "{fluid.prefs.prefsEditor}.events.onPrefsEditorRefresh": "{fluid.prefs.panel}.refreshView"
+        },
+        strings: {},
+        parentBundle: "{fluid.prefs.prefsEditorLoader}.msgResolver"
+    });
+
+    /********************************
+     * Preferences Editor Text Size *
+     ********************************/
+
+    /**
+     * A sub-component of fluid.prefs that renders the "text size" panel of the user preferences interface.
+     */
+    fluid.defaults("fluid.prefs.panel.textSize", {
+        gradeNames: ["fluid.prefs.panel", "autoInit"],
+        preferenceMap: {
+            "fluid.prefs.textSize": {
+                "model.textSize": "default",
+                "range.min": "minimum",
+                "range.max": "maximum"
+            }
+        },
+        // The default model values represent both the expected format as well as the setting to be applied in the absence of values passed down to the component.
+        // i.e. from the settings store, or specific defaults derived from schema.
+        // Note: Except for being passed down to its subcomponent, these default values are not contributed and shared out
+        range: {
+            min: 1,
+            max: 2
+        },
+        selectors: {
+            textSize: ".flc-prefsEditor-min-text-size",
+            label: ".flc-prefsEditor-min-text-size-label",
+            smallIcon: ".flc-prefsEditor-min-text-size-smallIcon",
+            largeIcon: ".flc-prefsEditor-min-text-size-largeIcon",
+            multiplier: ".flc-prefsEditor-multiplier"
+        },
+        selectorsToIgnore: ["textSize"],
+        components: {
+            textSize: {
+                type: "fluid.textfieldSlider",
+                container: "{that}.dom.textSize",
+                createOnEvent: "afterRender",
+                options: {
+                    model: {
+                        value: "{fluid.prefs.panel.textSize}.model.textSize"
+                    },
+                    range: "{fluid.prefs.panel.textSize}.options.range",
+                    sliderOptions: "{fluid.prefs.panel.textSize}.options.sliderOptions"
+                }
+            }
+        },
+        protoTree: {
+            label: {messagekey: "textSizeLabel"},
+            smallIcon: {messagekey: "textSizeSmallIcon"},
+            largeIcon: {messagekey: "textSizeLargeIcon"},
+            multiplier: {messagekey: "multiplier"}
+        },
+        sliderOptions: {
+            orientation: "horizontal",
+            step: 0.1,
+            range: "min"
+        }
+    });
+
+    /********************************
+     * Preferences Editor Text Font *
+     ********************************/
+
+    /**
+     * A sub-component of fluid.prefs that renders the "text font" panel of the user preferences interface.
+     */
+    fluid.defaults("fluid.prefs.panel.textFont", {
+        gradeNames: ["fluid.prefs.panel", "autoInit"],
+        preferenceMap: {
+            "fluid.prefs.textFont": {
+                "model.value": "default",
+                "controlValues.textFont": "enum"
+            }
+        },
+        selectors: {
+            textFont: ".flc-prefsEditor-text-font",
+            label: ".flc-prefsEditor-text-font-label"
+        },
+        stringArrayIndex: {
+            textFont: ["textFont-default", "textFont-times", "textFont-comic", "textFont-arial", "textFont-verdana"]
+        },
+        protoTree: {
+            label: {messagekey: "textFontLabel"},
+            textFont: {
+                optionnames: "${{that}.msgLookup.textFont}",
+                optionlist: "${{that}.options.controlValues.textFont}",
+                selection: "${value}",
+                decorators: {
+                    type: "fluid",
+                    func: "fluid.prefs.selectDecorator",
+                    options: {
+                        styles: "{that}.options.classnameMap.textFont"
+                    }
+                }
+            }
+        },
+        classnameMap: null, // must be supplied by implementors
+        controlValues: {
+            textFont: ["default", "times", "comic", "arial", "verdana"]
+        }
+    });
+
+    /*********************************
+     * Preferences Editor Line Space *
+     *********************************/
+
+    /**
+     * A sub-component of fluid.prefs that renders the "line space" panel of the user preferences interface.
+     */
+    fluid.defaults("fluid.prefs.panel.lineSpace", {
+        gradeNames: ["fluid.prefs.panel", "autoInit"],
+        preferenceMap: {
+            "fluid.prefs.lineSpace": {
+                "model.lineSpace": "default",
+                "range.min": "minimum",
+                "range.max": "maximum"
+            }
+        },
+        // The default model values represent both the expected format as well as the setting to be applied in the absence of values passed down to the component.
+        // i.e. from the settings store, or specific defaults derived from schema.
+        // Note: Except for being passed down to its subcomponent, these default values are not contributed and shared out
+        range: {
+            min: 1,
+            max: 2
+        },
+        selectors: {
+            lineSpace: ".flc-prefsEditor-line-space",
+            label: ".flc-prefsEditor-line-space-label",
+            narrowIcon: ".flc-prefsEditor-line-space-narrowIcon",
+            wideIcon: ".flc-prefsEditor-line-space-wideIcon",
+            multiplier: ".flc-prefsEditor-multiplier"
+        },
+        selectorsToIgnore: ["lineSpace"],
+        components: {
+            lineSpace: {
+                type: "fluid.textfieldSlider",
+                container: "{that}.dom.lineSpace",
+                createOnEvent: "afterRender",
+                options: {
+                    model: {
+                        value: "{fluid.prefs.panel.lineSpace}.model.lineSpace"
+                    },
+                    range: "{fluid.prefs.panel.lineSpace}.options.range",
+                    sliderOptions: "{fluid.prefs.panel.lineSpace}.options.sliderOptions"
+                }
+            }
+        },
+        protoTree: {
+            label: {messagekey: "lineSpaceLabel"},
+            narrowIcon: {messagekey: "lineSpaceNarrowIcon"},
+            wideIcon: {messagekey: "lineSpaceWideIcon"},
+            multiplier: {messagekey: "multiplier"}
+        },
+        sliderOptions: {
+            orientation: "horizontal",
+            step: 0.1,
+            range: "min"
+        }
+    });
+
+    /*******************************
+     * Preferences Editor Contrast *
+     *******************************/
+
+    /**
+     * A sub-component of fluid.prefs that renders the "contrast" panel of the user preferences interface.
+     */
+    fluid.defaults("fluid.prefs.panel.contrast", {
+        gradeNames: ["fluid.prefs.panel", "autoInit"],
+        preferenceMap: {
+            "fluid.prefs.contrast": {
+                "model.value": "default",
+                "controlValues.theme": "enum"
+            }
+        },
+        listeners: {
+            afterRender: "{that}.style"
+        },
+        selectors: {
+            themeRow: ".flc-prefsEditor-themeRow",
+            themeLabel: ".flc-prefsEditor-theme-label",
+            themeInput: ".flc-prefsEditor-themeInput",
+            label: ".flc-prefsEditor-contrast-label"
+        },
+        styles: {
+            defaultThemeLabel: "fl-prefsEditor-contrast-defaultThemeLabel"
+        },
+        stringArrayIndex: {
+            theme: ["contrast-default", "contrast-bw", "contrast-wb", "contrast-by", "contrast-yb", "contrast-lgdg"]
+        },
+        repeatingSelectors: ["themeRow"],
+        protoTree: {
+            label: {messagekey: "contrastLabel"},
+            expander: {
+                type: "fluid.renderer.selection.inputs",
+                rowID: "themeRow",
+                labelID: "themeLabel",
+                inputID: "themeInput",
+                selectID: "theme-radio",
+                tree: {
+                    optionnames: "${{that}.msgLookup.theme}",
+                    optionlist: "${{that}.options.controlValues.theme}",
+                    selection: "${value}"
+                }
+            }
+        },
+        controlValues: {
+            theme: ["default", "bw", "wb", "by", "yb", "lgdg"]
+        },
+        markup: {
+            // Aria-hidden needed on fl-preview-A and Display 'a' created as pseudo-content in css to prevent AT from reading out display 'a' on IE, Chrome, and Safari
+            // Aria-hidden needed on fl-crossout to prevent AT from trying to read crossout symbol in Safari
+            label: "<span class=\"fl-preview-A\" aria-hidden=\"true\"></span><span class=\"fl-hidden-accessible\">%theme</span><div class=\"fl-crossout\" aria-hidden=\"true\"></div>"
+        },
+        invokers: {
+            style: {
+                funcName: "fluid.prefs.panel.contrast.style",
+                args: [
+                    "{that}.dom.themeLabel",
+                    "{that}.msgLookup.theme",
+                    "{that}.options.markup.label",
+                    "{that}.options.controlValues.theme",
+                    "default",
+                    "{that}.options.classnameMap.theme",
+                    "{that}.options.styles.defaultThemeLabel"
+                ],
+                dynamic: true
+            }
+        }
+    });
+
+    fluid.prefs.panel.contrast.style = function (labels, strings, markup, theme, defaultThemeName, style, defaultLabelStyle) {
+        fluid.each(labels, function (label, index) {
+            label = $(label);
+
+            var themeValue = strings[index];
+            label.html(fluid.stringTemplate(markup, {
+                theme: themeValue
+            }));
+
+            // Aria-label set to prevent Firefox from reading out the display 'a'
+            label.attr("aria-label", themeValue);
+
+            var labelTheme = theme[index];
+            if (labelTheme === defaultThemeName) {
+                label.addClass(defaultLabelStyle);
+            }
+            label.addClass(style[labelTheme]);
+        });
+    };
+
+    /**************************************
+     * Preferences Editor Layout Controls *
+     **************************************/
+
+    /**
+     * A sub-component of fluid.prefs that renders the "layout and navigation" panel of the user preferences interface.
+     */
+    fluid.defaults("fluid.prefs.panel.layoutControls", {
+        gradeNames: ["fluid.prefs.panel", "autoInit"],
+        preferenceMap: {
+            "fluid.prefs.tableOfContents": {
+                "model.toc": "default"
+            }
+        },
+        selectors: {
+            toc: ".flc-prefsEditor-toc",
+            label: ".flc-prefsEditor-toc-label",
+            choiceLabel: ".flc-prefsEditor-toc-choice-label"
+        },
+        protoTree: {
+            label: {messagekey: "tocLabel"},
+            choiceLabel: {messagekey: "tocChoiceLabel"},
+            toc: "${toc}"
+        }
+    });
+
+    /**************************************
+     * Preferences Editor Emphasize Links *
+     **************************************/
+    /**
+     * A sub-component of fluid.prefs that renders the "links and buttons" panel of the user preferences interface.
+     */
+    fluid.defaults("fluid.prefs.panel.emphasizeLinks", {
+        gradeNames: ["fluid.prefs.panel", "autoInit"],
+        preferenceMap: {
+            "fluid.prefs.emphasizeLinks": {
+                "model.links": "default"
+            }
+        },
+        selectors: {
+            links: ".flc-prefsEditor-links",
+            linksChoiceLabel: ".flc-prefsEditor-links-choice-label"
+        },
+        protoTree: {
+            linksChoiceLabel: {messagekey: "linksChoiceLabel"},
+            links: "${links}"
+        }
+    });
+
+    /************************************
+     * Preferences Editor Inputs Larger *
+     ************************************/
+    /**
+     * A sub-component of fluid.prefs that renders the "links and buttons" panel of the user preferences interface.
+     */
+    fluid.defaults("fluid.prefs.panel.inputsLarger", {
+        gradeNames: ["fluid.prefs.panel", "autoInit"],
+        preferenceMap: {
+            "fluid.prefs.inputsLarger": {
+                "model.inputsLarger": "default"
+            }
+        },
+        selectors: {
+            inputsLarger: ".flc-prefsEditor-inputs-larger",
+            inputsChoiceLabel: ".flc-prefsEditor-links-inputs-choice-label"
+        },
+        protoTree: {
+            inputsChoiceLabel: {messagekey: "inputsChoiceLabel"},
+            inputsLarger: "${inputsLarger}"
+        }
+    });
+
+    /*************************************
+     * Preferences Editor Links Controls *
+     *************************************/
+    /**
+     * A sub-component of fluid.prefs that renders the "links and buttons" panel of the user preferences interface.
+     */
+    fluid.defaults("fluid.prefs.panel.linksControls", {
+        gradeNames: ["fluid.prefs.compositePanel", "autoInit"],
+        selectors: {
+            label: ".flc-prefsEditor-linksControls-label"
+        },
+        protoTree: {
+            label: {messagekey: "linksControlsLabel"}
+        }
+    });
+
+    /********************************************************
+     * Preferences Editor Select Dropdown Options Decorator *
+     ********************************************************/
+
+    /**
+     * A sub-component that decorates the options on the select dropdown list box with the css style
+     */
+    fluid.defaults("fluid.prefs.selectDecorator", {
+        gradeNames: ["fluid.viewRelayComponent", "autoInit"],
+        listeners: {
+            onCreate: "fluid.prefs.selectDecorator.decorateOptions"
+        },
+        styles: {
+            preview: "fl-preview-theme"
+        }
+    });
+
+    fluid.prefs.selectDecorator.decorateOptions = function (that) {
+        fluid.each($("option", that.container), function (option) {
+            var styles = that.options.styles;
+            $(option).addClass(styles.preview + " " + styles[fluid.value(option)]);
+        });
+    };
+
+})(jQuery, fluid_2_0);
+;/*
+Copyright 2014-2015 OCAD University
+
+Licensed under the Educational Community License (ECL), Version 2.0 or the New
+BSD license. You may not use this file except in compliance with one these
+Licenses.
+
+You may obtain a copy of the ECL 2.0 License and BSD License at
+https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
+*/
+
+var fluid_2_0 = fluid_2_0 || {};
+
+(function ($, fluid) {
+    "use strict";
+
+    /**********************************************************************************
+    * speakPanel
+    **********************************************************************************/
+    fluid.defaults("fluid.prefs.panel.speak", {
+        gradeNames: ["fluid.prefs.panel", "autoInit"],
+        preferenceMap: {
+            "fluid.prefs.speak": {
+                "model.speak": "default"
+            }
+        },
+        selectors: {
+            speak: ".flc-prefsEditor-speak",
+            label: ".flc-prefsEditor-speak-label",
+            choiceLabel: ".flc-prefsEditor-speak-choice-label"
+        },
+        protoTree: {
+            label: {messagekey: "speakLabel"},
+            choiceLabel: {messagekey: "speakChoiceLabel"},
+            speak: "${speak}"
+        }
+    });
+
+})(jQuery, fluid_2_0);
+;/*
+Copyright 2013 OCAD University
+
+Licensed under the Educational Community License (ECL), Version 2.0 or the New
+BSD license. You may not use this file except in compliance with one these
+Licenses.
+
+You may obtain a copy of the ECL 2.0 License and BSD License at
+https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
+*/
+
+var fluid_2_0 = fluid_2_0 || {};
+
+(function ($, fluid) {
+    "use strict";
+
+    fluid.defaults("fluid.prefs.enactor", {
+        gradeNames: ["fluid.standardRelayComponent", "autoInit"]
+    });
+
+    /**********************************************************************************
+     * styleElements
+     *
+     * Adds or removes the classname to/from the elements based upon the model value.
+     * This component is used as a grade by emphasizeLinks & inputsLarger
+     **********************************************************************************/
+    fluid.defaults("fluid.prefs.enactor.styleElements", {
+        gradeNames: ["fluid.prefs.enactor", "autoInit"],
+        cssClass: null,  // Must be supplied by implementors
+        elementsToStyle: null,  // Must be supplied by implementors
+        invokers: {
+            applyStyle: {
+                funcName: "fluid.prefs.enactor.styleElements.applyStyle",
+                args: ["{arguments}.0", "{arguments}.1"]
+            },
+            resetStyle: {
+                funcName: "fluid.prefs.enactor.styleElements.resetStyle",
+                args: ["{arguments}.0", "{arguments}.1"]
+            },
+            handleStyle: {
+                funcName: "fluid.prefs.enactor.styleElements.handleStyle",
+                args: ["{arguments}.0", "{that}.options.elementsToStyle", "{that}.options.cssClass", "{that}.applyStyle", "{that}.resetStyle"],
+                dynamic: true
+            }
+        },
+        modelListeners: {
+            value: {
+                listener: "{that}.handleStyle",
+                args: ["{change}.value"]
+            }
+        }
+    });
+
+    fluid.prefs.enactor.styleElements.applyStyle = function (elements, cssClass) {
+        elements.addClass(cssClass);
+    };
+
+    fluid.prefs.enactor.styleElements.resetStyle = function (elements, cssClass) {
+        $(elements, "." + cssClass).andSelf().removeClass(cssClass);
+    };
+
+    fluid.prefs.enactor.styleElements.handleStyle = function (value, elements, cssClass, applyStyleFunc, resetStyleFunc) {
+        var func = value ? applyStyleFunc : resetStyleFunc;
+        func(elements, cssClass);
+    };
+
+    /*******************************************************************************
+     * ClassSwapper
+     *
+     * Has a hash of classes it cares about and will remove all those classes from
+     * its container before setting the new class.
+     * This component tends to be used as a grade by textFont and contrast
+     *******************************************************************************/
+
+    fluid.defaults("fluid.prefs.enactor.classSwapper", {
+        gradeNames: ["fluid.viewRelayComponent", "fluid.prefs.enactor", "autoInit"],
+        classes: {},  // Must be supplied by implementors
+        invokers: {
+            clearClasses: {
+                funcName: "fluid.prefs.enactor.classSwapper.clearClasses",
+                args: ["{that}.container", "{that}.classStr"]
+            },
+            swap: {
+                funcName: "fluid.prefs.enactor.classSwapper.swap",
+                args: ["{arguments}.0", "{that}", "{that}.clearClasses"]
+            }
+        },
+        modelListeners: {
+            value: {
+                listener: "{that}.swap",
+                args: ["{change}.value"]
+            }
+        },
+        members: {
+            classStr: {
+                expander: {
+                    func: "fluid.prefs.enactor.classSwapper.joinClassStr",
+                    args: "{that}.options.classes"
+                }
+            }
+        }
+    });
+
+    fluid.prefs.enactor.classSwapper.clearClasses = function (container, classStr) {
+        container.removeClass(classStr);
+    };
+
+    fluid.prefs.enactor.classSwapper.swap = function (value, that, clearClassesFunc) {
+        clearClassesFunc();
+        that.container.addClass(that.options.classes[value]);
+    };
+
+    fluid.prefs.enactor.classSwapper.joinClassStr = function (classes) {
+        var classStr = "";
+
+        fluid.each(classes, function (oneClassName) {
+            if (oneClassName) {
+                classStr += classStr ? " " + oneClassName : oneClassName;
+            }
+        });
+        return classStr;
+    };
+
+    /*******************************************************************************
+     * emphasizeLinks
+     *
+     * The enactor to emphasize links in the container according to the value
+     *******************************************************************************/
+
+    // Note that the implementors need to provide the container for this view component
+    fluid.defaults("fluid.prefs.enactor.emphasizeLinks", {
+        gradeNames: ["fluid.viewRelayComponent", "fluid.prefs.enactor.styleElements", "autoInit"],
+        preferenceMap: {
+            "fluid.prefs.emphasizeLinks": {
+                "model.value": "default"
+            }
+        },
+        cssClass: null,  // Must be supplied by implementors
+        elementsToStyle: "{that}.container"
+    });
+
+    /*******************************************************************************
+     * inputsLarger
+     *
+     * The enactor to enlarge inputs in the container according to the value
+     *******************************************************************************/
+
+    // Note that the implementors need to provide the container for this view component
+    fluid.defaults("fluid.prefs.enactor.inputsLarger", {
+        gradeNames: ["fluid.viewRelayComponent", "fluid.prefs.enactor.styleElements", "autoInit"],
+        preferenceMap: {
+            "fluid.prefs.inputsLarger": {
+                "model.value": "default"
+            }
+        },
+        cssClass: null,  // Must be supplied by implementors
+        elementsToStyle: "{that}.container"
+    });
+
+    /*******************************************************************************
+     * textFont
+     *
+     * The enactor to change the font face used according to the value
+     *******************************************************************************/
+    // Note that the implementors need to provide the container for this view component
+    fluid.defaults("fluid.prefs.enactor.textFont", {
+        gradeNames: ["fluid.prefs.enactor.classSwapper", "autoInit"],
+        preferenceMap: {
+            "fluid.prefs.textFont": {
+                "model.value": "default"
+            }
+        }
+    });
+
+    /*******************************************************************************
+     * contrast
+     *
+     * The enactor to change the contrast theme according to the value
+     *******************************************************************************/
+    // Note that the implementors need to provide the container for this view component
+    fluid.defaults("fluid.prefs.enactor.contrast", {
+        gradeNames: ["fluid.prefs.enactor.classSwapper", "autoInit"],
+        preferenceMap: {
+            "fluid.prefs.contrast": {
+                "model.value": "default"
+            }
+        }
+    });
+
+
+
+    /*******************************************************************************
+     * Functions shared by textSize and lineSpace
+     *******************************************************************************/
+
+    /**
+     * return "font-size" in px
+     * @param (Object) container
+     * @param (Object) fontSizeMap: the mapping between the font size string values ("small", "medium" etc) to px values
+     */
+    fluid.prefs.enactor.getTextSizeInPx = function (container, fontSizeMap) {
+        var fontSize = container.css("font-size");
+
+        if (fontSizeMap[fontSize]) {
+            fontSize = fontSizeMap[fontSize];
+        }
+
+        // return fontSize in px
+        return parseFloat(fontSize);
+    };
+
+    /*******************************************************************************
+     * textSize
+     *
+     * Sets the text size on the root element to the multiple provided.
+     *******************************************************************************/
+
+    // Note that the implementors need to provide the container for this view component
+    fluid.defaults("fluid.prefs.enactor.textSize", {
+        gradeNames: ["fluid.viewRelayComponent", "fluid.prefs.enactor", "autoInit"],
+        preferenceMap: {
+            "fluid.prefs.textSize": {
+                "model.value": "default"
+            }
+        },
+        members: {
+            root: {
+                expander: {
+                    "this": "{that}.container",
+                    "method": "closest", // ensure that the correct document is being used. i.e. in an iframe
+                    "args": ["html"]
+                }
+            }
+        },
+        fontSizeMap: {},  // must be supplied by implementors
+        invokers: {
+            set: {
+                funcName: "fluid.prefs.enactor.textSize.set",
+                args: ["{arguments}.0", "{that}", "{that}.getTextSizeInPx"]
+            },
+            getTextSizeInPx: {
+                funcName: "fluid.prefs.enactor.getTextSizeInPx",
+                args: ["{that}.root", "{that}.options.fontSizeMap"]
+            }
+        },
+        modelListeners: {
+            value: {
+                listener: "{that}.set",
+                args: ["{change}.value"]
+            }
+        }
+    });
+
+    fluid.prefs.enactor.textSize.set = function (times, that, getTextSizeInPxFunc) {
+        times = times || 1;
+        // Calculating the initial size here rather than using a members expand because the "font-size"
+        // cannot be detected on hidden containers such as separated paenl iframe.
+        if (!that.initialSize) {
+            that.initialSize = getTextSizeInPxFunc();
+        }
+
+        if (that.initialSize) {
+            var targetSize = times * that.initialSize;
+            that.root.css("font-size", targetSize + "px");
+        }
+    };
+
+    /*******************************************************************************
+     * lineSpace
+     *
+     * Sets the line space on the container to the multiple provided.
+     *******************************************************************************/
+
+    // Note that the implementors need to provide the container for this view component
+    fluid.defaults("fluid.prefs.enactor.lineSpace", {
+        gradeNames: ["fluid.viewRelayComponent", "fluid.prefs.enactor", "autoInit"],
+        preferenceMap: {
+            "fluid.prefs.lineSpace": {
+                "model.value": "default"
+            }
+        },
+        fontSizeMap: {},  // must be supplied by implementors
+        invokers: {
+            set: {
+                funcName: "fluid.prefs.enactor.lineSpace.set",
+                args: ["{arguments}.0", "{that}", "{that}.getLineHeightMultiplier"]
+            },
+            getTextSizeInPx: {
+                funcName: "fluid.prefs.enactor.getTextSizeInPx",
+                args: ["{that}.container", "{that}.options.fontSizeMap"]
+            },
+            getLineHeight: {
+                funcName: "fluid.prefs.enactor.lineSpace.getLineHeight",
+                args: "{that}.container"
+            },
+            getLineHeightMultiplier: {
+                funcName: "fluid.prefs.enactor.lineSpace.getLineHeightMultiplier",
+                args: [{expander: {func: "{that}.getLineHeight"}}, {expander: {func: "{that}.getTextSizeInPx"}}],
+                dynamic: true
+            }
+        },
+        modelListeners: {
+            value: {
+                listener: "{that}.set",
+                args: ["{change}.value"]
+            }
+        }
+    });
+
+    // Get the line-height of an element
+    // In IE8 and IE9 this will return the line-height multiplier
+    // In other browsers it will return the pixel value of the line height.
+    fluid.prefs.enactor.lineSpace.getLineHeight = function (container) {
+        return container.css("line-height");
+    };
+
+    // Interprets browser returned "line-height" value, either a string "normal", a number with "px" suffix or "undefined"
+    // into a numeric value in em.
+    // Return 0 when the given "lineHeight" argument is "undefined" (http://issues.fluidproject.org/browse/FLUID-4500).
+    fluid.prefs.enactor.lineSpace.getLineHeightMultiplier = function (lineHeight, fontSize) {
+        // Handle the given "lineHeight" argument is "undefined", which occurs when firefox detects
+        // "line-height" css value on a hidden container. (http://issues.fluidproject.org/browse/FLUID-4500)
+        if (!lineHeight) {
+            return 0;
+        }
+
+        // Needs a better solution. For now, "line-height" value "normal" is defaulted to 1.2em
+        // according to https://developer.mozilla.org/en/CSS/line-height
+        if (lineHeight === "normal") {
+            return 1.2;
+        }
+
+        // Continuing the work-around of jQuery + IE bug - http://bugs.jquery.com/ticket/2671
+        if (lineHeight.match(/[0-9]$/)) {
+            return lineHeight;
+        }
+
+        return Math.round(parseFloat(lineHeight) / fontSize * 100) / 100;
+    };
+
+    fluid.prefs.enactor.lineSpace.set = function (times, that, getLineHeightMultiplierFunc) {
+        // Calculating the initial size here rather than using a members expand because the "line-height"
+        // cannot be detected on hidden containers such as separated paenl iframe.
+        if (!that.initialSize) {
+            that.initialSize = getLineHeightMultiplierFunc();
+        }
+
+        // that.initialSize === 0 when the browser returned "lineHeight" css value is undefined,
+        // which occurs when firefox detects "line-height" value on a hidden container.
+        // @ See getLineHeightMultiplier() & http://issues.fluidproject.org/browse/FLUID-4500
+        if (that.initialSize) {
+            var targetLineSpace = times * that.initialSize;
+            that.container.css("line-height", targetLineSpace);
+        }
+    };
+
+    /*******************************************************************************
+     * tableOfContents
+     *
+     * To create and show/hide table of contents
+     *******************************************************************************/
+
+    // Note that the implementors need to provide the container for this view component
+    fluid.defaults("fluid.prefs.enactor.tableOfContents", {
+        gradeNames: ["fluid.viewRelayComponent", "fluid.prefs.enactor", "autoInit"],
+        preferenceMap: {
+            "fluid.prefs.tableOfContents": {
+                "model.toc": "default"
+            }
+        },
+        tocTemplate: null,  // must be supplied by implementors
+        components: {
+            tableOfContents: {
+                type: "fluid.tableOfContents",
+                container: "{fluid.prefs.enactor.tableOfContents}.container",
+                createOnEvent: "onCreateTOCReady",
+                options: {
+                    components: {
+                        levels: {
+                            type: "fluid.tableOfContents.levels",
+                            options: {
+                                resources: {
+                                    template: {
+                                        forceCache: true,
+                                        url: "{fluid.prefs.enactor.tableOfContents}.options.tocTemplate"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    listeners: {
+                        afterRender: "{fluid.prefs.enactor.tableOfContents}.events.afterTocRender"
+                    }
+                }
+            }
+        },
+        invokers: {
+            applyToc: {
+                funcName: "fluid.prefs.enactor.tableOfContents.applyToc",
+                args: ["{arguments}.0", "{that}"]
+            }
+        },
+        events: {
+            onCreateTOCReady: null,
+            afterTocRender: null,
+            onLateRefreshRelay: null
+        },
+        modelListeners: {
+            toc: {
+                listener: "{that}.applyToc",
+                args: ["{change}.value"]
+            }
+        },
+        distributeOptions: {
+            source: "{that}.options.ignoreForToC",
+            target: "{that tableOfContents}.options.ignoreForToC"
+        }
+    });
+
+    fluid.prefs.enactor.tableOfContents.applyToc = function (value, that) {
+        if (value) {
+            if (that.tableOfContents) {
+                that.tableOfContents.show();
+            } else {
+                that.events.onCreateTOCReady.fire();
+            }
+        } else if (that.tableOfContents) {
+            that.tableOfContents.hide();
+        }
+    };
+
+})(jQuery, fluid_2_0);
+;/*
+Copyright 2013-2015 OCAD University
+
+Licensed under the Educational Community License (ECL), Version 2.0 or the New
+BSD license. You may not use this file except in compliance with one these
+Licenses.
+
+You may obtain a copy of the ECL 2.0 License and BSD License at
+https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
+*/
+
+var fluid_2_0 = fluid_2_0 || {};
+
+(function ($, fluid) {
+    "use strict";
+
+    /*******************************************************************************
+     * speak
+     *
+     * An enactor that is capable of speaking text.
+     * Typically this will be used as a base grade to an enactor that supplies
+     * the text to be spoken.
+     *******************************************************************************/
+
+    fluid.defaults("fluid.prefs.enactor.speak", {
+        gradeNames: ["fluid.textToSpeech", "fluid.prefs.enactor", "autoInit"],
+        preferenceMap: {
+            "fluid.prefs.speak": {
+                "model.enabled": "default"
+            }
+        },
+        invokers: {
+            queueSpeech: {
+                funcName: "fluid.prefs.enactor.speak.queueSpeech"
+            }
+        }
+    });
+
+
+    fluid.prefs.enactor.speak.queueSpeech = function (that, text, interrupt, options) {
+        // force a string value
+        var str = text.toString();
+
+        // remove extra whitespace
+        str = str.trim();
+        str.replace(/\s{2,}/gi, " ");
+
+        if (that.model.enabled && str) {
+            fluid.textToSpeech.queueSpeech(that, str, interrupt, options);
+        }
+    };
+
+    /*******************************************************************************
+     * selfVoicing
+     *
+     * The enactor that enables self voicing of an entire page
+     *******************************************************************************/
+
+    fluid.defaults("fluid.prefs.enactor.selfVoicing", {
+        gradeNames: ["fluid.viewRelayComponent", "fluid.prefs.enactor.speak", "autoInit"],
+        modelListeners: {
+            "enabled": {
+                listener: "{that}.handleSelfVoicing",
+                args: ["{change}.value"]
+            }
+        },
+        invokers: {
+            handleSelfVoicing: {
+                funcName: "fluid.prefs.enactor.selfVoicing.handleSelfVoicing",
+                // Pass in invokers to force them to be resolved
+                args: ["{that}.options.strings.welcomeMsg", "{that}.queueSpeech", "{that}.readFromDOM", "{that}.cancel", "{arguments}.0"]
+            },
+            readFromDOM: {
+                funcName: "fluid.prefs.enactor.selfVoicing.readFromDOM",
+                args: ["{that}", "{that}.container"]
+            }
+        },
+        strings: {
+            welcomeMsg: "text to speech enabled"
+        }
+    });
+
+    fluid.prefs.enactor.selfVoicing.handleSelfVoicing = function (welcomeMsg, queueSpeech, readFromDOM, cancel, enabled) {
+        if (enabled) {
+            queueSpeech(welcomeMsg, true);
+            readFromDOM();
+        } else {
+            cancel();
+        }
+    };
+
+    // Constants representing DOM node types.
+    fluid.prefs.enactor.selfVoicing.nodeType = {
+        ELEMENT_NODE: 1,
+        TEXT_NODE: 3
+    };
+
+    // TODO: Currently only reads text nodes and alt text.
+    // This should be expanded to read other text descriptors as well.
+    fluid.prefs.enactor.selfVoicing.readFromDOM = function (that, elm) {
+        elm = $(elm);
+        var nodes = elm.contents();
+        fluid.each(nodes, function (node) {
+            if (node.nodeType === fluid.prefs.enactor.selfVoicing.nodeType.TEXT_NODE && node.nodeValue) {
+                that.queueSpeech(node.nodeValue);
+            }
+
+            if (node.nodeType === fluid.prefs.enactor.selfVoicing.nodeType.ELEMENT_NODE && window.getComputedStyle(node).display !== "none") {
+                if (node.nodeName === "IMG") {
+                    var altText = node.getAttribute("alt");
+                    if (altText) {
+                        that.queueSpeech(altText);
+                    }
+                } else {
+                    fluid.prefs.enactor.selfVoicing.readFromDOM(that, node);
+                }
+            }
+        });
+    };
+
+})(jQuery, fluid_2_0);
+;/*
+Copyright 2013-2015 OCAD University
+
+Licensed under the Educational Community License (ECL), Version 2.0 or the New
+BSD license. You may not use this file except in compliance with one these
+Licenses.
+
+You may obtain a copy of the ECL 2.0 License and BSD License at
+https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
+*/
+
+var fluid_2_0 = fluid_2_0 || {};
+
+(function ($, fluid) {
+    "use strict";
+
+    /*******************************************************************************
+     * Starter Root Model
+     *
+     * Provides the default values for the starter enhancer/panels models
+     *******************************************************************************/
+
+    fluid.defaults("fluid.prefs.initialModel.starter", {
+        gradeNames: ["fluid.prefs.initialModel", "autoInit"],
+        members: {
+            // TODO: This information is supposed to be generated from the JSON
+            // schema describing various preferences. For now it's kept in top
+            // level prefsEditor to avoid further duplication.
+            initialModel: {
+                textFont: "default",          // key from classname map
+                theme: "default",             // key from classname map
+                textSize: 1,                  // in points
+                lineSpace: 1,                 // in ems
+                toc: false,                  // boolean
+                links: false,                // boolean
+                inputsLarger: false          // boolean
+            }
+        }
+    });
+
+    /*******************************************************************************
+     * CSSClassEnhancerBase
+     *
+     * Provides the map between the settings and css classes to be applied.
+     * Used as a UIEnhancer base grade that can be pulled in as requestd.
+     *******************************************************************************/
+
+    fluid.defaults("fluid.uiEnhancer.cssClassEnhancerBase", {
+        gradeNames: ["fluid.littleComponent", "autoInit"],
+        classnameMap: {
+            "textFont": {
+                "default": "",
+                "times": "fl-font-times",
+                "comic": "fl-font-comic-sans",
+                "arial": "fl-font-arial",
+                "verdana": "fl-font-verdana"
+            },
+            "theme": {
+                "default": "fl-theme-prefsEditor-default",
+                "bw": "fl-theme-prefsEditor-bw fl-theme-bw",
+                "wb": "fl-theme-prefsEditor-wb fl-theme-wb",
+                "by": "fl-theme-prefsEditor-by fl-theme-by",
+                "yb": "fl-theme-prefsEditor-yb fl-theme-yb",
+                "lgdg": "fl-theme-prefsEditor-lgdg fl-theme-lgdg"
+            },
+            "links": "fl-link-enhanced",
+            "inputsLarger": "fl-text-larger"
+        }
+    });
+
+    /*******************************************************************************
+     * BrowserTextEnhancerBase
+     *
+     * Provides the default font size translation between the strings and actual pixels.
+     * Used as a UIEnhancer base grade that can be pulled in as requestd.
+     *******************************************************************************/
+
+    fluid.defaults("fluid.uiEnhancer.browserTextEnhancerBase", {
+        gradeNames: ["fluid.littleComponent", "autoInit"],
+        fontSizeMap: {
+            "xx-small": "9px",
+            "x-small":  "11px",
+            "small":    "13px",
+            "medium":   "15px",
+            "large":    "18px",
+            "x-large":  "23px",
+            "xx-large": "30px"
+        }
+    });
+
+    /*******************************************************************************
+     * UI Enhancer Starter Enactors
+     *
+     * A grade component for UIEnhancer. It is a collection of default UI Enhancer
+     * action ants.
+     *******************************************************************************/
+
+    fluid.defaults("fluid.uiEnhancer.starterEnactors", {
+        gradeNames: ["fluid.uiEnhancer", "fluid.uiEnhancer.cssClassEnhancerBase", "fluid.uiEnhancer.browserTextEnhancerBase", "autoInit"],
+        model: "{fluid.prefs.initialModel}.initialModel",
+        components: {
+            textSize: {
+                type: "fluid.prefs.enactor.textSize",
+                container: "{uiEnhancer}.container",
+                options: {
+                    fontSizeMap: "{uiEnhancer}.options.fontSizeMap",
+                    model: {
+                        value: "{uiEnhancer}.model.textSize"
+                    }
+                }
+            },
+            textFont: {
+                type: "fluid.prefs.enactor.textFont",
+                container: "{uiEnhancer}.container",
+                options: {
+                    classes: "{uiEnhancer}.options.classnameMap.textFont",
+                    model: {
+                        value: "{uiEnhancer}.model.textFont"
+                    }
+                }
+            },
+            lineSpace: {
+                type: "fluid.prefs.enactor.lineSpace",
+                container: "{uiEnhancer}.container",
+                options: {
+                    fontSizeMap: "{uiEnhancer}.options.fontSizeMap",
+                    model: {
+                        value: "{uiEnhancer}.model.lineSpace"
+                    }
+                }
+            },
+            contrast: {
+                type: "fluid.prefs.enactor.contrast",
+                container: "{uiEnhancer}.container",
+                options: {
+                    classes: "{uiEnhancer}.options.classnameMap.theme",
+                    model: {
+                        value: "{uiEnhancer}.model.theme"
+                    }
+                }
+            },
+            emphasizeLinks: {
+                type: "fluid.prefs.enactor.emphasizeLinks",
+                container: "{uiEnhancer}.container",
+                options: {
+                    cssClass: "{uiEnhancer}.options.classnameMap.links",
+                    model: {
+                        value: "{uiEnhancer}.model.links"
+                    }
+                }
+            },
+            inputsLarger: {
+                type: "fluid.prefs.enactor.inputsLarger",
+                container: "{uiEnhancer}.container",
+                options: {
+                    cssClass: "{uiEnhancer}.options.classnameMap.inputsLarger",
+                    model: {
+                        value: "{uiEnhancer}.model.inputsLarger"
+                    }
+                }
+            },
+            tableOfContents: {
+                type: "fluid.prefs.enactor.tableOfContents",
+                container: "{uiEnhancer}.container",
+                options: {
+                    tocTemplate: "{uiEnhancer}.options.tocTemplate",
+                    model: {
+                        toc: "{uiEnhancer}.model.toc"
+                    }
+                }
+            }
+        }
+    });
+
+    /*********************************************************************************************************
+     * Starter Settings Panels
+     *
+     * A collection of all the default Preferences Editorsetting panels.
+     *********************************************************************************************************/
+    fluid.defaults("fluid.prefs.starterPanels", {
+        gradeNames: ["fluid.prefs.prefsEditor", "autoInit"],
+        selectors: {
+            textSize: ".flc-prefsEditor-text-size",
+            textFont: ".flc-prefsEditor-text-font",
+            lineSpace: ".flc-prefsEditor-line-space",
+            contrast: ".flc-prefsEditor-contrast",
+            textControls: ".flc-prefsEditor-text-controls",
+            layoutControls: ".flc-prefsEditor-layout-controls",
+            linksControls: ".flc-prefsEditor-links-controls"
+        },
+        components: {
+            textSize: {
+                type: "fluid.prefs.panel.textSize",
+                container: "{prefsEditor}.dom.textSize",
+                createOnEvent: "onPrefsEditorMarkupReady",
+                options: {
+                    gradeNames: "fluid.prefs.prefsEditorConnections",
+                    model: {
+                        textSize: "{prefsEditor}.model.textSize"
+                    },
+                    messageBase: "{messageLoader}.resources.textSize.resourceText",
+                    resources: {
+                        template: "{templateLoader}.resources.textSize"
+                    }
+                }
+            },
+            lineSpace: {
+                type: "fluid.prefs.panel.lineSpace",
+                container: "{prefsEditor}.dom.lineSpace",
+                createOnEvent: "onPrefsEditorMarkupReady",
+                options: {
+                    gradeNames: "fluid.prefs.prefsEditorConnections",
+                    model: {
+                        lineSpace: "{prefsEditor}.model.lineSpace"
+                    },
+                    messageBase: "{messageLoader}.resources.lineSpace.resourceText",
+                    resources: {
+                        template: "{templateLoader}.resources.lineSpace"
+                    }
+                }
+            },
+            textFont: {
+                type: "fluid.prefs.panel.textFont",
+                container: "{prefsEditor}.dom.textFont",
+                createOnEvent: "onPrefsEditorMarkupReady",
+                options: {
+                    gradeNames: "fluid.prefs.prefsEditorConnections",
+                    classnameMap: "{uiEnhancer}.options.classnameMap",
+                    model: {
+                        value: "{prefsEditor}.model.textFont"
+                    },
+                    messageBase: "{messageLoader}.resources.textFont.resourceText",
+                    resources: {
+                        template: "{templateLoader}.resources.textFont"
+                    }
+                }
+            },
+            contrast: {
+                type: "fluid.prefs.panel.contrast",
+                container: "{prefsEditor}.dom.contrast",
+                createOnEvent: "onPrefsEditorMarkupReady",
+                options: {
+                    gradeNames: "fluid.prefs.prefsEditorConnections",
+                    classnameMap: "{uiEnhancer}.options.classnameMap",
+                    model: {
+                        value: "{prefsEditor}.model.theme"
+                    },
+                    messageBase: "{messageLoader}.resources.contrast.resourceText",
+                    resources: {
+                        template: "{templateLoader}.resources.contrast"
+                    }
+                }
+            },
+            layoutControls: {
+                type: "fluid.prefs.panel.layoutControls",
+                container: "{prefsEditor}.dom.layoutControls",
+                createOnEvent: "onPrefsEditorMarkupReady",
+                options: {
+                    gradeNames: "fluid.prefs.prefsEditorConnections",
+                    model: {
+                        toc: "{prefsEditor}.model.toc"
+                    },
+                    messageBase: "{messageLoader}.resources.layoutControls.resourceText",
+                    resources: {
+                        template: "{templateLoader}.resources.layoutControls"
+                    }
+                }
+            },
+            linksControls: {
+                type: "fluid.prefs.panel.linksControls",
+                container: "{prefsEditor}.dom.linksControls",
+                createOnEvent: "onPrefsEditorMarkupReady",
+                options: {
+                    gradeNames: "fluid.prefs.prefsEditorConnections",
+                    selectors: {
+                        emphasizeLinks: ".flc-prefsEditor-emphasizeLinks",
+                        inputsLarger: ".flc-prefsEditor-inputsLarger"
+                    },
+                    selectorsToIgnore: ["emphasizeLinks", "inputsLarger"],
+                    model: {
+                        fluid_prefs_emphasizeLinks: "{prefsEditor}.model.links",
+                        fluid_prefs_inputsLarger: "{prefsEditor}.model.inputsLarger"
+                    },
+                    components: {
+                        emphasizeLinks: {
+                            type: "fluid.prefs.panel.emphasizeLinks",
+                            container: "{that}.dom.emphasizeLinks",
+                            createOnEvent: "initSubPanels",
+                            options: {
+                                messageBase: "{messageLoader}.resources.emphasizeLinks.resourceText"
+                            }
+                        },
+                        inputsLarger: {
+                            type: "fluid.prefs.panel.inputsLarger",
+                            container: "{that}.dom.inputsLarger",
+                            createOnEvent: "initSubPanels",
+                            options: {
+                                messageBase: "{messageLoader}.resources.inputsLarger.resourceText"
+                            }
+                        }
+                    },
+                    messageBase: "{messageLoader}.resources.linksControls.resourceText",
+                    resources: {
+                        template: "{templateLoader}.resources.linksControls",
+                        emphasizeLinks: "{templateLoader}.resources.emphasizeLinks",
+                        inputsLarger: "{templateLoader}.resources.inputsLarger"
+                    }
+                }
+            }
+        }
+    });
+
+    /******************************
+     * Starter Template Loader
+     ******************************/
+
+    /**
+     * A template loader component that expands the resources blocks for loading resources used by starterPanels
+     *
+     * @param {Object} options
+     */
+
+    fluid.defaults("fluid.prefs.starterTemplateLoader", {
+        gradeNames: ["fluid.prefs.resourceLoader", "autoInit"],
+        resources: {
+            textSize: "%templatePrefix/PrefsEditorTemplate-textSize.html",
+            textFont: "%templatePrefix/PrefsEditorTemplate-textFont.html",
+            lineSpace: "%templatePrefix/PrefsEditorTemplate-lineSpace.html",
+            contrast: "%templatePrefix/PrefsEditorTemplate-contrast.html",
+            layoutControls: "%templatePrefix/PrefsEditorTemplate-layout.html",
+            linksControls: "%templatePrefix/PrefsEditorTemplate-linksControls.html",
+            emphasizeLinks: "%templatePrefix/PrefsEditorTemplate-emphasizeLinks.html",
+            inputsLarger: "%templatePrefix/PrefsEditorTemplate-inputsLarger.html"
+        }
+    });
+
+    fluid.defaults("fluid.prefs.starterSeparatedPanelTemplateLoader", {
+        gradeNames: ["fluid.prefs.starterTemplateLoader", "autoInit"],
+        resources: {
+            prefsEditor: "%templatePrefix/SeparatedPanelPrefsEditor.html"
+        }
+    });
+
+    fluid.defaults("fluid.prefs.starterFullPreviewTemplateLoader", {
+        gradeNames: ["fluid.prefs.starterTemplateLoader", "autoInit"],
+        resources: {
+            prefsEditor: "%templatePrefix/FullPreviewPrefsEditor.html"
+        }
+    });
+
+    fluid.defaults("fluid.prefs.starterFullNoPreviewTemplateLoader", {
+        gradeNames: ["fluid.prefs.starterTemplateLoader", "autoInit"],
+        resources: {
+            prefsEditor: "%templatePrefix/FullNoPreviewPrefsEditor.html"
+        }
+    });
+
+    /******************************
+     * Starter Message Loader
+     ******************************/
+
+    /**
+     * A message loader component that expands the resources blocks for loading messages for starter panels
+     *
+     * @param {Object} options
+     */
+
+    fluid.defaults("fluid.prefs.starterMessageLoader", {
+        gradeNames: ["fluid.prefs.resourceLoader", "autoInit"],
+        resources: {
+            prefsEditor: "%messagePrefix/prefsEditor.json",
+            textSize: "%messagePrefix/textSize.json",
+            textFont: "%messagePrefix/textFont.json",
+            lineSpace: "%messagePrefix/lineSpace.json",
+            contrast: "%messagePrefix/contrast.json",
+            layoutControls: "%messagePrefix/tableOfContents.json",
+            linksControls: "%messagePrefix/linksControls.json",
+            emphasizeLinks: "%messagePrefix/emphasizeLinks.json",
+            inputsLarger: "%messagePrefix/inputsLarger.json"
+        }
+    });
+
+})(jQuery, fluid_2_0);
+;/*
+Copyright 2011-2015 OCAD University
+Copyright 2011 Lucendo Development Ltd.
+
+Licensed under the Educational Community License (ECL), Version 2.0 or the New
+BSD license. You may not use this file except in compliance with one these
+Licenses.
+
+You may obtain a copy of the ECL 2.0 License and BSD License at
+https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
+*/
+
+var fluid_2_0 = fluid_2_0 || {};
+
+(function ($, fluid) {
+    "use strict";
+
+    fluid.registerNamespace("fluid.dom");
+
+    fluid.dom.getDocumentHeight = function (dokkument) {
+        var body = $("body", dokkument)[0];
+        return body.offsetHeight;
+    };
+
+    /*******************************************************
+     * Separated Panel Preferences Editor Top Level Driver *
+     *******************************************************/
+
+    fluid.defaults("fluid.prefs.separatedPanel", {
+        gradeNames: ["fluid.prefs.prefsEditorLoader", "autoInit"],
+        events: {
+            afterRender: null,
+            onReady: null,
+            onCreateSlidingPanelReady: {
+                events: {
+                    iframeRendered: "afterRender",
+                    onPrefsEditorMessagesLoaded: "onPrefsEditorMessagesLoaded"
+                }
+            },
+            templatesAndIframeReady: {
+                events: {
+                    iframeReady: "afterRender",
+                    templatesLoaded: "onPrefsEditorTemplatesLoaded",
+                    messagesLoaded: "onPrefsEditorMessagesLoaded"
+                }
+            }
+        },
+        listeners: {
+            onReady: {
+                listener: "fluid.prefs.separatedPanel.bindEvents",
+                args: ["{separatedPanel}.prefsEditor", "{iframeRenderer}.iframeEnhancer", "{separatedPanel}"]
+            },
+            onCreate: {
+                listener: "fluid.prefs.separatedPanel.hideReset",
+                args: ["{separatedPanel}"]
+            }
+        },
+        selectors: {
+            reset: ".flc-prefsEditor-reset",
+            iframe: ".flc-prefsEditor-iframe"
+        },
+        invokers: {
+            bindReset: {
+                funcName: "fluid.bind",
+                args: ["{separatedPanel}.dom.reset", "click", "{arguments}.0"]
+            }
+        },
+        components: {
+            pageEnhancer: "{uiEnhancer}",
+            slidingPanel: {
+                type: "fluid.slidingPanel",
+                container: "{separatedPanel}.container",
+                createOnEvent: "onCreateSlidingPanelReady",
+                options: {
+                    gradeNames: ["fluid.prefs.msgLookup"],
+                    strings: {
+                        showText: "{that}.msgLookup.slidingPanelShowText",
+                        hideText: "{that}.msgLookup.slidingPanelHideText"
+                    },
+                    invokers: {
+                        operateShow: {
+                            funcName: "fluid.prefs.separatedPanel.showPanel",
+                            args: ["{that}.dom.panel", "{that}.events.afterPanelShow.fire"],
+                            // override default implementation
+                            "this": null,
+                            "method": null
+                        },
+                        operateHide: {
+                            funcName: "fluid.prefs.separatedPanel.hidePanel",
+                            args: ["{that}.dom.panel", "{iframeRenderer}.iframe", "{that}.events.afterPanelHide.fire"],
+                            // override default implementation
+                            "this": null,
+                            "method": null
+                        }
+                    },
+                    components: {
+                        msgResolver: {
+                            type: "fluid.messageResolver",
+                            options: {
+                                messageBase: "{messageLoader}.resources.prefsEditor.resourceText"
+                            }
+                        }
+                    }
+                }
+            },
+            iframeRenderer: {
+                type: "fluid.prefs.separatedPanel.renderIframe",
+                container: "{separatedPanel}.dom.iframe",
+                options: {
+                    markupProps: {
+                        src: "%templatePrefix/SeparatedPanelPrefsEditorFrame.html"
+                    },
+                    events: {
+                        afterRender: "{separatedPanel}.events.afterRender"
+                    },
+                    components: {
+                        iframeEnhancer: {
+                            type: "fluid.uiEnhancer",
+                            container: "{iframeRenderer}.renderPrefsEditorContainer",
+                            createOnEvent: "afterRender",
+                            options: {
+                                gradeNames: ["{pageEnhancer}.options.gradeNames"],
+                                jQuery: "{iframeRenderer}.jQuery",
+                                tocTemplate: "{pageEnhancer}.options.tocTemplate"
+                            }
+                        }
+                    }
+                }
+            },
+            prefsEditor: {
+                createOnEvent: "templatesAndIframeReady",
+                container: "{iframeRenderer}.renderPrefsEditorContainer",
+                options: {
+                    gradeNames: ["fluid.prefs.uiEnhancerRelay"],
+                    // ensure that model and applier are available to users at top level
+                    model: "{separatedPanel}.model",
+                    events: {
+                        onSignificantDOMChange: null,
+                        updateEnhancerModel: "{that}.events.modelChanged"
+                    },
+                    listeners: {
+                        modelChanged: "{that}.save",
+                        onCreate: {
+                            listener: "{separatedPanel}.bindReset",
+                            args: ["{that}.reset"]
+                        },
+                        onReset: "{that}.applyChanges",
+                        onReady: {
+                            listener: "{separatedPanel}.events.onReady",
+                            args: "{separatedPanel}"
+                        }
+                    }
+                }
+            }
+        },
+        outerEnhancerOptions: "{originalEnhancerOptions}.options.originalUserOptions",
+        distributeOptions: [{
+            source: "{that}.options.slidingPanel",
+            removeSource: true,
+            target: "{that > slidingPanel}.options"
+        }, {
+            source: "{that}.options.iframeRenderer",
+            removeSource: true,
+            target: "{that > iframeRenderer}.options"
+        }, {
+            source: "{that}.options.iframe",
+            removeSource: true,
+            target: "{that}.options.selectors.iframe"
+        }, {
+            source: "{that}.options.outerEnhancerOptions",
+            removeSource: true,
+            target: "{that iframeEnhancer}.options"
+        }, {
+            source: "{that}.options.terms",
+            target: "{that > iframeRenderer}.options.terms"
+        }]
+    });
+
+    fluid.prefs.separatedPanel.hideReset = function (separatedPanel) {
+        separatedPanel.locate("reset").hide();
+    };
+    /*****************************************
+     * fluid.prefs.separatedPanel.renderIframe *
+     *****************************************/
+
+    fluid.defaults("fluid.prefs.separatedPanel.renderIframe", {
+        gradeNames: ["fluid.viewRelayComponent", "autoInit"],
+        events: {
+            afterRender: null
+        },
+        styles: {
+            container: "fl-prefsEditor-separatedPanel-iframe"
+        },
+        terms: {
+            templatePrefix: "."
+        },
+        markupProps: {
+            "class": "flc-iframe",
+            src: "%templatePrefix/prefsEditorIframe.html"
+        }
+    });
+
+    fluid.prefs.separatedPanel.renderIframe.finalInit = function (that) {
+        var styles = that.options.styles;
+        // TODO: get earlier access to templateLoader,
+        that.options.markupProps.src = fluid.stringTemplate(that.options.markupProps.src, that.options.terms);
+        that.iframeSrc = that.options.markupProps.src;
+
+        // Create iframe and append to container
+        that.iframe = $("<iframe/>");
+        that.iframe.load(function () {
+            var iframeWindow = that.iframe[0].contentWindow;
+            that.iframeDocument = iframeWindow.document;
+
+            that.jQuery = iframeWindow.jQuery;
+            that.renderPrefsEditorContainer = that.jQuery("body", that.iframeDocument);
+            that.jQuery(that.iframeDocument).ready(that.events.afterRender.fire);
+        });
+        that.iframe.attr(that.options.markupProps);
+
+        that.iframe.addClass(styles.container);
+        that.iframe.hide();
+
+        that.iframe.appendTo(that.container);
+    };
+
+    fluid.prefs.separatedPanel.updateView = function (prefsEditor) {
+        prefsEditor.events.onPrefsEditorRefresh.fire();
+        prefsEditor.events.onSignificantDOMChange.fire();
+    };
+
+    fluid.prefs.separatedPanel.bindEvents = function (prefsEditor, iframeEnhancer, separatedPanel) {
+        // TODO: This binding should be done declaratively - needs ginger world in order to bind onto slidingPanel
+        // which is a child of this component
+        separatedPanel.slidingPanel.events.afterPanelShow.addListener(function () {
+            fluid.prefs.separatedPanel.updateView(prefsEditor);
+        });
+
+        prefsEditor.events.onPrefsEditorRefresh.addListener(function () {
+            iframeEnhancer.updateModel(prefsEditor.model);
+        });
+        prefsEditor.events.onReset.addListener(function (prefsEditor) {
+            fluid.prefs.separatedPanel.updateView(prefsEditor);
+        });
+        prefsEditor.events.onSignificantDOMChange.addListener(function () {
+            var dokkument = prefsEditor.container[0].ownerDocument;
+            var height = fluid.dom.getDocumentHeight(dokkument);
+            var iframe = separatedPanel.iframeRenderer.iframe;
+            var attrs = {height: height + 15}; // TODO: Configurable padding here
+            var panel = separatedPanel.slidingPanel.locate("panel");
+            panel.css({height: ""});
+            iframe.animate(attrs, 400);
+        });
+
+        separatedPanel.slidingPanel.events.afterPanelHide.addListener(function () {
+            separatedPanel.iframeRenderer.iframe.height(0);
+
+            // Prevent the hidden Preferences Editorpanel from being keyboard and screen reader accessible
+            separatedPanel.iframeRenderer.iframe.hide();
+        });
+        separatedPanel.slidingPanel.events.onPanelShow.addListener(function () {
+            separatedPanel.iframeRenderer.iframe.show();
+            separatedPanel.locate("reset").show();
+        });
+        separatedPanel.slidingPanel.events.onPanelHide.addListener(function () {
+            separatedPanel.locate("reset").hide();
+        });
+    };
+
+    // Replace the standard animator since we don't want the panel to become hidden
+    // (potential cause of jumping)
+    fluid.prefs.separatedPanel.hidePanel = function (panel, iframe, callback) {
+        iframe.clearQueue(); // FLUID-5334: clear the animation queue
+        $(panel).animate({height: 0}, {duration: 400, complete: callback});
+    };
+
+    // no activity - the kickback to the updateView listener will automatically trigger the
+    // DOMChangeListener above. This ordering is preferable to avoid causing the animation to
+    // jump by refreshing the view inside the iframe
+    fluid.prefs.separatedPanel.showPanel = function (panel, callback) {
+        // A bizarre race condition has emerged under FF where the iframe held within the panel does not
+        // react synchronously to being shown
+        setTimeout(callback, 1);
+    };
+
+})(jQuery, fluid_2_0);
+;/*
+Copyright 2011 OCAD University
+Copyright 2011 Lucendo Development Ltd.
+
+Licensed under the Educational Community License (ECL), Version 2.0 or the New
+BSD license. You may not use this file except in compliance with one these
+Licenses.
+
+You may obtain a copy of the ECL 2.0 License and BSD License at
+https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
+*/
+
+var fluid_2_0 = fluid_2_0 || {};
+
+(function ($, fluid) {
+    "use strict";
+
+    /**************************************
+     * Full No Preview Preferences Editor *
+     **************************************/
+
+    fluid.defaults("fluid.prefs.fullNoPreview", {
+        gradeNames: ["fluid.prefs.prefsEditorLoader", "autoInit"],
+        components: {
+            prefsEditor: {
+                container: "{that}.container",
+                options: {
+                    listeners: {
+                        onReset: [{
+                            listener: "{that}.applyChanges"
+                        }, {
+                            listener: "{that}.save"
+                        }],
+                        onReady: {
+                            listener: "{fullNoPreview}.events.onReady",
+                            args: "{fullNoPreview}"
+                        }
+                    }
+                }
+            }
+        },
+        events: {
+            onReady: null
+        }
+    });
+
+})(jQuery, fluid_2_0);
+;/*
+Copyright 2011 OCAD University
+Copyright 2011 Lucendo Development Ltd.
+
+Licensed under the Educational Community License (ECL), Version 2.0 or the New
+BSD license. You may not use this file except in compliance with one these
+Licenses.
+
+You may obtain a copy of the ECL 2.0 License and BSD License at
+https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
+*/
+
+var fluid_2_0 = fluid_2_0 || {};
+
+(function ($, fluid) {
+    "use strict";
+
+    /***********************************
+     * Full Preview Preferences Editor *
+     ***********************************/
+
+    fluid.defaults("fluid.prefs.fullPreview", {
+        gradeNames: ["fluid.prefs.prefsEditorLoader", "autoInit"],
+        outerPreviewEnhancerOptions: "{originalEnhancerOptions}.options.originalUserOptions",
+        components: {
+            prefsEditor: {
+                container: "{that}.container",
+                options: {
+                    components: {
+                        preview: {
+                            type: "fluid.prefs.preview",
+                            createOnEvent: "onReady",
+                            container: "{prefsEditor}.dom.previewFrame",
+                            options: {
+                                listeners: {
+                                    onReady: "{fullPreview}.events.onPreviewReady"
+                                }
+                            }
+                        }
+                    },
+                    listeners: {
+                        onReady: "{fullPreview}.events.onPrefsEditorReady"
+                    },
+                    distributeOptions: {
+                        source: "{that}.options.preview",
+                        removeSource: true,
+                        target: "{that > preview}.options"
+                    }
+                }
+            }
+        },
+        events: {
+            onPrefsEditorReady: null,
+            onPreviewReady: null,
+            onReady: {
+                events: {
+                    onPrefsEditorReady: "onPrefsEditorReady",
+                    onPreviewReady: "onPreviewReady"
+                },
+                args: "{that}"
+            }
+        },
+        distributeOptions: [{
+            source: "{that}.options.outerPreviewEnhancerOptions",
+            removeSource: true,
+            target: "{that enhancer}.options"
+        }, {
+            source: "{that}.options.preview",
+            target: "{that preview}.options"
+        }, {
+            source: "{that}.options.previewEnhancer",
+            removeSource: true,
+            target: "{that enhancer}.options"
+        }]
+    });
+
+})(jQuery, fluid_2_0);
+;/*
+Copyright 2013 OCAD University
+
+Licensed under the Educational Community License (ECL), Version 2.0 or the New
+BSD license. You may not use this file except in compliance with one these
+Licenses.
+
+You may obtain a copy of the ECL 2.0 License and BSD License at
+https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
+*/
+
+var fluid_2_0 = fluid_2_0 || {};
+
+(function ($, fluid) {
+    "use strict";
+
+    fluid.registerNamespace("fluid.prefs.schemas");
+
+    /**
+     * A custom merge policy that merges primary schema blocks and
+     * places them in the right location (consistent with the JSON schema
+     * format).
+     * @param  {JSON} target A base for merging the options.
+     * @param  {JSON} source Options being merged.
+     * @return {JSON}        Updated target.
+     */
+    fluid.prefs.schemas.merge = function (target, source) {
+        if (!target) {
+            target = {
+                type: "object",
+                properties: {}
+            };
+        }
+        // We can handle both schema blocks in options directly and also inside
+        // the |properties| field.
+        source = source.properties || source;
+        $.extend(true, target.properties, source);
+        return target;
+    };
+
+    /*******************************************************************************
+     * Primary builder grade
+     *******************************************************************************/
+
+    fluid.defaults("fluid.prefs.primaryBuilder", {
+        gradeNames: ["fluid.littleComponent", "autoInit", "{that}.buildPrimary"],
+        // An index of all schema grades registered with the framework.
+        schemaIndex: {
+            expander: {
+                func: "fluid.indexDefaults",
+                args: ["schemaIndex", {
+                    gradeNames: "fluid.prefs.schemas",
+                    indexFunc: "fluid.prefs.primaryBuilder.defaultSchemaIndexer"
+                }]
+            }
+        },
+        primarySchema: {},
+        // A list of all necessarry top level preference names.
+        typeFilter: [],
+        invokers: {
+            // An invoker used to generate a set of grades that comprise a
+            // final version of the primary schema to be used by the PrefsEditor
+            // builder.
+            buildPrimary: {
+                funcName: "fluid.prefs.primaryBuilder.buildPrimary",
+                args: [
+                    "{that}.options.schemaIndex",
+                    "{that}.options.typeFilter",
+                    "{that}.options.primarySchema"
+                ]
+            }
+        }
+    });
+
+    /**
+     * An invoker method that builds a list of grades that comprise a final
+     * version of the primary schema.
+     * @param  {JSON}  schemaIndex   A global index of all schema grades
+     *                               registered with the framework.
+     * @param  {Array} typeFilter    A list of all necessarry top level
+     *                               preference names.
+     * @param  {JSON}  primarySchema Primary schema provided as an option to
+     *                               the primary builder.
+     * @return {Array}               A list of schema grades.
+     */
+    fluid.prefs.primaryBuilder.buildPrimary = function (schemaIndex, typeFilter, primarySchema) {
+        var suppliedPrimaryGradeName = "fluid.prefs.schemas.suppliedPrimary" + fluid.allocateGuid();
+        // Create a grade that has a primary schema passed as an option inclosed.
+        fluid.defaults(suppliedPrimaryGradeName, {
+            gradeNames: ["autoInit", "fluid.prefs.schemas"],
+            schema: fluid.filterKeys(primarySchema.properties || primarySchema,
+                typeFilter, false)
+        });
+        var primary = [];
+        // Lookup all available schema grades from the index that match the
+        // top level preference name.
+        fluid.each(typeFilter, function merge(type) {
+            var schemaGrades = schemaIndex[type];
+            if (schemaGrades) {
+                primary.push.apply(primary, schemaGrades);
+            }
+        });
+        primary.push(suppliedPrimaryGradeName);
+        return primary;
+    };
+
+    /**
+     * An index function that indexes all shcema grades based on their
+     * preference name.
+     * @param  {JSON}   defaults Registered defaults for a schema grade.
+     * @return {String}          A preference name.
+     */
+    fluid.prefs.primaryBuilder.defaultSchemaIndexer = function (defaults) {
+        if (defaults.schema) {
+            return fluid.keys(defaults.schema.properties);
+        }
+    };
+
+    /*******************************************************************************
+     * Base primary schema grade
+     *******************************************************************************/
+    fluid.defaults("fluid.prefs.schemas", {
+        gradeNames: ["autoInit", "fluid.littleComponent"],
+        mergePolicy: {
+            schema: fluid.prefs.schemas.merge
+        }
+    });
+
+})(jQuery, fluid_2_0);
+;/*
+Copyright 2013-2015 OCAD University
+
+Licensed under the Educational Community License (ECL), Version 2.0 or the New
+BSD license. You may not use this file except in compliance with one these
+Licenses.
+
+You may obtain a copy of the ECL 2.0 License and BSD License at
+https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
+*/
+
+var fluid_2_0 = fluid_2_0 || {};
+
+
+(function ($, fluid) {
+    "use strict";
+
+    fluid.registerNamespace("fluid.prefs");
+
+    /*******************************************************************************
+     * Base auxiliary schema grade
+     *******************************************************************************/
+
+    fluid.defaults("fluid.prefs.auxSchema", {
+        gradeNames: ["fluid.littleComponent", "autoInit"],
+        auxiliarySchema: {
+            "loaderGrades": ["fluid.prefs.separatedPanel"]
+        }
+    });
+
+    /**
+     * Look up the value on the given source object by using the path.
+     * Takes a template string containing tokens in the form of "@source-path-to-value".
+     * Returns a value (any type) or undefined if the path is not found.
+     *
+     * @param {object}    root       an object to retrieve the returned value from
+     * @param {String}    pathRef    a string that the path to the requested value is embedded into
+     *
+     * Example:
+     * 1. Parameters:
+     * source:
+     * {
+     *     path1: {
+     *         path2: "here"
+     *     }
+     * }
+     *
+     * template: "@path1.path2"
+     *
+     * 2. Return: "here"
+     */
+    fluid.prefs.expandSchemaValue = function (root, pathRef) {
+        if (pathRef.charAt(0) !== "@") {
+            return pathRef;
+        }
+
+        return fluid.get(root, pathRef.substring(1));
+    };
+
+    fluid.prefs.addAtPath = function (root, path, object) {
+        var existingObject = fluid.get(root, path);
+        fluid.set(root, path, $.extend(true, {}, existingObject, object));
+
+        return root;
+    };
+
+    // only works with top level elements
+    fluid.prefs.removeKey = function (root, key) {
+        var value = root[key];
+        delete root[key];
+        return value;
+    };
+
+    fluid.prefs.rearrangeDirect = function (root, toPath, sourcePath) {
+        var result = {};
+        var sourceValue = fluid.prefs.removeKey(root, sourcePath);
+        if (sourceValue) {
+            fluid.set(result, toPath, sourceValue);
+        }
+        return result;
+    };
+
+    fluid.prefs.addCommonOptions = function (root, path, commonOptions, templateValues) {
+        templateValues = templateValues || {};
+
+        var existingValue = fluid.get(root, path);
+
+        if (!existingValue) {
+            return root;
+        }
+
+        var opts = {}, mergePolicy = {};
+
+        fluid.each(commonOptions, function (value, key) {
+            // Adds "container" option only for view and renderer components
+            if (key === "container") {
+                var componentType = fluid.get(root, [path, "type"]);
+                var componentOptions = fluid.defaults(componentType);
+                // Note that this approach is not completely reliable, although it has been reviewed as "good enough" -
+                // a grade which modifies the creation signature of its principal type would cause numerous other problems.
+                // We can review this awkward kind of "anticipatory logic" when the new renderer arrives.
+                if (fluid.get(componentOptions, ["argumentMap", "container"]) === undefined) {
+                    return false;
+                }
+            }
+            // Merge grade names defined in aux schema and system default grades
+            if (key.indexOf("gradeNames") !== -1) {
+                mergePolicy[key] = fluid.arrayConcatPolicy;
+            }
+
+            key = fluid.stringTemplate(key, templateValues);
+            value = typeof (value) === "string" ? fluid.stringTemplate(value, templateValues) : value;
+
+            fluid.set(opts, key, value);
+        });
+
+        fluid.set(root, path, fluid.merge(mergePolicy, existingValue, opts));
+
+        return root;
+    };
+
+    fluid.prefs.containerNeeded = function (root, path) {
+        var componentType = fluid.get(root, [path, "type"]);
+        var componentOptions = fluid.defaults(componentType);
+        return (fluid.hasGrade(componentOptions, "fluid.viewRelayComponent") || fluid.hasGrade(componentOptions, "fluid.rendererRelayComponent"));
+    };
+
+    fluid.prefs.checkPrimarySchema = function (primarySchema, prefKey) {
+        if (!primarySchema) {
+            fluid.fail("The primary schema for " + prefKey + " is not defined.");
+        }
+        return !!primarySchema;
+    };
+
+    fluid.prefs.expandSchemaComponents = function (auxSchema, type, prefKey, componentConfig, index, commonOptions, modelCommonOptions, mappedDefaults) {
+        var componentOptions = fluid.copy(componentConfig) || {};
+        var components = {};
+        var initialModel = {};
+
+        var componentName = fluid.prefs.removeKey(componentOptions, "type");
+        var regexp = new RegExp("\\.", "g");
+        var memberName = componentName.replace(regexp,  "_");
+        var flattenedPrefKey = prefKey.replace(regexp,  "_");
+
+        if (componentName) {
+
+            components[memberName] = {
+                type: componentName,
+                options: componentOptions
+            };
+
+            var selectors = fluid.prefs.rearrangeDirect(componentOptions, memberName, "container");
+            var templates = fluid.prefs.rearrangeDirect(componentOptions, memberName, "template");
+            var messages = fluid.prefs.rearrangeDirect(componentOptions, memberName, "message");
+
+            var preferenceMap = fluid.defaults(componentName).preferenceMap;
+
+            var map = preferenceMap[prefKey];
+            var prefSchema = mappedDefaults[prefKey];
+
+            fluid.each(map, function (primaryPath, internalPath) {
+                if (fluid.prefs.checkPrimarySchema(prefSchema, prefKey)) {
+                    var opts = {};
+                    if (internalPath.indexOf("model.") === 0) {
+                        var internalModelName = internalPath.slice(6);
+                        // Set up the binding in "rules" accepted by the modelRelay base grade of every panel
+                        fluid.set(opts, "model", fluid.get(opts, "model") || {});
+                        fluid.prefs.addCommonOptions(opts, "model", modelCommonOptions, {
+                            internalModelName: internalModelName,
+                            externalModelName: flattenedPrefKey
+                        });
+                        fluid.set(initialModel, ["members", "initialModel", flattenedPrefKey], prefSchema[primaryPath]);
+                    } else {
+                        fluid.set(opts, internalPath, prefSchema[primaryPath]);
+                    }
+                    $.extend(true, componentOptions, opts);
+                }
+            });
+
+            fluid.prefs.addCommonOptions(components, memberName, commonOptions, {
+                prefKey: memberName
+            });
+
+            fluid.prefs.addAtPath(auxSchema, [type, "components"], components);
+            fluid.prefs.addAtPath(auxSchema, [type, "selectors"], selectors);
+            fluid.prefs.addAtPath(auxSchema, ["templateLoader", "resources"], templates);
+            fluid.prefs.addAtPath(auxSchema, ["messageLoader", "resources"], messages);
+            fluid.prefs.addAtPath(auxSchema, "initialModel", initialModel);
+        }
+
+        return auxSchema;
+    };
+
+    /**
+     * Expands a all "@" path references from an auxiliary schema.
+     * Note that you cannot chain "@" paths.
+     *
+     *  @param {object} schemaToExpand the shcema which will be expanded
+     *  @param {object} altSource an alternative look up object. This is primarily used for the internal recursive call.
+     *  @return {object} an expaneded version of the schema.
+     */
+    fluid.prefs.expandSchemaImpl = function (schemaToExpand, altSource) {
+        var expandedSchema = fluid.copy(schemaToExpand);
+        altSource = altSource || expandedSchema;
+
+        fluid.each(expandedSchema, function (value, key) {
+            if (typeof value === "object") {
+                expandedSchema[key] = fluid.prefs.expandSchemaImpl(value, altSource);
+            } else if (typeof value === "string") {
+                var expandedVal = fluid.prefs.expandSchemaValue(altSource, value);
+                if (expandedVal !== undefined) {
+                    expandedSchema[key] = expandedVal;
+                } else {
+                    delete expandedSchema[key];
+                }
+            }
+        });
+        return expandedSchema;
+    };
+
+    fluid.prefs.expandCompositePanels = function (auxSchema, compositePanelList, panelIndex, panelCommonOptions, subPanelCommonOptions,
+        compositePanelBasedOnSubCommonOptions, panelModelCommonOptions, mappedDefaults) {
+        var panelsToIgnore = [];
+
+        fluid.each(compositePanelList, function (compositeDetail, compositeKey) {
+            var compositePanelOptions = {};
+            var components = {};
+            var initialModel = {};
+            var selectors = {};
+            var templates = {};
+            var messages = {};
+            var selectorsToIgnore = [];
+
+            var thisCompositeOptions = fluid.copy(compositeDetail);
+            fluid.set(compositePanelOptions, "type", thisCompositeOptions.type);
+            delete thisCompositeOptions.type;
+
+            selectors = fluid.prefs.rearrangeDirect(thisCompositeOptions, compositeKey, "container");
+            templates = fluid.prefs.rearrangeDirect(thisCompositeOptions, compositeKey, "template");
+            messages = fluid.prefs.rearrangeDirect(thisCompositeOptions, compositeKey, "message");
+
+            var subPanelList = []; // list of subpanels to generate options for
+            var subPanels = {};
+            var subPanelRenderOn = {};
+
+            // panels can contain an array of always on panels, or an object
+            // describing which panels are always and which are initialized by a preference value
+            if (!fluid.isPrimitive(thisCompositeOptions.panels)) {
+                fluid.each(thisCompositeOptions.panels, function (subpanelArray, pref) {
+                    subPanelList = subPanelList.concat(subpanelArray);
+                    if (pref !== "always") {
+                        fluid.each(subpanelArray, function (onePanel) {
+                            fluid.set(subPanelRenderOn, onePanel, pref);
+                        });
+                    }
+                });
+            } else {
+                subPanelList = thisCompositeOptions.panels;
+            }
+
+            fluid.each(subPanelList, function (subPanelID) {
+                panelsToIgnore.push(subPanelID);
+                var subPanelPrefsKey = fluid.get(auxSchema, [subPanelID, "type"]);
+                var safeSubPanelPrefsKey = fluid.prefs.subPanel.safePrefKey(subPanelPrefsKey);
+                selectorsToIgnore.push(safeSubPanelPrefsKey);
+
+                var subPanelOptions = fluid.copy(fluid.get(auxSchema, [subPanelID, "panel"]));
+                var subPanelType = fluid.get(subPanelOptions, "type");
+
+                fluid.set(subPanels, [safeSubPanelPrefsKey, "type"], subPanelType);
+                var renderOn = fluid.get(subPanelRenderOn, subPanelID);
+                if (renderOn) {
+                    fluid.set(subPanels, [safeSubPanelPrefsKey, "options", "renderOnPreference"], renderOn);
+                }
+
+                // Deal with preferenceMap related options
+                var map = fluid.defaults(subPanelType).preferenceMap[subPanelPrefsKey];
+                var prefSchema = mappedDefaults[subPanelPrefsKey];
+
+                fluid.each(map, function (primaryPath, internalPath) {
+                    if (fluid.prefs.checkPrimarySchema(prefSchema, subPanelPrefsKey)) {
+                        var opts;
+                        if (internalPath.indexOf("model.") === 0) {
+                            // Set up the binding in "rules" accepted by the modelRelay base grade of every panel
+                            fluid.set(compositePanelOptions, ["options", "model"], fluid.get(compositePanelOptions, ["options", "model"]) || {});
+                            fluid.prefs.addCommonOptions(compositePanelOptions, ["options", "model"], panelModelCommonOptions, {
+                                internalModelName: safeSubPanelPrefsKey,
+                                externalModelName: safeSubPanelPrefsKey
+                            });
+                            fluid.set(initialModel, ["members", "initialModel", safeSubPanelPrefsKey], prefSchema[primaryPath]);
+                        } else {
+                            opts = opts || {options: {}};
+                            fluid.set(opts, "options." + internalPath, prefSchema[primaryPath]);
+                        }
+                        $.extend(true, subPanels[safeSubPanelPrefsKey], opts);
+                    }
+                });
+
+                fluid.set(templates, safeSubPanelPrefsKey, fluid.get(subPanelOptions, "template"));
+                fluid.set(messages, safeSubPanelPrefsKey, fluid.get(subPanelOptions, "message"));
+
+                fluid.set(compositePanelOptions, ["options", "selectors", safeSubPanelPrefsKey], fluid.get(subPanelOptions, "container"));
+                fluid.set(compositePanelOptions, ["options", "resources"], fluid.get(compositePanelOptions, ["options", "resources"]) || {});
+
+                fluid.prefs.addCommonOptions(compositePanelOptions.options, "resources", compositePanelBasedOnSubCommonOptions, {
+                    subPrefKey: safeSubPanelPrefsKey
+                });
+
+                // add additional options from the aux schema for subpanels
+                delete subPanelOptions.type;
+                delete subPanelOptions.template;
+                delete subPanelOptions.message;
+                delete subPanelOptions.container;
+                fluid.set(subPanels, [safeSubPanelPrefsKey, "options"], $.extend(true, {}, fluid.get(subPanels, [safeSubPanelPrefsKey, "options"]), subPanelOptions));
+
+                fluid.prefs.addCommonOptions(subPanels, safeSubPanelPrefsKey, subPanelCommonOptions, {
+                    compositePanel: compositeKey,
+                    prefKey: safeSubPanelPrefsKey
+                });
+            });
+            delete thisCompositeOptions.panels;
+
+            // add additional options from the aux schema for the composite panel
+            fluid.set(compositePanelOptions, ["options"], $.extend(true, {}, compositePanelOptions.options, thisCompositeOptions));
+            fluid.set(compositePanelOptions, ["options", "selectorsToIgnore"], selectorsToIgnore);
+            fluid.set(compositePanelOptions, ["options", "components"], subPanels);
+
+            components[compositeKey] = compositePanelOptions;
+
+            fluid.prefs.addCommonOptions(components, compositeKey, panelCommonOptions, {
+                prefKey: compositeKey
+            });
+
+            // Add onto auxSchema
+            fluid.prefs.addAtPath(auxSchema, ["panels", "components"], components);
+            fluid.prefs.addAtPath(auxSchema, ["panels", "selectors"], selectors);
+            fluid.prefs.addAtPath(auxSchema, ["templateLoader", "resources"], templates);
+            fluid.prefs.addAtPath(auxSchema, ["messageLoader", "resources"], messages);
+            fluid.prefs.addAtPath(auxSchema, "initialModel", initialModel);
+            $.extend(true, auxSchema, {panelsToIgnore: panelsToIgnore});
+        });
+
+        return auxSchema;
+    };
+
+    // Processes the auxiliary schema to output an object that contains all grade component definitions
+    // required for building the preferences editor, uiEnhancer and the settings store. These grade components
+    // are: panels, enactors, initialModel, messageLoader, templateLoader and terms.
+    // These grades are consumed and integrated by builder.js
+    // (https://github.com/fluid-project/infusion/blob/master/src/framework/preferences/js/Builder.js)
+    fluid.prefs.expandSchema = function (schemaToExpand, indexes, topCommonOptions, elementCommonOptions, mappedDefaults) {
+        var auxSchema = fluid.prefs.expandSchemaImpl(schemaToExpand);
+        auxSchema.namespace = auxSchema.namespace || "fluid.prefs.created_" + fluid.allocateGuid();
+
+        var terms = fluid.get(auxSchema, "terms");
+        if (terms) {
+            delete auxSchema.terms;
+            fluid.set(auxSchema, ["terms", "terms"], terms);
+        }
+
+        var compositePanelList = fluid.get(auxSchema, "groups");
+        if (compositePanelList) {
+            fluid.prefs.expandCompositePanels(auxSchema, compositePanelList, fluid.get(indexes, "panel"),
+                fluid.get(elementCommonOptions, "panel"), fluid.get(elementCommonOptions, "subPanel"),
+                fluid.get(elementCommonOptions, "compositePanelBasedOnSub"), fluid.get(elementCommonOptions, "panelModel"),
+                mappedDefaults);
+        }
+
+        fluid.each(auxSchema, function (category, prefName) {
+            // TODO: Replace this cumbersome scheme with one based on an extensible lookup to handlers
+            var type = "panel";
+            // Ignore the subpanels that are only for composing composite panels
+            if (category[type] && $.inArray(prefName, auxSchema.panelsToIgnore) === -1) {
+                fluid.prefs.expandSchemaComponents(auxSchema, "panels", category.type, category[type], fluid.get(indexes, type),
+                    fluid.get(elementCommonOptions, type), fluid.get(elementCommonOptions, type + "Model"), mappedDefaults);
+            }
+
+            type = "enactor";
+            if (category[type]) {
+                fluid.prefs.expandSchemaComponents(auxSchema, "enactors", category.type, category[type], fluid.get(indexes, type),
+                    fluid.get(elementCommonOptions, type), fluid.get(elementCommonOptions, type + "Model"), mappedDefaults);
+            }
+
+            fluid.each(["template", "message"], function (type) {
+                if (prefName === type) {
+                    fluid.set(auxSchema, [type + "Loader", "resources", "prefsEditor"], auxSchema[type]);
+                    delete auxSchema[type];
+                }
+            });
+
+        });
+
+        // Remove subPanels array. It is to keep track of the panels that are only used as sub-components of composite panels.
+        if (auxSchema.panelsToIgnore) {
+            delete auxSchema.panelsToIgnore;
+        }
+
+        // Add top common options
+        fluid.each(topCommonOptions, function (topOptions, type) {
+            fluid.prefs.addCommonOptions(auxSchema, type, topOptions);
+        });
+
+        return auxSchema;
+    };
+
+    fluid.defaults("fluid.prefs.auxBuilder", {
+        gradeNames: ["fluid.prefs.auxSchema", "autoInit"],
+        mergePolicy: {
+            elementCommonOptions: "noexpand"
+        },
+        topCommonOptions: {
+            panels: {
+                gradeNames: ["fluid.prefs.prefsEditor", "autoInit"]
+            },
+            enactors: {
+                gradeNames: ["fluid.uiEnhancer", "autoInit"]
+            },
+            templateLoader: {
+                gradeNames: ["fluid.prefs.resourceLoader", "autoInit"]
+            },
+            messageLoader: {
+                gradeNames: ["fluid.prefs.resourceLoader", "autoInit"]
+            },
+            initialModel: {
+                gradeNames: ["fluid.prefs.initialModel", "autoInit"]
+            },
+            terms: {
+                gradeNames: ["fluid.littleComponent", "autoInit"]
+            }
+        },
+        elementCommonOptions: {
+            panel: {
+                "createOnEvent": "onPrefsEditorMarkupReady",
+                "container": "{prefsEditor}.dom.%prefKey",
+                "options.gradeNames": "fluid.prefs.prefsEditorConnections",
+                "options.resources.template": "{templateLoader}.resources.%prefKey",
+                "options.messageBase": "{messageLoader}.resources.%prefKey.resourceText"
+            },
+            panelModel: {
+                "%internalModelName": "{prefsEditor}.model.%externalModelName"
+            },
+            compositePanelBasedOnSub: {
+                "%subPrefKey": "{templateLoader}.resources.%subPrefKey"
+            },
+            subPanel: {
+                "container": "{%compositePanel}.dom.%prefKey",
+                "options.messageBase": "{messageLoader}.resources.%prefKey.resourceText"
+            },
+            enactor: {
+                "container": "{uiEnhancer}.container"
+            },
+            enactorModel: {
+                "%internalModelName": "{uiEnhancer}.model.%externalModelName"
+            }
+        },
+        indexes: {
+            panel: {
+                expander: {
+                    func: "fluid.indexDefaults",
+                    args: ["panelsIndex", {
+                        gradeNames: "fluid.prefs.panel",
+                        indexFunc: "fluid.prefs.auxBuilder.prefMapIndexer"
+                    }]
+                }
+            },
+            enactor: {
+                expander: {
+                    func: "fluid.indexDefaults",
+                    args: ["enactorsIndex", {
+                        gradeNames: "fluid.prefs.enactor",
+                        indexFunc: "fluid.prefs.auxBuilder.prefMapIndexer"
+                    }]
+                }
+            }
+        },
+        mappedDefaults: {},
+        expandedAuxSchema: {
+            expander: {
+                func: "fluid.prefs.expandSchema",
+                args: [
+                    "{that}.options.auxiliarySchema",
+                    "{that}.options.indexes",
+                    "{that}.options.topCommonOptions",
+                    "{that}.options.elementCommonOptions",
+                    "{that}.options.mappedDefaults"
+                ]
+            }
+        }
+    });
+
+    fluid.prefs.auxBuilder.prefMapIndexer = function (defaults) {
+        return fluid.keys(defaults.preferenceMap);
+    };
+
+})(jQuery, fluid_2_0);
+;/*
+Copyright 2013-2015 OCAD University
+
+Licensed under the Educational Community License (ECL), Version 2.0 or the New
+BSD license. You may not use this file except in compliance with one these
+Licenses.
+
+You may obtain a copy of the ECL 2.0 License and BSD License at
+https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
+*/
+
+var fluid_2_0 = fluid_2_0 || {};
+
+(function (fluid) {
+    "use strict";
+
+    /*******************************************************************************
+     * Starter auxiliary schema grade
+     *
+     * Contains the settings for 7 preferences: text size, line space, text font,
+     * contrast, table of contents, inputs larger and emphasize links
+     *******************************************************************************/
+
+    fluid.defaults("fluid.prefs.termsAware");
+
+    fluid.defaults("fluid.prefs.auxSchema.starter", {
+        gradeNames: ["fluid.prefs.auxSchema", "autoInit"],
+        auxiliarySchema: {
+            "loaderGrades": ["fluid.prefs.separatedPanel"],
+            "namespace": "fluid.prefs.constructed", // The author of the auxiliary schema will provide this and will be the component to call to initialize the constructed PrefsEditor.
+            "terms": {
+                "templatePrefix": "../../framework/preferences/html",  // Must match the keyword used below to identify the common path to settings panel templates.
+                "messagePrefix": "../../framework/preferences/messages"  // Must match the keyword used below to identify the common path to message files.
+            },
+            "template": "%templatePrefix/SeparatedPanelPrefsEditor.html",
+            "message": "%messagePrefix/prefsEditor.json",
+            "textSize": {
+                "type": "fluid.prefs.textSize",
+                "enactor": {
+                    "type": "fluid.prefs.enactor.textSize"
+                },
+                "panel": {
+                    "type": "fluid.prefs.panel.textSize",
+                    "container": ".flc-prefsEditor-text-size",  // the css selector in the template where the panel is rendered
+                    "template": "%templatePrefix/PrefsEditorTemplate-textSize.html",
+                    "message": "%messagePrefix/textSize.json"
+                }
+            },
+            "lineSpace": {
+                "type": "fluid.prefs.lineSpace",
+                "enactor": {
+                    "type": "fluid.prefs.enactor.lineSpace",
+                    "fontSizeMap": {
+                        "xx-small": "9px",
+                        "x-small": "11px",
+                        "small": "13px",
+                        "medium": "15px",
+                        "large": "18px",
+                        "x-large": "23px",
+                        "xx-large": "30px"
+                    }
+                },
+                "panel": {
+                    "type": "fluid.prefs.panel.lineSpace",
+                    "container": ".flc-prefsEditor-line-space",  // the css selector in the template where the panel is rendered
+                    "template": "%templatePrefix/PrefsEditorTemplate-lineSpace.html",
+                    "message": "%messagePrefix/lineSpace.json"
+                }
+            },
+            "textFont": {
+                "type": "fluid.prefs.textFont",
+                "classes": {
+                    "default": "",
+                    "times": "fl-font-times",
+                    "comic": "fl-font-comic-sans",
+                    "arial": "fl-font-arial",
+                    "verdana": "fl-font-verdana"
+                },
+                "enactor": {
+                    "type": "fluid.prefs.enactor.textFont",
+                    "classes": "@textFont.classes"
+                },
+                "panel": {
+                    "type": "fluid.prefs.panel.textFont",
+                    "container": ".flc-prefsEditor-text-font",  // the css selector in the template where the panel is rendered
+                    "classnameMap": {"textFont": "@textFont.classes"},
+                    "template": "%templatePrefix/PrefsEditorTemplate-textFont.html",
+                    "message": "%messagePrefix/textFont.json"
+                }
+            },
+            "contrast": {
+                "type": "fluid.prefs.contrast",
+                "classes": {
+                    "default": "fl-theme-prefsEditor-default",
+                    "bw": "fl-theme-prefsEditor-bw fl-theme-bw",
+                    "wb": "fl-theme-prefsEditor-wb fl-theme-wb",
+                    "by": "fl-theme-prefsEditor-by fl-theme-by",
+                    "yb": "fl-theme-prefsEditor-yb fl-theme-yb",
+                    "lgdg": "fl-theme-prefsEditor-lgdg fl-theme-lgdg"
+
+                },
+                "enactor": {
+                    "type": "fluid.prefs.enactor.contrast",
+                    "classes": "@contrast.classes"
+                },
+                "panel": {
+                    "type": "fluid.prefs.panel.contrast",
+                    "container": ".flc-prefsEditor-contrast",  // the css selector in the template where the panel is rendered
+                    "classnameMap": {"theme": "@contrast.classes"},
+                    "template": "%templatePrefix/PrefsEditorTemplate-contrast.html",
+                    "message": "%messagePrefix/contrast.json"
+                }
+            },
+            "tableOfContents": {
+                "type": "fluid.prefs.tableOfContents",
+                "enactor": {
+                    "type": "fluid.prefs.enactor.tableOfContents",
+                    "tocTemplate": "../../components/tableOfContents/html/TableOfContents.html"
+                },
+                "panel": {
+                    "type": "fluid.prefs.panel.layoutControls",
+                    "container": ".flc-prefsEditor-layout-controls",  // the css selector in the template where the panel is rendered
+                    "template": "%templatePrefix/PrefsEditorTemplate-layout.html",
+                    "message": "%messagePrefix/tableOfContents.json"
+                }
+            },
+            "emphasizeLinks": {
+                "type": "fluid.prefs.emphasizeLinks",
+                "enactor": {
+                    "type": "fluid.prefs.enactor.emphasizeLinks",
+                    "cssClass": "fl-link-enhanced"
+                },
+                "panel": {
+                    "type": "fluid.prefs.panel.emphasizeLinks",
+                    "container": ".flc-prefsEditor-emphasizeLinks",  // the css selector in the template where the panel is rendered
+                    "template": "%templatePrefix/PrefsEditorTemplate-emphasizeLinks.html",
+                    "message": "%messagePrefix/emphasizeLinks.json"
+                }
+            },
+            "inputsLarger": {
+                "type": "fluid.prefs.inputsLarger",
+                "enactor": {
+                    "type": "fluid.prefs.enactor.inputsLarger",
+                    "cssClass": "fl-text-larger"
+                },
+                "panel": {
+                    "type": "fluid.prefs.panel.inputsLarger",
+                    "container": ".flc-prefsEditor-inputsLarger",  // the css selector in the template where the panel is rendered
+                    "template": "%templatePrefix/PrefsEditorTemplate-inputsLarger.html",
+                    "message": "%messagePrefix/inputsLarger.json"
+                }
+            },
+            groups: {
+                "linksControls": {
+                    "container": ".flc-prefsEditor-links-controls",
+                    "template": "%templatePrefix/PrefsEditorTemplate-linksControls.html",
+                    "message": "%messagePrefix/linksControls.json",
+                    "type": "fluid.prefs.panel.linksControls",
+                    "panels": ["emphasizeLinks", "inputsLarger"]
+                }
+            }
+        }
+    });
+
+    /*******************************************************************************
+     * Starter primary schema grades
+     *
+     * Contains the settings for 7 preferences: text size, line space, text font,
+     * contrast, table of contents, inputs larger and emphasize links
+     *******************************************************************************/
+
+    fluid.defaults("fluid.prefs.schemas.textSize", {
+        gradeNames: ["autoInit", "fluid.prefs.schemas"],
+        schema: {
+            "fluid.prefs.textSize": {
+                "type": "number",
+                "default": 1,
+                "minimum": 1,
+                "maximum": 2,
+                "divisibleBy": 0.1
+            }
+        }
+    });
+
+    fluid.defaults("fluid.prefs.schemas.lineSpace", {
+        gradeNames: ["autoInit", "fluid.prefs.schemas"],
+        schema: {
+            "fluid.prefs.lineSpace": {
+                "type": "number",
+                "default": 1,
+                "minimum": 1,
+                "maximum": 2,
+                "divisibleBy": 0.1
+            }
+        }
+    });
+
+    fluid.defaults("fluid.prefs.schemas.textFont", {
+        gradeNames: ["autoInit", "fluid.prefs.schemas"],
+        schema: {
+            "fluid.prefs.textFont": {
+                "type": "string",
+                "default": "default",
+                "enum": ["default", "times", "comic", "arial", "verdana"]
+            }
+        }
+    });
+
+    fluid.defaults("fluid.prefs.schemas.contrast", {
+        gradeNames: ["autoInit", "fluid.prefs.schemas"],
+        schema: {
+            "fluid.prefs.contrast": {
+                "type": "string",
+                "default": "default",
+                "enum": ["default", "bw", "wb", "by", "yb", "lgdg"]
+            }
+        }
+    });
+
+    fluid.defaults("fluid.prefs.schemas.tableOfContents", {
+        gradeNames: ["autoInit", "fluid.prefs.schemas"],
+        schema: {
+            "fluid.prefs.tableOfContents": {
+                "type": "boolean",
+                "default": false
+            }
+        }
+    });
+
+    fluid.defaults("fluid.prefs.schemas.emphasizeLinks", {
+        gradeNames: ["autoInit", "fluid.prefs.schemas"],
+        schema: {
+            "fluid.prefs.emphasizeLinks": {
+                "type": "boolean",
+                "default": false
+            }
+        }
+    });
+
+    fluid.defaults("fluid.prefs.schemas.inputsLarger", {
+        gradeNames: ["autoInit", "fluid.prefs.schemas"],
+        schema: {
+            "fluid.prefs.inputsLarger": {
+                "type": "boolean",
+                "default": false
+            }
+        }
+    });
+})(fluid_2_0);
+;/*
+Copyright 2015 OCAD University
+
+Licensed under the Educational Community License (ECL), Version 2.0 or the New
+BSD license. You may not use this file except in compliance with one these
+Licenses.
+
+You may obtain a copy of the ECL 2.0 License and BSD License at
+https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
+*/
+
+var fluid_2_0 = fluid_2_0 || {};
+
+(function (fluid) {
+    "use strict";
+
+    /*******************************************************************************
+    * Starter auxiliary schema grade
+    *
+    * Contains the settings for 7 preferences: text size, line space, text font,
+    * contrast, table of contents, inputs larger and emphasize links
+    *******************************************************************************/
+
+    // Fine-tune the starter aux schema and add speak panel
+    fluid.defaults("fluid.prefs.auxSchema.speak", {
+        gradeNames: ["fluid.prefs.auxSchema", "autoInit"],
+        auxiliarySchema: {
+            "namespace": "fluid.prefs.constructed",
+            "terms": {
+                "templatePrefix": "../../framework/preferences/html/",
+                "messagePrefix": "../../framework/preferences/messages/"
+            },
+            "template": "%templatePrefix/SeparatedPanelPrefsEditor.html",
+            "message": "%messagePrefix/prefsEditor.json",
+
+            speak: {
+                type: "fluid.prefs.speak",
+                enactor: {
+                    type: "fluid.prefs.enactor.selfVoicing",
+                    container: "body"
+                },
+                panel: {
+                    type: "fluid.prefs.panel.speak",
+                    container: ".flc-prefsEditor-speak",
+                    template: "%templatePrefix/PrefsEditorTemplate-speak.html",
+                    message: "%messagePrefix/speak.json"
+                }
+            }
+        }
+    });
+
+
+    /*******************************************************************************
+    * Primary Schema
+    *******************************************************************************/
+
+    // add extra prefs to the starter primary schemas
+
+    fluid.defaults("fluid.prefs.schemas.speak", {
+        gradeNames: ["autoInit", "fluid.prefs.schemas"],
+        schema: {
+            "fluid.prefs.speak": {
+                "type": "boolean",
+                "default": false
+            }
+        }
+    });
+
+})(fluid_2_0);
+;/*
+Copyright 2013-2015 OCAD University
+
+Licensed under the Educational Community License (ECL), Version 2.0 or the New
+BSD license. You may not use this file except in compliance with one these
+Licenses.
+
+You may obtain a copy of the ECL 2.0 License and BSD License at
+https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
+*/
+
+var fluid_2_0 = fluid_2_0 || {};
+
+
+(function ($, fluid) {
+    "use strict";
+
+    fluid.registerNamespace("fluid.prefs");
+
+    fluid.defaults("fluid.prefs.builder", {
+        gradeNames: ["fluid.eventedComponent", "fluid.prefs.auxBuilder", "autoInit"],
+        mergePolicy: {
+            auxSchema: "expandedAuxSchema"
+        },
+        assembledPrefsEditorGrade: {
+            expander: {
+                func: "fluid.prefs.builder.generateGrade",
+                args: ["prefsEditor", "{that}.options.auxSchema.namespace", {
+                    gradeNames: ["fluid.viewRelayComponent", "autoInit", "fluid.prefs.assembler.prefsEd"],
+                    componentGrades: "{that}.options.constructedGrades",
+                    loaderGrades: "{that}.options.auxSchema.loaderGrades"
+                }]
+            }
+        },
+        assembledUIEGrade: {
+            expander: {
+                func: "fluid.prefs.builder.generateGrade",
+                args: ["uie", "{that}.options.auxSchema.namespace", {
+                    gradeNames: ["fluid.viewRelayComponent", "autoInit", "fluid.prefs.assembler.uie"],
+                    componentGrades: "{that}.options.constructedGrades"
+                }]
+            }
+        },
+        constructedGrades: {
+            expander: {
+                func: "fluid.prefs.builder.constructGrades",
+                args: ["{that}.options.auxSchema", ["enactors", "messages", "panels", "initialModel", "templateLoader", "messageLoader", "terms"]]
+            }
+        },
+        mappedDefaults: "{primaryBuilder}.options.schema.properties",
+        components: {
+            primaryBuilder: {
+                type: "fluid.prefs.primaryBuilder",
+                options: {
+                    typeFilter: {
+                        expander: {
+                            func: "fluid.prefs.builder.parseAuxSchema",
+                            args: "{builder}.options.auxiliarySchema"
+                        }
+                    }
+                }
+            }
+        },
+        distributeOptions: [{
+            source: "{that}.options.primarySchema",
+            removeSource: true,
+            target: "{that > primaryBuilder}.options.primarySchema"
+        }]
+    });
+
+    fluid.defaults("fluid.prefs.assembler.uie", {
+        gradeNames: ["autoInit", "fluid.viewRelayComponent"],
+        components: {
+            store: {
+                type: "fluid.littleComponent",
+                options: {
+                    gradeNames: ["{that}.options.storeType"],
+                    storeType: "fluid.globalSettingsStore"
+                }
+            },
+            enhancer: {
+                type: "fluid.littleComponent",
+                options: {
+                    gradeNames: "{that}.options.enhancerType",
+                    enhancerType: "fluid.pageEnhancer",
+                    components: {
+                        uiEnhancer: {
+                            options: {
+                                gradeNames: ["{fluid.prefs.assembler.uie}.options.componentGrades.enactors"]
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        distributeOptions: [{
+            source: "{that}.options.enhancer",
+            removeSource: true,
+            target: "{that uiEnhancer}.options"
+        }, {
+            source: "{that}.options.store",
+            removeSource: true,
+            target: "{that settingsStore}.options"
+        }, {
+            source: "{that}.options.storeType",
+            removeSource: true,
+            target: "{that > store}.options.storeType"
+        }, {
+            source: "{that}.options.enhancerType",
+            removeSource: true,
+            target: "{that > enhancer}.options.enhancerType"
+        }]
+    });
+
+    fluid.defaults("fluid.prefs.assembler.prefsEd", {
+        gradeNames: ["autoInit", "fluid.viewRelayComponent", "fluid.prefs.assembler.uie"],
+        components: {
+            prefsEditorLoader: {
+                type: "fluid.viewRelayComponent",
+                container: "{fluid.prefs.assembler.prefsEd}.container",
+                priority: "last",
+                options: {
+                    gradeNames: [
+                        "{fluid.prefs.assembler.prefsEd}.options.componentGrades.terms",
+                        "{fluid.prefs.assembler.prefsEd}.options.componentGrades.messages",
+                        "{fluid.prefs.assembler.prefsEd}.options.componentGrades.initialModel",
+                        "{that}.options.loaderGrades"
+                    ],
+                    templateLoader: {
+                        gradeNames: ["{fluid.prefs.assembler.prefsEd}.options.componentGrades.templateLoader"]
+                    },
+                    messageLoader: {
+                        gradeNames: ["{fluid.prefs.assembler.prefsEd}.options.componentGrades.messageLoader"]
+                    },
+                    prefsEditor: {
+                        gradeNames: ["{fluid.prefs.assembler.prefsEd}.options.componentGrades.panels", "fluid.prefs.uiEnhancerRelay"]
+                    },
+                    events: {
+                        onReady: "{fluid.prefs.assembler.prefsEd}.events.onPrefsEditorReady"
+                    }
+                }
+            }
+        },
+        events: {
+            onPrefsEditorReady: null,
+            onReady: {
+                events: {
+                    onPrefsEditorReady: "onPrefsEditorReady",
+                    onCreate: "onCreate"
+                },
+                args: ["{that}"]
+            }
+        },
+        distributeOptions: [{
+            source: "{that}.options.loaderGrades",
+            removeSource: true,
+            target: "{that > prefsEditorLoader}.options.loaderGrades"
+        }, {
+            source: "{that}.options.prefsEditor",
+            removeSource: true,
+            target: "{that prefsEditor}.options"
+        }, {
+            source: "{that}.options.terms",
+            removeSource: true,
+            target: "{that prefsEditorLoader}.options.terms"
+        }]
+    });
+
+    fluid.prefs.builder.generateGrade = function (name, namespace, options) {
+        var gradeNameTemplate = "%namespace.%name";
+        var gradeName = fluid.stringTemplate(gradeNameTemplate, {name: name, namespace: namespace});
+        fluid.defaults(gradeName, options);
+        return gradeName;
+    };
+
+    fluid.prefs.builder.constructGrades = function (auxSchema, gradeCategories) {
+        var constructedGrades = {};
+        fluid.each(gradeCategories, function (category) {
+            var gradeOpts = auxSchema[category];
+            if (fluid.get(gradeOpts, "gradeNames")) {
+                constructedGrades[category] = fluid.prefs.builder.generateGrade(category, auxSchema.namespace, gradeOpts);
+            }
+        });
+        return constructedGrades;
+    };
+
+    fluid.prefs.builder.parseAuxSchema = function (auxSchema) {
+        var auxTypes = [];
+        fluid.each(auxSchema, function parse(field) {
+            var type = field.type;
+            if (type) {
+                auxTypes.push(type);
+            }
+        });
+        return auxTypes;
+    };
+
+    /*
+     * A one-stop-shop function to build and instantiate a prefsEditor from a schema.
+     */
+    fluid.prefs.create = function (container, options) {
+        options = options || {};
+        var builder = fluid.prefs.builder(options.build);
+        return fluid.invokeGlobalFunction(builder.options.assembledPrefsEditorGrade, [container, options.prefsEditor]);
     };
 
 })(jQuery, fluid_2_0);
