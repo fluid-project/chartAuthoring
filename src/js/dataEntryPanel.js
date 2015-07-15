@@ -33,7 +33,7 @@ https://github.com/gpii/universal/LICENSE.txt
     */
 
     fluid.defaults("gpii.chartAuthoring.dataEntryPanel", {
-        gradeNames: ["fluid.viewRelayComponent", "autoInit"],
+        gradeNames: ["gpii.chartAuthoring.templateInjection", "autoInit"],
         selectors: {
             panelTitle: ".gpiic-ca-dataEntryPanel-title",
             description: ".gpiic-ca-dataEntryPanel-description",
@@ -55,14 +55,6 @@ https://github.com/gpii/universal/LICENSE.txt
             emptyTotalValue: "Value",
             totalPercentage: "%percentage%",
             totalLabel: "Total"
-        },
-        members: {
-            dataEntryContainerTemplate: {
-                expander: {
-                    "this": "{that}.dom.dataEntry",
-                    "method": "remove"
-                }
-            }
         },
         dynamicComponents: {
             dataEntry: {
@@ -171,8 +163,9 @@ https://github.com/gpii/universal/LICENSE.txt
         that.locate("dataEntryLabel").text(that.options.strings.dataEntryLabel);
         that.locate("totalLabel").text(that.options.strings.totalLabel);
 
+        var dataEntryContainerTemplate = that.locate("dataEntry").remove();
         for (var i = 1; i <= that.options.numDataEntryFields; i++) {
-            var deCont = gpii.chartAuthoring.dataEntryPanel.append(that.locate("dataEntries"), that.dataEntryContainerTemplate);
+            var deCont = gpii.chartAuthoring.dataEntryPanel.append(that.locate("dataEntries"), dataEntryContainerTemplate);
             that.events.createDataEntryField.fire(deCont);
         }
     };

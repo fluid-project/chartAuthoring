@@ -58,7 +58,26 @@ https://github.com/gpii/universal/LICENSE.txt
     });
 
     fluid.defaults("gpii.tests.chartAuthoring.dataEntryPanel", {
-        gradeNames: ["gpii.chartAuthoring.dataEntryPanel", "autoInit"]
+        gradeNames: ["gpii.chartAuthoring.dataEntryPanel", "autoInit"],
+        resources: {
+            template: {
+                resourceText: "<h2 class=\"gpiic-ca-dataEntryPanel-title\">Panel Title</h2>" +
+                                "<p class=\"gpiic-ca-dataEntryPanel-description\">Description</p>" +
+                                "<form>" +
+                                "<label class=\"gpiic-ca-dataEntryPanel-nameLabel\", for=\"gpiic-ca-dataEntryPanel-name\">Chart name label</label><span>:</span>" +
+                                "<input id=\"gpiic-ca-dataEntryPanel-name\" class=\"gpiic-ca-dataEntryPanel-name\" type=\"text\" placeholder=\"\">" +
+                                "<fieldset>" +
+                                "<legend class=\"gpiic-ca-dataEntryPanel-dataEntryLabel\">Entry</legend>" +
+                                "<ul class=\"gpiic-ca-dataEntryPanel-dataEntries\">" +
+                                "<li class=\"gpiic-ca-dataEntryPanel-dataEntry\"></li>" +
+                                "</ul>" +
+                                "<span class=\"gpiic-ca-dataEntryPanel-totalValue\">Value</span>" +
+                                "<span class=\"gpiic-ca-dataEntryPanel-totalPercentage\">%</span>" +
+                                "<span class=\"gpiic-ca-dataEntryPanel-totalLabel\">Total</span>" +
+                                "</fieldset>" +
+                                "</form>"
+            }
+        }
     });
 
     fluid.defaults("gpii.tests.chartAuthoring.dataEntryPanelTest", {
