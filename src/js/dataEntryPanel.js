@@ -59,8 +59,7 @@ https://github.com/gpii/universal/LICENSE.txt
         dynamicComponents: {
             dataEntry: {
                 createOnEvent: "createDataEntryField",
-                // type: "gpii.chartAuthoring.dataEntry",
-                type: "fluid.viewRelayComponent",
+                type: "gpii.chartAuthoring.dataEntry",
                 container: "{arguments}.0",
                 options: {
                     gradeNames: ["{that}.generateModelRelaysConnectionGrade"],

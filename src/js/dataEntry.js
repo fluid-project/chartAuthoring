@@ -25,10 +25,10 @@ https://github.com/gpii/universal/LICENSE.txt
             percentage: "%percentage%"
         },
         model: {
-            value: null,
-            description: "",
-            // perecentage: float
-            total: ""
+            // value: number
+            description: ""
+            // perecentage: number
+            // total: number
         },
         modelRelay: {
             source: "",

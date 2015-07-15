@@ -59,6 +59,19 @@ https://github.com/gpii/universal/LICENSE.txt
 
     fluid.defaults("gpii.tests.chartAuthoring.dataEntryPanel", {
         gradeNames: ["gpii.chartAuthoring.dataEntryPanel", "autoInit"],
+        dynamicComponents: {
+            dataEntry: {
+                options: {
+                    resources: {
+                        template: {
+                            resourceText: "<input type=\"text\" class=\"gpiic-ca-dataEntry-input\">" +
+                                            "<span class=\"gpiic-ca-dataEntry-percentage\"></span>" +
+                                            "<input type=\"text\" class=\"gpiic-ca-dataEntry-description\">"
+                        }
+                    }
+                }
+            }
+        },
         resources: {
             template: {
                 resourceText: "<h2 class=\"gpiic-ca-dataEntryPanel-title\">Panel Title</h2>" +
@@ -99,8 +112,20 @@ https://github.com/gpii/universal/LICENSE.txt
             totalsChanged: {
                 value: 10
             },
+            entryValue1: 20,
+            entryValue2: 30,
             totalsExpected: {
                 value: 10,
+                percentage: "100%",
+                label: "{dataEntryPanel}.options.strings.totalLabel"
+            },
+            totalsExpected1: {
+                value: 20,
+                percentage: "100%",
+                label: "{dataEntryPanel}.options.strings.totalLabel"
+            },
+            totalsExpected2: {
+                value: 50,
                 percentage: "100%",
                 label: "{dataEntryPanel}.options.strings.totalLabel"
             }
@@ -114,20 +139,28 @@ https://github.com/gpii/universal/LICENSE.txt
                 func: "jqUnit.assertValue",
                 args: ["The component should have been initialized.", "{dataEntryPanel}"]
             }, {
-                expect: 11,
+                expect: 17,
                 name: "Test Initial Rendering",
                 type: "test",
                 func: "gpii.tests.chartAuthoring.dataEntryPanelTester.testRendering",
                 args: ["{dataEntryPanel}"]
             }, {
                 name: "Model Changed Sequence",
-                expect: 3,
+                expect: 16,
                 sequence: [{
-                    func: "{dataEntryPanel}.applier.change",
-                    args: ["total", "{that}.options.testOptions.totalsChanged"]
+                    func: "{dataEntryPanel}.dataEntry.applier.change",
+                    args: ["value", "{that}.options.testOptions.entryValue1"]
                 }, {
                     listener: "gpii.tests.chartAuthoring.dataEntryPanelTester.verifyTotalOutput",
-                    args: ["{dataEntryPanel}", "{that}.options.testOptions.totalsExpected"],
+                    args: ["{dataEntryPanel}", "{that}.options.testOptions.totalsExpected1"],
+                    spec: {path: "total", priority: "last"},
+                    changeEvent: "{dataEntryPanel}.applier.modelChanged"
+                }, {
+                    func: "{dataEntryPanel}.dataEntry-1.applier.change",
+                    args: ["value", "{that}.options.testOptions.entryValue2"]
+                }, {
+                    listener: "gpii.tests.chartAuthoring.dataEntryPanelTester.verifyTotalOutput",
+                    args: ["{dataEntryPanel}", "{that}.options.testOptions.totalsExpected2"],
                     spec: {path: "total", priority: "last"},
                     changeEvent: "{dataEntryPanel}.applier.modelChanged"
                 }]
@@ -154,8 +187,10 @@ https://github.com/gpii/universal/LICENSE.txt
         var dataEntryLabel = that.locate("dataEntryLabel");
         jqUnit.assertEquals("The data entry label should be set", that.options.strings.dataEntryLabel, dataEntryLabel.text());
 
-        //TODO: Test creation of dataEntry components
-        jqUnit.assertEquals("There should be " + that.options.numDataEntryFields + " added", that.options.numDataEntryFields, that.locate("dataEntry").length);
+        // Test creation of dataEntry components
+        var expectedDataEntryFields = that.options.numDataEntryFields
+        jqUnit.assertEquals("There should be " + expectedDataEntryFields + " data entry components added", expectedDataEntryFields, that.locate("dataEntry").length);
+        jqUnit.assertEquals("There should be " + expectedDataEntryFields + " data entries added to the model", expectedDataEntryFields, fluid.keys(that.model.dataEntries).length);
 
         gpii.tests.chartAuthoring.dataEntryPanelTester.verifyTotalOutput(that, {
             label: that.options.strings.totalLabel,
@@ -168,6 +203,11 @@ https://github.com/gpii/universal/LICENSE.txt
         jqUnit.assertEquals("The total label should be set", expected.label, that.locate("totalLabel").text());
         jqUnit.assertEquals("The total value should be set", expected.value, that.locate("totalValue").text());
         jqUnit.assertEquals("The total percentage should be set", expected.percentage, that.locate("totalPercentage").text());
+
+        for (var i = 0; i < that.options.numDataEntryFields; i++) {
+            var dataEntry = "dataEntry" + (i ? "-" + i : "");
+            jqUnit.assertEquals("The total for " + dataEntry + " should be updated from the panel total", that.model.total.value, that[dataEntry].model.total);
+        }
     };
 
     $(document).ready(function () {
