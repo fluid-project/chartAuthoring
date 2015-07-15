@@ -13,7 +13,7 @@ https://github.com/gpii/universal/LICENSE.txt
     "use strict";
 
     fluid.defaults("gpii.chartAuthoring.dataEntry", {
-        gradeNames: ["fluid.viewRelayComponent", "gpii.chartAuthoring.valueBinding", "autoInit"],
+        gradeNames: ["gpii.chartAuthoring.templateInjection", "gpii.chartAuthoring.valueBinding", "autoInit"],
         selectors: {
             input: ".gpiic-ca-dataEntry-input",
             percentage: ".gpiic-ca-dataEntry-percentage",
@@ -58,14 +58,6 @@ https://github.com/gpii/universal/LICENSE.txt
             }
         },
         listeners: {
-            //TODO: Consider splitting off the template injection into a grade
-            // Will need to adjust model listeners that affect the DOM
-            "onCreate.injectTemplate": {
-                "this": "{that}.container",
-                "method": "html",
-                "args": ["{that}.options.resources.template.resourceText"],
-                "priority": "first"
-            },
             "onCreate.setPercentage": "{that}.setPercentage",
             "onCreate.setInputAttrs": {
                 "this": "{that}.dom.input",
@@ -99,12 +91,6 @@ https://github.com/gpii/universal/LICENSE.txt
                 excludeSource: "init"
             }
         }
-        // Integrators need to specify the HTML templaet to use
-        // resources: {
-        //     template: {
-        //         resourceText: ""
-        //     }
-        // }
     });
 
 })(jQuery, fluid);
