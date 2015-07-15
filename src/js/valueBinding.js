@@ -20,10 +20,12 @@ https://github.com/gpii/universal/LICENSE.txt
             generateModelListenersConnectionGrade: {
                 funcName: "gpii.chartAuthoring.valueBinding.generateModelListenersConnectionGrade",
                 args: ["{that}.options.bindings", "gpii.chartAuthoring.valueBinding.updateDOM"]
-            }
+            },
+            bindDOMChange: "gpii.chartAuthoring.valueBinding.bindDOMChange"
         },
         listeners: {
-            "onCreate.bindDOMChange": "gpii.chartAuthoring.valueBinding.bindDOMChange"
+            "onCreate.setInitialDOM": "gpii.chartAuthoring.valueBinding.setInitialDOM",
+            "onCreate.bindDOMChange": "{that}.bindDOMChange"
         }
     });
 
@@ -41,6 +43,12 @@ https://github.com/gpii/universal/LICENSE.txt
         elm[elm.is("input") ? "val" : "text"](value);
     };
 
+    gpii.chartAuthoring.valueBinding.setInitialDOM = function (that) {
+        fluid.each(that.options.bindings, function (modelPath, selector) {
+            gpii.chartAuthoring.valueBinding.updateDOM(that.locate(selector), fluid.get(that.model, modelPath));
+        });
+    };
+
     gpii.chartAuthoring.valueBinding.generateModelListenersConnectionGrade = function (bindings, handlerName) {
         var gradeName = "gpii.valueBindingModelConnections." + fluid.allocateGuid();
         var modelListeners = {};
@@ -49,7 +57,8 @@ https://github.com/gpii/universal/LICENSE.txt
             modelListeners[modelPath] = modelListeners[modelPath] || [];
             modelListeners[modelPath].push({
                 listener: handlerName,
-                args: ["{that}.dom." + selector, "{change}.value"]
+                args: ["{that}.dom." + selector, "{change}.value"],
+                excludeSource: "init"
             });
         });
 

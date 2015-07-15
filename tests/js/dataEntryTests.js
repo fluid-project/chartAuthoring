@@ -16,6 +16,13 @@ https://github.com/gpii/universal/LICENSE.txt
         gradeNames: ["gpii.chartAuthoring.dataEntry", "autoInit"],
         model: {
             total: 100
+        },
+        resources: {
+            template: {
+                resourceText: "<input type=\"text\" class=\"gpiic-ca-dataEntry-input\">" +
+                                "<span class=\"gpiic-ca-dataEntry-percentage\"></span>" +
+                                "<input type=\"text\" class=\"gpiic-ca-dataEntry-description\">"
+            }
         }
     });
 
@@ -78,7 +85,7 @@ https://github.com/gpii/universal/LICENSE.txt
                     args: ["{dataEntry}.dom.input", "{that}.options.testOptions.domChange"]
                 }, {
                     listener: "jqUnit.assertEquals",
-                    args: ["model.input shoudl have been updated", "{that}.options.testOptions.domChange", "{dataEntry}.model.value"],
+                    args: ["model.input should have been updated", "{that}.options.testOptions.domChange", "{dataEntry}.model.value"],
                     spec: {path: "value", priority: "last"},
                     changeEvent: "{dataEntry}.applier.modelChanged"
                 }]

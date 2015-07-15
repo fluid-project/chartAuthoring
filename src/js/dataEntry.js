@@ -58,6 +58,15 @@ https://github.com/gpii/universal/LICENSE.txt
             }
         },
         listeners: {
+            //TODO: Consider splitting off the template injection into a grade
+            // Will need to adjust model listeners that affect the DOM
+            "onCreate.injectTemplate": {
+                "this": "{that}.container",
+                "method": "html",
+                "args": ["{that}.options.resources.template.resourceText"],
+                "priority": "first"
+            },
+            "onCreate.setPercentage": "{that}.setPercentage",
             "onCreate.setInputAttrs": {
                 "this": "{that}.dom.input",
                 "method": "attr",
@@ -81,9 +90,21 @@ https://github.com/gpii/universal/LICENSE.txt
             }
         },
         modelListeners: {
-            "value": "{that}.setPercentage",
-            "total": "{that}.setPercentage"
+            "value": {
+                listener: "{that}.setPercentage",
+                excludeSource: "init"
+            },
+            "total": {
+                listener: "{that}.setPercentage",
+                excludeSource: "init"
+            }
         }
+        // Integrators need to specify the HTML templaet to use
+        // resources: {
+        //     template: {
+        //         resourceText: ""
+        //     }
+        // }
     });
 
 })(jQuery, fluid);
