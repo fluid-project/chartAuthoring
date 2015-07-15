@@ -19,8 +19,8 @@ The following directories were stripped out of the build since they contain code
 * src/lib/infusion/src/components/textToSpeech/
 * src/lib/infusion/src/framework/core/frameworkDependencies.json
 * src/lib/infusion/src/framework/core/js/
-* src/lib/infusion/src/framework/enhancement/js/
 * src/lib/infusion/src/framework/enhancement/enhancementDependencies.json
+* src/lib/infusion/src/framework/enhancement/js/
 * src/lib/infusion/src/framework/preferences/js/
 * src/lib/infusion/src/framework/preferences/preferencesDependencies.json
 * src/lib/infusion/src/framework/renderer/
