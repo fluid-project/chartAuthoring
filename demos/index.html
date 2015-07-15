@@ -7,30 +7,30 @@
         <link rel="stylesheet" href="../src/lib/infusion/src/lib/normalize/css/normalize.css" />
 
         <script type="text/javascript" src="../src/lib/infusion/infusion-custom.js"></script>
+        <script type="text/javascript" src="../src/js/valueBinding.js"></script>
+        <script type="text/javascript" src="../src/js/percentage.js"></script>
+        <script type="text/javascript" src="../src/js/dataEntry.js"></script>
+        <script type="text/javascript" src="../src/js/dataEntryPanel.js"></script>
+        <script type="text/javascript" src="../src/js/chartAuthoring.js"></script>
 
         <title>Chart Authoring Tool</title>
     </head>
 
     <body>
-        <h1>Tool Name</h1>
-        <section>
-            <h2>Panel Title</h2>
-            <p>Description</p>
-            <form>
-                <label class="gpii-chartTool-nameLabel", for="gpii-chartTool-nameInput">Chart name label</label><span>:</span>
-                <input id="gpii-chartTool-nameInput" type="text" placeholder="Description (max of 30 characters)" maxlength="30" size="31">
-                <fieldset>
-                    <legend>Entry</legend>
-                    <ul>
-                        <li>
-                            <input type="text" placeholder="Value">
-                            <span>%</span>
-                            <input type="text" placeholder="Description (max of 30 characters)"  maxlength="30" size="31">
-                        </li>
-                    </ul>
-                    <span>Value</span><span>%</span><span>Total</span>
-                </fieldset>
-            </form>
-        </section>
+        <div id="gpiic-chartAuthoring"></div>
+
+        <script type="text/javascript">
+            gpii.chartAuthoring("#gpiic-chartAuthoring", {
+                templateLoader: {
+                    terms: {
+                        templatePrefix: "../src/html"
+                    },
+                    resources: {
+                        dataEntryPanel: "%templatePrefix/dataEntryPanelTemplate.html",
+                        dataEntry: "%templatePrefix/dataEntryTemplate.html"
+                    }
+                }
+            });
+        </script>
     </body>
 </html>
