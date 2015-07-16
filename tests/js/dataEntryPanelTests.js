@@ -59,19 +59,6 @@ https://github.com/gpii/universal/LICENSE.txt
 
     fluid.defaults("gpii.tests.chartAuthoring.dataEntryPanel", {
         gradeNames: ["gpii.chartAuthoring.dataEntryPanel", "autoInit"],
-        dynamicComponents: {
-            dataEntry: {
-                options: {
-                    resources: {
-                        template: {
-                            resourceText: "<input type=\"text\" class=\"gpiic-ca-dataEntry-input\">" +
-                                            "<span class=\"gpiic-ca-dataEntry-percentage\"></span>" +
-                                            "<input type=\"text\" class=\"gpiic-ca-dataEntry-description\">"
-                        }
-                    }
-                }
-            }
-        },
         resources: {
             template: {
                 resourceText: "<h2 class=\"gpiic-ca-dataEntryPanel-title\">Panel Title</h2>" +
@@ -89,6 +76,11 @@ https://github.com/gpii/universal/LICENSE.txt
                                 "<span class=\"gpiic-ca-dataEntryPanel-totalLabel\">Total</span>" +
                                 "</fieldset>" +
                                 "</form>"
+            },
+            dataEntry: {
+                resourceText: "<input type=\"text\" class=\"gpiic-ca-dataEntry-input\">" +
+                                "<span class=\"gpiic-ca-dataEntry-percentage\"></span>" +
+                                "<input type=\"text\" class=\"gpiic-ca-dataEntry-description\">"
             }
         }
     });

@@ -68,6 +68,9 @@ https://github.com/gpii/universal/LICENSE.txt
                             funcName: "gpii.chartAuthoring.dataEntryPanel.generateModelRelaysConnectionGrade",
                             args: ["{that}.nickName", "{that}.id", ["dataEntries"]]
                         }
+                    },
+                    resources: {
+                        template: "{dataEntryPanel}.options.resources.dataEntry"
                     }
                 }
             }
@@ -115,6 +118,10 @@ https://github.com/gpii/universal/LICENSE.txt
                 listener: "gpii.chartAuthoring.dataEntryPanel.renderTotals",
                 args: ["{that}"]
             }
+        },
+        resources: {
+            template: {},
+            dataEntry: {}
         }
     });
 

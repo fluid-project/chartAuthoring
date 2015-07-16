@@ -28,12 +28,26 @@ https://github.com/gpii/universal/LICENSE.txt
                 createOnEvent: "onTemplatesLoaded",
                 container: "{chartAuthoring}.container",
                 options: {
-                    resources: "{chartAuthoring}.templateLoader.resources"
+                    resources: {
+                        template: "{templateLoader}.resources.dataEntryPanel",
+                        dataEntry: "{templateLoader}.resources.dataEntry"
+                    }
                 }
             }
         },
         events: {
             onTemplatesLoaded: null
+        },
+        // The terms and/or resources need to be set to the appropriate locations
+        // by the integrator.
+        templateLoader: {
+            terms: {
+                templatePrefix: ""
+            },
+            resources: {
+                dataEntryPanel: "%templatePrefix/dataEntryPanelTemplate.html",
+                dataEntry: "%templatePrefix/dataEntryTemplate.html"
+            }
         },
         distributeOptions: {
             source: "{that}.options.templateLoader",
