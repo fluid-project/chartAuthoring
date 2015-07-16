@@ -18,6 +18,21 @@ https://github.com/gpii/universal/LICENSE.txt
             terms: {
                 templatePrefix: "../../src/html"
             }
+        },
+        components: {
+            dataEntryPanel: {
+                options: {
+                    listeners: {
+                        "onCreate.escalate": {
+                            listener: "{chartAuthoring}.events.onPanelCreated.fire",
+                            priority: "last"
+                        }
+                    }
+                }
+            }
+        },
+        events: {
+            onPanelCreated: null
         }
     });
 
@@ -41,22 +56,37 @@ https://github.com/gpii/universal/LICENSE.txt
             name: "Tests the data entry panel component",
             tests: [{
                 name: "Chart Authoring Init",
-                expect: 2,
-                // TODO: Add test(s) to ensure the dataEntryPanel was initialized correctly.
+                expect: 6,
                 sequence: [{
                     listener: "gpii.tests.chartAuthoringTester.verifyInit",
-                    args: ["{chartAuthoring}.templateLoader.resources"],
+                    args: ["{chartAuthoring}"],
                     spec: {priority: "last"},
                     event: "{chartAuthoringTest chartAuthoring}.events.onTemplatesLoaded"
+                }, {
+                    // To work around the issue when two listeners are registered back to back, the second one doesn't get triggered.
+                    func: "fluid.identity"
+                }, {
+                    listener: "gpii.tests.chartAuthoringTester.verifyPanel",
+                    args: ["{gpii.tests.chartAuthoring}", "{gpii.tests.chartAuthoring}.dataEntryPanel"],
+                    event: "{gpii.tests.chartAuthoring}.events.onPanelCreated"
                 }]
             }]
         }]
     });
 
-    gpii.tests.chartAuthoringTester.verifyInit = function (resources) {
-        fluid.each(resources, function (resource, resourceName) {
+    gpii.tests.chartAuthoringTester.verifyInit = function (that) {
+        fluid.each(that.templateLoader.resources, function (resource, resourceName) {
             jqUnit.assertValue("The resource text for " + resourceName + " should have been fetched", resource.resourceText);
         });
+        jqUnit.assertEquals("The dataEntryPanel has not been rendered", "", that.container.html());
+    };
+
+    gpii.tests.chartAuthoringTester.verifyPanel = function (that, dataEntryPanel) {
+        fluid.each(that.templateLoader.resources, function (resource, resourceName) {
+            jqUnit.assertDeepEq("Templates have been passed into the dataEntryPanel sub-component", resource.resourceText,
+                dataEntryPanel.options.resources[resourceName === "dataEntryPanel" ? "template": resourceName].resourceText);
+        });
+        jqUnit.assertNotEquals("The dataEntryPanel has been rendered", "", dataEntryPanel.container.html());
     };
 
     $(document).ready(function () {
