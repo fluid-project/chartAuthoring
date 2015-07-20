@@ -39,7 +39,7 @@ https://github.com/gpii/universal/LICENSE.txt
                     "{that}.model.value",
                     "{that}.model.total"
                 ],
-                func: "gpii.chartAuthoring.percentage.calculate"
+                func: "gpii.chartAuthoring.dataEntry.calculatePercentage"
             }
         },
         bindings: {
@@ -92,5 +92,10 @@ https://github.com/gpii/universal/LICENSE.txt
             }
         }
     });
+
+    gpii.chartAuthoring.dataEntry.calculatePercentage = function (value, total) {
+        var percentage = gpii.chartAuthoring.percentage.calculate(value, total);
+        return fluid.isValue(percentage) ? percentage : "";
+    };
 
 })(jQuery, fluid);

@@ -12,6 +12,11 @@ https://github.com/gpii/universal/LICENSE.txt
 
     "use strict";
 
+    jqUnit.test("Test gpii.chartAuthoring.dataEntry.calculatePercentage", function () {
+        jqUnit.assertEquals("An undefined value should return \"\"", "", gpii.chartAuthoring.dataEntry.calculatePercentage(undefined, 10));
+        jqUnit.assertEquals("An undefined total should return \"\"", "", gpii.chartAuthoring.dataEntry.calculatePercentage(10, undefined));
+    });
+
     fluid.defaults("gpii.tests.chartAuthoring.dataEntry", {
         gradeNames: ["gpii.chartAuthoring.dataEntry", "autoInit"],
         model: {

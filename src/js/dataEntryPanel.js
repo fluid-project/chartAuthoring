@@ -193,7 +193,7 @@ https://github.com/gpii/universal/LICENSE.txt
             if (fluid.isValue(valToAdd) && !isNaN(valToAdd)) {
                 return valToAdd + (currentValue || 0);
             } else {
-                return currentValue;
+                return currentValue || null;
             }
         });
     };
