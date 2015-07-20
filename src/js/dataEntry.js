@@ -15,9 +15,9 @@ https://github.com/gpii/universal/LICENSE.txt
     fluid.defaults("gpii.chartAuthoring.dataEntry", {
         gradeNames: ["gpii.chartAuthoring.templateInjection", "gpii.chartAuthoring.valueBinding", "autoInit"],
         selectors: {
-            input: ".gpiic-ca-dataEntry-input",
+            input: ".gpiic-ca-dataEntry-value",
             percentage: ".gpiic-ca-dataEntry-percentage",
-            description: ".gpiic-ca-dataEntry-description"
+            description: ".gpiic-ca-dataEntry-label"
         },
         strings: {
             inputPlaceholder: "Value",
@@ -78,6 +78,13 @@ https://github.com/gpii/universal/LICENSE.txt
                             args: ["{that}.options.strings.descriptionPlacholder.length", "{that}.options.descriptionMaxLength"]
                         }
                     }
+                }
+            },
+            "onCreate.test": {
+                listener: function (that) {
+                    console.log("description:", that.locate("description"));
+                    console.log("input", that.locate("input"));
+                    console.log("percentage", that.locate("percentage"));
                 }
             }
         },
