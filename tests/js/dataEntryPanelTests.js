@@ -180,7 +180,7 @@ https://github.com/gpii/universal/LICENSE.txt
         jqUnit.assertEquals("The data entry label should be set", that.options.strings.dataEntryLabel, dataEntryLabel.text());
 
         // Test creation of dataEntry components
-        var expectedDataEntryFields = that.options.numDataEntryFields
+        var expectedDataEntryFields = that.options.numDataEntryFields;
         jqUnit.assertEquals("There should be " + expectedDataEntryFields + " data entry components added", expectedDataEntryFields, that.locate("dataEntry").length);
         jqUnit.assertEquals("There should be " + expectedDataEntryFields + " data entries added to the model", expectedDataEntryFields, fluid.keys(that.model.dataEntries).length);
 

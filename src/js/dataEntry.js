@@ -79,13 +79,6 @@ https://github.com/gpii/universal/LICENSE.txt
                         }
                     }
                 }
-            },
-            "onCreate.test": {
-                listener: function (that) {
-                    console.log("description:", that.locate("description"));
-                    console.log("input", that.locate("input"));
-                    console.log("percentage", that.locate("percentage"));
-                }
             }
         },
         modelListeners: {
