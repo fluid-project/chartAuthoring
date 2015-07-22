@@ -54,7 +54,7 @@ https://github.com/gpii/universal/LICENSE.txt
         gpii.chartAuthoring.dataEntryPanel.append(container, template);
         gpii.chartAuthoring.dataEntryPanel.append(container, $(template));
 
-        jqUnit.assertEquals("The elments should be appendend to the container", 2, container.find(".appendtest-appended").length);
+        jqUnit.assertEquals("The elements should be appended to the container", 2, container.find(".appendtest-appended").length);
     });
 
     fluid.defaults("gpii.tests.chartAuthoring.dataEntryPanel", {
@@ -171,10 +171,10 @@ https://github.com/gpii/universal/LICENSE.txt
         jqUnit.assertEquals("The chart name label should be set", that.options.strings.chartNameLabel, chartNameLabel.text());
 
         var chartName = that.locate("chartName");
-        jqUnit.assertEquals("The chart name placholder has been set", that.options.strings.chartNamePlacholder, chartName.attr("placeholder"));
+        jqUnit.assertEquals("The chart name placeholder has been set", that.options.strings.chartNamePlaceholder, chartName.attr("placeholder"));
         jqUnit.assertEquals("The chart name's max length should be set", that.options.chartNameMaxLength, chartName.attr("maxlength"));
         var chartNameSize = parseInt(chartName.attr("size"), 10);
-        jqUnit.assertTrue("The chartName's size should be set to a size that will accommodate the maximum name and the placeholder text.", chartNameSize >= that.options.chartNameMaxLength && chartNameSize >= that.options.strings.chartNamePlacholder.length);
+        jqUnit.assertTrue("The chartName's size should be set to a size that will accommodate the maximum name and the placeholder text.", chartNameSize >= that.options.chartNameMaxLength && chartNameSize >= that.options.strings.chartNamePlaceholder.length);
 
         var dataEntryLabel = that.locate("dataEntryLabel");
         jqUnit.assertEquals("The data entry label should be set", that.options.strings.dataEntryLabel, dataEntryLabel.text());

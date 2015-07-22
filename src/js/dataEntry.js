@@ -21,7 +21,7 @@ https://github.com/gpii/universal/LICENSE.txt
         },
         strings: {
             inputPlaceholder: "Value",
-            descriptionPlacholder: "Description (max of 30 characters)",
+            descriptionPlaceholder: "Description (max of 30 characters)",
             percentage: "%percentage%"
         },
         model: {
@@ -70,12 +70,12 @@ https://github.com/gpii/universal/LICENSE.txt
                 "this": "{that}.dom.description",
                 "method": "attr",
                 "args": {
-                    placeholder: "{that}.options.strings.descriptionPlacholder",
+                    placeholder: "{that}.options.strings.descriptionPlaceholder",
                     maxlength: "{that}.options.descriptionMaxLength",
                     size: {
                         expander: {
                             funcName: "Math.max",
-                            args: ["{that}.options.strings.descriptionPlacholder.length", "{that}.options.descriptionMaxLength"]
+                            args: ["{that}.options.strings.descriptionPlaceholder.length", "{that}.options.descriptionMaxLength"]
                         }
                     }
                 }

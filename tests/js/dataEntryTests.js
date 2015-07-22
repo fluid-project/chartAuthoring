@@ -118,15 +118,15 @@ https://github.com/gpii/universal/LICENSE.txt
         var description = that.locate("description");
 
         gpii.tests.chartAuthoring.dataEntryTester.verifyInput("input", input, that.model.value || "");
-        jqUnit.assertEquals("The input placholder has been set", that.options.strings.inputPlaceholder, input.attr("placeholder"));
+        jqUnit.assertEquals("The input placeholder has been set", that.options.strings.inputPlaceholder, input.attr("placeholder"));
 
         gpii.tests.chartAuthoring.dataEntryTester.verifyPercentage(percentage, "%");
 
         gpii.tests.chartAuthoring.dataEntryTester.verifyInput("description", description, that.model.description || "");
-        jqUnit.assertEquals("The description placholder has been set", that.options.strings.descriptionPlacholder, description.attr("placeholder"));
+        jqUnit.assertEquals("The description placeholder has been set", that.options.strings.descriptionPlaceholder, description.attr("placeholder"));
         jqUnit.assertEquals("The description's max length should be set", that.options.descriptionMaxLength, description.attr("maxlength"));
         var descriptionSize = parseInt(description.attr("size"), 10);
-        jqUnit.assertTrue("The description's size should be set to a size that will accommodate the maximum description and the placeholder text.", descriptionSize >= that.options.descriptionMaxLength && descriptionSize >= that.options.strings.descriptionPlacholder.length);
+        jqUnit.assertTrue("The description's size should be set to a size that will accommodate the maximum description and the placeholder text.", descriptionSize >= that.options.descriptionMaxLength && descriptionSize >= that.options.strings.descriptionPlaceholder.length);
     };
 
     $(document).ready(function () {
