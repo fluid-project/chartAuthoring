@@ -54,7 +54,17 @@ https://github.com/gpii/universal/LICENSE.txt
             },
             setPercentage: {
                 funcName: "gpii.chartAuthoring.percentage.render",
-                args: ["{that}.dom.percentage", "{that}.getPercentageToRender", "{that}.options.strings.percentage"]
+                args: [
+                    "{that}.dom.percentage",
+                    {
+                        expander: {
+                            func: "{that}.getPercentageToRender"
+                        }
+                    },
+                    "{that}.options.strings.percentage",
+                    2
+                ],
+                dynamic: true
             }
         },
         listeners: {

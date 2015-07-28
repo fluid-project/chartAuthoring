@@ -30,10 +30,20 @@ https://github.com/gpii/universal/LICENSE.txt
      * perencentage.
      * @param template {String} - an optional string template to use for rendering the percentage. By
      * default only the percentage value is rendered.
+     * @param digits {Number} - an optional parameter for how many digits should appear after the decimal point.
+     * By default it is 0.
      */
-    gpii.chartAuthoring.percentage.render = function (elm, percentage, template) {
+    gpii.chartAuthoring.percentage.render = function (elm, percentage, template, digits) {
         elm = $(elm);
         template = template || "%percentage";
+
+        var numericalPercentage = parseFloat(percentage);
+
+        if (numericalPercentage) {
+            percentage = numericalPercentage.toFixed(digits);
+        } else {
+            percentage = "";
+        }
 
         var output = fluid.stringTemplate(template, {percentage: percentage});
         elm.text(output);

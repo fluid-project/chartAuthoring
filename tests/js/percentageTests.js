@@ -55,9 +55,11 @@ https://github.com/gpii/universal/LICENSE.txt
 
     gpii.tests.renderPerencentage.templates = [undefined, "%percentage%"];
 
+    gpii.tests.renderPerencentage.digits = [undefined, 2];
+
     gpii.tests.renderPerencentage.outputs = [
-        ["10.5", "10.5", "10", "10", "10.5", "10.5", "10", "10"], // template === undefined
-        ["10.5%", "10.5%", "10%", "10%", "10.5%", "10.5%", "10%", "10%"] // template === "%percentage%"
+        ["11", "11", "10", "10", "11", "11", "10", "10"], // template === undefined
+        ["11%", "11%", "10%", "10%", "11%", "11%", "10%", "10%"] // template === "%percentage%"
     ];
 
     fluid.each(gpii.tests.renderPerencentage.templates, function (template, templateIdx) {
@@ -66,6 +68,23 @@ https://github.com/gpii/universal/LICENSE.txt
                 var elm = $(".renderPerencentage-test");
                 var expected = gpii.tests.renderPerencentage.outputs[templateIdx][perIdx];
                 gpii.chartAuthoring.percentage.render(elm, percentage, template);
+                var actual = elm.text();
+                jqUnit.assertEquals("The percentage should be rendered into the DOM correctly.", expected, actual);
+            });
+        });
+    });
+
+    gpii.tests.renderPerencentage.digitOutputs = [
+        ["11", "11", "10", "10", "11", "11", "10", "10"], // digits === undefined
+        ["10.50", "10.50", "10.00", "10.00", "10.50", "10.50", "10.00", "10.00"] // digits === "2"
+    ];
+
+    fluid.each(gpii.tests.renderPerencentage.digits, function (digits, digitIdx) {
+        fluid.each(gpii.tests.percentages, function (percentage, perIdx) {
+            jqUnit.test("Test gpii.chartAuthoring.percentage.render - percentage: " + percentage + ", digits: " + digits, function () {
+                var elm = $(".renderPerencentage-test");
+                var expected = gpii.tests.renderPerencentage.digitOutputs[digitIdx][perIdx];
+                gpii.chartAuthoring.percentage.render(elm, percentage, undefined, digits);
                 var actual = elm.text();
                 jqUnit.assertEquals("The percentage should be rendered into the DOM correctly.", expected, actual);
             });
