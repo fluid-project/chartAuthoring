@@ -23,22 +23,17 @@ https://github.com/gpii/universal/LICENSE.txt
         }
     };
 
-    gpii.chartAuthoring.percentage.retrieveVal = function (val) {
-        return typeof(val) === "function" ? val() : val;
-    };
-
     /**
      * Renders the percentage into a DOM element.
      * @param elm - a jQueryable selector representing the element(s) to set the percentage on
-     * @param perencentage {Number/String/Function} - Either a Number/String representation of the
-     * perencentage, or a function that returns it. *Note: No arguments are passed into the function*
+     * @param perencentage {Number/String} - Either a Number or String representation of the
+     * perencentage.
      * @param template {String} - an optional string template to use for rendering the percentage. By
      * default only the percentage value is rendered.
      */
     gpii.chartAuthoring.percentage.render = function (elm, percentage, template) {
         elm = $(elm);
         template = template || "%percentage";
-        percentage = gpii.chartAuthoring.percentage.retrieveVal(percentage);
 
         var output = fluid.stringTemplate(template, {percentage: percentage});
         elm.text(output);
@@ -48,7 +43,7 @@ https://github.com/gpii/universal/LICENSE.txt
     // Used to provide a default value if a model or some other value had not been set.
     gpii.chartAuthoring.percentage.percentageIfValue = function (percentage, value, defPercentage) {
         defPercentage = defPercentage || "";
-        return !fluid.isValue(value) ? defPercentage : gpii.chartAuthoring.percentage.retrieveVal(percentage);
+        return !fluid.isValue(value) ? defPercentage : percentage;
     };
 
 })(jQuery, fluid);
