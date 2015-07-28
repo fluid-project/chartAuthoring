@@ -79,23 +79,18 @@ https://github.com/gpii/universal/LICENSE.txt
         ["10.5%", "10.5%", "10%", "10%", "10.5%", "10.5%", "10%", "10%"] // template === "%percentage%"
     ];
 
-    jqUnit.test("Test gpii.chartAuthoring.percentage.render", function () {
-        var elm = $(".renderPerencentage-test");
-        fluid.each(gpii.tests.renderPerencentage.templates, function (template, templateIdx) {
-            fluid.each(gpii.tests.retrieveVal.percentages, function (percentage, perIdx) {
-                // make sure the text is reset
-                elm.text("");
-
+    fluid.each(gpii.tests.renderPerencentage.templates, function (template, templateIdx) {
+        fluid.each(gpii.tests.retrieveVal.percentages, function (percentage, perIdx) {
+            jqUnit.test("Test gpii.chartAuthoring.percentage.render - percentage: " + percentage + ", template: " + template, function () {
+                var elm = $(".renderPerencentage-test");
                 var expected = gpii.tests.renderPerencentage.outputs[templateIdx][perIdx];
                 gpii.chartAuthoring.percentage.render(elm, percentage, template);
                 var actual = elm.text();
                 jqUnit.assertEquals("The percentage should be rendered into the DOM correctly.", expected, actual);
-
-                // cleanup after test
-                elm.text("");
             });
         });
     });
+
 
     fluid.registerNamespace("gpii.tests.percentagesIfValue");
 
