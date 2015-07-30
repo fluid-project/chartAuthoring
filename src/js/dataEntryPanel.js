@@ -104,7 +104,7 @@ https://github.com/gpii/universal/LICENSE.txt
             model: {
                 value: modelPathBase + "value",
                 percentage: modelPathBase + "percentage",
-                description: modelPathBase + "description"
+                label: modelPathBase + "label"
             },
             modelRelay: {
                 source: "{dataEntryPanel}.model.total.value",
