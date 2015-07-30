@@ -48,13 +48,13 @@ https://github.com/gpii/universal/LICENSE.txt
         gradeNames: ["fluid.test.testCaseHolder", "autoInit"],
         testOptions: {
             valueChange: 65,
-            descriptionChange: "Description of Input",
+            labelChange: "Value Label",
             domChange: 50
         },
         modules: [{
             name: "Tests the data entry component",
             tests: [{
-                expect: 8,
+                expect: 5,
                 name: "Test Init",
                 type: "test",
                 func: "gpii.tests.chartAuthoring.dataEntryTester.testRendering",
@@ -69,17 +69,17 @@ https://github.com/gpii/universal/LICENSE.txt
                     listener: "gpii.tests.chartAuthoring.dataEntryTester.verifyEntry",
                     args: ["{dataEntry}", {
                         value: "{that}.options.testOptions.valueChange",
-                        percentage: "65%"
+                        percentage: "65.00%"
                     }],
                     spec: {path: "value", priority: "last"},
                     changeEvent: "{dataEntry}.applier.modelChanged"
                 }, {
                     func: "{dataEntry}.applier.change",
-                    args: ["description", "{that}.options.testOptions.descriptionChange"]
+                    args: ["label", "{that}.options.testOptions.labelChange"]
                 }, {
                     listener: "gpii.tests.chartAuthoring.dataEntryTester.verifyInput",
-                    args: ["description", "{dataEntry}.dom.description", "{that}.options.testOptions.descriptionChange"],
-                    spec: {path: "description", priority: "last"},
+                    args: ["label", "{dataEntry}.dom.label", "{that}.options.testOptions.labelChange"],
+                    spec: {path: "label", priority: "last"},
                     changeEvent: "{dataEntry}.applier.modelChanged"
                 }]
             }, {
@@ -115,18 +115,14 @@ https://github.com/gpii/universal/LICENSE.txt
         jqUnit.assertValue("The component should have been initialized.", that);
         var input = that.locate("input");
         var percentage = that.locate("percentage");
-        var description = that.locate("description");
+        var label = that.locate("label");
 
         gpii.tests.chartAuthoring.dataEntryTester.verifyInput("input", input, that.model.value || "");
         jqUnit.assertEquals("The input placeholder has been set", that.options.strings.inputPlaceholder, input.attr("placeholder"));
 
         gpii.tests.chartAuthoring.dataEntryTester.verifyPercentage(percentage, "%");
 
-        gpii.tests.chartAuthoring.dataEntryTester.verifyInput("description", description, that.model.description || "");
-        jqUnit.assertEquals("The description placeholder has been set", that.options.strings.descriptionPlaceholder, description.attr("placeholder"));
-        jqUnit.assertEquals("The description's max length should be set", that.options.descriptionMaxLength, description.attr("maxlength"));
-        var descriptionSize = parseInt(description.attr("size"), 10);
-        jqUnit.assertTrue("The description's size should be set to a size that will accommodate the maximum description and the placeholder text.", descriptionSize >= that.options.descriptionMaxLength && descriptionSize >= that.options.strings.descriptionPlaceholder.length);
+        gpii.tests.chartAuthoring.dataEntryTester.verifyInput("label", label, that.model.label || "");
     };
 
     $(document).ready(function () {

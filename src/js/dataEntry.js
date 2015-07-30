@@ -17,16 +17,15 @@ https://github.com/gpii/universal/LICENSE.txt
         selectors: {
             input: ".gpiic-ca-dataEntry-value",
             percentage: ".gpiic-ca-dataEntry-percentage",
-            description: ".gpiic-ca-dataEntry-label"
+            label: ".gpiic-ca-dataEntry-label"
         },
         strings: {
             inputPlaceholder: "Value",
-            descriptionPlaceholder: "Description (max of 30 characters)",
             percentage: "%percentage%"
         },
         model: {
             // value: number
-            description: ""
+            label: ""
             // perecentage: number
             // total: number
         },
@@ -44,9 +43,8 @@ https://github.com/gpii/universal/LICENSE.txt
         },
         bindings: {
             input: "value",
-            description: "description"
+            label: "label"
         },
-        descriptionMaxLength: 30,
         invokers: {
             getPercentageToRender: {
                 funcName: "gpii.chartAuthoring.percentage.percentageIfValue",
@@ -74,20 +72,6 @@ https://github.com/gpii/universal/LICENSE.txt
                 "method": "attr",
                 "args": {
                     placeholder: "{that}.options.strings.inputPlaceholder"
-                }
-            },
-            "onCreate.setDescriptionAttrs": {
-                "this": "{that}.dom.description",
-                "method": "attr",
-                "args": {
-                    placeholder: "{that}.options.strings.descriptionPlaceholder",
-                    maxlength: "{that}.options.descriptionMaxLength",
-                    size: {
-                        expander: {
-                            funcName: "Math.max",
-                            args: ["{that}.options.strings.descriptionPlaceholder.length", "{that}.options.descriptionMaxLength"]
-                        }
-                    }
                 }
             }
         },
