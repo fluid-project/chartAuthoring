@@ -78,9 +78,10 @@ https://github.com/gpii/universal/LICENSE.txt
                                 "</form>"
             },
             dataEntry: {
-                resourceText: "<input type=\"text\" class=\"gpiic-ca-dataEntry-input\">" +
-                                "<span class=\"gpiic-ca-dataEntry-percentage\"></span>" +
-                                "<input type=\"text\" class=\"gpiic-ca-dataEntry-description\">"
+                resourceText: "<input type=\"text\" class=\"gpiic-ca-dataEntry-label\">" +
+                                "<input type=\"text\" class=\"gpiic-ca-dataEntry-value\">" +
+                                "<span class=\"gpiic-ca-dataEntry-percentage\"></span>"
+
             }
         }
     });
