@@ -15,10 +15,6 @@ https://github.com/gpii/universal/LICENSE.txt
     fluid.defaults("gpii.chartAuthoring.dataEntryPanel", {
         gradeNames: ["gpii.chartAuthoring.templateInjection", "autoInit"],
         selectors: {
-            panelTitle: ".gpiic-ca-dataEntryPanel-title",
-            description: ".gpiic-ca-dataEntryPanel-description",
-            chartNameLabel: ".gpiic-ca-dataEntryPanel-nameLabel",
-            chartName: ".gpiic-ca-dataEntryPanel-name",
             dataEntryLabel: ".gpiic-ca-dataEntryPanel-dataEntryLabel",
             dataEntries: ".gpiic-ca-dataEntryPanel-dataEntries",
             dataEntry: ".gpiic-ca-dataEntryPanel-dataEntry",
@@ -27,10 +23,6 @@ https://github.com/gpii/universal/LICENSE.txt
             totalLabel: ".gpiic-ca-dataEntryPanel-totalLabel"
         },
         strings: {
-            panelTitle: "Data Entry",
-            description: "<p><strong>Welcome!</strong></p> <p>In order to create your chart, you first need to enter your values. If you enter numeric values, the percentage will be calculated automatically for you. If you enter percentages, there is no need to add any other value. Note that the total percentage must be equal 100%.</p>",
-            chartNameLabel: "Name your chart",
-            chartNamePlaceholder: "Name (max of 30 characters)",
             dataEntryLabel: "Enter your values",
             emptyTotalValue: "Value",
             totalPercentage: "%percentage%",
@@ -86,7 +78,6 @@ https://github.com/gpii/universal/LICENSE.txt
             }
         }],
         numDataEntryFields: 5,
-        chartNameMaxLength: 30,
         events: {
             createDataEntryField: null
         },
@@ -135,17 +126,6 @@ https://github.com/gpii/universal/LICENSE.txt
     };
 
     gpii.chartAuthoring.dataEntryPanel.renderPanel = function (that) {
-        that.locate("panelTitle").text(that.options.strings.panelTitle);
-        that.locate("description").html(that.options.strings.description);
-        that.locate("chartNameLabel").text(that.options.strings.chartNameLabel);
-
-        var chartName = that.locate("chartName");
-        chartName.attr({
-            placeholder: that.options.strings.chartNamePlaceholder,
-            maxlength: that.options.chartNameMaxLength,
-            size: Math.max(that.options.strings.chartNamePlaceholder.length, that.options.chartNameMaxLength)
-        });
-
         that.locate("dataEntryLabel").text(that.options.strings.dataEntryLabel);
         that.locate("totalLabel").text(that.options.strings.totalLabel);
 

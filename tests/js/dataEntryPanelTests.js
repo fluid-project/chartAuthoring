@@ -61,11 +61,7 @@ https://github.com/gpii/universal/LICENSE.txt
         gradeNames: ["gpii.chartAuthoring.dataEntryPanel", "autoInit"],
         resources: {
             template: {
-                resourceText: "<h2 class=\"gpiic-ca-dataEntryPanel-title\">Panel Title</h2>" +
-                                "<p class=\"gpiic-ca-dataEntryPanel-description\">Description</p>" +
-                                "<form>" +
-                                "<label class=\"gpiic-ca-dataEntryPanel-nameLabel\", for=\"gpiic-ca-dataEntryPanel-name\">Chart name label</label><span>:</span>" +
-                                "<input id=\"gpiic-ca-dataEntryPanel-name\" class=\"gpiic-ca-dataEntryPanel-name\" type=\"text\" placeholder=\"\">" +
+                resourceText: "<form>" +
                                 "<fieldset>" +
                                 "<legend class=\"gpiic-ca-dataEntryPanel-dataEntryLabel\">Entry</legend>" +
                                 "<ul class=\"gpiic-ca-dataEntryPanel-dataEntries\">" +
@@ -132,7 +128,7 @@ https://github.com/gpii/universal/LICENSE.txt
                 func: "jqUnit.assertValue",
                 args: ["The component should have been initialized.", "{dataEntryPanel}"]
             }, {
-                expect: 17,
+                expect: 11,
                 name: "Test Initial Rendering",
                 type: "test",
                 func: "gpii.tests.chartAuthoring.dataEntryPanelTester.testRendering",
@@ -162,21 +158,6 @@ https://github.com/gpii/universal/LICENSE.txt
     });
 
     gpii.tests.chartAuthoring.dataEntryPanelTester.testRendering = function (that) {
-        var panelTitle = that.locate("panelTitle");
-        jqUnit.assertEquals("The panel title should be set", that.options.strings.panelTitle, panelTitle.text());
-
-        var description = that.locate("description");
-        jqUnit.assertEquals("The description should be set", that.options.strings.description, description.html());
-
-        var chartNameLabel = that.locate("chartNameLabel");
-        jqUnit.assertEquals("The chart name label should be set", that.options.strings.chartNameLabel, chartNameLabel.text());
-
-        var chartName = that.locate("chartName");
-        jqUnit.assertEquals("The chart name placeholder has been set", that.options.strings.chartNamePlaceholder, chartName.attr("placeholder"));
-        jqUnit.assertEquals("The chart name's max length should be set", that.options.chartNameMaxLength, chartName.attr("maxlength"));
-        var chartNameSize = parseInt(chartName.attr("size"), 10);
-        jqUnit.assertTrue("The chartName's size should be set to a size that will accommodate the maximum name and the placeholder text.", chartNameSize >= that.options.chartNameMaxLength && chartNameSize >= that.options.strings.chartNamePlaceholder.length);
-
         var dataEntryLabel = that.locate("dataEntryLabel");
         jqUnit.assertEquals("The data entry label should be set", that.options.strings.dataEntryLabel, dataEntryLabel.text());
 
