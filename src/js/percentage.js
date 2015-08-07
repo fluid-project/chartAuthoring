@@ -14,13 +14,21 @@ https://github.com/gpii/universal/LICENSE.txt
 
     fluid.registerNamespace("gpii.chartAuthoring.percentage");
 
-    gpii.chartAuthoring.percentage.calculate = function (value, total) {
-        value = parseFloat(value, 10);
-        total = parseFloat(total, 10);
+    gpii.chartAuthoring.percentage.isNumber = function (value) {
+        return typeof (value) === "number" && !isNaN(value);
+    };
 
-        if (!isNaN(value) && !isNaN(total)) {
-            return !total ? 0 : (value / total) * 100;
-        }
+    /**
+     * Calculates a percentage given a value and total.
+     * @param value {Number}
+     * @param total {Number}
+     *
+     * @return {Number}  - a floating point number representing the percentage.
+     * Will return 0 if the total is 0.
+     */
+    gpii.chartAuthoring.percentage.calculate = function (value, total) {
+        var isValid = gpii.chartAuthoring.percentage.isNumber(value) && gpii.chartAuthoring.percentage.isNumber(total);
+        return !isValid ? null : !total ? 0 : (value / total) * 100;
     };
 
     /**
@@ -39,7 +47,7 @@ https://github.com/gpii/universal/LICENSE.txt
 
         var numericalPercentage = parseFloat(percentage);
 
-        if (numericalPercentage) {
+        if (numericalPercentage || numericalPercentage === 0) {
             percentage = numericalPercentage.toFixed(digits);
         } else {
             percentage = "";
@@ -47,13 +55,6 @@ https://github.com/gpii/universal/LICENSE.txt
 
         var output = fluid.stringTemplate(template, {percentage: percentage});
         elm.text(output);
-    };
-
-    //TODO: consider refactoring this into a general function that returns a default value if a condition isn't met.
-    // Used to provide a default value if a model or some other value had not been set.
-    gpii.chartAuthoring.percentage.percentageIfValue = function (percentage, value, defPercentage) {
-        defPercentage = defPercentage || "";
-        return !fluid.isValue(value) ? defPercentage : percentage;
     };
 
 })(jQuery, fluid);

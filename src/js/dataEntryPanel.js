@@ -69,12 +69,9 @@ https://github.com/gpii/universal/LICENSE.txt
             source: "total.value",
             target: "total.percentage",
             singleTransform: {
-                type: "fluid.transforms.free",
-                args: [
-                    "{that}.model.total.value",
-                    "{that}.model.total.value"
-                ],
-                func: "gpii.chartAuthoring.percentage.calculate"
+                type: "gpii.chartAuthoring.transforms.percentage",
+                value: "{that}.model.total.value",
+                total: "{that}.model.total.value"
             }
         }],
         numDataEntryFields: 5,
@@ -137,10 +134,18 @@ https://github.com/gpii/universal/LICENSE.txt
     };
 
     gpii.chartAuthoring.dataEntryPanel.renderTotals = function (that) {
-        var totalToRender = gpii.chartAuthoring.percentage.percentageIfValue(that.model.total.value, that.model.total.value, that.options.strings.emptyTotalValue);
-        that.locate("totalValue").text(totalToRender);
+        var percentage, totalToRender;
+        var total = that.model.total.value;
 
-        var percentage = gpii.chartAuthoring.percentage.percentageIfValue(that.model.total.percentage, that.model.total.value, "");
+        if (fluid.isValue(total)) {
+            percentage = that.model.total.percentage;
+            totalToRender = total;
+        } else {
+            percentage = "";
+            totalToRender = that.options.strings.emptyTotalValue;
+        }
+
+        that.locate("totalValue").text(totalToRender);
         gpii.chartAuthoring.percentage.render(that.locate("totalPercentage"), percentage, that.options.strings.totalPercentage);
     };
 
@@ -153,7 +158,7 @@ https://github.com/gpii/universal/LICENSE.txt
             if (fluid.isValue(valToAdd) && !isNaN(valToAdd)) {
                 return valToAdd + (currentValue || 0);
             } else {
-                return currentValue || null;
+                return fluid.isValue(currentValue) ? currentValue : null;
             }
         });
     };

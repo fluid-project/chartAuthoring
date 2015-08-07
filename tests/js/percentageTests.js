@@ -14,28 +14,37 @@ https://github.com/gpii/universal/LICENSE.txt
 
     fluid.registerNamespace("gpii.tests.calculatePercentage");
 
-    gpii.tests.calculatePercentage.inputs = [undefined, null, NaN, false, true, function () {}, {}, ["array"], "", "string", 2.2, "2.2", 0, "0", 50, "50", 100, "100"];
+    gpii.tests.calculatePercentage.isNumberInputs = [undefined, null, NaN, false, true, function () {}, {}, ["array"], "", "string", 2.2, "2.2", 0, "0", 50, "50"];
+    gpii.tests.calculatePercentage.isNumberOutputs = [false, false, false, false, false, false, false, false, false, false, true, false, true, false, true, false];
+
+    jqUnit.test("Test gpii.chartAuthoring.percentage.isNumber", function () {
+        fluid.each(gpii.tests.calculatePercentage.isNumberInputs, function (value, idx) {
+            var actual = gpii.chartAuthoring.percentage.isNumber(value);
+            var expected = gpii.tests.calculatePercentage.isNumberOutputs[idx];
+            jqUnit.assertEquals("value: '" + value + "', with typeof: " + typeof(value) + ", isNumber should be: " + expected, expected, actual);
+        });
+    });
+
+    gpii.tests.calculatePercentage.inputs = [undefined, null, NaN, false, true, function () {}, {}, ["array"], "", "string", 2.2, "2.2", 0, "0", 50, 100];
     gpii.tests.calculatePercentage.outputs = [
         // value:
-        // undefined, null,     NaN,      false,     true,      function,  {},        [],        "",        "string",  2.2,       "2.2",     0,         "0",       50,       "50",       100,       "100"]
-        [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined], // total === undefined
-        [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined], // total === null
-        [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined], // total === NaN
-        [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined], // total === false
-        [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined], // total === true
-        [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined], // total === function () {}
-        [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined], // total === {}
-        [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined], // total === []
-        [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined], // total === ""
-        [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined], // total === "string"
-        [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 100, 100, 0, 0, 2272.7272727272725, 2272.7272727272725, 4545.454545454545, 4545.454545454545], // total === 2.2
-        [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 100, 100, 0, 0, 2272.7272727272725, 2272.7272727272725, 4545.454545454545, 4545.454545454545], // total === "2.2"
-        [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 0, 0, 0, 0, 0, 0, 0, 0], // total === 0
-        [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 0, 0, 0, 0, 0, 0, 0, 0], // total === "0"
-        [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 4.4, 4.4, 0, 0, 100, 100, 200, 200], // total === 50
-        [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 4.4, 4.4, 0, 0, 100, 100, 200, 200], // total === "50"
-        [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 2.2, 2.2, 0, 0, 50, 50, 100, 100], // total === 100
-        [undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, 2.2, 2.2, 0, 0, 50, 50, 100, 100] // total === "100"
+        // undefined, null, NaN, false, true, function, {}, [], "", "string", 2.2, "2.2", 0, "0", 50, 100]
+        [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], // total === undefined
+        [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], // total === null
+        [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], // total === NaN
+        [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], // total === false
+        [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], // total === true
+        [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], // total === function () {}
+        [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], // total === {}
+        [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], // total === []
+        [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], // total === ""
+        [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], // total === "string"
+        [null, null, null, null, null, null, null, null, null, null, 100, null, 0, null, 2272.7272727272725, 4545.454545454545], // total === 2.2
+        [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], // total === "2.2"
+        [null, null, null, null, null, null, null, null, null, null, 0, null, 0, null, 0, 0], // total === 0
+        [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], // total === "0"
+        [null, null, null, null, null, null, null, null, null, null, 4.4, null, 0, null, 100, 200], // total === 50
+        [null, null, null, null, null, null, null, null, null, null, 2.2, null, 0, null, 50, 100] // total === 100
     ];
 
     jqUnit.test("Test gpii.chartAuthoring.percentage.calculate", function () {
@@ -51,15 +60,15 @@ https://github.com/gpii/universal/LICENSE.txt
 
     fluid.registerNamespace("gpii.tests.renderPerencentage");
 
-    gpii.tests.percentages = ["10.5", 10.5, "10", 10, "10.5", 10.5, "10", 10];
+    gpii.tests.percentages = [null, 0, "0", "10.5", 10.5, "10", 10, "10.5", 10.5, "10", 10];
 
     gpii.tests.renderPerencentage.templates = [undefined, "%percentage%"];
 
     gpii.tests.renderPerencentage.digits = [undefined, 2];
 
     gpii.tests.renderPerencentage.outputs = [
-        ["11", "11", "10", "10", "11", "11", "10", "10"], // template === undefined
-        ["11%", "11%", "10%", "10%", "11%", "11%", "10%", "10%"] // template === "%percentage%"
+        ["", "0", "0", "11", "11", "10", "10", "11", "11", "10", "10"], // template === undefined
+        ["%", "0%", "0%", "11%", "11%", "10%", "10%", "11%", "11%", "10%", "10%"] // template === "%percentage%"
     ];
 
     fluid.each(gpii.tests.renderPerencentage.templates, function (template, templateIdx) {
@@ -75,8 +84,8 @@ https://github.com/gpii/universal/LICENSE.txt
     });
 
     gpii.tests.renderPerencentage.digitOutputs = [
-        ["11", "11", "10", "10", "11", "11", "10", "10"], // digits === undefined
-        ["10.50", "10.50", "10.00", "10.00", "10.50", "10.50", "10.00", "10.00"] // digits === "2"
+        ["", "0", "0", "11", "11", "10", "10", "11", "11", "10", "10"], // digits === undefined
+        ["", "0.00", "0.00", "10.50", "10.50", "10.00", "10.00", "10.50", "10.50", "10.00", "10.00"] // digits === "2"
     ];
 
     fluid.each(gpii.tests.renderPerencentage.digits, function (digits, digitIdx) {
@@ -89,36 +98,6 @@ https://github.com/gpii/universal/LICENSE.txt
                 jqUnit.assertEquals("The percentage should be rendered into the DOM correctly.", expected, actual);
             });
         });
-    });
-
-
-    fluid.registerNamespace("gpii.tests.percentagesIfValue");
-
-    gpii.tests.percentagesIfValue.values = [undefined, null, NaN, "", false, true, 0, "0", 10];
-    gpii.tests.percentagesIfValue.outputs = [
-        ["", "", "", "", "", "", "", ""], // value === undefined
-        ["", "", "", "", "", "", "", ""], // value === null
-        ["10.5", "10.5", "10", "10", "10.5", "10.5", "10", "10"], // value === NaN
-        ["10.5", "10.5", "10", "10", "10.5", "10.5", "10", "10"], // value === ""
-        ["10.5", "10.5", "10", "10", "10.5", "10.5", "10", "10"], // value === false
-        ["10.5", "10.5", "10", "10", "10.5", "10.5", "10", "10"], // value === true
-        ["10.5", "10.5", "10", "10", "10.5", "10.5", "10", "10"], // value === 0
-        ["10.5", "10.5", "10", "10", "10.5", "10.5", "10", "10"], // value === "0"
-        ["10.5", "10.5", "10", "10", "10.5", "10.5", "10", "10"] // value === 10
-    ];
-
-    jqUnit.test("Test gpii.chartAuthoring.percentage.percentageIfValue", function () {
-        fluid.each(gpii.tests.percentagesIfValue.values, function (value, valIdx) {
-            fluid.each(gpii.tests.percentages, function (percentage, perIdx) {
-                var expected = gpii.tests.percentagesIfValue.outputs[valIdx][perIdx];
-                var actual = gpii.chartAuthoring.percentage.percentageIfValue(percentage, value);
-                jqUnit.assertEquals("The expected percentage is returned", expected, actual);
-            });
-        });
-
-        var defaultPercentage = 100;
-        var actualPercentage = gpii.chartAuthoring.percentage.percentageIfValue(10, null, defaultPercentage);
-        jqUnit.assertEquals("The expected defaultPercentage is returned", defaultPercentage, actualPercentage);
     });
 
 })(jQuery, fluid);

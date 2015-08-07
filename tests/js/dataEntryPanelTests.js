@@ -31,13 +31,19 @@ https://github.com/gpii/universal/LICENSE.txt
         "invalid3": {}
     };
 
-    gpii.tests.chartAuthoring.dataEntries.mixed = $.extend(true, {}, gpii.tests.chartAuthoring.dataEntries.ints, gpii.tests.chartAuthoring.dataEntries.floats, gpii.tests.chartAuthoring.dataEntries.invalid);
+    gpii.tests.chartAuthoring.dataEntries.zero = {
+        "zero1": {value: 0},
+        "zero2": {value: null}
+    };
+
+    gpii.tests.chartAuthoring.dataEntries.mixed = $.extend(true, {}, gpii.tests.chartAuthoring.dataEntries.ints, gpii.tests.chartAuthoring.dataEntries.floats, gpii.tests.chartAuthoring.dataEntries.invalid, gpii.tests.chartAuthoring.dataEntries.zero);
 
     gpii.tests.chartAuthoring.expectedSums = {
         ints: 2,
         floats: 4.4,
         invalid: undefined,
-        mixed: 6.4
+        mixed: 6.4,
+        zero: 0
     };
 
     jqUnit.test("Test gpii.chartAuthoring.dataEntryPanel.sumDataEntries", function () {
@@ -67,9 +73,9 @@ https://github.com/gpii/universal/LICENSE.txt
                                 "<ul class=\"gpiic-ca-dataEntryPanel-dataEntries\">" +
                                 "<li class=\"gpiic-ca-dataEntryPanel-dataEntry\"></li>" +
                                 "</ul>" +
+                                "<span class=\"gpiic-ca-dataEntryPanel-totalLabel\">Total</span>" +
                                 "<span class=\"gpiic-ca-dataEntryPanel-totalValue\">Value</span>" +
                                 "<span class=\"gpiic-ca-dataEntryPanel-totalPercentage\">%</span>" +
-                                "<span class=\"gpiic-ca-dataEntryPanel-totalLabel\">Total</span>" +
                                 "</fieldset>" +
                                 "</form>"
             },

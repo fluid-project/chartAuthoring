@@ -24,45 +24,39 @@ https://github.com/gpii/universal/LICENSE.txt
             percentage: "%percentage%"
         },
         model: {
-            // value: number
-            label: ""
-            // perecentage: number
-            // total: number
+            value: null,
+            label: "",
+            perecentage: null,
+            total: null
         },
-        modelRelay: {
+        modelRelay: [{
+            source: "value",
+            target: "value",
+            singleTransform: {
+                type: "gpii.chartAuthoring.transforms.stringToNumber"
+            }
+        },{
             source: "",
             target: "percentage",
             singleTransform: {
-                type: "fluid.transforms.free",
-                args: [
-                    "{that}.model.value",
-                    "{that}.model.total"
-                ],
-                func: "gpii.chartAuthoring.dataEntry.calculatePercentage"
+                type: "gpii.chartAuthoring.transforms.percentage",
+                value: "{that}.model.value",
+                total: "{that}.model.total"
             }
-        },
+        }],
         bindings: {
             input: "value",
             label: "label"
         },
         invokers: {
-            getPercentageToRender: {
-                funcName: "gpii.chartAuthoring.percentage.percentageIfValue",
-                args: ["{that}.model.percentage", "{that}.model.value", ""]
-            },
             setPercentage: {
                 funcName: "gpii.chartAuthoring.percentage.render",
                 args: [
                     "{that}.dom.percentage",
-                    {
-                        expander: {
-                            func: "{that}.getPercentageToRender"
-                        }
-                    },
+                    "{that}.model.percentage",
                     "{that}.options.strings.percentage",
                     2
-                ],
-                dynamic: true
+                ]
             }
         },
         listeners: {
@@ -86,10 +80,5 @@ https://github.com/gpii/universal/LICENSE.txt
             }
         }
     });
-
-    gpii.chartAuthoring.dataEntry.calculatePercentage = function (value, total) {
-        var percentage = gpii.chartAuthoring.percentage.calculate(value, total);
-        return fluid.isValue(percentage) ? percentage : "";
-    };
 
 })(jQuery, fluid);
