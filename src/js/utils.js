@@ -10,6 +10,8 @@ https://github.com/gpii/universal/LICENSE.txt
 
 (function ($, fluid) {
 
+    "use strict";
+
     fluid.registerNamespace("gpii.d3");
 
     /**
@@ -25,6 +27,12 @@ https://github.com/gpii/universal/LICENSE.txt
         d3Elem.on(eventName, function (data, i) {
             fluid.invokeGlobalFunction(listener, [data, i, that]);
         });
+    };
+
+    gpii.isCssClass = function (cssClass) {
+        cssClass = cssClass.trim();
+        var pattern = /^\.[_a-zA-Z]+[_a-zA-Z0-9-]*$/;
+        return pattern.test(cssClass);
     };
 
 })(jQuery, fluid);

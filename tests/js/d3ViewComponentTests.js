@@ -47,7 +47,7 @@ https://github.com/gpii/universal/LICENSE.txt
     });
 
     jqUnit.test("Test gpii.d3ViewComponent.extractSelectorName()", function () {
-        jqUnit.expect(7);
+        jqUnit.expect(2);
 
         var cases = [{
             msg: "Correctly extract the string that has one period at the start of the input",
@@ -57,26 +57,6 @@ https://github.com/gpii/universal/LICENSE.txt
             msg: "The input string is trimmed",
             input: "   .gpii-ca   ",
             expected: "gpii-ca"
-        }, {
-            msg: "More than one periods in the input returns null",
-            input: ".gpii-ca.",
-            expected: null
-        }, {
-            msg: "No period at the start of the string returns null",
-            input: "gpii-ca.",
-            expected: null
-        }, {
-            msg: "Having spaces in the middle of the input string returns null",
-            input: ".gpii-ca .b",
-            expected: null
-        }, {
-            msg: "Undefined input string retuns null",
-            input: undefined,
-            expected: null
-        }, {
-            msg: "Null string returns null",
-            input: null,
-            expected: null
         }];
 
         fluid.each(cases, function (oneCase) {
@@ -85,7 +65,7 @@ https://github.com/gpii/universal/LICENSE.txt
     });
 
     jqUnit.test("Test gpii.d3ViewComponent.synthesizeClasses()", function () {
-        jqUnit.expect(5);
+        jqUnit.expect(4);
 
         var cases = [{
             msg: "When the styles block having extra elements",
@@ -131,20 +111,7 @@ https://github.com/gpii/universal/LICENSE.txt
                 a: "b c",
                 b: "any string"
             }
-        }, {
-            msg: "When the selectors block has elements that don't need to be combined",
-            styles: {
-                a: "b c",
-                b: "any string"
-            },
-            selectors: {
-                a: "a"
-            },
-            expected: {
-                a: "b c",
-                b: "any string"
-            }
-        }, ];
+        }];
 
         fluid.each(cases, function (oneCase) {
             jqUnit.assertDeepEq(oneCase.msg, oneCase.expected, gpii.d3ViewComponent.synthesizeClasses(oneCase.styles, oneCase.selectors));

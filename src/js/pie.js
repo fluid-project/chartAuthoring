@@ -65,6 +65,10 @@ https://github.com/gpii/universal/LICENSE.txt
             draw: {
                 funcName: "gpii.chartAuthoring.pieChart.pie.draw",
                 args: ["{that}"]
+            },
+            textTransform: {
+                funcName: "gpii.chartAuthoring.pieChart.textTransform",
+                args: ["{that}.arc", "{arguments}.0"]
             }
         }
     });
@@ -117,20 +121,13 @@ https://github.com/gpii/universal/LICENSE.txt
             .attr({
                 "text-anchor": "middle",
                 "class": textClass,
-                "transform": function(d) {
-                    return "translate(" + arc.centroid(d) + ")";
+                "transform": function (d) {
+                    that.textTransform(d);
                 }
             });
 
-        // The same "transform" attribute definition for texts are used twice at the transition here and above when texts
-        // are created. This is because, the definition above pushes the text to the center of the pie slice when the
-        // text is created. The one at the transition here happs when a slice is tranformed from an old angle to a
-        // new angle and the duplicate transform moves the text from the center of the old slice to the center of the
-        // new slice. Having the first transform without the 2nd, the text would stay at the old position, the center
-        // of the old slice, without moving to the center of the new slice. Having the 2nd without the 1st, the transition
-        // would start from the center/origin of the pie circle instead of the center of the old slice.
-        texts.transition().duration(animationDuration).attr("transform", function(d) {
-            return "translate(" + arc.centroid(d) + ")";
+        texts.transition().duration(animationDuration).attr("transform", function (d) {
+            that.textTransform(d);
         });
 
         texts.exit().remove();
@@ -177,6 +174,10 @@ https://github.com/gpii/universal/LICENSE.txt
         that.draw();
 
         that.events.onPieCreated.fire();
+    };
+
+    gpii.chartAuthoring.pieChart.textTransform = function (arc, d) {
+        return "translate(" + arc.centroid(d) + ")";
     };
 
 })(jQuery, fluid);

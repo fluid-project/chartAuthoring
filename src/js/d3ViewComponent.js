@@ -44,13 +44,14 @@ https://github.com/gpii/universal/LICENSE.txt
     // couldn't handle any other form.
     gpii.d3ViewComponent.extractSelectorName = function (selector) {
         if (!selector) {
-            return null;
+            return;
         }
-
         selector = selector.trim();
-        var numOfPeriod = (selector.match(/\./g) || []).length;
-        var numOfSpace = (selector.match(/\s/g) || []).length;
-        return selector.substring(0, 1) === "." && numOfPeriod === 1 && numOfSpace === 0 ? selector.substring(1) : null;
+        if (gpii.isCssClass(selector)) {
+            return selector.substring(1);
+        } else {
+            fluid.fail(selector + " is not a css class");
+        }
     };
 
     // Synthesize "styles" and "selectors" blocks to combine elements with the same key
