@@ -14,13 +14,13 @@ https://github.com/gpii/universal/LICENSE.txt
 
     // Draw the pie part of the pie chart. Features include:
     // 1. able to draw a pie based on the data set and pie options
-    // 2. able to register D3 DOM event listeners
-    // 3. extend the input data set structure to accept an array of objects as long as objects contain a "value" element for drawing the pie slice
-    // 4. able to configure the color of each pie slice
-    // 5. update the pie when the data set changes, including adding or removing slices
+    // 2. the input data set structure accepts an array of numbers or an array of objects
+    //    as long as objects contain "value" elements for drawing pie slices
+    // 3. able to configure the color of each pie slice
+    // 4. update the pie when the data set changes, including adding or removing slices
 
     fluid.defaults("gpii.chartAuthoring.pieChart.pie", {
-        gradeNames: ["fluid.viewRelayComponent", "autoInit"],
+        gradeNames: ["gpii.d3ViewComponent", "autoInit"],
         model: {
             // dataSet accepts:
             // 1. an array of primitive values, such as numbers;
@@ -31,16 +31,15 @@ https://github.com/gpii/universal/LICENSE.txt
         pieOptions: {
             width: 300,
             height: 300,
-            colors: null, // An array of colors to fill slices generated for corresponding values from options.dataSet
+            colors: null, // An array of colors to fill slices generated for corresponding values of model.dataSet
             outerRadius: null,
             innerRadius: null,
             animationDuration: 750
         },
-        // The class names to be
-        classNames: {
-            pie: "gpiic-ca-pieChart-pie gpii-ca-pieChart-pie",
-            slice: "gpiic-ca-pieChart-slice gpii-ca-pieChart-slice",
-            text: "gpiic-ca-pieChart-text gpii-ca-pieChart-text"
+        styles: {
+            pie: "gpii-ca-pieChart-pie",
+            slice: "gpii-ca-pieChart-slice",
+            text: "gpii-ca-pieChart-text"
         },
         selectors: {
             pie: ".gpiic-ca-pieChart-pie",
@@ -63,14 +62,6 @@ https://github.com/gpii/universal/LICENSE.txt
             }
         },
         invokers: {
-            jQueryDomToD3Dom: {
-                funcName: "gpii.chartAuthoring.pieChart.pie.jQueryDomToD3Dom",
-                args: ["{arguments}.0"]
-            },
-            addD3Listeners: {
-                funcName: "gpii.chartAuthoring.pieChart.pie.addD3Listeners",
-                args: ["{that}", "{arguments}.0", "{arguments}.1", "{arguments}.2"]
-            },
             draw: {
                 funcName: "gpii.chartAuthoring.pieChart.pie.draw",
                 args: ["{that}"]
@@ -78,29 +69,14 @@ https://github.com/gpii/universal/LICENSE.txt
         }
     });
 
-    /**
-     * Convert jQuery DOM elements to D3 DOM elements.
-     * @param domElem - a jQuery DOM element or an array of jQuery DOM elements
-     */
-    gpii.chartAuthoring.pieChart.pie.jQueryDomToD3Dom = function (domElem) {
-        return d3.selectAll(domElem.toArray());
-    };
-
-    gpii.chartAuthoring.pieChart.pie.addD3Listeners = function (that, elem, eventName, listener) {
-        var d3Elem = that.jQueryDomToD3Dom(elem);
-        d3Elem.on(eventName, function (data, i) {
-            fluid.invokeGlobalFunction(listener, [data, i, that]);
-        });
-    };
-
     gpii.chartAuthoring.pieChart.pie.draw = function (that) {
         var svg = that.svg,
             pie = that.pie,
             arc = that.arc,
             color = that.color,
             dataSet = that.model.dataSet,
-            sliceSelector = that.options.classNames.slice,
-            textSelector = that.options.classNames.text,
+            sliceClass = that.classes.slice,
+            textClass = that.classes.text,
             animationDuration = that.options.pieOptions.animationDuration;
 
         var paths = svg.selectAll("path")
@@ -116,7 +92,7 @@ https://github.com/gpii/universal/LICENSE.txt
                     return color(i);
                 },
                 "d": arc,
-                "class": sliceSelector
+                "class": sliceClass
             })
             .each(function (d) {
                 this._current = d;
@@ -135,17 +111,24 @@ https://github.com/gpii/universal/LICENSE.txt
         // Draw texts for pie slices
         texts.enter()
             .append("text")
-            .attr("transform", function(d) {
-                return "translate(" + arc.centroid(d) + ")";
+            .text(function(d) {
+                return d.value;
             })
             .attr({
                 "text-anchor": "middle",
-                "class": textSelector
-            })
-            .text(function(d) {
-                return d.value;
+                "class": textClass,
+                "transform": function(d) {
+                    return "translate(" + arc.centroid(d) + ")";
+                }
             });
 
+        // The same "transform" attribute definition for texts are used twice at the transition here and above when texts
+        // are created. This is because, the definition above pushes the text to the center of the pie slice when the
+        // text is created. The one at the transition here happs when a slice is tranformed from an old angle to a
+        // new angle and the duplicate transform moves the text from the center of the old slice to the center of the
+        // new slice. Having the first transform without the 2nd, the text would stay at the old position, the center
+        // of the old slice, without moving to the center of the new slice. Having the 2nd without the 1st, the transition
+        // would start from the center/origin of the pie circle instead of the center of the old slice.
         texts.transition().duration(animationDuration).attr("transform", function(d) {
             return "translate(" + arc.centroid(d) + ")";
         });
@@ -156,12 +139,13 @@ https://github.com/gpii/universal/LICENSE.txt
     gpii.chartAuthoring.pieChart.pie.create = function (that) {
         var container = that.container,
             dataSet = that.model.dataSet,
-            width = that.options.pieOptions.width,
-            height = that.options.pieOptions.height,
-            colors = that.options.pieOptions.colors,
-            outerRadius = that.options.pieOptions.outerRadius || width / 2,
-            innerRadius = that.options.pieOptions.innerRadius || 0,
-            pieSelector = that.options.classNames.pie;
+            p = that.options.pieOptions,
+            width = p.width,
+            height = p.height,
+            colors = p.colors,
+            outerRadius = p.outerRadius || width / 2,
+            innerRadius = p.innerRadius || 0,
+            pieClass = that.classes.pie;
 
         if (dataSet.length === 0) {
             return;
@@ -176,23 +160,21 @@ https://github.com/gpii/universal/LICENSE.txt
                 return typeof (d) === "object" ? d.value : d;
             });
 
-        //Easy colors accessible via a 10-step ordinal scale
         that.color = colors ? d3.scale.ordinal().range(colors) : d3.scale.category10();
 
-        //Create SVG element
-        that.svg = that.jQueryDomToD3Dom(container)
+        that.svg = that.jQueryToD3(container)
             .append("svg")
             .attr({
                 "width": width,
                 "height": height,
-                "class": pieSelector
+                "class": pieClass
             })
             .append("g")
             .attr({
                 "transform": "translate(" + outerRadius + "," + outerRadius + ")"
             });
 
-        that.draw(that);
+        that.draw();
 
         that.events.onPieCreated.fire();
     };

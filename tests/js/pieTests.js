@@ -47,7 +47,7 @@ https://github.com/gpii/universal/LICENSE.txt
         jqUnit.assertEquals("The texts for pie slices have been created with the proper selectors", that.model.dataSet.length, that.locate("text").length);
 
         // Each slice receives the corresponding data object
-        var d3Slices = that.jQueryDomToD3Dom($(that.locate("slice")));
+        var d3Slices = that.jQueryToD3($(that.locate("slice")));
         d3Slices.each(function (d, i) {
             jqUnit.assertEquals("The slice colors are filled correctly", that.options.pieOptions.colors[i], ($(this).attr("fill")));
             testSliceDataFunc(d, i);
@@ -59,7 +59,7 @@ https://github.com/gpii/universal/LICENSE.txt
 
         // The D3 DOM event listener is registered
         jqUnit.assertFalse("The mouseover listener for pie slices have not been triggered", that.mouseOverListenerCalled);
-        var oneD3Slice = that.jQueryDomToD3Dom($(that.locate("slice")[0]));
+        var oneD3Slice = that.jQueryToD3($(that.locate("slice")[0]));
         oneD3Slice.on("mouseover")();
         jqUnit.assertTrue("The mouseover listener for pie slices have been registered", that.mouseOverListenerCalled);
     };
