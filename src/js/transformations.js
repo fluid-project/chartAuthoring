@@ -32,4 +32,21 @@ https://github.com/gpii/universal/LICENSE.txt
     gpii.chartAuthoring.transforms.percentage = function (transformSpec) {
         return gpii.chartAuthoring.percentage.calculate(transformSpec.value, transformSpec.total);
     };
+
+    fluid.defaults("gpii.chartAuthoring.transforms.reduce", {
+        gradeNames: ["fluid.standardOutputTransformFunction"]
+    });
+
+    gpii.chartAuthoring.transforms.reduce = function (transformSpec) {
+        var values = transformSpec.value;
+
+        if (fluid.isPlainObject(values) && !fluid.isArrayable(values)) {
+            values = fluid.values(values);
+        }
+
+        return fluid.accumulate(values, function (value, currentValue) {
+            return fluid.invokeGlobalFunction(transformSpec.func, [value, currentValue]);
+        }, transformSpec.initialValue);
+    };
+
 })(jQuery, fluid);

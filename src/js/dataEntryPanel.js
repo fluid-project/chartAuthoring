@@ -56,13 +56,12 @@ https://github.com/gpii/universal/LICENSE.txt
                 // "dataEntryComponent-uuid": {}
             }
         },
-        // TODO: add a model relay for summing data entries.
         modelRelay: [{
             source: "dataEntries",
             target: "total.value",
             singleTransform: {
-                type: "fluid.transforms.free",
-                args: ["{that}.model.dataEntries"],
+                type: "gpii.chartAuthoring.transforms.reduce",
+                value: "{that}.model.dataEntries",
                 func: "gpii.chartAuthoring.dataEntryPanel.sumDataEntries"
             }
         }, {
@@ -149,18 +148,14 @@ https://github.com/gpii/universal/LICENSE.txt
         gpii.chartAuthoring.percentage.render(that.locate("totalPercentage"), percentage, that.options.strings.totalPercentage);
     };
 
-    gpii.chartAuthoring.dataEntryPanel.sumDataEntries = function (dataEntries) {
-        var entryKeys = fluid.keys(dataEntries);
+    gpii.chartAuthoring.dataEntryPanel.sumDataEntries = function (entry, currentValue) {
+        var valToAdd = entry.value;
 
-        return fluid.accumulate(entryKeys, function (entryKey, currentValue) {
-            var valToAdd = parseFloat(dataEntries[entryKey].value);
-
-            if (fluid.isValue(valToAdd) && !isNaN(valToAdd)) {
-                return valToAdd + (currentValue || 0);
-            } else {
-                return fluid.isValue(currentValue) ? currentValue : null;
-            }
-        });
+        if (fluid.isValue(valToAdd) && !isNaN(valToAdd)) {
+            return valToAdd + (currentValue || 0);
+        } else {
+            return fluid.isValue(currentValue) ? currentValue : null;
+        }
     };
 
 })(jQuery, fluid);

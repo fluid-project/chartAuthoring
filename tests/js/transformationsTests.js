@@ -79,4 +79,60 @@ https://github.com/gpii/universal/LICENSE.txt
             });
         });
     });
+
+    gpii.tests.chartAuthoring.transforms.reduceAdd = function (value, currentValue) {
+        return value + (currentValue || 0);
+    };
+
+    gpii.tests.chartAuthoring.transforms.reduceModel = {
+        array: [1, 2],
+        obj: {
+            a: 3,
+            b: 4
+        }
+    };
+
+    gpii.tests.chartAuthoring.transforms.reduceExpected = {
+        array1: 3,
+        array2: 5,
+        obj1: 7,
+        obj2: 9
+    };
+
+    gpii.tests.chartAuthoring.transforms.reduceTransforms = {
+        array1: {
+            transform: {
+                type: "gpii.chartAuthoring.transforms.reduce",
+                value: gpii.tests.chartAuthoring.transforms.reduceModel.array,
+                func: "gpii.tests.chartAuthoring.transforms.reduceAdd"
+            }
+        },
+        array2: {
+            transform: {
+                type: "gpii.chartAuthoring.transforms.reduce",
+                value: gpii.tests.chartAuthoring.transforms.reduceModel.array,
+                initialValue: 2,
+                func: "gpii.tests.chartAuthoring.transforms.reduceAdd"
+            }
+        },
+        obj1: {
+            transform: {
+                type: "gpii.chartAuthoring.transforms.reduce",
+                value: gpii.tests.chartAuthoring.transforms.reduceModel.obj,
+                func: "gpii.tests.chartAuthoring.transforms.reduceAdd"
+            }
+        },
+        obj2: {
+            transform: {
+                type: "gpii.chartAuthoring.transforms.reduce",
+                value: gpii.tests.chartAuthoring.transforms.reduceModel.obj,
+                initialValue: 2,
+                func: "gpii.tests.chartAuthoring.transforms.reduceAdd"
+            }
+        }
+    };
+
+    jqUnit.test("Test gpii.chartAuthoring.transforms.reduce", function () {
+        gpii.tests.chartAuthoring.transforms.assertTransformation("The reduce transforms should have been performed correctly", gpii.tests.chartAuthoring.transforms.reduceModel, gpii.tests.chartAuthoring.transforms.reduceTransforms, gpii.tests.chartAuthoring.transforms.reduceExpected);
+    });
 })(jQuery, fluid);

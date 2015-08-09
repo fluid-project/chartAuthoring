@@ -14,42 +14,24 @@ https://github.com/gpii/universal/LICENSE.txt
 
     fluid.registerNamespace("gpii.tests.chartAuthoring.dataEntries");
 
-    gpii.tests.chartAuthoring.dataEntries.ints = {
-        "ints1": {value: 0},
-        "ints2": {value: 1},
-        "ints3": {value: "1"}
-    };
+    gpii.tests.chartAuthoring.dataEntries.vals = [0, 1, 2.2, null, undefined];
 
-    gpii.tests.chartAuthoring.dataEntries.floats = {
-        "floats1": {value: 2.2},
-        "floats2": {value: "2.2"}
-    };
-
-    gpii.tests.chartAuthoring.dataEntries.invalid = {
-        "invalid1": {value: null},
-        "invalid2": {value: ""},
-        "invalid3": {}
-    };
-
-    gpii.tests.chartAuthoring.dataEntries.zero = {
-        "zero1": {value: 0},
-        "zero2": {value: null}
-    };
-
-    gpii.tests.chartAuthoring.dataEntries.mixed = $.extend(true, {}, gpii.tests.chartAuthoring.dataEntries.ints, gpii.tests.chartAuthoring.dataEntries.floats, gpii.tests.chartAuthoring.dataEntries.invalid, gpii.tests.chartAuthoring.dataEntries.zero);
-
-    gpii.tests.chartAuthoring.expectedSums = {
-        ints: 2,
-        floats: 4.4,
-        invalid: undefined,
-        mixed: 6.4,
-        zero: 0
-    };
+    gpii.tests.chartAuthoring.dataEntries.expected = [
+        //entry
+        // 0, 1, 2.2, "", null, undefined
+        [0, 1, 2.2, 0, 0], // currentValue === 0
+        [1, 2, 3.2, 1, 1], // currentValue === 1
+        [2.2, 3.2, 4.4, 2.2, 2.2], // currentValue === 2.2
+        [0, 1, 2.2, null, null], // currentValue === null
+        [0, 1, 2.2, null, null] // currentValue === undefined
+    ];
 
     jqUnit.test("Test gpii.chartAuthoring.dataEntryPanel.sumDataEntries", function () {
-        fluid.each(gpii.tests.chartAuthoring.dataEntries, function (entries, type) {
-            var sum = gpii.chartAuthoring.dataEntryPanel.sumDataEntries(entries);
-            jqUnit.assertEquals("The '" + type + "' data entries should have been summed correctly", gpii.tests.chartAuthoring.expectedSums[type], sum);
+        fluid.each(gpii.tests.chartAuthoring.dataEntries.vals, function (currentValue, cvIdx) {
+            fluid.each(gpii.tests.chartAuthoring.dataEntries.vals, function (value, valIdx) {
+                var sum = gpii.chartAuthoring.dataEntryPanel.sumDataEntries({value: value}, currentValue);
+                jqUnit.assertEquals("The entry value: '" + value + "' and currentValue: '" + currentValue + "' should be summed together correctly.", gpii.tests.chartAuthoring.dataEntries.expected[cvIdx][valIdx], sum);
+            });
         });
     });
 
