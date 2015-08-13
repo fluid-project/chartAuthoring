@@ -48,19 +48,20 @@ https://github.com/gpii/universal/LICENSE.txt
             input: "value",
             label: "label"
         },
+        percentageDigits: 2,
         invokers: {
-            setPercentage: {
+            updatePercentage: {
                 funcName: "gpii.chartAuthoring.percentage.render",
                 args: [
                     "{that}.dom.percentage",
                     "{that}.model.percentage",
                     "{that}.options.strings.percentage",
-                    2
+                    "{that}.options.percentageDigits"
                 ]
             }
         },
         listeners: {
-            "onCreate.setPercentage": "{that}.setPercentage",
+            "onCreate.updatePercentage": "{that}.updatePercentage",
             "onCreate.setInputAttrs": {
                 "this": "{that}.dom.input",
                 "method": "attr",
@@ -71,11 +72,11 @@ https://github.com/gpii/universal/LICENSE.txt
         },
         modelListeners: {
             "value": {
-                listener: "{that}.setPercentage",
+                listener: "{that}.updatePercentage",
                 excludeSource: "init"
             },
             "total": {
-                listener: "{that}.setPercentage",
+                listener: "{that}.updatePercentage",
                 excludeSource: "init"
             }
         }
