@@ -41,43 +41,39 @@ https://github.com/gpii/universal/LICENSE.txt
         });
     });
 
-    gpii.tests.chartAuthoring.transforms.percentageInputs = [undefined, null, NaN, false, true, function () {}, {}, ["array"], "", "string", 2.2, "2.2", 0, "0", 50, 100];
-    gpii.tests.chartAuthoring.transforms.percentageOutputs = [
+    gpii.tests.chartAuthoring.transforms.percentageValidInputs = [0, 2.2, 50, 100];
+    gpii.tests.chartAuthoring.transforms.percentageValidOutputs = [
         // values
-        // undefined, null, NaN, false, true, function () {}, {}, ["array"], "", "string", 2.2, "2.2", 0, "0", 50, 100
-        [{value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}], // total === undefined
-        [{value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}], // total === null
-        [{value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}], // total === NaN
-        [{value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}], // total === false
-        [{value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}], // total === true
-        [{value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}], // total === function () {}
-        [{value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}], // total === {}
-        [{value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}], // total === []
-        [{value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}], // total === ""
-        [{value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}], // total === "string"
-        [{value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: 100}, {value: null}, {value: 0}, {value: null}, {value: 2272.7272727272725}, {value: 4545.454545454545}], // total === 2.2
-        [{value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}], // total === "2.2"
-        [{value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: 0}, {value: null}, {value: 0}, {value: null}, {value: 0}, {value: 0}], // total === 0
-        [{value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}], // total === "0"
-        [{value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: 4.4}, {value: null}, {value: 0}, {value: null}, {value: 100}, {value: 200}], // total === 50
-        [{value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: null}, {value: 2.2}, {value: null}, {value: 0}, {value: null}, {value: 50}, {value: 100}] // total === 100
+        // 0, 2.2, 50, 100
+        [{value: 0}, {value: 0}, {value: 0}, {value: 0}], // total === 0
+        [{value: 0}, {value: 100}, {value: 2272.7272727272725}, {value: 4545.454545454545}], // total === 2.2
+        [{value: 0}, {value: 4.4}, {value: 100}, {value: 200}], // total === 50
+        [{value: 0}, {value: 2.2}, {value: 50}, {value: 100}] // total === 50
     ];
 
-    jqUnit.test("Test gpii.chartAuthoring.transforms.percentage", function () {
-        fluid.each(gpii.tests.chartAuthoring.transforms.percentageInputs, function (total, totalIdx) {
-            fluid.each(gpii.tests.chartAuthoring.transforms.percentageInputs, function (value, valIdx) {
-                var transform = {
-                    transform: {
-                        type: "gpii.chartAuthoring.transforms.percentage",
-                        outputPath: "value",
-                        value: value,
-                        total: total
-                    }
-                };
-                var expected = gpii.tests.chartAuthoring.transforms.percentageOutputs[totalIdx][valIdx];
-                gpii.tests.chartAuthoring.transforms.assertTransformation("The value: '" + value + "' and total: '" + total + "' should have been transformed", {}, transform, expected);
-            });
+    gpii.tests.chartAuthoring.transforms.percentageInvalidInputs = [undefined, null, NaN, false, true, function () {}, {}, ["array"], "", "string", "0", "2.2"];
+
+    gpii.tests.chartAuthoring.transforms.testTransforms = function (inputs, outputs) {
+        gpii.tests.utils.matrixTest(inputs, function (total, value, totalIdx, valIdx) {
+            var transform = {
+                transform: {
+                    type: "gpii.chartAuthoring.transforms.percentage",
+                    outputPath: "value",
+                    value: value,
+                    total: total
+                }
+            };
+            var expected = fluid.isArrayable(outputs) ? outputs[totalIdx][valIdx] : outputs;
+            gpii.tests.chartAuthoring.transforms.assertTransformation("The value: '" + value + "' and total: '" + total + "' should have been transformed", {}, transform, expected);
         });
+    };
+
+    jqUnit.test("Test gpii.chartAuthoring.transforms.percentage - valid", function () {
+        gpii.tests.chartAuthoring.transforms.testTransforms(gpii.tests.chartAuthoring.transforms.percentageValidInputs, gpii.tests.chartAuthoring.transforms.percentageValidOutputs);
+    });
+
+    jqUnit.test("Test gpii.chartAuthoring.transforms.percentage - invalid", function () {
+        gpii.tests.chartAuthoring.transforms.testTransforms(gpii.tests.chartAuthoring.transforms.percentageInvalidInputs, {value: null});
     });
 
     gpii.tests.chartAuthoring.transforms.reduceAdd = function (value, currentValue) {

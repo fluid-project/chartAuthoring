@@ -25,36 +25,31 @@ https://github.com/gpii/universal/LICENSE.txt
         });
     });
 
-    gpii.tests.calculatePercentage.inputs = [undefined, null, NaN, false, true, function () {}, {}, ["array"], "", "string", 2.2, "2.2", 0, "0", 50, 100];
-    gpii.tests.calculatePercentage.outputs = [
+    gpii.tests.calculatePercentage.validInputs = [0, 2.2, 50, 100];
+    gpii.tests.calculatePercentage.invalidInputs = [undefined, null, NaN, false, true, function () {}, {}, ["array"], "", "string", "0", "2.2"];
+
+    gpii.tests.calculatePercentage.validOutputs = [
         // value:
-        // undefined, null, NaN, false, true, function, {}, [], "", "string", 2.2, "2.2", 0, "0", 50, 100]
-        [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], // total === undefined
-        [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], // total === null
-        [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], // total === NaN
-        [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], // total === false
-        [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], // total === true
-        [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], // total === function () {}
-        [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], // total === {}
-        [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], // total === []
-        [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], // total === ""
-        [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], // total === "string"
-        [null, null, null, null, null, null, null, null, null, null, 100, null, 0, null, 2272.7272727272725, 4545.454545454545], // total === 2.2
-        [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], // total === "2.2"
-        [null, null, null, null, null, null, null, null, null, null, 0, null, 0, null, 0, 0], // total === 0
-        [null, null, null, null, null, null, null, null, null, null, null, null, null, null, null, null], // total === "0"
-        [null, null, null, null, null, null, null, null, null, null, 4.4, null, 0, null, 100, 200], // total === 50
-        [null, null, null, null, null, null, null, null, null, null, 2.2, null, 0, null, 50, 100] // total === 100
+        // 0, 2.2, 50, 100
+        [0, 0, 0, 0], // total === 0
+        [0, 100, 2272.7272727272725, 4545.454545454545], // total === 2.2
+        [0, 4.4, 100, 200], // total === 50
+        [0, 2.2, 50, 100] // total === 50
     ];
 
-    jqUnit.test("Test gpii.chartAuthoring.percentage.calculate", function () {
-        fluid.each(gpii.tests.calculatePercentage.inputs, function (total, totalIdx) {
-            fluid.each(gpii.tests.calculatePercentage.inputs, function (value, valIdx) {
-                var actual = gpii.chartAuthoring.percentage.calculate(value, total);
-                var expected = gpii.tests.calculatePercentage.outputs[totalIdx][valIdx];
-                // Using fluid.model.isSameValue to remove any javascript precision errors on floating point numbers.
-                jqUnit.assertTrue("The percentate for value: " + value + " total: " + total + " should be calculated as " + expected, fluid.model.isSameValue(expected, actual));
-            });
+    jqUnit.test("Test gpii.chartAuthoring.percentage.calculate - valid", function () {
+        gpii.tests.utils.matrixTest(gpii.tests.calculatePercentage.validInputs, function (total, value, totalIdx, valIdx) {
+            var actual = gpii.chartAuthoring.percentage.calculate(value, total);
+            var expected = gpii.tests.calculatePercentage.validOutputs[totalIdx][valIdx];
+            // Using fluid.model.isSameValue to remove any javascript precision errors on floating point numbers.
+            jqUnit.assertTrue("The percentate for value: " + value + " total: " + total + " should be calculated as " + expected, fluid.model.isSameValue(expected, actual));
+        });
+    });
+
+    jqUnit.test("Test gpii.chartAuthoring.percentage.calculate - invalid", function () {
+        gpii.tests.utils.matrixTest(gpii.tests.calculatePercentage.invalidInputs, function (total, value) {
+            var actual = gpii.chartAuthoring.percentage.calculate(value, total);
+            jqUnit.assertNull("The percentate for value: " + value + " total: " + total + " should be calculated as null", actual);
         });
     });
 
