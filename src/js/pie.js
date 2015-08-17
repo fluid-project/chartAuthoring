@@ -13,7 +13,7 @@ https://github.com/gpii/universal/LICENSE.txt
     "use strict";
 
     // Draw the pie part of the pie chart. Features include:
-    // 1. able to draw a pie based on the data set and pie options
+    // 1. able to draw a pie based on the input data set and pie options
     // 2. the input data set structure accepts an array of numbers or an array of objects
     //    as long as objects contain "value" elements for drawing pie slices
     // 3. able to configure the color of each pie slice
@@ -122,12 +122,12 @@ https://github.com/gpii/universal/LICENSE.txt
                 "text-anchor": "middle",
                 "class": textClass,
                 "transform": function (d) {
-                    that.textTransform(d);
+                    return that.textTransform(d);
                 }
             });
 
         texts.transition().duration(animationDuration).attr("transform", function (d) {
-            that.textTransform(d);
+            return that.textTransform(d);
         });
 
         texts.exit().remove();
