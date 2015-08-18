@@ -23,8 +23,6 @@ https://github.com/gpii/universal/LICENSE.txt
         }
     });
 
-    gpii.tests.chartAuthoring.numberArray = [17,8,11,23];
-
     gpii.tests.chartAuthoring.objectArray = [{
         id: "id0",
         value: 5,
@@ -81,18 +79,6 @@ https://github.com/gpii/universal/LICENSE.txt
       label: "Three"
   }
 ];
-
-    jqUnit.test("Test the legend component created based off an array of numbers", function () {
-        jqUnit.expect(0);
-
-        var that = gpii.tests.chartAuthoring.pieChart.legend(".gpii-ca-legend-numbers", {
-            model: {
-                dataSet: gpii.tests.chartAuthoring.numberArray
-            }
-        });
-        // console.log(that);
-    });
-
 
     jqUnit.test("Test the legend component created based off an array of objects", function () {
         jqUnit.expect(0);

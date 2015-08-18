@@ -16,8 +16,7 @@ https://github.com/gpii/universal/LICENSE.txt
         gradeNames: ["gpii.d3ViewComponent", "autoInit"],
         model: {
             // dataSet accepts:
-            // 1. an array of primitive values, such as numbers;
-            // 2. an array of objects. Must contain "value" and "label" variables.
+            // 1. an array of objects. Must contain "value" and "label" variables.
             // Example: [{id: string, value: number, label: string} ... ]
             dataSet: []
         },
@@ -77,7 +76,10 @@ https://github.com/gpii/universal/LICENSE.txt
           "style": function(d, i) {
             return "background-color: "+color(i)+";";
           }
-        })
+        });
+
+        addedRows
+        .append("td")
         .html(function(d, i) {
           return d.label;
         });
@@ -88,6 +90,7 @@ https://github.com/gpii/universal/LICENSE.txt
         });
 
         var removedRows = rows.exit();
+
         removedRows.remove();
 
     };
@@ -122,7 +125,14 @@ https://github.com/gpii/universal/LICENSE.txt
                .attr({
                  "scope":"col"
                })
+               .html("Legend");
+
+          thead.append("th")
+               .attr({
+                 "scope":"col"
+               })
                .html("Label");
+
           thead.append("th")
           .attr({
             "scope":"col"
