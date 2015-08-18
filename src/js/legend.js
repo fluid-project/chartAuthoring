@@ -64,27 +64,15 @@ https://github.com/gpii/universal/LICENSE.txt
             color = that.color,
             dataSet = that.model.dataSet;
 
-        var thead = table.selectAll("thead");
-
-        thead.append("th")
-             .attr({
-               "scope":"col"
-             })
-             .html("Label");
-        thead.append("th")
-        .attr({
-          "scope":"col"
-        })
-        .html("Value");
-
         var tbody = table.selectAll("tbody");
 
         var rows = tbody.selectAll("tr")
-            .data(dataSet)
-            .enter()
-            .append("tr");
+            .data(dataSet);
 
-        rows.append("td")
+        var addedRows = rows.enter().append("tr");
+
+        addedRows
+        .append("td")
         .attr({
           "style": function(d, i) {
             return "background-color: "+color(i)+";";
@@ -94,10 +82,14 @@ https://github.com/gpii/universal/LICENSE.txt
           return d.label;
         });
 
-        rows.append("td")
+        addedRows.append("td")
         .html(function(d,i) {
           return d.value;
         });
+
+        var removedRows = rows.exit();
+        removedRows.remove();
+
     };
 
     gpii.chartAuthoring.pieChart.legend.create = function(that) {
@@ -123,6 +115,19 @@ https://github.com/gpii/universal/LICENSE.txt
 
           that.table.append("thead");
           that.table.append("tbody");
+
+          var thead = that.table.selectAll("thead");
+
+          thead.append("th")
+               .attr({
+                 "scope":"col"
+               })
+               .html("Label");
+          thead.append("th")
+          .attr({
+            "scope":"col"
+          })
+          .html("Value");
 
           that.draw();
 

@@ -43,6 +43,45 @@ https://github.com/gpii/universal/LICENSE.txt
         label: "Four"
     }];
 
+    gpii.tests.chartAuthoring.objectArrayAdd = [{
+        id: "id0",
+        value: 5,
+        label: "One"
+    }, {
+        id: "id1",
+        value: 10,
+        label: "Two"
+    }, {
+        id: "id2",
+        value: 20,
+        label: "Three"
+    }, {
+        id: "id3",
+        value: 45,
+        label: "Four"
+    },
+    {
+        id: "id4",
+        value: 26,
+        label: "Five"
+    }
+  ];
+
+  gpii.tests.chartAuthoring.objectArrayRemove = [{
+      id: "id0",
+      value: 5,
+      label: "One"
+  }, {
+      id: "id1",
+      value: 10,
+      label: "Two"
+  }, {
+      id: "id2",
+      value: 20,
+      label: "Three"
+  }
+];
+
     jqUnit.test("Test the legend component created based off an array of numbers", function () {
         jqUnit.expect(0);
 
@@ -63,6 +102,13 @@ https://github.com/gpii/universal/LICENSE.txt
                 dataSet: gpii.tests.chartAuthoring.objectArray
             }
         });
+        setTimeout(function() {
+          that.applier.change("dataSet", gpii.tests.chartAuthoring.objectArrayAdd);
+        }, 3000);
+        setTimeout(function() {
+          that.applier.change("dataSet", gpii.tests.chartAuthoring.objectArrayRemove);
+        }, 6000);
+
         // console.log(that);
     });
 
