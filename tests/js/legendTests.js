@@ -124,7 +124,7 @@ https://github.com/gpii/universal/LICENSE.txt
 
         var d3Rows = that.jQueryToD3($(that.locate("legendColorCell")));
         d3Rows.each(function (d, i) {
-            jqUnit.assertEquals("The legend colors are filled correctly", that.options.legendOptions.colors[i], ($(this).css("background-color")));
+            jqUnit.assertEquals("The legend colors are filled correctly", d.color, ($(this).css("background-color")));
         });
     };
 

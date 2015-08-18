@@ -24,7 +24,7 @@ https://github.com/gpii/universal/LICENSE.txt
             width: 300,
             height: 300,
             colors: null, // An array of colors for the legend generated for corresponding values of model.dataSet
-            sort: false // Whether or not to sort the data by values when creating the legend
+            sort: true // Whether or not to sort the data by values when creating the legend
         },
         styles: {
             legend: "gpii-ca-pieChart-legend",
@@ -66,17 +66,33 @@ https://github.com/gpii/universal/LICENSE.txt
         }
     });
 
+    // Takes the dataSet array and a color array, and returns a consolidated object array
+    gpii.chartAuthoring.pieChart.legend.consolidateDataAndColors = function(dataSet, colors) {
+      var c = [];
+      for(var i=0; i<dataSet.length; i++) {
+        var d = {
+          id: dataSet[i].id,
+          label: dataSet[i].label,
+          value: dataSet[i].value,
+          color: colors(i)
+        };
+        c.push(d);
+      }
+      return c;
+    };
+
     gpii.chartAuthoring.pieChart.legend.draw = function(that) {
         // console.log("gpii.chartAuthoring.pieChart.legend.draw function");
 
         var table = that.table,
             l = that.options.legendOptions,
-            color = that.color,
-            dataSet = that.model.dataSet,
+            dataSet = gpii.chartAuthoring.pieChart.legend.consolidateDataAndColors(that.model.dataSet,that.color),
             rowClass = that.classes.row,
             legendColorCellClass = that.classes.legendColorCell,
             sort = l.sort;
         var tbody = table.selectAll("tbody");
+console.log(dataSet);
+
 
         var rows = tbody.selectAll("tr")
             .data(dataSet, function(d) {
@@ -94,7 +110,7 @@ https://github.com/gpii/universal/LICENSE.txt
         .append("td")
         .attr({
           "style": function(d, i) {
-            return "background-color: "+color(i)+";";
+            return "background-color: "+d.color+";";
           },
           "class": legendColorCellClass
         });
