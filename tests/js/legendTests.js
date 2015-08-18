@@ -20,12 +20,22 @@ https://github.com/gpii/universal/LICENSE.txt
             width: 200,
             height: 200,
             colors: ["#000000", "#ff0000", "#00ff00", "#0000ff", "#aabbcc", "#ccbbaa"]
+        },
+        listeners: {
+            "onLegendCreated.addMouseoverListener": {
+                listener: "{that}.addD3Listeners",
+                args: ["{that}.dom.row", "mouseover", "gpii.tests.chartAuthoring.mouseOverListener"]
+            }
         }
     });
 
+    gpii.tests.chartAuthoring.mouseOverListener = function (data, i, that) {
+        // that.mouseOverListenerCalled = true;
+    };
+
     gpii.tests.chartAuthoring.objectArray = [{
         id: "id0",
-        value: 5,
+        value: 15,
         label: "One"
     }, {
         id: "id1",
@@ -43,7 +53,7 @@ https://github.com/gpii/universal/LICENSE.txt
 
     gpii.tests.chartAuthoring.objectArrayAdd = [{
         id: "id0",
-        value: 5,
+        value: 15,
         label: "One"
     }, {
         id: "id1",
@@ -67,7 +77,7 @@ https://github.com/gpii/universal/LICENSE.txt
 
   gpii.tests.chartAuthoring.objectArrayRemove = [{
       id: "id0",
-      value: 5,
+      value: 15,
       label: "One"
   }, {
       id: "id1",

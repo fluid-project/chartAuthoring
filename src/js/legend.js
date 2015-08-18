@@ -16,22 +16,25 @@ https://github.com/gpii/universal/LICENSE.txt
         gradeNames: ["gpii.d3ViewComponent", "autoInit"],
         model: {
             // dataSet accepts:
-            // 1. an array of objects. Must contain "value" and "label" variables.
+            // 1. an array of objects. Must contain "id", "value" and "label" variables.
             // Example: [{id: string, value: number, label: string} ... ]
             dataSet: []
         },
         legendOptions: {
             width: 300,
             height: 300,
-            colors: null // An array of colors for the legend generated for corresponding values of model.dataSet
+            colors: null, // An array of colors for the legend generated for corresponding values of model.dataSet
+            sort: true // Whether or not to sort the data by values when creating the legend
         },
         styles: {
             legend: "gpii-ca-pieChart-legend",
-            table: "gpii-ca-pieChart-table"
+            table: "gpii-ca-pieChart-legend-table",
+            row: "gpii-ca-pieChart-legend-table-row"
         },
         selectors: {
             legend: ".gpiic-ca-pieChart-legend",
-            table: ".gpii-ca-pieChart-table"
+            table: ".gpii-ca-pieChart-legend-table",
+            row: ".gpii-ca-pieChart-legend-table-row"
         },
         events: {
             onLegendCreated: null  // Fire when the legend is created. Ready to register D3 DOM event listeners
@@ -60,15 +63,24 @@ https://github.com/gpii/universal/LICENSE.txt
         // console.log("gpii.chartAuthoring.pieChart.legend.draw function");
 
         var table = that.table,
+            l = that.options.legendOptions,
             color = that.color,
-            dataSet = that.model.dataSet;
-
+            dataSet = that.model.dataSet,
+            rowClass = that.classes.row,
+            sort = l.sort;
         var tbody = table.selectAll("tbody");
 
         var rows = tbody.selectAll("tr")
-            .data(dataSet);
+            .data(dataSet, function(d) {
+              return d.id;
+            });
 
         var addedRows = rows.enter().append("tr");
+
+        addedRows
+        .attr({
+          "class": rowClass
+        });
 
         addedRows
         .append("td")
@@ -92,6 +104,13 @@ https://github.com/gpii/universal/LICENSE.txt
         var removedRows = rows.exit();
 
         removedRows.remove();
+
+
+        if(sort === true) {
+          rows.sort(function(a,b){
+            return b.value - a.value;
+          });
+        }
 
     };
 
