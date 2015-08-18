@@ -26,12 +26,32 @@ https://github.com/gpii/universal/LICENSE.txt
                 listener: "{that}.addD3Listeners",
                 args: ["{that}.dom.row", "mouseover", "gpii.tests.chartAuthoring.mouseOverListener"]
             }
+        },
+        members: {
+            mouseOverListenerCalled: false
         }
     });
 
-    gpii.tests.chartAuthoring.mouseOverListener = function (data, i, that) {
-        // that.mouseOverListenerCalled = true;
-    };
+    // Necessary to get jQuery to return .css("background-color") value in hexadecimal
+    // See http://stackoverflow.com/questions/6177454/can-i-force-jquery-cssbackgroundcolor-returns-on-hexadecimal-format
+    $.cssHooks.backgroundColor = {
+        get: function(elem) {
+            if (elem.currentStyle)
+                var bg = elem.currentStyle["backgroundColor"];
+            else if (window.getComputedStyle)
+                var bg = document.defaultView.getComputedStyle(elem,
+                    null).getPropertyValue("background-color");
+            if (bg.search("rgb") == -1)
+                return bg;
+            else {
+                bg = bg.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+                function hex(x) {
+                    return ("0" + parseInt(x).toString(16)).slice(-2);
+                }
+                return "#" + hex(bg[1]) + hex(bg[2]) + hex(bg[3]);
+            }
+        }
+    }
 
     gpii.tests.chartAuthoring.objectArray = [{
         id: "id0",
@@ -90,22 +110,44 @@ https://github.com/gpii/universal/LICENSE.txt
   }
 ];
 
+    gpii.tests.chartAuthoring.mouseOverListener = function (data, i, that) {
+        that.mouseOverListenerCalled = true;
+    };
+
+    gpii.tests.chartAuthoring.validateLegend = function (that) {
+        var table = that.locate("table");
+
+        // Test the legend creation
+        jqUnit.assertNotEquals("The TABLE element for the legend is created with the proper selector", 0, table.length);
+
+        jqUnit.assertEquals("A row has been created for each value in the dataset, with proper selectors", that.model.dataSet.length, that.locate("row").length);
+
+        var d3Rows = that.jQueryToD3($(that.locate("legendColorCell")));
+        d3Rows.each(function (d, i) {
+            jqUnit.assertEquals("The legend colors are filled correctly", that.options.legendOptions.colors[i], ($(this).css("background-color")));
+        });
+    };
+
+
     jqUnit.test("Test the legend component created based off an array of objects", function () {
-        jqUnit.expect(0);
+        jqUnit.expect(6);
 
         var that = gpii.tests.chartAuthoring.pieChart.legend(".gpii-ca-legend-objects", {
             model: {
                 dataSet: gpii.tests.chartAuthoring.objectArray
             }
         });
+
+        gpii.tests.chartAuthoring.validateLegend(that);
+        /*
         setTimeout(function() {
           that.applier.change("dataSet", gpii.tests.chartAuthoring.objectArrayAdd);
         }, 3000);
         setTimeout(function() {
           that.applier.change("dataSet", gpii.tests.chartAuthoring.objectArrayRemove);
         }, 6000);
+        */
 
-        // console.log(that);
     });
 
 })(jQuery, fluid);

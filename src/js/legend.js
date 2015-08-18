@@ -24,17 +24,19 @@ https://github.com/gpii/universal/LICENSE.txt
             width: 300,
             height: 300,
             colors: null, // An array of colors for the legend generated for corresponding values of model.dataSet
-            sort: true // Whether or not to sort the data by values when creating the legend
+            sort: false // Whether or not to sort the data by values when creating the legend
         },
         styles: {
             legend: "gpii-ca-pieChart-legend",
             table: "gpii-ca-pieChart-legend-table",
-            row: "gpii-ca-pieChart-legend-table-row"
+            row: "gpii-ca-pieChart-legend-table-row",
+            legendColorCell: "gpii-ca-pieChart-legend-table-row-legend-color-cell"
         },
         selectors: {
             legend: ".gpiic-ca-pieChart-legend",
             table: ".gpii-ca-pieChart-legend-table",
-            row: ".gpii-ca-pieChart-legend-table-row"
+            row: ".gpii-ca-pieChart-legend-table-row",
+            legendColorCell: ".gpii-ca-pieChart-legend-table-row-legend-color-cell"
         },
         events: {
             onLegendCreated: null  // Fire when the legend is created. Ready to register D3 DOM event listeners
@@ -67,6 +69,7 @@ https://github.com/gpii/universal/LICENSE.txt
             color = that.color,
             dataSet = that.model.dataSet,
             rowClass = that.classes.row,
+            legendColorCellClass = that.classes.legendColorCell,
             sort = l.sort;
         var tbody = table.selectAll("tbody");
 
@@ -87,7 +90,8 @@ https://github.com/gpii/universal/LICENSE.txt
         .attr({
           "style": function(d, i) {
             return "background-color: "+color(i)+";";
-          }
+          },
+          "class": legendColorCellClass
         });
 
         addedRows
@@ -120,7 +124,6 @@ https://github.com/gpii/universal/LICENSE.txt
           dataSet = that.model.dataSet,
           l = that.options.legendOptions,
           colors = l.colors,
-          legendClass = that.classes.legend,
           tableClass = that.classes.table;
 
           if (dataSet.length === 0) {
