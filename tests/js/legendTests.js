@@ -16,7 +16,7 @@ https://github.com/gpii/universal/LICENSE.txt
 
     fluid.defaults("gpii.tests.chartAuthoring.pieChart.legend", {
         gradeNames: ["gpii.chartAuthoring.pieChart.legend", "autoInit"],
-        pieOptions: {
+        legendOptions: {
             width: 200,
             height: 200,
             colors: ["#000000", "#ff0000", "#00ff00", "#0000ff", "#aabbcc", "#ccbbaa"]

@@ -58,42 +58,60 @@ https://github.com/gpii/universal/LICENSE.txt
     });
 
     gpii.chartAuthoring.pieChart.legend.draw = function(that) {
-        console.log("gpii.chartAuthoring.pieChart.legend.draw function");
+        // console.log("gpii.chartAuthoring.pieChart.legend.draw function");
 
         var table = that.table,
             color = that.color,
             dataSet = that.model.dataSet;
 
-        var tbody = table.selectAll("tbody")
+        var thead = table.selectAll("thead");
+
+        thead.append("th")
+             .attr({
+               "scope":"col"
+             })
+             .html("Label");
+        thead.append("th")
+        .attr({
+          "scope":"col"
+        })
+        .html("Value");
+
+        var tbody = table.selectAll("tbody");
 
         var rows = tbody.selectAll("tr")
-            .data(dataSet);
+            .data(dataSet)
+            .enter()
+            .append("tr");
 
-        // Append rows in legend
+        rows.append("td")
+        .attr({
+          "style": function(d, i) {
+            return "background-color: "+color(i)+";";
+          }
+        })
+        .html(function(d, i) {
+          return d.label;
+        });
 
-        rows.enter()
-            .append("tr")
-            .append("td")
-            .attr({
-              "style": function(d, i) {
-                return "background-color: "+color(i)+";"
-              }
-            })
-            .html(function(d,i) {
-              return d.label + " : " + d.value;
-            });
+        rows.append("td")
+        .html(function(d,i) {
+          return d.value;
+        });
     };
 
     gpii.chartAuthoring.pieChart.legend.create = function(that) {
-      console.log("gpii.chartAuthoring.pieChart.legend.create function");
+      // console.log("gpii.chartAuthoring.pieChart.legend.create function");
       var container = that.container,
           dataSet = that.model.dataSet,
           l = that.options.legendOptions,
           colors = l.colors,
           legendClass = that.classes.legend,
           tableClass = that.classes.table;
-          console.log("tableClass: " + tableClass);
-          console.log("that.classes.table: " + that.classes.table);
+
+          if (dataSet.length === 0) {
+              return;
+          }
 
           that.color = colors ? d3.scale.ordinal().range(colors) : d3.scale.category10();
 
