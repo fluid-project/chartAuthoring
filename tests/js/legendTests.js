@@ -10,8 +10,6 @@ https://github.com/gpii/universal/LICENSE.txt
 
 (function ($, fluid) {
 
-    "use strict";
-
     fluid.registerNamespace("gpii.tests.chartAuthoring");
 
     fluid.defaults("gpii.tests.chartAuthoring.pieChart.legend", {
