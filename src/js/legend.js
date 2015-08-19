@@ -62,27 +62,27 @@ https://github.com/gpii/universal/LICENSE.txt
             draw: {
                 funcName: "gpii.chartAuthoring.pieChart.legend.draw",
                 args: ["{that}"]
-              }
+            }
         }
     });
 
     // Takes the dataSet array and the color array, and returns a consolidated object array to ease sorting and other operations while keeping colors "correct"
 
     gpii.chartAuthoring.pieChart.legend.consolidateDataAndColors = function(dataSet, colors) {
-      var c = [];
-      for(var i=0; i<dataSet.length; i++) {
-        var d = {
-          id: dataSet[i].id,
-          label: dataSet[i].label,
-          value: dataSet[i].value,
-          color: colors(i)
-        };
-        c.push(d);
-      }
-      return c;
+        var c = [];
+        for(var i=0; i<dataSet.length; i++) {
+            var d = {
+                id: dataSet[i].id,
+                label: dataSet[i].label,
+                value: dataSet[i].value,
+                color: colors(i)
+            };
+            c.push(d);
+        }
+        return c;
     };
 
-    gpii.chartAuthoring.pieChart.legend.draw = function(that) {        
+    gpii.chartAuthoring.pieChart.legend.draw = function(that) {
 
         var table = that.table,
             l = that.options.legendOptions,
@@ -96,7 +96,7 @@ https://github.com/gpii/universal/LICENSE.txt
 
         var rows = tbody.selectAll("tr")
             .data(dataSet, function(d) {
-              return d.id;
+                return d.id;
             });
 
         var addedRows = rows.enter().append("tr");
@@ -104,22 +104,22 @@ https://github.com/gpii/universal/LICENSE.txt
 
         addedRows
         .attr({
-          "class": rowClass
+            "class": rowClass
         });
 
         addedRows
         .append("td")
         .attr({
-          "style": function(d, i) {
-            return "background-color: "+d.color+";";
-          },
-          "class": legendColorCellClass
+            "style": function(d, i) {
+                return "background-color: "+d.color+";";
+            },
+            "class": legendColorCellClass
         });
 
         addedRows
         .append("td")
         .attr({
-          "class": legendLabelCellClass
+            "class": legendLabelCellClass
         })
         .html(function(d, i) {
           return d.label;
