@@ -41,7 +41,7 @@ https://github.com/gpii/universal/LICENSE.txt
             }
             else if (window.getComputedStyle) {
                 var bg = document.defaultView.getComputedStyle(elem, null).getPropertyValue("background-color");
-                }
+            }
             if (bg.search("rgb") == -1)
                 return bg;
             else {
@@ -155,7 +155,7 @@ https://github.com/gpii/universal/LICENSE.txt
                 dataSet: gpii.tests.chartAuthoring.objectArray
             },
             legendOptions: {
-              sort:false
+                sort:false
             }
         });
 
@@ -187,7 +187,7 @@ https://github.com/gpii/universal/LICENSE.txt
                 dataSet: gpii.tests.chartAuthoring.objectArray
             },
             legendOptions: {
-              sort:true
+                sort:true
             }
         });
 
