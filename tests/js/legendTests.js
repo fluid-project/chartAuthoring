@@ -111,8 +111,15 @@ https://github.com/gpii/universal/LICENSE.txt
 ];
 
     gpii.tests.chartAuthoring.mouseOverListener = function (data, i, that) {
-        that.mouseOverListenerCalled = true;
+        that.mouseOverListenerCalled = true;    
     };
+
+    gpii.tests.chartAuthoring.testMouseOverListener = function(that) {
+      jqUnit.assertFalse("The mouseover listener for legend rows has not been triggered", that.mouseOverListenerCalled);
+      var oneD3Row = that.jQueryToD3($(that.locate("row")[0]));
+      oneD3Row.on("mouseover")();
+      jqUnit.assertTrue("The mouseover listener for legend rows has been triggered", that.mouseOverListenerCalled);
+    }
 
     gpii.tests.chartAuthoring.validateLegend = function (that) {
         var table = that.locate("table");
@@ -140,7 +147,7 @@ https://github.com/gpii/universal/LICENSE.txt
     };
 
     jqUnit.test("Test the legend component created based off an array of objects, unsorted", function () {
-        jqUnit.expect(42);
+        jqUnit.expect(44);
 
         var that = gpii.tests.chartAuthoring.pieChart.legend(".gpii-ca-legend-objects-unsorted", {
             model: {
@@ -154,6 +161,8 @@ https://github.com/gpii/universal/LICENSE.txt
         // Legend is created from dataset
 
         gpii.tests.chartAuthoring.validateLegend(that);
+
+        gpii.tests.chartAuthoring.testMouseOverListener(that);
 
         // Legend is redrawn when data set changes
 
@@ -170,7 +179,7 @@ https://github.com/gpii/universal/LICENSE.txt
     });
 
     jqUnit.test("Test the legend component created based off an array of objects, sorted", function () {
-        jqUnit.expect(42);
+        jqUnit.expect(44);
 
         var that = gpii.tests.chartAuthoring.pieChart.legend(".gpii-ca-legend-objects-sorted", {
             model: {
@@ -184,6 +193,8 @@ https://github.com/gpii/universal/LICENSE.txt
         // Legend is created from dataset
 
         gpii.tests.chartAuthoring.validateLegend(that);
+
+        gpii.tests.chartAuthoring.testMouseOverListener(that);
 
         // Legend is redrawn when data set changes
 
