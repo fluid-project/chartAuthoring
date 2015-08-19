@@ -31,8 +31,8 @@ https://github.com/gpii/universal/LICENSE.txt
             table: "gpii-ca-pieChart-legend-table",
             row: "gpii-ca-pieChart-legend-table-row",
             legendColorCell: "gpii-ca-pieChart-legend-table-row-legend-color-cell",
-            labelCell: "gpii-ca-pieChart-legend-table-row-legend-color-cell",
-            valueCell: "gpii-ca-pieChart-legend-table-row-legend-color-cell"
+            labelCell: "gpii-ca-pieChart-legend-table-row-legend-label-cell",
+            valueCell: "gpii-ca-pieChart-legend-table-row-legend-value-cell"
 
         },
         selectors: {
@@ -40,8 +40,8 @@ https://github.com/gpii/universal/LICENSE.txt
             table: ".gpii-ca-pieChart-legend-table",
             row: ".gpii-ca-pieChart-legend-table-row",
             legendColorCell: ".gpii-ca-pieChart-legend-table-row-legend-color-cell",
-            labelCell: ".gpii-ca-pieChart-legend-table-row-legend-color-cell",
-            valueCell: ".gpii-ca-pieChart-legend-table-row-legend-color-cell"
+            labelCell: ".gpii-ca-pieChart-legend-table-row-legend-label-cell",
+            valueCell: ".gpii-ca-pieChart-legend-table-row-legend-value-cell"
         },
         events: {
             onLegendCreated: null  // Fire when the legend is created. Ready to register D3 DOM event listeners
@@ -66,7 +66,8 @@ https://github.com/gpii/universal/LICENSE.txt
         }
     });
 
-    // Takes the dataSet array and a color array, and returns a consolidated object array
+    // Takes the dataSet array and the color array, and returns a consolidated object array to ease sorting and other operations while keeping colors "correct"
+
     gpii.chartAuthoring.pieChart.legend.consolidateDataAndColors = function(dataSet, colors) {
       var c = [];
       for(var i=0; i<dataSet.length; i++) {
@@ -81,18 +82,17 @@ https://github.com/gpii/universal/LICENSE.txt
       return c;
     };
 
-    gpii.chartAuthoring.pieChart.legend.draw = function(that) {
-        // console.log("gpii.chartAuthoring.pieChart.legend.draw function");
+    gpii.chartAuthoring.pieChart.legend.draw = function(that) {        
 
         var table = that.table,
             l = that.options.legendOptions,
             dataSet = gpii.chartAuthoring.pieChart.legend.consolidateDataAndColors(that.model.dataSet,that.color),
             rowClass = that.classes.row,
             legendColorCellClass = that.classes.legendColorCell,
+            legendLabelCellClass = that.classes.labelCell,
+            legendValueCellClass = that.classes.valueCell,
             sort = l.sort;
         var tbody = table.selectAll("tbody");
-console.log(dataSet);
-
 
         var rows = tbody.selectAll("tr")
             .data(dataSet, function(d) {
@@ -100,6 +100,7 @@ console.log(dataSet);
             });
 
         var addedRows = rows.enter().append("tr");
+
 
         addedRows
         .attr({
@@ -117,14 +118,21 @@ console.log(dataSet);
 
         addedRows
         .append("td")
+        .attr({
+          "class": legendLabelCellClass
+        })
         .html(function(d, i) {
           return d.label;
         });
 
         addedRows.append("td")
+        .attr({
+          "class": legendValueCellClass
+        })
         .html(function(d,i) {
           return d.value;
         });
+
 
         var removedRows = rows.exit();
 
@@ -140,7 +148,6 @@ console.log(dataSet);
     };
 
     gpii.chartAuthoring.pieChart.legend.create = function(that) {
-      // console.log("gpii.chartAuthoring.pieChart.legend.create function");
       var container = that.container,
           dataSet = that.model.dataSet,
           l = that.options.legendOptions,

@@ -59,7 +59,7 @@ https://github.com/gpii/universal/LICENSE.txt
         label: "One"
     }, {
         id: "id1",
-        value: 10,
+        value: 67,
         label: "Two"
     }, {
         id: "id2",
@@ -77,7 +77,7 @@ https://github.com/gpii/universal/LICENSE.txt
         label: "One"
     }, {
         id: "id1",
-        value: 10,
+        value: 67,
         label: "Two"
     }, {
         id: "id2",
@@ -101,7 +101,7 @@ https://github.com/gpii/universal/LICENSE.txt
       label: "One"
   }, {
       id: "id1",
-      value: 10,
+      value: 67,
       label: "Two"
   }, {
       id: "id2",
@@ -129,25 +129,80 @@ https://github.com/gpii/universal/LICENSE.txt
     };
 
 
-    jqUnit.test("Test the legend component created based off an array of objects", function () {
-        jqUnit.expect(6);
+    gpii.tests.chartAuthoring.validateFirstLegendRowValue = function (that, expectedValue, testMessage) {
+      var firstLegendRowValue = $(that.locate("valueCell")[0]).html();
+      jqUnit.assertEquals(testMessage, expectedValue, firstLegendRowValue);
+    }
 
-        var that = gpii.tests.chartAuthoring.pieChart.legend(".gpii-ca-legend-objects", {
+    jqUnit.test("Test the legend component created based off an array of objects, unsorted", function () {
+        jqUnit.expect(19);
+
+        var that = gpii.tests.chartAuthoring.pieChart.legend(".gpii-ca-legend-objects-unsorted", {
             model: {
                 dataSet: gpii.tests.chartAuthoring.objectArray
+            },
+            legendOptions: {
+              sort:false
             }
         });
 
+        // Legend is created from dataset
+
         gpii.tests.chartAuthoring.validateLegend(that);
-        /*
-        setTimeout(function() {
-          that.applier.change("dataSet", gpii.tests.chartAuthoring.objectArrayAdd);
-        }, 3000);
-        setTimeout(function() {
-          that.applier.change("dataSet", gpii.tests.chartAuthoring.objectArrayRemove);
-        }, 6000);
-        */
+
+        gpii.tests.chartAuthoring.validateFirstLegendRowValue(that, that.model.dataSet[0].value, "The value of first item in dataset as specified is the first item in the legend (no sorting)");
+
+        // Legend is redrawn when data set changes
+
+        // Item added to dataset
+
+        that.applier.change("dataSet", gpii.tests.chartAuthoring.objectArrayAdd);
+        gpii.tests.chartAuthoring.validateLegend(that);
+
+        // Item removed from dataset
+
+        that.applier.change("dataSet", gpii.tests.chartAuthoring.objectArrayRemove);
+        gpii.tests.chartAuthoring.validateLegend(that);
 
     });
+
+    jqUnit.test("Test the legend component created based off an array of objects, sorted", function () {
+        jqUnit.expect(19);
+
+        var that = gpii.tests.chartAuthoring.pieChart.legend(".gpii-ca-legend-objects-sorted", {
+            model: {
+                dataSet: gpii.tests.chartAuthoring.objectArray
+            },
+            legendOptions: {
+              sort:true
+            }
+        });
+
+        // Legend is created from dataset
+
+        gpii.tests.chartAuthoring.validateLegend(that);
+
+
+        // Ascending sort the dataset for test
+        that.model.dataSet.sort(function(a,b) {
+          return b.value - a.value;
+        });
+
+        gpii.tests.chartAuthoring.validateFirstLegendRowValue(that, that.model.dataSet[0].value, "The value of highest-value item in dataset as specified is the first item in the legend (sorting)");
+
+        // Legend is redrawn when data set changes
+
+        // Item added to dataset
+
+        that.applier.change("dataSet", gpii.tests.chartAuthoring.objectArrayAdd);
+        gpii.tests.chartAuthoring.validateLegend(that);
+
+        // Item removed from dataset
+
+        that.applier.change("dataSet", gpii.tests.chartAuthoring.objectArrayRemove);
+        gpii.tests.chartAuthoring.validateLegend(that);
+
+    });
+
 
 })(jQuery, fluid);
