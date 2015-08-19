@@ -36,11 +36,12 @@ https://github.com/gpii/universal/LICENSE.txt
     // See http://stackoverflow.com/questions/6177454/can-i-force-jquery-cssbackgroundcolor-returns-on-hexadecimal-format
     $.cssHooks.backgroundColor = {
         get: function(elem) {
-            if (elem.currentStyle)
+            if (elem.currentStyle) {
                 var bg = elem.currentStyle["backgroundColor"];
-            else if (window.getComputedStyle)
-                var bg = document.defaultView.getComputedStyle(elem,
-                    null).getPropertyValue("background-color");
+            }
+            else if (window.getComputedStyle) {
+                var bg = document.defaultView.getComputedStyle(elem, null).getPropertyValue("background-color");
+                }
             if (bg.search("rgb") == -1)
                 return bg;
             else {
@@ -111,7 +112,7 @@ https://github.com/gpii/universal/LICENSE.txt
 ];
 
     gpii.tests.chartAuthoring.mouseOverListener = function (data, i, that) {
-        that.mouseOverListenerCalled = true;    
+        that.mouseOverListenerCalled = true;
     };
 
     gpii.tests.chartAuthoring.testMouseOverListener = function(that) {
