@@ -164,7 +164,7 @@ https://github.com/gpii/universal/LICENSE.txt
             .append("table")
             .attr({
             "class": tableClass
-            });
+        });
 
         that.table.append("thead");
         that.table.append("tbody");
@@ -173,20 +173,20 @@ https://github.com/gpii/universal/LICENSE.txt
 
         thead.append("th")
             .attr({
-             "scope":"col"
+                "scope":"col"
             })
             .html("Legend");
 
         thead.append("th")
             .attr({
-             "scope":"col"
+                "scope":"col"
             })
             .html("Label");
 
-      thead.append("th")
-      .attr({
-        "scope":"col"
-      })
+        thead.append("th")
+            .attr({
+            "scope":"col"
+        })
       .html("Value");
 
         that.draw();
