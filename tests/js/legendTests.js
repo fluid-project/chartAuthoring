@@ -96,30 +96,30 @@ https://github.com/gpii/universal/LICENSE.txt
     }
   ];
 
-  gpii.tests.chartAuthoring.objectArrayRemove = [{
-      id: "id0",
-      value: 15,
-      label: "One"
-  }, {
-      id: "id1",
-      value: 67,
-      label: "Two"
-  }, {
-      id: "id2",
-      value: 20,
-      label: "Three"
-  }
-];
+    gpii.tests.chartAuthoring.objectArrayRemove = [{
+        id: "id0",
+        value: 15,
+        label: "One"
+    }, {
+        id: "id1",
+        value: 67,
+        label: "Two"
+    }, {
+        id: "id2",
+        value: 20,
+        label: "Three"
+    }
+    ];
 
     gpii.tests.chartAuthoring.mouseOverListener = function (data, i, that) {
         that.mouseOverListenerCalled = true;
     };
 
     gpii.tests.chartAuthoring.testMouseOverListener = function(that) {
-      jqUnit.assertFalse("The mouseover listener for legend rows has not been triggered", that.mouseOverListenerCalled);
-      var oneD3Row = that.jQueryToD3($(that.locate("row")[0]));
-      oneD3Row.on("mouseover")();
-      jqUnit.assertTrue("The mouseover listener for legend rows has been triggered", that.mouseOverListenerCalled);
+        jqUnit.assertFalse("The mouseover listener for legend rows has not been triggered", that.mouseOverListenerCalled);
+        var oneD3Row = that.jQueryToD3($(that.locate("row")[0]));
+        oneD3Row.on("mouseover")();
+        jqUnit.assertTrue("The mouseover listener for legend rows has been triggered", that.mouseOverListenerCalled);
     }
 
     gpii.tests.chartAuthoring.validateLegend = function (that) {
@@ -140,8 +140,8 @@ https://github.com/gpii/universal/LICENSE.txt
             jqUnit.assertEquals("The data labels are applied correctly in the legend", d.label, ($(this).html()));
         });
 
-        var d3LabelCells = that.jQueryToD3($(that.locate("valueCell")));
-        d3LabelCells.each(function (d, i) {
+        var d3ValueCells = that.jQueryToD3($(that.locate("valueCell")));
+        d3ValueCells.each(function (d, i) {
             jqUnit.assertEquals("The data values are applied correctly in the legend", d.value, ($(this).html()));
         });
 
