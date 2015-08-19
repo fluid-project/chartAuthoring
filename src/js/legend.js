@@ -122,15 +122,15 @@ https://github.com/gpii/universal/LICENSE.txt
             "class": legendLabelCellClass
         })
         .html(function(d, i) {
-          return d.label;
+            return d.label;
         });
 
         addedRows.append("td")
         .attr({
-          "class": legendValueCellClass
+            "class": legendValueCellClass
         })
         .html(function(d,i) {
-          return d.value;
+            return d.value;
         });
 
 
@@ -140,58 +140,58 @@ https://github.com/gpii/universal/LICENSE.txt
 
 
         if(sort === true) {
-          rows.sort(function(a,b){
-            return b.value - a.value;
-          });
+            rows.sort(function(a,b){
+                return b.value - a.value;
+            });
         }
 
     };
 
     gpii.chartAuthoring.pieChart.legend.create = function(that) {
-      var container = that.container,
-          dataSet = that.model.dataSet,
-          l = that.options.legendOptions,
-          colors = l.colors,
-          tableClass = that.classes.table;
+        var container = that.container,
+            dataSet = that.model.dataSet,
+            l = that.options.legendOptions,
+            colors = l.colors,
+            tableClass = that.classes.table;
 
-          if (dataSet.length === 0) {
-              return;
-          }
+        if (dataSet.length === 0) {
+            return;
+        }
 
-          that.color = colors ? d3.scale.ordinal().range(colors) : d3.scale.category10();
+        that.color = colors ? d3.scale.ordinal().range(colors) : d3.scale.category10();
 
-          that.table = that.jQueryToD3(container)
-              .append("table")
-              .attr({
-                "class": tableClass
-              });
+        that.table = that.jQueryToD3(container)
+            .append("table")
+            .attr({
+            "class": tableClass
+            });
 
-          that.table.append("thead");
-          that.table.append("tbody");
+        that.table.append("thead");
+        that.table.append("tbody");
 
-          var thead = that.table.selectAll("thead");
+        var thead = that.table.selectAll("thead");
 
-          thead.append("th")
-               .attr({
-                 "scope":"col"
-               })
-               .html("Legend");
+        thead.append("th")
+            .attr({
+             "scope":"col"
+            })
+            .html("Legend");
 
-          thead.append("th")
-               .attr({
-                 "scope":"col"
-               })
-               .html("Label");
+        thead.append("th")
+            .attr({
+             "scope":"col"
+            })
+            .html("Label");
 
-          thead.append("th")
-          .attr({
-            "scope":"col"
-          })
-          .html("Value");
+      thead.append("th")
+      .attr({
+        "scope":"col"
+      })
+      .html("Value");
 
-          that.draw();
+        that.draw();
 
-          that.events.onLegendCreated.fire();
+        that.events.onLegendCreated.fire();
 
     };
 
