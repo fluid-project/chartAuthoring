@@ -120,22 +120,27 @@ https://github.com/gpii/universal/LICENSE.txt
         // Test the legend creation
         jqUnit.assertNotEquals("The TABLE element for the legend is created with the proper selector", 0, table.length);
 
-        jqUnit.assertEquals("A row has been created for each value in the dataset, with proper selectors", that.model.dataSet.length, that.locate("row").length);
+        jqUnit.assertEquals("A TR element has been created for each value in the dataset, with proper selectors", that.model.dataSet.length, that.locate("row").length);
 
-        var d3Rows = that.jQueryToD3($(that.locate("legendColorCell")));
-        d3Rows.each(function (d, i) {
-            jqUnit.assertEquals("The legend colors are filled correctly", d.color, ($(this).css("background-color")));
+        var d3ColorCells = that.jQueryToD3($(that.locate("legendColorCell")));
+        d3ColorCells.each(function (d, i) {
+            jqUnit.assertEquals("The data colors are filled correctly in the legend", d.color, ($(this).css("background-color")));
         });
+
+        var d3LabelCells = that.jQueryToD3($(that.locate("labelCell")));
+        d3LabelCells.each(function (d, i) {
+            jqUnit.assertEquals("The data labels are applied correctly in the legend", d.label, ($(this).html()));
+        });
+
+        var d3LabelCells = that.jQueryToD3($(that.locate("valueCell")));
+        d3LabelCells.each(function (d, i) {
+            jqUnit.assertEquals("The data values are applied correctly in the legend", d.value, ($(this).html()));
+        });
+
     };
 
-
-    gpii.tests.chartAuthoring.validateFirstLegendRowValue = function (that, expectedValue, testMessage) {
-      var firstLegendRowValue = $(that.locate("valueCell")[0]).html();
-      jqUnit.assertEquals(testMessage, expectedValue, firstLegendRowValue);
-    }
-
     jqUnit.test("Test the legend component created based off an array of objects, unsorted", function () {
-        jqUnit.expect(19);
+        jqUnit.expect(42);
 
         var that = gpii.tests.chartAuthoring.pieChart.legend(".gpii-ca-legend-objects-unsorted", {
             model: {
@@ -149,8 +154,6 @@ https://github.com/gpii/universal/LICENSE.txt
         // Legend is created from dataset
 
         gpii.tests.chartAuthoring.validateLegend(that);
-
-        gpii.tests.chartAuthoring.validateFirstLegendRowValue(that, that.model.dataSet[0].value, "The value of first item in dataset as specified is the first item in the legend (no sorting)");
 
         // Legend is redrawn when data set changes
 
@@ -167,7 +170,7 @@ https://github.com/gpii/universal/LICENSE.txt
     });
 
     jqUnit.test("Test the legend component created based off an array of objects, sorted", function () {
-        jqUnit.expect(19);
+        jqUnit.expect(42);
 
         var that = gpii.tests.chartAuthoring.pieChart.legend(".gpii-ca-legend-objects-sorted", {
             model: {
@@ -181,14 +184,6 @@ https://github.com/gpii/universal/LICENSE.txt
         // Legend is created from dataset
 
         gpii.tests.chartAuthoring.validateLegend(that);
-
-
-        // Ascending sort the dataset for test
-        that.model.dataSet.sort(function(a,b) {
-          return b.value - a.value;
-        });
-
-        gpii.tests.chartAuthoring.validateFirstLegendRowValue(that, that.model.dataSet[0].value, "The value of highest-value item in dataset as specified is the first item in the legend (sorting)");
 
         // Legend is redrawn when data set changes
 
