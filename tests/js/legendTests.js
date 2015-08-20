@@ -10,6 +10,8 @@ https://github.com/gpii/universal/LICENSE.txt
 
 (function ($, fluid) {
 
+    "use strict";
+
     fluid.registerNamespace("gpii.tests.chartAuthoring");
 
     fluid.defaults("gpii.tests.chartAuthoring.pieChart.legend", {
@@ -29,28 +31,6 @@ https://github.com/gpii/universal/LICENSE.txt
             mouseOverListenerCalled: false
         }
     });
-
-    // Necessary to get jQuery to return .css("background-color") value in hexadecimal
-    // See http://stackoverflow.com/questions/6177454/can-i-force-jquery-cssbackgroundcolor-returns-on-hexadecimal-format
-    $.cssHooks.backgroundColor = {
-        get: function(elem) {
-            if (elem.currentStyle) {
-                var bg = elem.currentStyle["backgroundColor"];
-            }
-            else if (window.getComputedStyle) {
-                var bg = document.defaultView.getComputedStyle(elem, null).getPropertyValue("background-color");
-            }
-            if (bg.search("rgb") == -1)
-                return bg;
-            else {
-                bg = bg.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
-                function hex(x) {
-                    return ("0" + parseInt(x).toString(16)).slice(-2);
-                }
-                return "#" + hex(bg[1]) + hex(bg[2]) + hex(bg[3]);
-            }
-        }
-    }
 
     gpii.tests.chartAuthoring.objectArray = [{
         id: "id0",
@@ -94,30 +74,41 @@ https://github.com/gpii/universal/LICENSE.txt
     }
   ];
 
-    gpii.tests.chartAuthoring.objectArrayRemove = [{
-        id: "id0",
-        value: 15,
-        label: "One"
-    }, {
-        id: "id1",
-        value: 67,
-        label: "Two"
-    }, {
-        id: "id2",
-        value: 20,
-        label: "Three"
-    }
-    ];
+  gpii.tests.chartAuthoring.objectArrayRemove = [{
+      id: "id0",
+      value: 15,
+      label: "One"
+  }, {
+      id: "id1",
+      value: 67,
+      label: "Two"
+  }, {
+      id: "id2",
+      value: 20,
+      label: "Three"
+  }
+];
 
     gpii.tests.chartAuthoring.mouseOverListener = function (data, i, that) {
         that.mouseOverListenerCalled = true;
     };
 
+    // convenience function for easing testing of colors (jquery returns only RGB)
+    // based off example at https://gist.github.com/lrvick/2080648
+    gpii.tests.chartAuthoring.hexToRGB = function(hexStr){
+        // note: hexStr should be #rrggbb
+        var hex = parseInt(hexStr.substring(1), 16);
+        var r = (hex & 0xff0000) >> 16;
+        var g = (hex & 0x00ff00) >> 8;
+        var b = hex & 0x0000ff;
+        return "rgb("+r+", "+g + ", " +b + ")";
+    }
+
     gpii.tests.chartAuthoring.testMouseOverListener = function(that) {
-        jqUnit.assertFalse("The mouseover listener for legend rows has not been triggered", that.mouseOverListenerCalled);
-        var oneD3Row = that.jQueryToD3($(that.locate("row")[0]));
-        oneD3Row.on("mouseover")();
-        jqUnit.assertTrue("The mouseover listener for legend rows has been triggered", that.mouseOverListenerCalled);
+      jqUnit.assertFalse("The mouseover listener for legend rows has not been triggered", that.mouseOverListenerCalled);
+      var oneD3Row = that.jQueryToD3($(that.locate("row")[0]));
+      oneD3Row.on("mouseover")();
+      jqUnit.assertTrue("The mouseover listener for legend rows has been triggered", that.mouseOverListenerCalled);
     }
 
     gpii.tests.chartAuthoring.validateLegend = function (that) {
@@ -130,7 +121,8 @@ https://github.com/gpii/universal/LICENSE.txt
 
         var d3ColorCells = that.jQueryToD3($(that.locate("legendColorCell")));
         d3ColorCells.each(function (d, i) {
-            jqUnit.assertEquals("The data colors are filled correctly in the legend", d.color, ($(this).css("background-color")));
+
+            jqUnit.assertEquals("The data colors are filled correctly in the legend", gpii.tests.chartAuthoring.hexToRGB(d.color), ($(this).css("background-color")));
         });
 
         var d3LabelCells = that.jQueryToD3($(that.locate("labelCell")));
@@ -138,8 +130,8 @@ https://github.com/gpii/universal/LICENSE.txt
             jqUnit.assertEquals("The data labels are applied correctly in the legend", d.label, ($(this).html()));
         });
 
-        var d3ValueCells = that.jQueryToD3($(that.locate("valueCell")));
-        d3ValueCells.each(function (d, i) {
+        var d3LabelCells = that.jQueryToD3($(that.locate("valueCell")));
+        d3LabelCells.each(function (d, i) {
             jqUnit.assertEquals("The data values are applied correctly in the legend", d.value, ($(this).html()));
         });
 
@@ -153,7 +145,7 @@ https://github.com/gpii/universal/LICENSE.txt
                 dataSet: gpii.tests.chartAuthoring.objectArray
             },
             legendOptions: {
-                sort:false
+              sort:false
             }
         });
 
@@ -185,7 +177,7 @@ https://github.com/gpii/universal/LICENSE.txt
                 dataSet: gpii.tests.chartAuthoring.objectArray
             },
             legendOptions: {
-                sort:true
+              sort:true
             }
         });
 
