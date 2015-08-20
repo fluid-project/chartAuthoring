@@ -94,7 +94,7 @@ https://github.com/gpii/universal/LICENSE.txt
     };
 
     // convenience function for easing testing of colors (jquery returns only RGB)
-    // based off example at https://gist.github.com/lrvick/2080648
+    // Based off http://stackoverflow.com/questions/4262417/jquery-hex-to-rgb-calculation-different-between-browsers
     gpii.tests.chartAuthoring.hexToRGB = function(hexStr){
         // note: hexStr should be #rrggbb
         var hex = parseInt(hexStr.substring(1), 16);
