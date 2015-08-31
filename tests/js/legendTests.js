@@ -99,7 +99,7 @@ https://github.com/gpii/universal/LICENSE.txt
         var r = (hex & 0xff0000) >> 16;
         var g = (hex & 0x00ff00) >> 8;
         var b = hex & 0x0000ff;
-        return "rgb("+r+", "+g + ", " +b + ")";
+        return "rgb(" + r + ", " + g + ", " + b + ")";
     };
 
     gpii.tests.chartAuthoring.testMouseOverListener = function (that) {

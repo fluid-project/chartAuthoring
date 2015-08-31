@@ -141,7 +141,7 @@ https://github.com/gpii/universal/LICENSE.txt
         .append("td")
         .attr({
             "style": function (d) {
-                return "background-color: "+d.color+";";
+                return "background-color: " + d.color + ";";
             },
             "class": legendColorCellClass
         });
