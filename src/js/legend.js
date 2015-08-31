@@ -167,7 +167,7 @@ https://github.com/gpii/universal/LICENSE.txt
 
         removedRows.remove();
 
-        if(sort === true) {
+        if (sort) {
             rows.sort(function (a,b){
                 return b.value - a.value;
             });
