@@ -29,6 +29,17 @@ https://github.com/gpii/universal/LICENSE.txt
             colors: null, // An array of colors for the legend generated for corresponding values of model.dataSet
             sort: true // Whether or not to sort the data by values when creating the legend
         },
+        modelRelay: [{
+          target: "dataSetWithColors",
+          singleTransform: {
+            type: "fluid.transforms.free",
+            args: {
+              "dataSet": "{that}.model.dataSet",
+              "colors": "{that}.options.legendOptions.colors"
+            },
+            func: "gpii.chartAuthoring.pieChart.legend.consolidateDataAndColors"
+          }
+        }],
         styles: {
             legend: "gpii-ca-pieChart-legend",
             table: "gpii-ca-pieChart-legend-table",
@@ -68,26 +79,36 @@ https://github.com/gpii/universal/LICENSE.txt
         }
     });
 
+    // Return a D3 color scale based on user supplied colors or the d3.scale.category10() defaults
+
+    gpii.chartAuthoring.pieChart.legend.getColorScale = function (colors) {
+      return colors ? d3.scale.ordinal().range(colors) : d3.scale.category10();
+    };
+
     // Takes the dataSet array and the color array, and returns a consolidated object array to ease sorting and other operations while keeping colors "correct"
 
-    gpii.chartAuthoring.pieChart.legend.consolidateDataAndColors = function (dataSet, colors) {
+    gpii.chartAuthoring.pieChart.legend.consolidateDataAndColors = function (model) {
+      var dataSet = model.dataSet;
+      var color = gpii.chartAuthoring.pieChart.legend.getColorScale(model.colors);
+
         var c = [];
         for(var i=0; i<dataSet.length; i++) {
             var d = {
                 id: dataSet[i].id,
                 label: dataSet[i].label,
                 value: dataSet[i].value,
-                color: colors(i)
+                color: color(i)
             };
             c.push(d);
         }
         return c;
+
     };
 
-    gpii.chartAuthoring.pieChart.legend.draw = function (that) {
+    gpii.chartAuthoring.pieChart.legend.draw = function (that) {        
         var table = that.table,
             l = that.options.legendOptions,
-            dataSet = gpii.chartAuthoring.pieChart.legend.consolidateDataAndColors(that.model.dataSet,that.color),
+            dataSet = that.model.dataSetWithColors,
             rowClass = that.classes.row,
             legendColorCellClass = that.classes.legendColorCell,
             legendLabelCellClass = that.classes.labelCell,
@@ -155,7 +176,7 @@ https://github.com/gpii/universal/LICENSE.txt
             return;
         }
 
-        that.color = colors ? d3.scale.ordinal().range(colors) : d3.scale.category10();
+        that.color = gpii.chartAuthoring.pieChart.legend.getColorScale(colors);
 
         that.table = that.jQueryToD3(container)
             .append("table")
