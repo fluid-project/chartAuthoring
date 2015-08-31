@@ -76,15 +76,15 @@ https://github.com/gpii/universal/LICENSE.txt
         gpii.tests.chartAuthoring.transforms.testTransforms(gpii.tests.chartAuthoring.transforms.percentageInvalidInputs, {value: null});
     });
 
-    gpii.tests.chartAuthoring.transforms.reduceAdd = function (value, currentValue) {
-        return value + (currentValue || 0);
-    };
-
     gpii.tests.chartAuthoring.transforms.reduceModel = {
         array: [1, 2],
         obj: {
             a: 3,
             b: 4
+        },
+        nested: {
+            a: {value: 5},
+            b: {value: 6}
         }
     };
 
@@ -92,7 +92,9 @@ https://github.com/gpii/universal/LICENSE.txt
         array1: 3,
         array2: 5,
         obj1: 7,
-        obj2: 9
+        obj2: 9,
+        nested1: 11,
+        nested2: 13
     };
 
     gpii.tests.chartAuthoring.transforms.reduceTransforms = {
@@ -100,7 +102,7 @@ https://github.com/gpii/universal/LICENSE.txt
             transform: {
                 type: "gpii.chartAuthoring.transforms.reduce",
                 value: gpii.tests.chartAuthoring.transforms.reduceModel.array,
-                func: "gpii.tests.chartAuthoring.transforms.reduceAdd"
+                func: "gpii.chartAuthoring.transforms.reduce.add"
             }
         },
         array2: {
@@ -108,14 +110,14 @@ https://github.com/gpii/universal/LICENSE.txt
                 type: "gpii.chartAuthoring.transforms.reduce",
                 value: gpii.tests.chartAuthoring.transforms.reduceModel.array,
                 initialValue: 2,
-                func: "gpii.tests.chartAuthoring.transforms.reduceAdd"
+                func: "gpii.chartAuthoring.transforms.reduce.add"
             }
         },
         obj1: {
             transform: {
                 type: "gpii.chartAuthoring.transforms.reduce",
                 value: gpii.tests.chartAuthoring.transforms.reduceModel.obj,
-                func: "gpii.tests.chartAuthoring.transforms.reduceAdd"
+                func: "gpii.chartAuthoring.transforms.reduce.add"
             }
         },
         obj2: {
@@ -123,7 +125,24 @@ https://github.com/gpii/universal/LICENSE.txt
                 type: "gpii.chartAuthoring.transforms.reduce",
                 value: gpii.tests.chartAuthoring.transforms.reduceModel.obj,
                 initialValue: 2,
-                func: "gpii.tests.chartAuthoring.transforms.reduceAdd"
+                func: "gpii.chartAuthoring.transforms.reduce.add"
+            }
+        },
+        nested1: {
+            transform: {
+                type: "gpii.chartAuthoring.transforms.reduce",
+                value: gpii.tests.chartAuthoring.transforms.reduceModel.nested,
+                extractor: "gpii.chartAuthoring.transforms.reduce.valueExtractor",
+                func: "gpii.chartAuthoring.transforms.reduce.add"
+            }
+        },
+        nested2: {
+            transform: {
+                type: "gpii.chartAuthoring.transforms.reduce",
+                value: gpii.tests.chartAuthoring.transforms.reduceModel.nested,
+                extractor: "gpii.chartAuthoring.transforms.reduce.valueExtractor",
+                initialValue: 2,
+                func: "gpii.chartAuthoring.transforms.reduce.add"
             }
         }
     };

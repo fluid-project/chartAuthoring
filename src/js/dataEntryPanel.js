@@ -62,7 +62,9 @@ https://github.com/gpii/universal/LICENSE.txt
             singleTransform: {
                 type: "gpii.chartAuthoring.transforms.reduce",
                 value: "{that}.model.dataEntries",
-                func: "gpii.chartAuthoring.dataEntryPanel.sumDataEntries"
+                initialValue: null,
+                extractor: "gpii.chartAuthoring.transforms.reduce.valueExtractor",
+                func: "gpii.chartAuthoring.transforms.reduce.add"
             }
         }, {
             source: "total.value",
@@ -146,16 +148,6 @@ https://github.com/gpii/universal/LICENSE.txt
 
         that.locate("totalValue").text(totalToRender);
         gpii.chartAuthoring.percentage.render(that.locate("totalPercentage"), percentage, that.options.strings.totalPercentage);
-    };
-
-    gpii.chartAuthoring.dataEntryPanel.sumDataEntries = function (entry, currentValue) {
-        var valToAdd = entry.value;
-
-        if (fluid.isValue(valToAdd) && !isNaN(valToAdd)) {
-            return valToAdd + (currentValue || 0);
-        } else {
-            return fluid.isValue(currentValue) ? currentValue : null;
-        }
     };
 
 })(jQuery, fluid);

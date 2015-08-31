@@ -39,14 +39,30 @@ https://github.com/gpii/universal/LICENSE.txt
 
     gpii.chartAuthoring.transforms.reduce = function (transformSpec) {
         var values = transformSpec.value;
+        var extractor = transformSpec.extractor || "fluid.identity";
 
         if (fluid.isPlainObject(values) && !fluid.isArrayable(values)) {
             values = fluid.values(values);
         }
 
         return fluid.accumulate(values, function (value, currentValue) {
-            return fluid.invokeGlobalFunction(transformSpec.func, [value, currentValue]);
+            value = fluid.invokeGlobalFunction(extractor, [value]);
+
+            if (fluid.isValue(value) && !isNaN(value)) {
+                return fluid.invokeGlobalFunction(transformSpec.func, [value, currentValue]);
+            } else {
+                return currentValue;
+            }
+
         }, transformSpec.initialValue);
+    };
+
+    gpii.chartAuthoring.transforms.reduce.add = function (value, currentValue) {
+        return value + (currentValue || 0);
+    };
+
+    gpii.chartAuthoring.transforms.reduce.valueExtractor = function (obj) {
+        return obj.value;
     };
 
 })(jQuery, fluid);

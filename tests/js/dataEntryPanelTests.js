@@ -12,29 +12,6 @@ https://github.com/gpii/universal/LICENSE.txt
 
     "use strict";
 
-    fluid.registerNamespace("gpii.tests.chartAuthoring.dataEntries");
-
-    gpii.tests.chartAuthoring.dataEntries.vals = [0, 1, 2.2, null, undefined];
-
-    gpii.tests.chartAuthoring.dataEntries.expected = [
-        //entry
-        // 0, 1, 2.2, "", null, undefined
-        [0, 1, 2.2, 0, 0], // currentValue === 0
-        [1, 2, 3.2, 1, 1], // currentValue === 1
-        [2.2, 3.2, 4.4, 2.2, 2.2], // currentValue === 2.2
-        [0, 1, 2.2, null, null], // currentValue === null
-        [0, 1, 2.2, null, null] // currentValue === undefined
-    ];
-
-    jqUnit.test("Test gpii.chartAuthoring.dataEntryPanel.sumDataEntries", function () {
-        fluid.each(gpii.tests.chartAuthoring.dataEntries.vals, function (currentValue, cvIdx) {
-            fluid.each(gpii.tests.chartAuthoring.dataEntries.vals, function (value, valIdx) {
-                var sum = gpii.chartAuthoring.dataEntryPanel.sumDataEntries({value: value}, currentValue);
-                jqUnit.assertEquals("The entry value: '" + value + "' and currentValue: '" + currentValue + "' should be summed together correctly.", gpii.tests.chartAuthoring.dataEntries.expected[cvIdx][valIdx], sum);
-            });
-        });
-    });
-
     jqUnit.test("Test gpii.chartAuthoring.dataEntryPanel.append", function () {
         var container = $(".appendtest");
         var template = "<span class='appendtest-appended'>Appended</span>";
