@@ -153,7 +153,7 @@ https://github.com/gpii/universal/LICENSE.txt
         // Item removed from dataset
 
         that.applier.change("dataSet", gpii.tests.chartAuthoring.objectArrayRemove);
-        gpii.tests.chartAuthoring.validateLegend(that, false);
+        gpii.tests.chartAuthoring.validateLegend(that);
     };
 
     jqUnit.test("Test the legend component created based off an array of objects, unsorted", function () {

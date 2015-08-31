@@ -29,13 +29,21 @@ https://github.com/gpii/universal/LICENSE.txt
             colors: null, // An array of colors for the legend generated for corresponding values of model.dataSet
             sort: true // Whether or not to sort the data by values when creating the legend
         },
+        members: {
+            color: {
+                expander: {
+                    funcName: "gpii.chartAuthoring.pieChart.legend.getColorScale",
+                    args: ["{that}.options.legendOptions.colors"]
+                }
+            }
+        },
         modelRelay: [{
             target: "dataSetWithColors",
             singleTransform: {
                 type: "fluid.transforms.free",
                 args: {
                     "dataSet": "{that}.model.dataSet",
-                    "colors": "{that}.options.legendOptions.colors"
+                    "color": "{that}.color"
                 },
             func: "gpii.chartAuthoring.pieChart.legend.consolidateDataAndColors"
           }
@@ -89,18 +97,19 @@ https://github.com/gpii/universal/LICENSE.txt
 
     gpii.chartAuthoring.pieChart.legend.consolidateDataAndColors = function (model) {
         var dataSet = model.dataSet;
-        var color = gpii.chartAuthoring.pieChart.legend.getColorScale(model.colors);
+        var color = model.color;
 
         var c = [];
-        for(var i=0; i<dataSet.length; i++) {
+        fluid.each(dataSet, function(item, index) {
             var d = {
-                id: dataSet[i].id,
-                label: dataSet[i].label,
-                value: dataSet[i].value,
-                color: color(i)
+                id: item.id,
+                label: item.label,
+                value: item.value,
+                color: color(index)
             };
             c.push(d);
-        }
+        });
+
         return c;
 
     };
@@ -175,8 +184,6 @@ https://github.com/gpii/universal/LICENSE.txt
         if (dataSet.length === 0) {
             return;
         }
-
-        that.color = gpii.chartAuthoring.pieChart.legend.getColorScale(colors);
 
         that.table = that.jQueryToD3(container)
             .append("table")
