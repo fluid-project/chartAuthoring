@@ -103,10 +103,10 @@ https://github.com/gpii/universal/LICENSE.txt
     };
 
     gpii.tests.chartAuthoring.testMouseOverListener = function (that) {
-      jqUnit.assertFalse("The mouseover listener for legend rows has not been triggered", that.mouseOverListenerCalled);
-      var oneD3Row = that.jQueryToD3($(that.locate("row")[0]));
-      oneD3Row.on("mouseover")();
-      jqUnit.assertTrue("The mouseover listener for legend rows has been triggered", that.mouseOverListenerCalled);
+        jqUnit.assertFalse("The mouseover listener for legend rows has not been triggered", that.mouseOverListenerCalled);
+        var oneD3Row = that.jQueryToD3($(that.locate("row")[0]));
+        oneD3Row.on("mouseover")();
+        jqUnit.assertTrue("The mouseover listener for legend rows has been triggered", that.mouseOverListenerCalled);
     };
 
     gpii.tests.chartAuthoring.validateLegend = function (that) {
@@ -137,23 +137,23 @@ https://github.com/gpii/universal/LICENSE.txt
     };
 
     gpii.tests.chartAuthoring.testLegend = function (that) {
-      // Legend is created from dataset
+        // Legend is created from dataset
 
-      gpii.tests.chartAuthoring.validateLegend(that);
+        gpii.tests.chartAuthoring.validateLegend(that);
 
-      gpii.tests.chartAuthoring.testMouseOverListener(that);
+        gpii.tests.chartAuthoring.testMouseOverListener(that);
 
-      // Legend is redrawn when data set changes
+        // Legend is redrawn when data set changes
 
-      // Item added to dataset
+        // Item added to dataset
 
-      that.applier.change("dataSet", gpii.tests.chartAuthoring.objectArrayAdd);
-      gpii.tests.chartAuthoring.validateLegend(that);
+        that.applier.change("dataSet", gpii.tests.chartAuthoring.objectArrayAdd);
+        gpii.tests.chartAuthoring.validateLegend(that);
 
-      // Item removed from dataset
+        // Item removed from dataset
 
-      that.applier.change("dataSet", gpii.tests.chartAuthoring.objectArrayRemove);
-      gpii.tests.chartAuthoring.validateLegend(that, false);
+        that.applier.change("dataSet", gpii.tests.chartAuthoring.objectArrayRemove);
+        gpii.tests.chartAuthoring.validateLegend(that, false);
     };
 
     jqUnit.test("Test the legend component created based off an array of objects, unsorted", function () {
