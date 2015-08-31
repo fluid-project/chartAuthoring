@@ -128,7 +128,9 @@ https://github.com/gpii/universal/LICENSE.txt
             jqUnit.assertEquals("The data labels are applied correctly in the legend", d.label, ($(this).html()));
         });
 
-        d3LabelCells.each(function (d) {
+        var d3ValueCells = that.jQueryToD3($(that.locate("valueCell")));
+
+        d3ValueCells.each(function (d) {
             jqUnit.assertEquals("The data values are applied correctly in the legend", d.value, ($(this).html()));
         });
 

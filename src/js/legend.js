@@ -14,6 +14,9 @@ https://github.com/gpii/universal/LICENSE.txt
 
     fluid.defaults("gpii.chartAuthoring.pieChart.legend", {
         gradeNames: ["gpii.d3ViewComponent", "autoInit"],
+        strings: {
+
+        },
         model: {
             // dataSet accepts:
             // 1. an array of objects. Must contain "id", "value" and "label" variables.
