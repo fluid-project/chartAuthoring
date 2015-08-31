@@ -93,7 +93,7 @@ https://github.com/gpii/universal/LICENSE.txt
 
     // convenience function for easing testing of colors (jquery returns only RGB)
     // Based off http://stackoverflow.com/questions/4262417/jquery-hex-to-rgb-calculation-different-between-browsers
-    gpii.tests.chartAuthoring.hexToRGB = function(hexStr){
+    gpii.tests.chartAuthoring.hexToRGB = function (hexStr){
         // note: hexStr should be #rrggbb
         var hex = parseInt(hexStr.substring(1), 16);
         var r = (hex & 0xff0000) >> 16;
@@ -102,7 +102,7 @@ https://github.com/gpii/universal/LICENSE.txt
         return "rgb("+r+", "+g + ", " +b + ")";
     }
 
-    gpii.tests.chartAuthoring.testMouseOverListener = function(that) {
+    gpii.tests.chartAuthoring.testMouseOverListener = function (that) {
       jqUnit.assertFalse("The mouseover listener for legend rows has not been triggered", that.mouseOverListenerCalled);
       var oneD3Row = that.jQueryToD3($(that.locate("row")[0]));
       oneD3Row.on("mouseover")();

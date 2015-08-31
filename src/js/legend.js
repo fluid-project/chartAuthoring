@@ -65,7 +65,7 @@ https://github.com/gpii/universal/LICENSE.txt
 
     // Takes the dataSet array and the color array, and returns a consolidated object array to ease sorting and other operations while keeping colors "correct"
 
-    gpii.chartAuthoring.pieChart.legend.consolidateDataAndColors = function(dataSet, colors) {
+    gpii.chartAuthoring.pieChart.legend.consolidateDataAndColors = function (dataSet, colors) {
         var c = [];
         for(var i=0; i<dataSet.length; i++) {
             var d = {
@@ -79,7 +79,7 @@ https://github.com/gpii/universal/LICENSE.txt
         return c;
     };
 
-    gpii.chartAuthoring.pieChart.legend.draw = function(that) {
+    gpii.chartAuthoring.pieChart.legend.draw = function (that) {
         var table = that.table,
             l = that.options.legendOptions,
             dataSet = gpii.chartAuthoring.pieChart.legend.consolidateDataAndColors(that.model.dataSet,that.color),
@@ -91,7 +91,7 @@ https://github.com/gpii/universal/LICENSE.txt
         var tbody = table.selectAll("tbody");
 
         var rows = tbody.selectAll("tr")
-            .data(dataSet, function(d) {
+            .data(dataSet, function (d) {
                 return d.id;
             });
 
@@ -105,7 +105,7 @@ https://github.com/gpii/universal/LICENSE.txt
         addedRows
         .append("td")
         .attr({
-            "style": function(d, i) {
+            "style": function (d, i) {
                 return "background-color: "+d.color+";";
             },
             "class": legendColorCellClass
@@ -116,7 +116,7 @@ https://github.com/gpii/universal/LICENSE.txt
         .attr({
             "class": legendLabelCellClass
         })
-        .html(function(d, i) {
+        .html(function (d, i) {
             return d.label;
         });
 
@@ -124,7 +124,7 @@ https://github.com/gpii/universal/LICENSE.txt
         .attr({
             "class": legendValueCellClass
         })
-        .html(function(d,i) {
+        .html(function (d,i) {
             return d.value;
         });
 
@@ -133,7 +133,7 @@ https://github.com/gpii/universal/LICENSE.txt
         removedRows.remove();
 
         if(sort === true) {
-            rows.sort(function(a,b){
+            rows.sort(function (a,b){
                 return b.value - a.value;
             });
         }
