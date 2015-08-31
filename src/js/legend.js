@@ -15,7 +15,9 @@ https://github.com/gpii/universal/LICENSE.txt
     fluid.defaults("gpii.chartAuthoring.pieChart.legend", {
         gradeNames: ["gpii.d3ViewComponent", "autoInit"],
         strings: {
-
+          legendColHeading:"Legend",
+          labelColHeading:"Label",
+          valueColHeading:"Value"
         },
         model: {
             // dataSet accepts:
@@ -170,19 +172,19 @@ https://github.com/gpii/universal/LICENSE.txt
             .attr({
                 "scope":"col"
             })
-            .html("Legend");
+            .html(that.options.strings.legendColHeading);
 
         thead.append("th")
             .attr({
                 "scope":"col"
             })
-            .html("Label");
+            .html(that.options.strings.labelColHeading);
 
         thead.append("th")
             .attr({
             "scope":"col"
         })
-      .html("Value");
+      .html(that.options.strings.valueColHeading);
 
         that.draw();
 
