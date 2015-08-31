@@ -100,14 +100,14 @@ https://github.com/gpii/universal/LICENSE.txt
         var g = (hex & 0x00ff00) >> 8;
         var b = hex & 0x0000ff;
         return "rgb("+r+", "+g + ", " +b + ")";
-    }
+    };
 
     gpii.tests.chartAuthoring.testMouseOverListener = function (that) {
       jqUnit.assertFalse("The mouseover listener for legend rows has not been triggered", that.mouseOverListenerCalled);
       var oneD3Row = that.jQueryToD3($(that.locate("row")[0]));
       oneD3Row.on("mouseover")();
       jqUnit.assertTrue("The mouseover listener for legend rows has been triggered", that.mouseOverListenerCalled);
-    }
+    };
 
     gpii.tests.chartAuthoring.validateLegend = function (that) {
         var table = that.locate("table");
@@ -118,18 +118,17 @@ https://github.com/gpii/universal/LICENSE.txt
         jqUnit.assertEquals("A TR element has been created for each value in the dataset, with proper selectors", that.model.dataSet.length, that.locate("row").length);
 
         var d3ColorCells = that.jQueryToD3($(that.locate("legendColorCell")));
-        d3ColorCells.each(function (d, i) {
+        d3ColorCells.each(function (d) {
 
             jqUnit.assertEquals("The data colors are filled correctly in the legend", gpii.tests.chartAuthoring.hexToRGB(d.color), ($(this).css("background-color")));
         });
 
         var d3LabelCells = that.jQueryToD3($(that.locate("labelCell")));
-        d3LabelCells.each(function (d, i) {
+        d3LabelCells.each(function (d) {
             jqUnit.assertEquals("The data labels are applied correctly in the legend", d.label, ($(this).html()));
         });
 
-        var d3LabelCells = that.jQueryToD3($(that.locate("valueCell")));
-        d3LabelCells.each(function (d, i) {
+        d3LabelCells.each(function (d) {
             jqUnit.assertEquals("The data values are applied correctly in the legend", d.value, ($(this).html()));
         });
 

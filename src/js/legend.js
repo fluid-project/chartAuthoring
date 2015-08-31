@@ -105,7 +105,7 @@ https://github.com/gpii/universal/LICENSE.txt
         addedRows
         .append("td")
         .attr({
-            "style": function (d, i) {
+            "style": function (d) {
                 return "background-color: "+d.color+";";
             },
             "class": legendColorCellClass
@@ -116,7 +116,7 @@ https://github.com/gpii/universal/LICENSE.txt
         .attr({
             "class": legendLabelCellClass
         })
-        .html(function (d, i) {
+        .html(function (d) {
             return d.label;
         });
 
@@ -124,7 +124,7 @@ https://github.com/gpii/universal/LICENSE.txt
         .attr({
             "class": legendValueCellClass
         })
-        .html(function (d,i) {
+        .html(function (d) {
             return d.value;
         });
 
@@ -139,7 +139,7 @@ https://github.com/gpii/universal/LICENSE.txt
         }
     };
 
-    gpii.chartAuthoring.pieChart.legend.create = function(that) {
+    gpii.chartAuthoring.pieChart.legend.create = function (that) {
         var container = that.container,
             dataSet = that.model.dataSet,
             l = that.options.legendOptions,
