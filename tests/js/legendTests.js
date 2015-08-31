@@ -136,6 +136,26 @@ https://github.com/gpii/universal/LICENSE.txt
 
     };
 
+    gpii.tests.chartAuthoring.testLegend = function (that) {
+      // Legend is created from dataset
+
+      gpii.tests.chartAuthoring.validateLegend(that);
+
+      gpii.tests.chartAuthoring.testMouseOverListener(that);
+
+      // Legend is redrawn when data set changes
+
+      // Item added to dataset
+
+      that.applier.change("dataSet", gpii.tests.chartAuthoring.objectArrayAdd);
+      gpii.tests.chartAuthoring.validateLegend(that);
+
+      // Item removed from dataset
+
+      that.applier.change("dataSet", gpii.tests.chartAuthoring.objectArrayRemove);
+      gpii.tests.chartAuthoring.validateLegend(that, false);
+    }
+
     jqUnit.test("Test the legend component created based off an array of objects, unsorted", function () {
         jqUnit.expect(44);
 
@@ -148,23 +168,7 @@ https://github.com/gpii/universal/LICENSE.txt
             }
         });
 
-        // Legend is created from dataset
-
-        gpii.tests.chartAuthoring.validateLegend(that);
-
-        gpii.tests.chartAuthoring.testMouseOverListener(that);
-
-        // Legend is redrawn when data set changes
-
-        // Item added to dataset
-
-        that.applier.change("dataSet", gpii.tests.chartAuthoring.objectArrayAdd);
-        gpii.tests.chartAuthoring.validateLegend(that);
-
-        // Item removed from dataset
-
-        that.applier.change("dataSet", gpii.tests.chartAuthoring.objectArrayRemove);
-        gpii.tests.chartAuthoring.validateLegend(that);
+        gpii.tests.chartAuthoring.testLegend(that);
 
     });
 
@@ -180,23 +184,7 @@ https://github.com/gpii/universal/LICENSE.txt
             }
         });
 
-        // Legend is created from dataset
-
-        gpii.tests.chartAuthoring.validateLegend(that);
-
-        gpii.tests.chartAuthoring.testMouseOverListener(that);
-
-        // Legend is redrawn when data set changes
-
-        // Item added to dataset
-
-        that.applier.change("dataSet", gpii.tests.chartAuthoring.objectArrayAdd);
-        gpii.tests.chartAuthoring.validateLegend(that);
-
-        // Item removed from dataset
-
-        that.applier.change("dataSet", gpii.tests.chartAuthoring.objectArrayRemove);
-        gpii.tests.chartAuthoring.validateLegend(that);
+        gpii.tests.chartAuthoring.testLegend(that);
 
     });
 
