@@ -13,7 +13,7 @@ https://github.com/gpii/universal/LICENSE.txt
     "use strict";
 
     fluid.defaults("gpii.chartAuthoring.valueBinding", {
-        gradeNames: ["fluid.viewRelayComponent", "autoInit", "{that}.generateModelListenersConnectionGrade"],
+        gradeNames: ["fluid.viewComponent", "{that}.generateModelListenersConnectionGrade"],
         // A key/value of selectorName: model.path
         bindings: {},
         invokers: {

@@ -13,7 +13,7 @@ https://github.com/gpii/universal/LICENSE.txt
     "use strict";
 
     fluid.defaults("gpii.chartAuthoring.dataEntryPanel", {
-        gradeNames: ["gpii.chartAuthoring.templateInjection", "autoInit"],
+        gradeNames: ["gpii.chartAuthoring.templateInjection"],
         selectors: {
             dataEntryLabel: ".gpiic-ca-dataEntryPanel-dataEntryLabel",
             dataEntries: ".gpiic-ca-dataEntryPanel-dataEntries",

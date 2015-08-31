@@ -13,7 +13,7 @@ https://github.com/gpii/universal/LICENSE.txt
     "use strict";
 
     fluid.defaults("gpii.chartAuthoring.dataEntry", {
-        gradeNames: ["gpii.chartAuthoring.templateInjection", "gpii.chartAuthoring.valueBinding", "autoInit"],
+        gradeNames: ["gpii.chartAuthoring.templateInjection", "gpii.chartAuthoring.valueBinding"],
         selectors: {
             input: ".gpiic-ca-dataEntry-value",
             percentage: ".gpiic-ca-dataEntry-percentage",

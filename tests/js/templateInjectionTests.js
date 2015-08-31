@@ -13,7 +13,7 @@ https://github.com/gpii/universal/LICENSE.txt
     "use strict";
 
     fluid.defaults("gpii.tests.chartAuthoring.templateInjection", {
-        gradeNames: ["gpii.chartAuthoring.templateInjection", "autoInit"],
+        gradeNames: ["gpii.chartAuthoring.templateInjection"],
         selectors: {
             injected: ".injected"
         },

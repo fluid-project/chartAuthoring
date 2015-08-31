@@ -13,7 +13,7 @@ https://github.com/gpii/universal/LICENSE.txt
     "use strict";
 
     fluid.defaults("gpii.tests.chartAuthoring.valueBinding", {
-        gradeNames: ["gpii.chartAuthoring.valueBinding", "autoInit"],
+        gradeNames: ["gpii.chartAuthoring.valueBinding"],
         selectors: {
             unidirectional: "label",
             bidirectional: "input"
@@ -31,7 +31,7 @@ https://github.com/gpii/universal/LICENSE.txt
     });
 
     fluid.defaults("gpii.tests.chartAuthoring.valueBindingTests", {
-        gradeNames: ["fluid.test.testEnvironment", "autoInit"],
+        gradeNames: ["fluid.test.testEnvironment"],
         components: {
             valueBinding: {
                 type: "gpii.tests.chartAuthoring.valueBinding",
@@ -44,7 +44,7 @@ https://github.com/gpii/universal/LICENSE.txt
     });
 
     fluid.defaults("gpii.tests.chartAuthoring.valueBindingTester", {
-        gradeNames: ["fluid.test.testCaseHolder", "autoInit"],
+        gradeNames: ["fluid.test.testCaseHolder"],
         modules: [{
             name: "Tests value binding",
             tests: [{

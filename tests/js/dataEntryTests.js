@@ -13,7 +13,7 @@ https://github.com/gpii/universal/LICENSE.txt
     "use strict";
 
     fluid.defaults("gpii.tests.chartAuthoring.dataEntry", {
-        gradeNames: ["gpii.chartAuthoring.dataEntry", "autoInit"],
+        gradeNames: ["gpii.chartAuthoring.dataEntry"],
         model: {
             total: 100
         },
@@ -28,7 +28,7 @@ https://github.com/gpii/universal/LICENSE.txt
     });
 
     fluid.defaults("gpii.tests.chartAuthoring.dataEntryTest", {
-        gradeNames: ["fluid.test.testEnvironment", "autoInit"],
+        gradeNames: ["fluid.test.testEnvironment"],
         components: {
             dataEntry: {
                 type: "gpii.tests.chartAuthoring.dataEntry",
@@ -41,7 +41,7 @@ https://github.com/gpii/universal/LICENSE.txt
     });
 
     fluid.defaults("gpii.tests.chartAuthoring.dataEntryTester", {
-        gradeNames: ["fluid.test.testCaseHolder", "autoInit"],
+        gradeNames: ["fluid.test.testCaseHolder"],
         testOptions: {
             valueChange: 65,
             labelChange: "Value Label",

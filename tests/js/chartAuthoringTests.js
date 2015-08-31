@@ -13,7 +13,7 @@ https://github.com/gpii/universal/LICENSE.txt
     "use strict";
 
     fluid.defaults("gpii.tests.chartAuthoring", {
-        gradeNames: ["gpii.chartAuthoring", "autoInit"],
+        gradeNames: ["gpii.chartAuthoring"],
         templateLoader: {
             terms: {
                 templatePrefix: "../../src/html"
@@ -37,7 +37,7 @@ https://github.com/gpii/universal/LICENSE.txt
     });
 
     fluid.defaults("gpii.tests.chartAuthoringTest", {
-        gradeNames: ["fluid.test.testEnvironment", "autoInit"],
+        gradeNames: ["fluid.test.testEnvironment"],
         components: {
             chartAuthoring: {
                 type: "gpii.tests.chartAuthoring",
@@ -51,7 +51,7 @@ https://github.com/gpii/universal/LICENSE.txt
     });
 
     fluid.defaults("gpii.tests.chartAuthoringTester", {
-        gradeNames: ["fluid.test.testCaseHolder", "autoInit"],
+        gradeNames: ["fluid.test.testCaseHolder"],
         modules: [{
             name: "Tests the data entry panel component",
             tests: [{
