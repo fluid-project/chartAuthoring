@@ -21,8 +21,6 @@ https://github.com/gpii/universal/LICENSE.txt
             dataSet: []
         },
         legendOptions: {
-            width: 300,
-            height: 300,
             colors: null, // An array of colors for the legend generated for corresponding values of model.dataSet
             sort: true // Whether or not to sort the data by values when creating the legend
         },
