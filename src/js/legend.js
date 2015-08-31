@@ -28,18 +28,18 @@ https://github.com/gpii/universal/LICENSE.txt
             legend: "gpii-ca-pieChart-legend",
             table: "gpii-ca-pieChart-legend-table",
             row: "gpii-ca-pieChart-legend-table-row",
-            legendColorCell: "gpii-ca-pieChart-legend-table-row-legend-color-cell",
-            labelCell: "gpii-ca-pieChart-legend-table-row-legend-label-cell",
-            valueCell: "gpii-ca-pieChart-legend-table-row-legend-value-cell"
+            legendColorCell: "gpii-ca-pieChart-legend-color-cell",
+            labelCell: "gpii-ca-pieChart-legend-label-cell",
+            valueCell: "gpii-ca-pieChart-legend-value-cell"
 
         },
         selectors: {
             legend: ".gpiic-ca-pieChart-legend",
             table: ".gpii-ca-pieChart-legend-table",
             row: ".gpii-ca-pieChart-legend-table-row",
-            legendColorCell: ".gpii-ca-pieChart-legend-table-row-legend-color-cell",
-            labelCell: ".gpii-ca-pieChart-legend-table-row-legend-label-cell",
-            valueCell: ".gpii-ca-pieChart-legend-table-row-legend-value-cell"
+            legendColorCell: ".gpii-ca-pieChart-legend-color-cell",
+            labelCell: ".gpii-ca-pieChart-legend-label-cell",
+            valueCell: ".gpii-ca-pieChart-legend-value-cell"
         },
         events: {
             onLegendCreated: null  // Fire when the legend is created. Ready to register D3 DOM event listeners
