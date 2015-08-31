@@ -24,7 +24,7 @@ https://github.com/gpii/universal/LICENSE.txt
 
     gpii.tests.chartAuthoring.transforms.stringToNumberTestCases = {
         transform: {
-                transform: {
+            transform: {
                 type: "gpii.chartAuthoring.transforms.stringToNumber",
                 inputPath: "value",
                 outputPath: "value"
