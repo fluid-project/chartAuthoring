@@ -18,7 +18,7 @@ https://github.com/gpii/universal/LICENSE.txt
     // 3. Synthesize that.options.styles and that.options.selectors to combine elements with the same key into that.classes
 
     fluid.defaults("gpii.d3ViewComponent", {
-        gradeNames: ["fluid.viewRelayComponent", "autoInit"],
+        gradeNames: ["fluid.viewComponent", "autoInit"],
         members: {
             classes: {
                 expander: {
