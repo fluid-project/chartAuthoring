@@ -176,9 +176,7 @@ https://github.com/gpii/universal/LICENSE.txt
 
     gpii.chartAuthoring.pieChart.legend.create = function (that) {
         var container = that.container,
-            dataSet = that.model.dataSet,
-            l = that.options.legendOptions,
-            colors = l.colors,
+            dataSet = that.model.dataSet,                        
             tableClass = that.classes.table;
 
         if (dataSet.length === 0) {
