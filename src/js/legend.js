@@ -27,8 +27,8 @@ https://github.com/gpii/universal/LICENSE.txt
         },
         legendOptions: {
             colors: null, // An array of colors for the legend generated for corresponding values of model.dataSet
-            sort: true // Whether or not to sort the data by values when creating the legend
-
+            sort: true, // Whether or not to sort the data by values when creating the legend
+            showLegendHeadings: true // Whether or not to display column headings in the legend
         },
         members: {
             color: {
@@ -179,7 +179,8 @@ https://github.com/gpii/universal/LICENSE.txt
     gpii.chartAuthoring.pieChart.legend.create = function (that) {
         var container = that.container,
             dataSet = that.model.dataSet,
-            tableClass = that.classes.table;
+            tableClass = that.classes.table,
+            showLegendHeadings = that.options.legendOptions.showLegendHeadings;
 
         if (dataSet.length === 0) {
             return;
@@ -193,26 +194,27 @@ https://github.com/gpii/universal/LICENSE.txt
 
         that.table.append("thead");
         that.table.append("tbody");
+        if(showLegendHeadings) {
+            var thead = that.table.selectAll("thead");
 
-        var thead = that.table.selectAll("thead");
+            thead.append("th")
+                .attr({
+                    "scope":"col"
+                })
+                .html(that.options.strings.legendColHeading);
 
-        thead.append("th")
-            .attr({
+            thead.append("th")
+                .attr({
+                    "scope":"col"
+                })
+                .html(that.options.strings.labelColHeading);
+
+            thead.append("th")
+                .attr({
                 "scope":"col"
             })
-            .html(that.options.strings.legendColHeading);
-
-        thead.append("th")
-            .attr({
-                "scope":"col"
-            })
-            .html(that.options.strings.labelColHeading);
-
-        thead.append("th")
-            .attr({
-            "scope":"col"
-        })
-      .html(that.options.strings.valueColHeading);
+          .html(that.options.strings.valueColHeading);
+      }
 
         that.draw();
 
