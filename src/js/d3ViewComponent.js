@@ -61,7 +61,7 @@ https://github.com/gpii/universal/LICENSE.txt
         fluid.each(styles, function (styleValue, key) {
             var correspondingSelector = fluid.get(selectors, key),
                 selectorName = gpii.d3ViewComponent.extractSelectorName(correspondingSelector),
-                concatenated = selectorName ? selectorName.concat(" " + styleValue) : styleValue;
+                concatenated = selectorName ? selectorName === styleValue ? selectorName : selectorName.concat(" " + styleValue) : styleValue;
             fluid.set(result, key, concatenated);
         });
 
@@ -74,7 +74,6 @@ https://github.com/gpii/universal/LICENSE.txt
                 }
             }
         });
-
         return result;
     };
 
