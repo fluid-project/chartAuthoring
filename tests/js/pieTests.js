@@ -47,7 +47,7 @@ https://github.com/gpii/universal/LICENSE.txt
         jqUnit.assertEquals("The texts for pie slices have been created with the proper selectors", that.model.dataSet.length, that.locate("text").length);
 
         // Test that displayed values are in sync with the current model
-        gpii.tests.chartAuthoring.testSyncWithModelDataSet(that);
+        gpii.tests.chartAuthoring.testPieTextSyncWithModelDataSet(that);
 
         // Each slice receives the corresponding data object
         var d3Slices = that.jQueryToD3($(that.locate("slice")));
@@ -67,7 +67,7 @@ https://github.com/gpii/universal/LICENSE.txt
         jqUnit.assertTrue("The mouseover listener for pie slices have been registered", that.mouseOverListenerCalled);
     };
 
-    gpii.tests.chartAuthoring.testSyncWithModelDataSet = function(that) {
+    gpii.tests.chartAuthoring.testPieTextSyncWithModelDataSet = function(that) {
         var dataSet = that.model.dataSet;
         var d3Elem = gpii.d3.jQueryToD3(that.locate("text"));
         d3Elem.each(function (d,i) {
