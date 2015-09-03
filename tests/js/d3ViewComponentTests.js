@@ -65,7 +65,7 @@ https://github.com/gpii/universal/LICENSE.txt
     });
 
     jqUnit.test("Test gpii.d3ViewComponent.synthesizeClasses()", function () {
-        jqUnit.expect(4);
+        jqUnit.expect(5);
 
         var cases = [{
             msg: "When the styles block having extra elements",
@@ -110,6 +110,20 @@ https://github.com/gpii/universal/LICENSE.txt
             expected: {
                 a: "b c",
                 b: "any string"
+            }
+        }, {
+            msg: "When the styles and selectors are the same",
+            styles: {
+                a: "a",
+                b: "b"
+            },
+            selectors: {
+                a: ".a",
+                b: ".b"
+            },
+            expected: {
+                a: "a",
+                b: "b"
             }
         }];
 
