@@ -69,8 +69,7 @@ https://github.com/gpii/universal/LICENSE.txt
         id: "id4",
         value: 26,
         label: "Five"
-    }
-  ];
+    }];
 
   gpii.tests.chartAuthoring.objectArrayRemove = [{
       id: "id0",
@@ -84,8 +83,21 @@ https://github.com/gpii/universal/LICENSE.txt
       id: "id2",
       value: 20,
       label: "Three"
-  }
-];
+  }];
+
+  gpii.tests.chartAuthoring.objectArrayChangeInPlace = [{
+      id: "id0",
+      value: 36,
+      label: "I"
+  }, {
+      id: "id1",
+      value: 67,
+      label: "II"
+  }, {
+      id: "id2",
+      value: 26,
+      label: "Three"
+  }];
 
     gpii.tests.chartAuthoring.mouseOverListener = function (data, i, that) {
         that.mouseOverListenerCalled = true;
@@ -100,6 +112,26 @@ https://github.com/gpii/universal/LICENSE.txt
         var g = (hex & 0x00ff00) >> 8;
         var b = hex & 0x0000ff;
         return "rgb(" + r + ", " + g + ", " + b + ")";
+    };
+
+    gpii.tests.chartAuthoring.testLegendSyncWithModelDataSet = function(that) {
+        var dataSet = that.model.dataSet;
+        //
+        if(that.options.legendOptions.sort) {
+            dataSet.sort(function(a,b) {
+                return b.value - a.value;
+            });
+        }
+
+        var rows = gpii.d3.jQueryToD3(that.locate("row"));
+        rows.each(function (d,i) {
+            var displayedLabel = d3.select(this).select("."+that.classes.labelCell).text();
+            var expectedLabel = dataSet[i].label;
+            var displayedValue = d3.select(this).select("."+that.classes.valueCell).text();
+            var expectedValue = dataSet[i].value;
+            jqUnit.assertEquals("Displayed labels are in sync with the current model's labels", expectedLabel, displayedLabel);
+            jqUnit.assertEquals("Displayed values are in sync with the current model's values", expectedValue, displayedValue);
+        });
     };
 
     gpii.tests.chartAuthoring.testMouseOverListener = function (that) {
@@ -134,6 +166,8 @@ https://github.com/gpii/universal/LICENSE.txt
             jqUnit.assertEquals("The data values are applied correctly in the legend", d.value, ($(this).html()));
         });
 
+        gpii.tests.chartAuthoring.testLegendSyncWithModelDataSet(that);
+
     };
 
     gpii.tests.chartAuthoring.testLegend = function (that) {
@@ -154,10 +188,16 @@ https://github.com/gpii/universal/LICENSE.txt
 
         that.applier.change("dataSet", gpii.tests.chartAuthoring.objectArrayRemove);
         gpii.tests.chartAuthoring.validateLegend(that);
+
+        // Items changed in place
+
+        that.applier.change("dataSet", gpii.tests.chartAuthoring.objectArrayChangeInPlace);
+        gpii.tests.chartAuthoring.validateLegend(that);
+
     };
 
     jqUnit.test("Test the legend component created based off an array of objects, unsorted", function () {
-        jqUnit.expect(44);
+        jqUnit.expect(85);
 
         var that = gpii.tests.chartAuthoring.pieChart.legend(".gpii-ca-legend-objects-unsorted", {
             model: {
@@ -173,7 +213,7 @@ https://github.com/gpii/universal/LICENSE.txt
     });
 
     jqUnit.test("Test the legend component created based off an array of objects, sorted", function () {
-        jqUnit.expect(44);
+        jqUnit.expect(85);
 
         var that = gpii.tests.chartAuthoring.pieChart.legend(".gpii-ca-legend-objects-sorted", {
             model: {
