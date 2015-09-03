@@ -112,12 +112,9 @@ https://github.com/gpii/universal/LICENSE.txt
 
         paths.exit().remove();
 
-        // Draw texts for pie slices
+        // Create texts for pie slices
         texts.enter()
             .append("text")
-            .text(function(d) {
-                return d.value;
-            })
             .attr({
                 "text-anchor": "middle",
                 "class": textClass,
@@ -125,6 +122,12 @@ https://github.com/gpii/universal/LICENSE.txt
                     return that.textTransform(d);
                 }
             });
+
+        // Update text values
+        texts.text(function (d) {
+            return d.value;
+        });
+
 
         texts.transition().duration(animationDuration).attr("transform", function (d) {
             return that.textTransform(d);
@@ -135,7 +138,6 @@ https://github.com/gpii/universal/LICENSE.txt
 
     gpii.chartAuthoring.pieChart.pie.create = function (that) {
         var container = that.container,
-            dataSet = that.model.dataSet,
             p = that.options.pieOptions,
             width = p.width,
             height = p.height,
@@ -143,10 +145,6 @@ https://github.com/gpii/universal/LICENSE.txt
             outerRadius = p.outerRadius || width / 2,
             innerRadius = p.innerRadius || 0,
             pieClass = that.classes.pie;
-
-        if (dataSet.length === 0) {
-            return;
-        }
 
         that.arc = d3.svg.arc()
             .innerRadius(innerRadius)

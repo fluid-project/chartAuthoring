@@ -132,6 +132,8 @@ https://github.com/gpii/universal/LICENSE.txt
                 return d.id;
             });
 
+        // Add new rows for new data, apply appropriate classes for selectors and styling
+
         var addedRows = rows.enter().append("tr");
 
         addedRows
@@ -142,9 +144,6 @@ https://github.com/gpii/universal/LICENSE.txt
         addedRows
         .append("td")
         .attr({
-            "style": function (d) {
-                return "background-color: " + d.color + ";";
-            },
             "class": legendColorCellClass
         });
 
@@ -152,17 +151,26 @@ https://github.com/gpii/universal/LICENSE.txt
         .append("td")
         .attr({
             "class": legendLabelCellClass
-        })
-        .html(function (d) {
-            return d.label;
         });
 
-        addedRows.append("td")
+        addedRows
+        .append("td")
         .attr({
             "class": legendValueCellClass
-        })
-        .html(function (d) {
-            return d.value;
+        });
+
+        // Update cell legend colours, labels and values
+        rows.each(function (d) {
+            d3.select(this).select("."+legendColorCellClass)
+            .attr({
+                "style": function (d) {
+                    return "background-color: " + d.color + ";";
+                }
+            });
+            d3.select(this).select("."+legendLabelCellClass)
+            .text(d.label);
+            d3.select(this).select("."+legendValueCellClass)
+            .text(d.value);
         });
 
         var removedRows = rows.exit();
@@ -177,14 +185,9 @@ https://github.com/gpii/universal/LICENSE.txt
     };
 
     gpii.chartAuthoring.pieChart.legend.create = function (that) {
-        var container = that.container,
-            dataSet = that.model.dataSet,
+        var container = that.container,            
             tableClass = that.classes.table,
             showLegendHeadings = that.options.legendOptions.showLegendHeadings;
-
-        if (dataSet.length === 0) {
-            return;
-        }
 
         that.table = that.jQueryToD3(container)
             .append("table")
