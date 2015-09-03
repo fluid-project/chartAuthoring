@@ -71,7 +71,7 @@ https://github.com/gpii/universal/LICENSE.txt
         var dataSet = that.model.dataSet;
         var d3Elem = gpii.d3.jQueryToD3(that.locate("text"));
         d3Elem.each(function (d,i) {
-            var displayedValue = d3.select(this).text()
+            var displayedValue = d3.select(this).text();
             var expectedValue = typeof (dataSet[i]) === "object" ? dataSet[i].value : dataSet[i];
             jqUnit.assertEquals("Displayed values are in sync with the current model", expectedValue, displayedValue);
         });
