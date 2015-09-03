@@ -56,25 +56,39 @@ https://github.com/gpii/universal/LICENSE.txt
 
     // Synthesize "styles" and "selectors" blocks to combine elements with the same key
     gpii.d3ViewComponent.synthesizeClasses = function (styles, selectors) {
-        var result = {};
+
+        var consolidatedClasses = {};
 
         fluid.each(styles, function (styleValue, key) {
-            var correspondingSelector = fluid.get(selectors, key),
-                selectorName = gpii.d3ViewComponent.extractSelectorName(correspondingSelector),
-                concatenated = selectorName ? selectorName === styleValue ? selectorName : selectorName.concat(" " + styleValue) : styleValue;
-            fluid.set(result, key, concatenated);
+            consolidatedClasses[key] = styleValue;
         });
 
         fluid.each(selectors, function (selector, key) {
-            var correspondingStyle = fluid.get(styles, key);
-            if (!correspondingStyle) {
-                var selectorName = gpii.d3ViewComponent.extractSelectorName(selector);
-                if (selectorName) {
-                    fluid.set(result, key, selectorName);
-                }
-            }
+            if(consolidatedClasses[key]) {
+                consolidatedClasses[key] = consolidatedClasses[key] + " " + gpii.d3ViewComponent.extractSelectorName(selector);
+            } else {consolidatedClasses[key] = gpii.d3ViewComponent.extractSelectorName(selector);}
         });
-        return result;
+
+        fluid.each(consolidatedClasses, function(classes, key) {
+            var splitClasses = classes.split(" ");
+            // Basic alphabetic sort to improve readability of applied classes
+            splitClasses.sort(function (a,b) {
+                if(a < b) {return -1;}
+                if(a > b) {return 1;}
+                return 0;
+            });
+
+            var uniqueClasses = [];
+
+            // Add classes to the uniqueClasses array if they aren't already there
+            fluid.each(splitClasses, function(currentClass) {
+                if ($.inArray(currentClass, uniqueClasses) === -1) {uniqueClasses.push(currentClass);}
+            });
+            // Update each key to contain only the unique classes
+            consolidatedClasses[key] = uniqueClasses.join(" ");
+        });
+
+        return consolidatedClasses;
     };
 
 })(jQuery, fluid);
