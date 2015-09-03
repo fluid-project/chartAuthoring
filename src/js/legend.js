@@ -47,8 +47,8 @@ https://github.com/gpii/universal/LICENSE.txt
                     "dataSet": "{that}.model.dataSet",
                     "color": "{that}.color"
                 },
-            func: "gpii.chartAuthoring.pieChart.legend.consolidateDataAndColors"
-          }
+                func: "gpii.chartAuthoring.pieChart.legend.consolidateDataAndColors"
+            }
         }],
         styles: {
             legend: "gpii-ca-pieChart-legend",
@@ -185,7 +185,7 @@ https://github.com/gpii/universal/LICENSE.txt
     };
 
     gpii.chartAuthoring.pieChart.legend.create = function (that) {
-        var container = that.container,            
+        var container = that.container,
             tableClass = that.classes.table,
             showLegendHeadings = that.options.legendOptions.showLegendHeadings;
 
@@ -217,7 +217,7 @@ https://github.com/gpii/universal/LICENSE.txt
                 "scope":"col"
             })
           .html(that.options.strings.valueColHeading);
-      }
+        }
 
         that.draw();
 

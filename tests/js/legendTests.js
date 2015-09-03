@@ -71,33 +71,33 @@ https://github.com/gpii/universal/LICENSE.txt
         label: "Five"
     }];
 
-  gpii.tests.chartAuthoring.objectArrayRemove = [{
-      id: "id0",
-      value: 15,
-      label: "One"
-  }, {
-      id: "id1",
-      value: 67,
-      label: "Two"
-  }, {
-      id: "id2",
-      value: 20,
-      label: "Three"
-  }];
+    gpii.tests.chartAuthoring.objectArrayRemove = [{
+        id: "id0",
+        value: 15,
+        label: "One"
+    }, {
+        id: "id1",
+        value: 67,
+        label: "Two"
+    }, {
+        id: "id2",
+        value: 20,
+        label: "Three"
+    }];
 
-  gpii.tests.chartAuthoring.objectArrayChangeInPlace = [{
-      id: "id0",
-      value: 36,
-      label: "I"
-  }, {
-      id: "id1",
-      value: 67,
-      label: "II"
-  }, {
-      id: "id2",
-      value: 26,
-      label: "Three"
-  }];
+    gpii.tests.chartAuthoring.objectArrayChangeInPlace = [{
+        id: "id0",
+        value: 36,
+        label: "I"
+    }, {
+        id: "id1",
+        value: 67,
+        label: "II"
+    }, {
+        id: "id2",
+        value: 26,
+        label: "Three"
+    }];
 
     gpii.tests.chartAuthoring.mouseOverListener = function (data, i, that) {
         that.mouseOverListenerCalled = true;
@@ -204,7 +204,7 @@ https://github.com/gpii/universal/LICENSE.txt
                 dataSet: gpii.tests.chartAuthoring.objectArray
             },
             legendOptions: {
-              sort:false
+                sort:false
             }
         });
 
@@ -220,7 +220,7 @@ https://github.com/gpii/universal/LICENSE.txt
                 dataSet: gpii.tests.chartAuthoring.objectArray
             },
             legendOptions: {
-              sort:true
+                sort:true
             }
         });
 
