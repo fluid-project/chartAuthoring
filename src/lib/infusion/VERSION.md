@@ -30,7 +30,6 @@ The following directories were stripped out of the build since they contain code
 * src/lib/infusion/src/lib/jquery/ui/jQueryUICoreDependencies.json
 * src/lib/infusion/src/lib/jquery/ui/jQueryUIWidgetsDependencies.json
 * src/lib/infusion/src/lib/jquery/ui/js/
-* src/lib/infusion/src/lib/jquery/json/
 * src/lib/infusion/src/lib/normalize/normalizeDependencies.json
 
 Additionally, the testing framework from Infusion is used (tests/lib/infusion) and should be updated to a matching version. This directory is a copy of
