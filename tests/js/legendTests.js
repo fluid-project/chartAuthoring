@@ -99,6 +99,78 @@ https://github.com/gpii/universal/LICENSE.txt
         label: "Three"
     }];
 
+    gpii.tests.chartAuthoring.objectArraySorted = [{
+        id: "id1",
+        value: 67,
+        label: "Two"
+    }, {
+        id: "id3",
+        value: 45,
+        label: "Four"
+    },
+    {
+        id: "id2",
+        value: 20,
+        label: "Three"
+    }, {
+        id: "id0",
+        value: 15,
+        label: "One"
+    }];
+
+    gpii.tests.chartAuthoring.objectArrayAddSorted = [{
+        id: "id1",
+        value: 67,
+        label: "Two"
+    }, {
+        id: "id3",
+        value: 45,
+        label: "Four"
+    },
+    {
+        id: "id4",
+        value: 26,
+        label: "Five"
+    },
+    {
+        id: "id2",
+        value: 20,
+        label: "Three"
+    }, {
+        id: "id0",
+        value: 15,
+        label: "One"
+    }];
+
+    gpii.tests.chartAuthoring.objectArrayRemoveSorted = [{
+        id: "id1",
+        value: 67,
+        label: "Two"
+    },
+    {
+        id: "id2",
+        value: 20,
+        label: "Three"
+    }, {
+        id: "id0",
+        value: 15,
+        label: "One"
+    }];
+
+    gpii.tests.chartAuthoring.objectArrayChangeInPlaceSorted = [{
+        id: "id1",
+        value: 67,
+        label: "II"
+    }, {
+        id: "id0",
+        value: 36,
+        label: "I"
+    }, {
+        id: "id2",
+        value: 26,
+        label: "Three"
+    }];
+
     gpii.tests.chartAuthoring.mouseOverListener = function (data, i, that) {
         that.mouseOverListenerCalled = true;
     };
@@ -114,13 +186,8 @@ https://github.com/gpii/universal/LICENSE.txt
         return "rgb(" + r + ", " + g + ", " + b + ")";
     };
 
-    gpii.tests.chartAuthoring.testLegendSyncWithModelDataSet = function(that) {
-        var dataSet = that.model.dataSet;        
-        if(that.options.legendOptions.sort) {
-            dataSet.sort(function(a,b) {
-                return b.value - a.value;
-            });
-        }
+    gpii.tests.chartAuthoring.testLegendSyncWithModelDataSet = function(that, expectedDataSet) {
+        var dataSet = expectedDataSet
 
         var rows = gpii.d3.jQueryToD3(that.locate("row"));
         rows.each(function (d,i) {
@@ -140,7 +207,7 @@ https://github.com/gpii/universal/LICENSE.txt
         jqUnit.assertTrue("The mouseover listener for legend rows has been triggered", that.mouseOverListenerCalled);
     };
 
-    gpii.tests.chartAuthoring.validateLegend = function (that) {
+    gpii.tests.chartAuthoring.validateLegend = function (that, expectedDataSet) {
         var table = that.locate("table");
 
         // Test the legend creation
@@ -165,14 +232,15 @@ https://github.com/gpii/universal/LICENSE.txt
             jqUnit.assertEquals("The data values are applied correctly in the legend", d.value, ($(this).html()));
         });
 
-        gpii.tests.chartAuthoring.testLegendSyncWithModelDataSet(that);
+        gpii.tests.chartAuthoring.testLegendSyncWithModelDataSet(that, expectedDataSet);
 
     };
 
-    gpii.tests.chartAuthoring.testLegend = function (that) {
+    gpii.tests.chartAuthoring.testLegend = function (that, objectArray, objectArrayAdd, objectArrayRemove, objectArrayChangeInPlace) {
+
         // Legend is created from dataset
 
-        gpii.tests.chartAuthoring.validateLegend(that);
+        gpii.tests.chartAuthoring.validateLegend(that, objectArray);
 
         gpii.tests.chartAuthoring.testMouseOverListener(that);
 
@@ -181,17 +249,17 @@ https://github.com/gpii/universal/LICENSE.txt
         // Item added to dataset
 
         that.applier.change("dataSet", gpii.tests.chartAuthoring.objectArrayAdd);
-        gpii.tests.chartAuthoring.validateLegend(that);
+        gpii.tests.chartAuthoring.validateLegend(that, objectArrayAdd);
 
         // Item removed from dataset
 
         that.applier.change("dataSet", gpii.tests.chartAuthoring.objectArrayRemove);
-        gpii.tests.chartAuthoring.validateLegend(that);
+        gpii.tests.chartAuthoring.validateLegend(that, objectArrayRemove);
 
         // Items changed in place
 
         that.applier.change("dataSet", gpii.tests.chartAuthoring.objectArrayChangeInPlace);
-        gpii.tests.chartAuthoring.validateLegend(that);
+        gpii.tests.chartAuthoring.validateLegend(that, objectArrayChangeInPlace);
 
     };
 
@@ -207,7 +275,7 @@ https://github.com/gpii/universal/LICENSE.txt
             }
         });
 
-        gpii.tests.chartAuthoring.testLegend(that);
+        gpii.tests.chartAuthoring.testLegend(that, gpii.tests.chartAuthoring.objectArray, gpii.tests.chartAuthoring.objectArrayAdd, gpii.tests.chartAuthoring.objectArrayRemove, gpii.tests.chartAuthoring.objectArrayChangeInPlace);
 
     });
 
@@ -223,7 +291,7 @@ https://github.com/gpii/universal/LICENSE.txt
             }
         });
 
-        gpii.tests.chartAuthoring.testLegend(that);
+        gpii.tests.chartAuthoring.testLegend(that, gpii.tests.chartAuthoring.objectArraySorted, gpii.tests.chartAuthoring.objectArrayAddSorted, gpii.tests.chartAuthoring.objectArrayRemoveSorted, gpii.tests.chartAuthoring.objectArrayChangeInPlaceSorted);
 
     });
 
