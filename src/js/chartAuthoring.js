@@ -37,8 +37,8 @@ https://github.com/gpii/universal/LICENSE.txt
                         target: "{gpii.chartAuthoring.pieChart}.model.dataSet",
                         singleTransform: {
                             type: "fluid.transforms.free",
-                            args: ["{chartAuthoring}.dataEntryPanel"],
-                            func: "gpii.chartAuthoring.dataEntryPanelToD3"
+                            args: ["{that}.model.dataEntries"],
+                            func: "gpii.chartAuthoring.dataEntriesToD3"
                         },
                         forward: "liveOnly",
                         backward: "never"
@@ -77,9 +77,9 @@ https://github.com/gpii/universal/LICENSE.txt
     });
 
     // Given an object in the style of gpii.chartAuthoring.dataEntryPanel.model.dataEntries, convert it to an array of objects usable by D3, maintaining object constancy by using the dataEntry object name as the key
-       gpii.chartAuthoring.dataEntryPanelToD3 = function(dataEntryPanel) {
-           var dataEntries = dataEntryPanel.model.dataEntries;
-           var c = [];
+       gpii.chartAuthoring.dataEntriesToD3 = function(dataEntries) {
+
+           var d3Data = [];
            fluid.each(dataEntries, function(item, key) {
                var d = {
                    id: key,
@@ -87,11 +87,10 @@ https://github.com/gpii/universal/LICENSE.txt
                    value: item.value
                };
                if(d.value !== null) {
-                   c.push(d);
+                   d3Data.push(d);
                }
            });
-           // console.log(c);
-           return c;
+           return d3Data;
        };
 
 })(jQuery, fluid);
