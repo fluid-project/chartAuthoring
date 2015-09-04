@@ -26,7 +26,7 @@ https://github.com/gpii/universal/LICENSE.txt
         model: {
             value: null,
             label: "",
-            perecentage: null,
+            percentage: null,
             total: null
         },
         modelRelay: [{
