@@ -59,7 +59,7 @@ https://github.com/gpii/universal/LICENSE.txt
         },
         selectors: {
             pie: ".gpiic-ca-pieChart-pie",
-            slice: ".gpiic-ca-pieChart-legend"
+            legend: ".gpiic-ca-pieChart-legend"
         },
         events: {
             onPieCreated: null,
