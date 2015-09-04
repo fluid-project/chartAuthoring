@@ -23,13 +23,42 @@
 
 
         <title>Chart Authoring Tool</title>
+        <style>
+            .gpiic-ca-pieChart-pie {
+                float: left;
+                width: 400px;
+            }
+            .gpiic-ca-pieChart-legend {
+                float: left;
+                width: 300px;
+            }
+            .gpii-ca-pieChart-legend-table {
+                border: 1px solid black;
+            }
+            .gpii-ca-pieChart-legend-table thead th {
+                border: 1px solid black;
+                padding: 2px;
+            }
+            .gpii-ca-pieChart-legend-table-row {
+                border: 1px solid black;
+            }
+            .gpii-ca-pieChart-legend-table-row td {
+                border: 1px solid black;
+                padding: 2px;
+            }
+            #gpiic-chartAuthoring {
+                clear: both;
+            }
+        </style>
     </head>
 
     <body>
-        <div id="gpiic-chartAuthoring"></div>
         <div id="gpiic-chartAuthoring-pieChart">
             <div class="gpiic-ca-pieChart-pie"></div>
+            <div class="gpiic-ca-pieChart-legend"></div>
         </div>
+        <div id="gpiic-chartAuthoring"></div>
+
 
         <script type="text/javascript">
             gpii.chartAuthoring("#gpiic-chartAuthoring", {
