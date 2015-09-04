@@ -31,8 +31,23 @@ https://github.com/gpii/universal/LICENSE.txt
                     resources: {
                         template: "{templateLoader}.resources.dataEntryPanel",
                         dataEntry: "{templateLoader}.resources.dataEntry"
+                    },
+                    modelRelay: {
+                        source: "{that}.model.dataEntries",
+                        target: "{gpii.chartAuthoring.pieChart}.model.dataSet",
+                        singleTransform: {
+                            type: "fluid.transforms.free",
+                            args: ["{chartAuthoring}.dataEntryPanel"],
+                            func: "gpii.chartAuthoring.dataEntryPanelToD3"
+                        },
+                        forward: "liveOnly",
+                        backward: "never"
                     }
                 }
+            },
+            pieChart: {
+                type: "gpii.chartAuthoring.pieChart",
+                container: "{pieChart}.container"
             }
         },
         events: {
@@ -49,11 +64,34 @@ https://github.com/gpii/universal/LICENSE.txt
                 dataEntry: "%templatePrefix/dataEntryTemplate.html"
             }
         },
-        distributeOptions: {
+        distributeOptions: [{
             source: "{that}.options.templateLoader",
             removeSource: true,
             target: "{that > templateLoader}.options"
-        }
+        },
+        {
+            source: "{that}.options.pieChart.container",
+            removeSource: true,
+            target: "{that > pieChart}.container"
+        }]
     });
+
+    // Given an object in the style of gpii.chartAuthoring.dataEntryPanel.model.dataEntries, convert it to an array of objects usable by D3, maintaining object constancy by using the dataEntry object name as the key
+       gpii.chartAuthoring.dataEntryPanelToD3 = function(dataEntryPanel) {
+           var dataEntries = dataEntryPanel.model.dataEntries;
+           var c = [];
+           fluid.each(dataEntries, function(item, key) {
+               var d = {
+                   id: key,
+                   label: item.label,
+                   value: item.value
+               };
+               if(d.value !== null) {
+                   c.push(d);
+               }
+           });
+           // console.log(c);
+           return c;
+       };
 
 })(jQuery, fluid);

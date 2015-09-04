@@ -29,6 +29,9 @@ https://github.com/gpii/universal/LICENSE.txt
                         }
                     }
                 }
+            },
+            pieChart: {
+                container: ".gpiic-pieChart"
             }
         },
         events: {

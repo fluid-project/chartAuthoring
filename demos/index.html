@@ -7,6 +7,7 @@
         <link rel="stylesheet" href="../src/lib/infusion/src/lib/normalize/css/normalize.css" />
 
         <script type="text/javascript" src="../src/lib/infusion/infusion-custom.js"></script>
+        <script type="text/javascript" src="../src/lib/d3/d3.js"></script>
         <script type="text/javascript" src="../src/js/valueBinding.js"></script>
         <script type="text/javascript" src="../src/js/percentage.js"></script>
         <script type="text/javascript" src="../src/js/transformations.js"></script>
@@ -14,12 +15,21 @@
         <script type="text/javascript" src="../src/js/dataEntry.js"></script>
         <script type="text/javascript" src="../src/js/dataEntryPanel.js"></script>
         <script type="text/javascript" src="../src/js/chartAuthoring.js"></script>
+        <script type="text/javascript" src="../src/js/d3ViewComponent.js"></script>
+        <script type="text/javascript" src="../src/js/legend.js"></script>
+        <script type="text/javascript" src="../src/js/pie.js"></script>
+        <script type="text/javascript" src="../src/js/pieChart.js"></script>
+        <script type="text/javascript" src="../src/js/utils.js"></script>
+
 
         <title>Chart Authoring Tool</title>
     </head>
 
     <body>
         <div id="gpiic-chartAuthoring"></div>
+        <div id="gpiic-chartAuthoring-pieChart">
+            <div class="gpiic-ca-pieChart-pie"></div>
+        </div>
 
         <script type="text/javascript">
             gpii.chartAuthoring("#gpiic-chartAuthoring", {
@@ -27,6 +37,9 @@
                     terms: {
                         templatePrefix: "../src/html"
                     }
+                },
+                pieChart: {
+                    container: "#gpiic-chartAuthoring-pieChart"
                 }
             });
         </script>
