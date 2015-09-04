@@ -23,7 +23,9 @@ https://github.com/gpii/universal/LICENSE.txt
             // dataSet accepts:
             // 1. an array of objects. Must contain "id", "value" and "label" variables.
             // Example: [{id: string, value: number, label: string} ... ]
-            dataSet: []
+            dataSet: [],
+            // "dataSetWithColors" consolidates the dataset in original order with the array of colors, into a single array of objects
+            // dataSetWithColors: []
         },
         legendOptions: {
             colors: null, // An array of colors for the legend generated for corresponding values of model.dataSet
@@ -39,7 +41,6 @@ https://github.com/gpii/universal/LICENSE.txt
             }
         },
         modelRelay: [{
-            // consolidates the dataset in original order with the array of colors, into a single array of objects
             target: "dataSetWithColors",
             singleTransform: {
                 type: "fluid.transforms.free",
