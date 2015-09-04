@@ -115,8 +115,7 @@ https://github.com/gpii/universal/LICENSE.txt
     };
 
     gpii.tests.chartAuthoring.testLegendSyncWithModelDataSet = function(that) {
-        var dataSet = that.model.dataSet;
-        //
+        var dataSet = that.model.dataSet;        
         if(that.options.legendOptions.sort) {
             dataSet.sort(function(a,b) {
                 return b.value - a.value;
