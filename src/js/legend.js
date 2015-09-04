@@ -23,7 +23,7 @@ https://github.com/gpii/universal/LICENSE.txt
             // dataSet accepts:
             // 1. an array of objects. Must contain "id", "value" and "label" variables.
             // Example: [{id: string, value: number, label: string} ... ]
-            dataSet: [],
+            dataSet: []
             // "dataSetWithColors" consolidates the dataset in original order with the array of colors, into a single array of objects
             // dataSetWithColors: []
         },

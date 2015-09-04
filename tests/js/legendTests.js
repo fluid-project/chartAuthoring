@@ -187,7 +187,7 @@ https://github.com/gpii/universal/LICENSE.txt
     };
 
     gpii.tests.chartAuthoring.testLegendSyncWithModelDataSet = function(that, expectedDataSet) {
-        var dataSet = expectedDataSet
+        var dataSet = expectedDataSet;
 
         var rows = gpii.d3.jQueryToD3(that.locate("row"));
         rows.each(function (d,i) {
