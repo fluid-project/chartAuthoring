@@ -59,19 +59,26 @@ https://github.com/gpii/universal/LICENSE.txt
 
         var consolidatedClasses = {};
 
+        // 1. Combine any matching styles and selectors by key into a single string of class names
+
         fluid.each(styles, function (styleValue, key) {
-            consolidatedClasses[key] = styleValue;
+            fluid.set(consolidatedClasses, key, styleValue);
         });
 
         fluid.each(selectors, function (selector, key) {
-            if(consolidatedClasses[key]) {
-                consolidatedClasses[key] = consolidatedClasses[key] + " " + gpii.d3ViewComponent.extractSelectorName(selector);
-            } else {consolidatedClasses[key] = gpii.d3ViewComponent.extractSelectorName(selector);}
+            var correspondingStyle = fluid.get(consolidatedClasses, key);
+            if(correspondingStyle) {
+                var combinedValues = consolidatedClasses[key] + " " + gpii.d3ViewComponent.extractSelectorName(selector);
+                fluid.set(consolidatedClasses, key, combinedValues);
+            } else {fluid.set(consolidatedClasses, key, gpii.d3ViewComponent.extractSelectorName(selector));}
         });
+
+        // 2. For each key in the consolidatedClasses object, split its value into an array of string values separated by spaces,
+        // filter for unique strings, and make a new value based on the array of uniques
 
         fluid.each(consolidatedClasses, function(classes, key) {
             var splitClasses = classes.split(" ");
-            // Basic alphabetic sort to improve readability of applied classes
+            // Basic alphabetic sort to improve readability of applied classes and make testing easier
             splitClasses.sort(function (a,b) {
                 if(a < b) {return -1;}
                 if(a > b) {return 1;}
@@ -84,8 +91,8 @@ https://github.com/gpii/universal/LICENSE.txt
             fluid.each(splitClasses, function(currentClass) {
                 if ($.inArray(currentClass, uniqueClasses) === -1) {uniqueClasses.push(currentClass);}
             });
-            // Update each key to contain only the unique classes
-            consolidatedClasses[key] = uniqueClasses.join(" ");
+            // Update each key to contain only the unique classes by joining the array of uniques
+            fluid.set(consolidatedClasses, key, uniqueClasses.join(" "));
         });
 
         return consolidatedClasses;
