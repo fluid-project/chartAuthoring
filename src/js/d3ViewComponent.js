@@ -56,26 +56,42 @@ https://github.com/gpii/universal/LICENSE.txt
 
     // Synthesize "styles" and "selectors" blocks to combine elements with the same key
     gpii.d3ViewComponent.synthesizeClasses = function (styles, selectors) {
-        var result = {};
+
+        var consolidatedClasses = {};
+
+        // 1. Combine any matching styles and selectors by key into a single string of class names
+
+        // Do the selectors first to maintain gpiic/gpii-style ordering
+        fluid.each(selectors, function (selector, key) {
+            fluid.set(consolidatedClasses, key, gpii.d3ViewComponent.extractSelectorName(selector));
+        });
 
         fluid.each(styles, function (styleValue, key) {
-            var correspondingSelector = fluid.get(selectors, key),
-                selectorName = gpii.d3ViewComponent.extractSelectorName(correspondingSelector),
-                concatenated = selectorName ? selectorName.concat(" " + styleValue) : styleValue;
-            fluid.set(result, key, concatenated);
+            var correspondingSelector = fluid.get(consolidatedClasses, key);
+            if(correspondingSelector) {
+                var combinedValues = fluid.get(consolidatedClasses, key) + " " + styleValue;
+                fluid.set(consolidatedClasses, key, combinedValues);
+            } else {fluid.set(consolidatedClasses, key, styleValue);}
+
         });
 
-        fluid.each(selectors, function (selector, key) {
-            var correspondingStyle = fluid.get(styles, key);
-            if (!correspondingStyle) {
-                var selectorName = gpii.d3ViewComponent.extractSelectorName(selector);
-                if (selectorName) {
-                    fluid.set(result, key, selectorName);
-                }
-            }
+        // 2. For each key in the consolidatedClasses object, split its value into an array of string values separated by spaces,
+        // filter for unique strings, and make a new value based on the array of uniques
+
+        fluid.each(consolidatedClasses, function(classes, key) {
+            var splitClasses = classes.split(" ");
+
+            var uniqueClasses = [];
+
+            // Add classes to the uniqueClasses array if they aren't already there
+            fluid.each(splitClasses, function(currentClass) {
+                if ($.inArray(currentClass, uniqueClasses) === -1) {uniqueClasses.push(currentClass);}
+            });
+            // Update each key to contain only the unique classes by joining the array of uniques
+            fluid.set(consolidatedClasses, key, uniqueClasses.join(" "));
         });
 
-        return result;
+        return consolidatedClasses;
     };
 
 })(jQuery, fluid);

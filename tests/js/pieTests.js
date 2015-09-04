@@ -46,6 +46,9 @@ https://github.com/gpii/universal/LICENSE.txt
         jqUnit.assertEquals("The pie slices have been created with the proper selectors", that.model.dataSet.length, that.locate("slice").length);
         jqUnit.assertEquals("The texts for pie slices have been created with the proper selectors", that.model.dataSet.length, that.locate("text").length);
 
+        // Test that displayed values are in sync with the current model
+        gpii.tests.chartAuthoring.testPieTextSyncWithModelDataSet(that);
+
         // Each slice receives the corresponding data object
         var d3Slices = that.jQueryToD3($(that.locate("slice")));
         d3Slices.each(function (d, i) {
@@ -64,6 +67,16 @@ https://github.com/gpii/universal/LICENSE.txt
         jqUnit.assertTrue("The mouseover listener for pie slices have been registered", that.mouseOverListenerCalled);
     };
 
+    gpii.tests.chartAuthoring.testPieTextSyncWithModelDataSet = function(that) {
+        var dataSet = that.model.dataSet;
+        var d3Elem = gpii.d3.jQueryToD3(that.locate("text"));
+        d3Elem.each(function (d,i) {
+            var displayedValue = d3.select(this).text();
+            var expectedValue = typeof (dataSet[i]) === "object" ? dataSet[i].value : dataSet[i];
+            jqUnit.assertEquals("Displayed values are in sync with the current model", expectedValue, displayedValue);
+        });
+    };
+
     gpii.tests.chartAuthoring.testPrimitiveData = function (d) {
         jqUnit.assertEquals("The corresponding value is associated with this slice", d.value, d.data);
     };
@@ -77,7 +90,7 @@ https://github.com/gpii/universal/LICENSE.txt
     gpii.tests.chartAuthoring.numberArray = [5, 10, 20, 45, 6, 25];
 
     jqUnit.test("Test the pie chart component created based off an array of numbers", function () {
-        jqUnit.expect(19);
+        jqUnit.expect(25);
 
         var that = gpii.tests.chartAuthoring.pieChart.pie(".gpiic-ca-pieChart-numberArray", {
             model: {
@@ -133,8 +146,19 @@ https://github.com/gpii/universal/LICENSE.txt
         value: 45
     }];
 
+    gpii.tests.chartAuthoring.objectArrayChangeInPlace = [{
+        id: "id0",
+        value: 25
+    }, {
+        id: "id1",
+        value: 15
+    }, {
+        id: "id2",
+        value: 35
+    }];
+
     jqUnit.test("Test the pie chart component created based off an array of objects", function () {
-        jqUnit.expect(69);
+        jqUnit.expect(102);
 
         var that = gpii.tests.chartAuthoring.pieChart.pie(".gpiic-ca-pieChart-objectArray", {
             model: {
@@ -149,6 +173,9 @@ https://github.com/gpii/universal/LICENSE.txt
         gpii.tests.chartAuthoring.validatePie(that, gpii.tests.chartAuthoring.testObjectData);
 
         that.applier.change("dataSet", gpii.tests.chartAuthoring.objectArrayRemove);
+        gpii.tests.chartAuthoring.validatePie(that, gpii.tests.chartAuthoring.testObjectData);
+
+        that.applier.change("dataSet", gpii.tests.chartAuthoring.objectArrayChangeInPlace);
         gpii.tests.chartAuthoring.validatePie(that, gpii.tests.chartAuthoring.testObjectData);
     });
 

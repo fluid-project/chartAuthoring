@@ -65,7 +65,7 @@ https://github.com/gpii/universal/LICENSE.txt
     });
 
     jqUnit.test("Test gpii.d3ViewComponent.synthesizeClasses()", function () {
-        jqUnit.expect(4);
+        jqUnit.expect(7);
 
         var cases = [{
             msg: "When the styles block having extra elements",
@@ -110,6 +110,48 @@ https://github.com/gpii/universal/LICENSE.txt
             expected: {
                 a: "b c",
                 b: "any string"
+            }
+        }, {
+            msg: "When the style and selector values are the same",
+            styles: {
+                a: "_abc",
+                b: "efg"
+            },
+            selectors: {
+                a: "._abc",
+                b: ".efg"
+            },
+            expected: {
+                a: "_abc",
+                b: "efg"
+            }
+        }, {
+            msg: "When the styles and selector values contain some common and some unique elements",
+            styles: {
+                a: "e_1 g",
+                b: "g h-2"
+            },
+            selectors: {
+                a: ".e_1",
+                b: ".h-2"
+            },
+            expected: {
+                a: "e_1 g",
+                b: "h-2 g"
+            }
+        }, {
+            msg: "When using gpiic/gpii selectors/styles, Infusion ordering convention is maintained",
+            styles: {
+                a: "gpii-abc1 gpii-abc2",
+                b: "gpii-efg3 gpii-efg4"
+            },
+            selectors: {
+                a: ".gpiic-abc",
+                b: ".gpiic-efg"
+            },
+            expected: {
+                a: "gpiic-abc gpii-abc1 gpii-abc2",
+                b: "gpiic-efg gpii-efg3 gpii-efg4"
             }
         }];
 
