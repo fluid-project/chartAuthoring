@@ -61,16 +61,18 @@ https://github.com/gpii/universal/LICENSE.txt
 
         // 1. Combine any matching styles and selectors by key into a single string of class names
 
-        fluid.each(styles, function (styleValue, key) {
-            fluid.set(consolidatedClasses, key, styleValue);
+        // Do the selectors first to maintain gpiic/gpii-style ordering
+        fluid.each(selectors, function (selector, key) {
+            fluid.set(consolidatedClasses, key, gpii.d3ViewComponent.extractSelectorName(selector));
         });
 
-        fluid.each(selectors, function (selector, key) {
-            var correspondingStyle = fluid.get(consolidatedClasses, key);
-            if(correspondingStyle) {
-                var combinedValues = consolidatedClasses[key] + " " + gpii.d3ViewComponent.extractSelectorName(selector);
+        fluid.each(styles, function (styleValue, key) {
+            var correspondingSelector = fluid.get(consolidatedClasses, key);
+            if(correspondingSelector) {
+                var combinedValues = fluid.get(consolidatedClasses, key) + " " + styleValue;
                 fluid.set(consolidatedClasses, key, combinedValues);
-            } else {fluid.set(consolidatedClasses, key, gpii.d3ViewComponent.extractSelectorName(selector));}
+            } else {fluid.set(consolidatedClasses, key, styleValue);}
+
         });
 
         // 2. For each key in the consolidatedClasses object, split its value into an array of string values separated by spaces,
@@ -78,12 +80,6 @@ https://github.com/gpii/universal/LICENSE.txt
 
         fluid.each(consolidatedClasses, function(classes, key) {
             var splitClasses = classes.split(" ");
-            // Basic alphabetic sort to improve readability of applied classes and make testing easier
-            splitClasses.sort(function (a,b) {
-                if(a < b) {return -1;}
-                if(a > b) {return 1;}
-                return 0;
-            });
 
             var uniqueClasses = [];
 
