@@ -114,30 +114,30 @@ https://github.com/gpii/universal/LICENSE.txt
         }, {
             msg: "When the style and selector values are the same",
             styles: {
-                a: "abc",
+                a: "_abc",
                 b: "efg"
             },
             selectors: {
-                a: ".abc",
+                a: "._abc",
                 b: ".efg"
             },
             expected: {
-                a: "abc",
+                a: "_abc",
                 b: "efg"
             }
         }, {
             msg: "When the styles and selector values contain some common and some unique elements",
             styles: {
-                a: "e1 g",
-                b: "g h2"
+                a: "e_1 g",
+                b: "g h-2"
             },
             selectors: {
-                a: ".e1",
-                b: ".h2"
+                a: ".e_1",
+                b: ".h-2"
             },
             expected: {
-                a: "e1 g",
-                b: "g h2"
+                a: "e_1 g",
+                b: "g h-2"
             }
         }];
 
