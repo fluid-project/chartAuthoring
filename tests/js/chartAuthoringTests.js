@@ -59,7 +59,7 @@ https://github.com/gpii/universal/LICENSE.txt
             name: "Tests the data entry panel component",
             tests: [{
                 name: "Chart Authoring Init",
-                expect: 6,
+                expect: 7,
                 sequence: [{
                     listener: "gpii.tests.chartAuthoringTester.verifyInit",
                     args: ["{chartAuthoring}"],
@@ -90,6 +90,7 @@ https://github.com/gpii/universal/LICENSE.txt
                 dataEntryPanel.options.resources[resourceName === "dataEntryPanel" ? "template": resourceName].resourceText);
         });
         jqUnit.assertNotEquals("The dataEntryPanel has been rendered", "", dataEntryPanel.container.html());
+        jqUnit.assertNotEquals("The pieChart has been rendered", "", that.pieChart.container.html());
     };
 
     $(document).ready(function () {
