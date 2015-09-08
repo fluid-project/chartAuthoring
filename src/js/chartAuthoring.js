@@ -38,20 +38,39 @@ https://github.com/gpii/universal/LICENSE.txt
                         singleTransform: {
                             type: "fluid.transforms.free",
                             args: ["{that}.model.dataEntries"],
-                            func: "gpii.chartAuthoring.dataEntriesToD3"
+                            func: "gpii.chartAuthoring.dataEntriesToPieChartData"
                         },
                         forward: "liveOnly",
                         backward: "never"
+                    },
+                    events: {
+                        onCreate: "{chartAuthoring}.events.onPanelReady"
                     }
                 }
             },
             pieChart: {
                 type: "gpii.chartAuthoring.pieChart",
-                container: "{pieChart}.container"
+                container: "{pieChart}.container",
+                options: {
+                    listeners: {
+                        "onPieChartReady.escalate": {
+                            funcName: "{chartAuthoring}.events.onPieChartReady.fire"
+                        }
+                    }
+                }
             }
         },
         events: {
-            onTemplatesLoaded: null
+            onTemplatesLoaded: null,
+            onPanelReady: null,
+            onPieChartReady: null,
+            onToolReady: {
+                events: {
+                    onPanelReady: "onPanelReady",
+                    onPieChartReady: "onPieChartReady"
+                },
+                args: ["{that}"]
+            }
         },
         // The terms and/or resources need to be set to the appropriate locations
         // by the integrator.
@@ -76,10 +95,12 @@ https://github.com/gpii/universal/LICENSE.txt
         }]
     });
 
-    // Given an object in the style of gpii.chartAuthoring.dataEntryPanel.model.dataEntries, convert it to an array of objects usable by D3, maintaining object constancy by using the dataEntry object name as the key
-       gpii.chartAuthoring.dataEntriesToD3 = function(dataEntries) {
+    // Given an object in the style of gpii.chartAuthoring.dataEntryPanel.model.dataEntries,
+    // convert it to an array of objects in the style used by the pieChart components,
+    // maintaining object constancy by using the dataEntry object name as the key
+       gpii.chartAuthoring.dataEntriesToPieChartData = function(dataEntries) {
 
-           var d3Data = [];
+           var pieChartData = [];
            fluid.each(dataEntries, function(item, key) {
                var d = {
                    id: key,
@@ -87,10 +108,10 @@ https://github.com/gpii/universal/LICENSE.txt
                    value: item.value
                };
                if(d.value !== null) {
-                   d3Data.push(d);
+                   pieChartData.push(d);
                }
            });
-           return d3Data;
+           return pieChartData;
        };
 
 })(jQuery, fluid);
