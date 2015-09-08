@@ -82,6 +82,11 @@ https://github.com/gpii/universal/LICENSE.txt
         gpii.tests.chartAuthoring.pieChart(".gpiic-ca-pieChart", {
             listeners: {
                 "onPieChartReady.runTest": "gpii.tests.chartAuthoring.testPieChart"
+            },
+            resources: {
+                template: {
+                    resourceText: "<div class=\"gpiic-ca-pieChart-pie\"></div><div class=\"gpiic-ca-pieChart-legend\"></div>"
+                }
             }
         });
     });

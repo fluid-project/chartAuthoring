@@ -14,10 +14,11 @@ https://github.com/gpii/universal/LICENSE.txt
 
     // Connects the drawing of the pie (gpii.chartAuthoring.pieChart.pie) and the legend (gpii.chartAuthoring.pieChart.legend)
     fluid.defaults("gpii.chartAuthoring.pieChart", {
-        gradeNames: ["fluid.viewComponent", "autoInit"],
+        gradeNames: ["gpii.chartAuthoring.templateInjection", "autoInit"],
         components: {
             pie: {
                 type: "gpii.chartAuthoring.pieChart.pie",
+                createOnEvent: "onParentReady",
                 container: "{that}.dom.pie",
                 options: {
                     pieOptions: "{pieChart}.options.pieChartOptions",
@@ -32,6 +33,7 @@ https://github.com/gpii/universal/LICENSE.txt
             },
             legend: {
                 type: "gpii.chartAuthoring.pieChart.legend",
+                createOnEvent: "onParentReady",
                 container: "{that}.dom.legend",
                 options: {
                     legendOptions: "{pieChart}.options.pieChartOptions",
@@ -63,6 +65,9 @@ https://github.com/gpii/universal/LICENSE.txt
             pie: ".gpiic-ca-pieChart-pie",
             legend: ".gpiic-ca-pieChart-legend"
         },
+        listeners: {
+            "onCreate.renderTemplate": "gpii.chartAuthoring.pieChart.renderTemplate"
+        },
         events: {
             onPieCreated: null,
             onLegendCreated: null,
@@ -80,8 +85,17 @@ https://github.com/gpii/universal/LICENSE.txt
                     onPieRedrawn: "onPieRedrawn",
                     onLegendRedrawn: "onLegendRedrawn"
                 }
-            }
+            },
+            onParentReady: null
+        },
+        // Supplied by implementer
+        resources: {
+            template: {}
         }
     });
+
+    gpii.chartAuthoring.pieChart.renderTemplate = function (that) {
+        that.events.onParentReady.fire();
+    };
 
 })(jQuery, fluid);

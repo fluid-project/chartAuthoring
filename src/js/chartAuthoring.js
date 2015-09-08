@@ -25,7 +25,7 @@ https://github.com/gpii/universal/LICENSE.txt
             },
             dataEntryPanel: {
                 type: "gpii.chartAuthoring.dataEntryPanel",
-                createOnEvent: "onTemplatesLoaded",
+                createOnEvent: "onPieChartReady",
                 container: "{chartAuthoring}.container",
                 options: {
                     resources: {
@@ -50,8 +50,12 @@ https://github.com/gpii/universal/LICENSE.txt
             },
             pieChart: {
                 type: "gpii.chartAuthoring.pieChart",
+                createOnEvent: "onTemplatesLoaded",
                 container: "{pieChart}.container",
                 options: {
+                    resources: {
+                        template: "{templateLoader}.resources.pieChart",
+                    },
                     listeners: {
                         "onPieChartReady.escalate": {
                             funcName: "{chartAuthoring}.events.onPieChartReady.fire"
@@ -80,7 +84,8 @@ https://github.com/gpii/universal/LICENSE.txt
             },
             resources: {
                 dataEntryPanel: "%templatePrefix/dataEntryPanelTemplate.html",
-                dataEntry: "%templatePrefix/dataEntryTemplate.html"
+                dataEntry: "%templatePrefix/dataEntryTemplate.html",
+                pieChart: "%templatePrefix/pieChartTemplate.html"
             }
         },
         distributeOptions: [{
