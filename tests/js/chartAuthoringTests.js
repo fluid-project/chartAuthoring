@@ -12,6 +12,13 @@ https://github.com/gpii/universal/LICENSE.txt
 
     "use strict";
 
+    jqUnit.test("Test the data conversion function", function () {
+        jqUnit.expect(1);
+        var convertedData = gpii.chartAuthoring.dataEntriesToPieChartData(gpii.tests.chartAuthoring.dataEntries);
+        jqUnit.assertDeepEq("Data conversion between data entries and chart works", gpii.tests.chartAuthoring.dataSet, convertedData);
+    });
+
+    // IoC tests
     fluid.defaults("gpii.tests.chartAuthoring", {
         gradeNames: ["gpii.chartAuthoring"],
         templateLoader: {
@@ -20,24 +27,51 @@ https://github.com/gpii/universal/LICENSE.txt
             }
         },
         components: {
-            dataEntryPanel: {
+            pieChart: {
+                container: ".gpiic-pieChart",
                 options: {
                     listeners: {
-                        "onCreate.escalate": {
-                            listener: "{chartAuthoring}.events.onPanelCreated.fire",
+                        "onPieChartRedrawn.escalate": {
+                            listener: "{chartAuthoring}.events.onPieChartRedrawn.fire",
                             priority: "last"
                         }
                     }
                 }
-            },
-            pieChart: {
-                container: ".gpiic-pieChart"
             }
         },
         events: {
-            onPanelCreated: null
+            onPieChartRedrawn: null
         }
     });
+
+
+    gpii.tests.chartAuthoring.dataEntries =
+    {
+        entry1: {
+            value: "100",
+            label: "Label One",
+            percentage: "100%"
+        },
+        entry2: {
+            value: "50",
+            label: "Label Two",
+            percentage: "100%"
+        }
+    };
+
+    gpii.tests.chartAuthoring.dataSet =
+    [
+        {
+            id: "entry1",
+            value: "100",
+            label: "Label One"
+        },
+        {
+            id: "entry2",
+            value: "50",
+            label: "Label Two"
+        }
+    ];
 
     fluid.defaults("gpii.tests.chartAuthoringTest", {
         gradeNames: ["fluid.test.testEnvironment"],
@@ -59,7 +93,7 @@ https://github.com/gpii/universal/LICENSE.txt
             name: "Tests the data entry panel component",
             tests: [{
                 name: "Chart Authoring Init",
-                expect: 7,
+                expect: 8,
                 sequence: [{
                     listener: "gpii.tests.chartAuthoringTester.verifyInit",
                     args: ["{chartAuthoring}"],
@@ -69,9 +103,16 @@ https://github.com/gpii/universal/LICENSE.txt
                     // To work around the issue when two listeners are registered back to back, the second one doesn't get triggered.
                     func: "fluid.identity"
                 }, {
-                    listener: "gpii.tests.chartAuthoringTester.verifyPanel",
+                    listener: "gpii.tests.chartAuthoringTester.verifyTool",
                     args: ["{gpii.tests.chartAuthoring}", "{gpii.tests.chartAuthoring}.dataEntryPanel"],
-                    event: "{gpii.tests.chartAuthoring}.events.onPanelCreated"
+                    event: "{gpii.tests.chartAuthoring}.events.onToolReady"
+                }, {
+                    func: "{gpii.tests.chartAuthoring}.dataEntryPanel.applier.change",
+                    args: ["dataEntries", gpii.tests.chartAuthoring.dataEntries]
+                }, {
+                    listener: "gpii.tests.chartAuthoringTester.verifyRelay",
+                    args: ["{gpii.tests.chartAuthoring}"],
+                    event: "{gpii.tests.chartAuthoring}.events.onPieChartRedrawn"
                 }]
             }]
         }]
@@ -84,13 +125,18 @@ https://github.com/gpii/universal/LICENSE.txt
         jqUnit.assertEquals("The dataEntryPanel has not been rendered", "", that.container.html());
     };
 
-    gpii.tests.chartAuthoringTester.verifyPanel = function (that, dataEntryPanel) {
+    gpii.tests.chartAuthoringTester.verifyTool = function (that, dataEntryPanel) {
         fluid.each(that.templateLoader.resources, function (resource, resourceName) {
             jqUnit.assertDeepEq("Templates have been passed into the dataEntryPanel sub-component", resource.resourceText,
                 dataEntryPanel.options.resources[resourceName === "dataEntryPanel" ? "template": resourceName].resourceText);
         });
         jqUnit.assertNotEquals("The dataEntryPanel has been rendered", "", dataEntryPanel.container.html());
         jqUnit.assertNotEquals("The pieChart has been rendered", "", that.pieChart.container.html());
+    };
+
+    gpii.tests.chartAuthoringTester.verifyRelay = function (that) {
+        // 1) Test that the models are kept in sync by the relay
+        jqUnit.assertDeepEq("Model is relayed between dataEntryPanel and pieChart", gpii.tests.chartAuthoring.dataSet, that.pieChart.model.dataSet);
     };
 
     $(document).ready(function () {
