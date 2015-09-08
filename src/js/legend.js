@@ -68,7 +68,8 @@ https://github.com/gpii/universal/LICENSE.txt
             valueCell: ".gpii-ca-pieChart-legend-value-cell"
         },
         events: {
-            onLegendCreated: null  // Fire when the legend is created. Ready to register D3 DOM event listeners
+            onLegendCreated: null,  // Fire when the legend is created. Ready to register D3 DOM event listeners,
+            onLegendRedrawn: null // Fire when the legend is redrawn.
         },
         listeners: {
             "onCreate.create": {
@@ -183,6 +184,8 @@ https://github.com/gpii/universal/LICENSE.txt
                 return b.value - a.value;
             });
         }
+
+        that.events.onLegendRedrawn.fire();
     };
 
     gpii.chartAuthoring.pieChart.legend.create = function (that) {
