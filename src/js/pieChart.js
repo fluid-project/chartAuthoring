@@ -25,7 +25,8 @@ https://github.com/gpii/universal/LICENSE.txt
                         dataSet: "{pieChart}.model.dataSet"
                     },
                     events: {
-                        onPieCreated: "{pieChart}.events.onPieCreated"
+                        onPieCreated: "{pieChart}.events.onPieCreated",
+                        onPieRedrawn: "{pieChart}.events.onPieRedrawn"
                     }
                 }
             },
@@ -38,7 +39,8 @@ https://github.com/gpii/universal/LICENSE.txt
                         dataSet: "{pieChart}.model.dataSet"
                     },
                     events: {
-                        onLegendCreated: "{pieChart}.events.onLegendCreated"
+                        onLegendCreated: "{pieChart}.events.onLegendCreated",
+                        onLegendRedrawn: "{pieChart}.events.onLegendRedrawn"
                     }
                 }
             }
@@ -64,12 +66,20 @@ https://github.com/gpii/universal/LICENSE.txt
         events: {
             onPieCreated: null,
             onLegendCreated: null,
+            onPieRedrawn: null,
+            onLegendRedrawn: null,
             onPieChartReady: {
                 events: {
                     onPieCreated: "onPieCreated",
                     onLegendCreated: "onLegendCreated"
                 },
                 args: ["{that}"]
+            },
+            onPieChartRedrawn: {
+                events: {
+                    onPieRedrawn: "onPieRedrawn",
+                    onLegendRedrawn: "onLegendRedrawn"
+                }
             }
         }
     });
