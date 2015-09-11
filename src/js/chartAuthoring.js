@@ -54,7 +54,7 @@ https://github.com/gpii/universal/LICENSE.txt
                 container: "{pieChart}.container",
                 options: {
                     resources: {
-                        template: "{templateLoader}.resources.pieChart",
+                        template: "{templateLoader}.resources.pieChart"
                     },
                     listeners: {
                         "onPieChartReady.escalate": {
@@ -108,20 +108,20 @@ https://github.com/gpii/universal/LICENSE.txt
     // Given an object in the style of gpii.chartAuthoring.dataEntryPanel.model.dataEntries,
     // convert it to an array of objects in the style used by the pieChart components,
     // maintaining object constancy by using the dataEntry object name as the key
-       gpii.chartAuthoring.dataEntriesToPieChartData = function(dataEntries) {
+    gpii.chartAuthoring.dataEntriesToPieChartData = function(dataEntries) {
 
-           var pieChartData = [];
-           fluid.each(dataEntries, function(item, key) {
-               var d = {
-                   id: key,
-                   label: item.label,
-                   value: item.value
-               };
-               if(d.value !== null) {
-                   pieChartData.push(d);
-               }
-           });
-           return pieChartData;
-       };
+        var pieChartData = [];
+        fluid.each(dataEntries, function(item, key) {
+            var d = {
+                id: key,
+                label: item.label,
+                value: item.value
+            };
+            if(d.value !== null) {
+                pieChartData.push(d);
+            }
+        });
+        return pieChartData;
+    };
 
 })(jQuery, fluid);
