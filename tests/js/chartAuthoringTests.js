@@ -28,7 +28,7 @@ https://github.com/gpii/universal/LICENSE.txt
         },
         components: {
             dataEntryPanel: {
-                container: ".gpiic-dataEntryPanel",
+                container: ".gpiic-dataEntryPanel"
             },
             pieChart: {
                 container: ".gpiic-pieChart",
@@ -93,10 +93,10 @@ https://github.com/gpii/universal/LICENSE.txt
     fluid.defaults("gpii.tests.chartAuthoringTester", {
         gradeNames: ["fluid.test.testCaseHolder"],
         modules: [{
-            name: "Tests the data entry panel component",
+            name: "Test the chart authoring component",
             tests: [{
                 name: "Chart Authoring Init",
-                expect: 8,
+                expect: 11,
                 sequence: [{
                     listener: "gpii.tests.chartAuthoringTester.verifyInit",
                     args: ["{chartAuthoring}"],
@@ -107,7 +107,7 @@ https://github.com/gpii/universal/LICENSE.txt
                     func: "fluid.identity"
                 }, {
                     listener: "gpii.tests.chartAuthoringTester.verifyTool",
-                    args: ["{gpii.tests.chartAuthoring}", "{gpii.tests.chartAuthoring}.dataEntryPanel"],
+                    args: ["{gpii.tests.chartAuthoring}"],
                     event: "{gpii.tests.chartAuthoring}.events.onToolReady"
                 }, {
                     func: "{gpii.tests.chartAuthoring}.dataEntryPanel.applier.change",
@@ -125,17 +125,21 @@ https://github.com/gpii/universal/LICENSE.txt
         fluid.each(that.templateLoader.resources, function (resource, resourceName) {
             jqUnit.assertValue("The resource text for " + resourceName + " should have been fetched", resource.resourceText);
         });
-        console.log(that);
         jqUnit.assertEquals("The dataEntryPanel has not been rendered", null, that.dataEntryPanel);
         jqUnit.assertEquals("The pieChart has not been rendered", null, that.pieChart);
     };
 
     gpii.tests.chartAuthoringTester.verifyTool = function (that) {
         // TODO: rewrite this test to handle the new template situation
-        // fluid.each(that.templateLoader.resources, function (resource, resourceName) {
-        //    jqUnit.assertDeepEq("Templates have been passed into the dataEntryPanel sub-component", resource.resourceText,
-        //    dataEntryPanel.options.resources[resourceName === "dataEntryPanel" ? "template": resourceName].resourceText);
-        // });
+
+        var dataEntryPanelResources = that.dataEntryPanel.options.resources,
+            pieChartResources = that.pieChart.options.resources,
+            templateLoaderResources = that.templateLoader.resources;
+
+        jqUnit.assertDeepEq("Template has been passed into the dataEntryPanel sub-component", dataEntryPanelResources.template.resourceText, templateLoaderResources.dataEntryPanel.resourceText);
+        jqUnit.assertDeepEq("Template has been passed into the dataEntry sub-component of the dataEntryPanel sub-component", dataEntryPanelResources.dataEntry.resourceText, templateLoaderResources.dataEntry.resourceText);
+        jqUnit.assertDeepEq("Template has been passed into the pieChart sub-component", pieChartResources.template.resourceText, templateLoaderResources.pieChart.resourceText);
+
         jqUnit.assertNotEquals("The dataEntryPanel has been rendered", "", that.dataEntryPanel.container.html());
         jqUnit.assertNotEquals("The pieChart has been rendered", "", that.pieChart.container.html());
     };
