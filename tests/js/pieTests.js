@@ -17,8 +17,8 @@ https://github.com/gpii/universal/LICENSE.txt
     fluid.defaults("gpii.tests.chartAuthoring.pieChart.pie", {
         gradeNames: ["gpii.chartAuthoring.pieChart.pie", "autoInit"],
         pieOptions: {
-            width: 200,
-            height: 200,
+            width: "200",
+            height: "200",
             colors: ["#000000", "#ff0000", "#00ff00", "#0000ff", "#aabbcc", "#ccbbaa"]
         },
         listeners: {
@@ -41,8 +41,9 @@ https://github.com/gpii/universal/LICENSE.txt
 
         // Test the drawing
         jqUnit.assertNotEquals("The SVG element is created with the proper selector", 0, pie.length);
-        jqUnit.assertEquals("The width is set correctly on the pie chart", that.options.pieOptions.width, pie.attr("width"));
-        jqUnit.assertEquals("The height is set correctly on the pie chart", that.options.pieOptions.height, pie.attr("height"));
+
+        jqUnit.assertEquals("The width is set correctly on the pie chart", that.options.pieOptions.width === "auto" ? that.container.width() : that.options.pieOptions.width, pie.attr("width"));
+        jqUnit.assertEquals("The height is set correctly on the pie chart", that.options.pieOptions.height === "auto" ? that.container.height() : that.options.pieOptions.height, pie.attr("height"));
         jqUnit.assertEquals("The pie slices have been created with the proper selectors", that.model.dataSet.length, that.locate("slice").length);
         jqUnit.assertEquals("The texts for pie slices have been created with the proper selectors", that.model.dataSet.length, that.locate("text").length);
 
@@ -177,6 +178,22 @@ https://github.com/gpii/universal/LICENSE.txt
 
         that.applier.change("dataSet", gpii.tests.chartAuthoring.objectArrayChangeInPlace);
         gpii.tests.chartAuthoring.validatePie(that, gpii.tests.chartAuthoring.testObjectData);
+    });
+
+    jqUnit.test("Test the pie chart component created with automatic scaling", function () {
+        jqUnit.expect(25);
+
+        var that = gpii.tests.chartAuthoring.pieChart.pie(".gpiic-ca-pieChart-autoScale", {
+            model: {
+                dataSet: gpii.tests.chartAuthoring.numberArray
+            },
+            pieOptions: {
+                width: "auto",
+                height: "auto",
+            }
+        });
+
+        gpii.tests.chartAuthoring.runCommonTests(that, gpii.tests.chartAuthoring.testPrimitiveData);
     });
 
 })(jQuery, fluid);

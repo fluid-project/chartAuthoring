@@ -142,12 +142,14 @@ https://github.com/gpii/universal/LICENSE.txt
     gpii.chartAuthoring.pieChart.pie.create = function (that) {
         var container = that.container,
             p = that.options.pieOptions,
-            width = p.width,
-            height = p.height,
+            width = p.width === "auto" ? gpii.chartAuthoring.pieChart.pie.calcAutoscaleWidth(that) : p.width,
+            height = p.height === "auto" ? gpii.chartAuthoring.pieChart.pie.calcAutoscaleHeight(that) : p.height,
             colors = p.colors,
             outerRadius = p.outerRadius || width / 2,
             innerRadius = p.innerRadius || 0,
             pieClass = that.classes.pie;
+
+        gpii.chartAuthoring.pieChart.pie.calcAutoscaleWidth(that);
 
         that.arc = d3.svg.arc()
             .innerRadius(innerRadius)
@@ -165,7 +167,8 @@ https://github.com/gpii/universal/LICENSE.txt
             .attr({
                 "width": width,
                 "height": height,
-                "class": pieClass
+                "class": pieClass,
+                "viewBox": gpii.chartAuthoring.pieChart.getViewBoxConfiguration(0,0, width, height)
             })
             .append("g")
             .attr({
@@ -179,6 +182,20 @@ https://github.com/gpii/universal/LICENSE.txt
 
     gpii.chartAuthoring.pieChart.textTransform = function (arc, d) {
         return "translate(" + arc.centroid(d) + ")";
+    };
+
+    gpii.chartAuthoring.pieChart.getViewBoxConfiguration = function (x, y, width, height) {
+        return x + "," + y + "," + width + "," + height;
+    };
+
+    // Returns automatically calculated width based on container width;
+    gpii.chartAuthoring.pieChart.pie.calcAutoscaleWidth = function (that) {
+        return that.container.width();
+    };
+
+    // Returns automatically calculated height based on container height;
+    gpii.chartAuthoring.pieChart.pie.calcAutoscaleHeight = function (that) {
+        return that.container.height();
     };
 
 })(jQuery, fluid);
