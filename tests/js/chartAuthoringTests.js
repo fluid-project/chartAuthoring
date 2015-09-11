@@ -27,6 +27,9 @@ https://github.com/gpii/universal/LICENSE.txt
             }
         },
         components: {
+            dataEntryPanel: {
+                container: ".gpiic-dataEntryPanel",
+            },
             pieChart: {
                 container: ".gpiic-pieChart",
                 options: {
@@ -93,7 +96,7 @@ https://github.com/gpii/universal/LICENSE.txt
             name: "Tests the data entry panel component",
             tests: [{
                 name: "Chart Authoring Init",
-                expect: 7,
+                expect: 8,
                 sequence: [{
                     listener: "gpii.tests.chartAuthoringTester.verifyInit",
                     args: ["{chartAuthoring}"],
@@ -122,7 +125,9 @@ https://github.com/gpii/universal/LICENSE.txt
         fluid.each(that.templateLoader.resources, function (resource, resourceName) {
             jqUnit.assertValue("The resource text for " + resourceName + " should have been fetched", resource.resourceText);
         });
-        jqUnit.assertEquals("The dataEntryPanel has not been rendered", "", that.container.html());
+        console.log(that);
+        jqUnit.assertEquals("The dataEntryPanel has not been rendered", null, that.dataEntryPanel);
+        jqUnit.assertEquals("The pieChart has not been rendered", null, that.pieChart);
     };
 
     gpii.tests.chartAuthoringTester.verifyTool = function (that) {

@@ -26,7 +26,7 @@ https://github.com/gpii/universal/LICENSE.txt
             dataEntryPanel: {
                 type: "gpii.chartAuthoring.dataEntryPanel",
                 createOnEvent: "onPieChartReady",
-                container: "{chartAuthoring}.container",
+                container: "{dataEntryPanel}.container",
                 options: {
                     resources: {
                         template: "{templateLoader}.resources.dataEntryPanel",
@@ -92,6 +92,11 @@ https://github.com/gpii/universal/LICENSE.txt
             source: "{that}.options.templateLoader",
             removeSource: true,
             target: "{that > templateLoader}.options"
+        },
+        {
+            source: "{that}.options.dataEntryPanel.container",
+            removeSource: true,
+            target: "{that > dataEntryPanel}.container"
         },
         {
             source: "{that}.options.pieChart.container",

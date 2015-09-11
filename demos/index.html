@@ -46,18 +46,17 @@
                 border: 1px solid black;
                 padding: 2px;
             }
-            #gpiic-chartAuthoring {
+            #gpiic-chartAuthoring-dataEntryPanel {
                 clear: both;
             }
         </style>
     </head>
 
     <body>
-        <div id="gpiic-chartAuthoring-pieChart">
-            <div class="gpiic-ca-pieChart-pie"></div>
-            <div class="gpiic-ca-pieChart-legend"></div>
+        <div id="gpiic-chartAuthoring">
+        <div id="gpiic-chartAuthoring-pieChart"></div>
+        <div id="gpiic-chartAuthoring-dataEntryPanel"></div>
         </div>
-        <div id="gpiic-chartAuthoring"></div>
 
 
         <script type="text/javascript">
@@ -66,6 +65,9 @@
                     terms: {
                         templatePrefix: "../src/html"
                     }
+                },
+                dataEntryPanel: {
+                    container: "#gpiic-chartAuthoring-dataEntryPanel"
                 },
                 pieChart: {
                     container: "#gpiic-chartAuthoring-pieChart"
