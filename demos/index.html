@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link rel="stylesheet" href="../src/lib/infusion/src/lib/normalize/css/normalize.css" />
+
+        <script type="text/javascript" src="../src/lib/infusion/infusion-custom.js"></script>
+        <script type="text/javascript" src="../src/js/valueBinding.js"></script>
+        <script type="text/javascript" src="../src/js/percentage.js"></script>
+        <script type="text/javascript" src="../src/js/transformations.js"></script>
+        <script type="text/javascript" src="../src/js/templateInjection.js"></script>
+        <script type="text/javascript" src="../src/js/dataEntry.js"></script>
+        <script type="text/javascript" src="../src/js/dataEntryPanel.js"></script>
+        <script type="text/javascript" src="../src/js/chartAuthoring.js"></script>
+
+        <title>Chart Authoring Tool</title>
+    </head>
+
+    <body>
+        <div id="gpiic-chartAuthoring"></div>
+
+        <script type="text/javascript">
+            gpii.chartAuthoring("#gpiic-chartAuthoring", {
+                templateLoader: {
+                    terms: {
+                        templatePrefix: "../src/html"
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>
