@@ -29,6 +29,7 @@ https://github.com/gpii/universal/LICENSE.txt
             dataSet: []
         },
         pieOptions: {
+            // Width & height can be supplied as fixed, or as "auto" to automatically scale to width/height of container
             width: 300,
             height: 300,
             colors: null, // An array of colors to fill slices generated for corresponding values of model.dataSet
@@ -195,7 +196,7 @@ https://github.com/gpii/universal/LICENSE.txt
 
     // Returns automatically calculated height based on container height;
     gpii.chartAuthoring.pieChart.pie.calcAutoscaleHeight = function (that) {
-        return that.container.height();
+        return that.container.width();
     };
 
 })(jQuery, fluid);

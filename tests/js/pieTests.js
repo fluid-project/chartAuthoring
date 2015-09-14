@@ -189,7 +189,7 @@ https://github.com/gpii/universal/LICENSE.txt
             },
             pieOptions: {
                 width: "auto",
-                height: "auto",
+                height: "auto"
             }
         });
 
