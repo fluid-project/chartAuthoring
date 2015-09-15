@@ -50,7 +50,7 @@ https://github.com/gpii/universal/LICENSE.txt
         modules: [{
             name: "Tests the data entry component",
             tests: [{
-                expect: 5,
+                expect: 7,
                 name: "Test Init",
                 type: "test",
                 func: "gpii.tests.chartAuthoring.dataEntryTester.testRendering",
@@ -107,6 +107,13 @@ https://github.com/gpii/universal/LICENSE.txt
         gpii.tests.chartAuthoring.dataEntryTester.verifyPercentage(that.locate("percentage"), expected.percentage);
     };
 
+    gpii.tests.chartAuthoring.dataEntryTester.verifyAccessibility = function(that) {
+        var valueInput = that.locate("input");
+        var labelInput = that.locate("label");
+        jqUnit.assertEquals("An aria-label for the label input has been set", that.options.strings.labelInputAriaLabel, labelInput.attr("aria-label"));
+        jqUnit.assertEquals("An aria-label for the value input has been set", that.options.strings.valueInputAriaLabel, valueInput.attr("aria-label"));
+    };
+
     gpii.tests.chartAuthoring.dataEntryTester.testRendering = function (that) {
         jqUnit.assertValue("The component should have been initialized.", that);
         var input = that.locate("input");
@@ -119,6 +126,9 @@ https://github.com/gpii/universal/LICENSE.txt
         gpii.tests.chartAuthoring.dataEntryTester.verifyPercentage(percentage, "%");
 
         gpii.tests.chartAuthoring.dataEntryTester.verifyInput("label", label, that.model.label || "");
+
+        gpii.tests.chartAuthoring.dataEntryTester.verifyAccessibility(that);
+
     };
 
     $(document).ready(function () {

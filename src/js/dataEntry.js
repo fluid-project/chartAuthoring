@@ -21,7 +21,11 @@ https://github.com/gpii/universal/LICENSE.txt
         },
         strings: {
             inputPlaceholder: "Value",
-            percentage: "%percentage%"
+            percentage: "%percentage%",
+            // aria-label attribute for the Value form input
+            valueInputAriaLabel: "Value",
+            // aria-label attribute for the Label form input
+            labelInputAriaLabel: "Label"
         },
         model: {
             value: null,
@@ -66,7 +70,15 @@ https://github.com/gpii/universal/LICENSE.txt
                 "this": "{that}.dom.input",
                 "method": "attr",
                 "args": {
-                    placeholder: "{that}.options.strings.inputPlaceholder"
+                    placeholder: "{that}.options.strings.inputPlaceholder",
+                    "aria-label": "{that}.options.strings.valueInputAriaLabel"
+                }
+            },
+            "onCreate.setLabelAttrs": {
+                "this": "{that}.dom.label",
+                "method": "attr",
+                "args": {
+                    "aria-label": "{that}.options.strings.labelInputAriaLabel"
                 }
             }
         },
