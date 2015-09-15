@@ -37,6 +37,10 @@ https://github.com/gpii/universal/LICENSE.txt
             innerRadius: null,
             animationDuration: 750
         },
+        strings: {
+            pieTitle: "Pie Chart",
+            pieDescription: "A pie chart."
+        },
         styles: {
             pie: "gpii-ca-pieChart-pie",
             slice: "gpii-ca-pieChart-slice",
@@ -76,7 +80,7 @@ https://github.com/gpii/universal/LICENSE.txt
     });
 
     gpii.chartAuthoring.pieChart.pie.draw = function (that) {
-        var svg = that.svg,
+        var pieGroup = that.pieGroup,
             pie = that.pie,
             arc = that.arc,
             color = that.color,
@@ -85,9 +89,9 @@ https://github.com/gpii/universal/LICENSE.txt
             textClass = that.classes.text,
             animationDuration = that.options.pieOptions.animationDuration;
 
-        var paths = svg.selectAll("path")
+        var paths = pieGroup.selectAll("path")
             .data(pie(dataSet));
-        var texts = svg.selectAll("text")
+        var texts = pieGroup.selectAll("text")
             .data(pie(dataSet));
 
         // Draw pie slices
@@ -170,7 +174,17 @@ https://github.com/gpii/universal/LICENSE.txt
                 "height": height,
                 "class": pieClass,
                 "viewBox": gpii.chartAuthoring.pieChart.getViewBoxConfiguration(0,0, width, height)
-            })
+            });
+
+        that.svg
+            .append("title")
+            .text(that.options.strings.pieTitle);
+
+        that.svg
+            .append("desc")
+            .text(that.options.strings.pieDescription);
+
+        that.pieGroup = that.svg.append("a")
             .append("g")
             .attr({
                 "transform": "translate(" + outerRadius + "," + outerRadius + ")"
