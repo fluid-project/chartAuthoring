@@ -184,8 +184,7 @@ https://github.com/gpii/universal/LICENSE.txt
             .append("desc")
             .text(that.options.strings.pieDescription);
 
-        that.pieGroup = that.svg.append("a")
-            .append("g")
+        that.pieGroup = that.svg.append("g")            
             .attr({
                 "transform": "translate(" + outerRadius + "," + outerRadius + ")"
             });
