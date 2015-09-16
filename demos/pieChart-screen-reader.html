@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+        <link rel="stylesheet" href="../src/lib/infusion/src/lib/normalize/css/normalize.css" />
+
+        <script type="text/javascript" src="../src/lib/infusion/infusion-custom.js"></script>
+        <script type="text/javascript" src="../src/lib/d3/d3.js"></script>
+        <script type="text/javascript" src="../src/js/valueBinding.js"></script>
+        <script type="text/javascript" src="../src/js/percentage.js"></script>
+        <script type="text/javascript" src="../src/js/transformations.js"></script>
+        <script type="text/javascript" src="../src/js/templateInjection.js"></script>
+        <script type="text/javascript" src="../src/js/dataEntry.js"></script>
+        <script type="text/javascript" src="../src/js/dataEntryPanel.js"></script>
+        <script type="text/javascript" src="../src/js/chartAuthoring.js"></script>
+        <script type="text/javascript" src="../src/js/d3ViewComponent.js"></script>
+        <script type="text/javascript" src="../src/js/legend.js"></script>
+        <script type="text/javascript" src="../src/js/pie.js"></script>
+        <script type="text/javascript" src="../src/js/pieChart.js"></script>
+        <script type="text/javascript" src="../src/js/utils.js"></script>
+
+
+        <title>Chart Authoring Tool</title>
+        <style>
+            .gpiic-ca-pieChart-pie {
+                width: 400px;
+            }
+            .gpiic-ca-pieChart-legend {
+                width: 300px;
+            }
+            .gpii-ca-pieChart-legend-table {
+                border: 1px solid black;
+            }
+            .gpii-ca-pieChart-legend-table thead th {
+                border: 1px solid black;
+                padding: 2px;
+            }
+            .gpii-ca-pieChart-legend-table-row {
+                border: 1px solid black;
+            }
+            .gpii-ca-pieChart-legend-table-row td {
+                border: 1px solid black;
+                padding: 2px;
+            }
+            #gpiic-chartAuthoring-dataEntryPanel {
+                clear: both;
+            }
+
+            #gpiic-chartAuthoring-dataEntryPanel li {
+                list-style: none;
+            }
+
+        </style>
+    </head>
+
+    <body>
+
+        <div class="gpiic-ca-pieChart">
+            <div class="gpiic-ca-pieChart-pie"></div>
+        </div>
+
+
+        <script type="text/javascript">
+            var chart = gpii.chartAuthoring.pieChart(".gpiic-ca-pieChart", {
+                model: {
+                    dataSet:
+                    [{
+                        id: "id0",
+                        value: 5,
+                        label: "label 0"
+                    }, {
+                        id: "id1",
+                        value: 10,
+                        label: "label 1"
+                    }, {
+                        id: "id2",
+                        value: 20,
+                        label: "label 2"
+                    }, {
+                        id: "id3",
+                        value: 45,
+                        label: "label 3"
+                    }]
+                },
+                resources: {
+                    template: {
+                        resourceText: "<div class=\"gpiic-ca-pieChart-pie\"></div><div class=\"gpiic-ca-pieChart-legend\"></div>"
+                    }
+                }
+            });
+        </script>
+    </body>
+</html>

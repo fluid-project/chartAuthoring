@@ -152,7 +152,9 @@ https://github.com/gpii/universal/LICENSE.txt
             colors = p.colors,
             outerRadius = p.outerRadius || width / 2,
             innerRadius = p.innerRadius || 0,
-            pieClass = that.classes.pie;
+            pieClass = that.classes.pie,
+            pieTitleId = "fluid-id-"+fluid.allocateGuid(),
+            pieDescId = "fluid-id-"+fluid.allocateGuid();
 
         gpii.chartAuthoring.pieChart.pie.calcAutoscaleWidth(that);
 
@@ -173,18 +175,28 @@ https://github.com/gpii/universal/LICENSE.txt
                 "width": width,
                 "height": height,
                 "class": pieClass,
-                "viewBox": gpii.chartAuthoring.pieChart.getViewBoxConfiguration(0,0, width, height)
+                "viewBox": gpii.chartAuthoring.pieChart.getViewBoxConfiguration(0,0, width, height),
+                // Set aria role to image
+                "role": "img",
+                // Explicitly associate SVG title & desc via aria-describedby
+                "aria-describedby": pieTitleId + " " + pieDescId
             });
 
         that.svg
             .append("title")
+            .attr({
+                "id": pieTitleId
+            })
             .text(that.options.strings.pieTitle);
 
         that.svg
             .append("desc")
+            .attr({
+                "id": pieDescId
+            })
             .text(that.options.strings.pieDescription);
 
-        that.pieGroup = that.svg.append("g")            
+        that.pieGroup = that.svg.append("g")
             .attr({
                 "transform": "translate(" + outerRadius + "," + outerRadius + ")"
             });
