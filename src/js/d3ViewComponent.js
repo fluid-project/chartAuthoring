@@ -13,8 +13,8 @@ https://github.com/gpii/universal/LICENSE.txt
     "use strict";
 
     // The D3 view component that is able to:
-    // 1. convert jQuery DOM elements to D3 elements;
-    // 2. register D3 DOM event listeners;
+    // 1. Convert jQuery DOM elements to D3 elements;
+    // 2. Attach D3 DOM event listeners;
     // 3. Synthesize that.options.styles and that.options.selectors to combine elements with the same key into that.classes
 
     fluid.defaults("gpii.d3ViewComponent", {

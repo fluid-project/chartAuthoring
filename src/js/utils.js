@@ -18,12 +18,12 @@ https://github.com/gpii/universal/LICENSE.txt
      * Convert jQuery DOM elements to D3 DOM elements.
      * @param domElem - a jQuery DOM element or an array of jQuery DOM elements
      */
-    gpii.d3.jQueryToD3 = function (domElem) {
-        return d3.selectAll(domElem.toArray());
+    gpii.d3.jQueryToD3 = function (elem) {
+        return d3.selectAll(elem.toArray());
     };
 
-    gpii.d3.addD3Listeners = function (elem, eventName, listener, that) {
-        var d3Elem = that.jQueryToD3(elem);
+    gpii.d3.addD3Listeners = function (jQueryElem, eventName, listener, that) {
+        var d3Elem = gpii.d3.jQueryToD3(jQueryElem);
         d3Elem.on(eventName, function (data, i) {
             fluid.invokeGlobalFunction(listener, [data, i, that]);
         });

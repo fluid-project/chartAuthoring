@@ -44,4 +44,34 @@ https://github.com/gpii/universal/LICENSE.txt
         });
     });
 
+    jqUnit.test("Test gpii.d3.jQueryToD3()", function () {
+        jqUnit.expect(3);
+
+        var jQueryContainer = $(".gpiic-container");
+        jqUnit.assertNotUndefined("The source container is a jQuery container", jQueryContainer.jquery);
+
+        var d3Elem = gpii.d3.jQueryToD3(jQueryContainer);
+        jqUnit.assertUndefined("The source container is a jQuery container", d3Elem[0].jquery);
+        jqUnit.assertEquals("The jQuery element has been converted to D3 element", jQueryContainer[0], d3Elem[0][0]);
+    });
+
+    gpii.tests.mouseOverListenerCalled = false;
+
+    gpii.tests.mouseOverListener = function (data, i, that) {
+        gpii.tests.mouseOverListenerCalled = true;
+    };
+
+    jqUnit.test("Test gpii.d3.addD3Listeners()", function () {
+        jqUnit.expect(2);
+
+        var container = $(".gpiic-d3Listener");
+        gpii.d3.addD3Listeners(container, "mouseover", "gpii.tests.mouseOverListener");
+
+        jqUnit.assertFalse("The mouseover listener have not been triggered", gpii.tests.mouseOverListenerCalled);
+        var d3Container = gpii.d3.jQueryToD3(container);
+        d3Container.on("mouseover")();
+        jqUnit.assertTrue("The mouseover listener have been registered", gpii.tests.mouseOverListenerCalled);
+
+    });
+
 })(jQuery, fluid);
