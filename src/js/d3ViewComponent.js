@@ -39,9 +39,9 @@ https://github.com/gpii/universal/LICENSE.txt
         }
     });
 
-    // Validate the given selector to ensure it is indeed of the form "period plus classname" since the element
-    // is achieved through adding a classname via the d3 "class" directivethe and the current implementation
-    // couldn't handle any other form.
+    // Validate the given selector to ensure it is in the form "period plus classname". The current
+    // implementation adds the given classname via the d3 "class" directive, so it couldn't handle
+    // selectors in any other forms such as "#foo" or ".foo.bar"
     gpii.d3ViewComponent.extractSelectorName = function (selector) {
         if (!selector) {
             return;
@@ -59,39 +59,36 @@ https://github.com/gpii/universal/LICENSE.txt
 
         var consolidatedClasses = {};
 
-        // 1. Combine any matching styles and selectors by key into a single string of class names
+        // 1. Combine any matching styles and selectors by key into an array of class names
 
         // Do the selectors first to maintain gpiic/gpii-style ordering
         fluid.each(selectors, function (selector, key) {
-            fluid.set(consolidatedClasses, key, gpii.d3ViewComponent.extractSelectorName(selector));
+            fluid.set(consolidatedClasses, key, [gpii.d3ViewComponent.extractSelectorName(selector)]);
         });
 
         fluid.each(styles, function (styleValue, key) {
-            var correspondingSelector = fluid.get(consolidatedClasses, key);
-            if(correspondingSelector) {
-                var combinedValues = fluid.get(consolidatedClasses, key) + " " + styleValue;
-                fluid.set(consolidatedClasses, key, combinedValues);
-            } else {fluid.set(consolidatedClasses, key, styleValue);}
+            var resultArray = styleValue.split(" ");
+            var correspondingSelectorArray = fluid.get(consolidatedClasses, key);
 
-        });
-
-        // 2. For each key in the consolidatedClasses object, split its value into an array of string values separated by spaces,
-        // filter for unique strings, and make a new value based on the array of uniques
-
-        fluid.each(consolidatedClasses, function(classes, key) {
-            var splitClasses = classes.split(" ");
-
-            var uniqueClasses = [];
-
-            // Add classes to the uniqueClasses array if they aren't already there
-            fluid.each(splitClasses, function(currentClass) {
-                if ($.inArray(currentClass, uniqueClasses) === -1) {uniqueClasses.push(currentClass);}
+            if(correspondingSelectorArray) {
+                resultArray = correspondingSelectorArray.concat(resultArray);
+            }
+            // Only keep unique values for each consolidated class array
+            var resultArrayWithUniqueValues = resultArray.filter(function (value, index, self) {
+                return self.indexOf(value) === index;
             });
-            // Update each key to contain only the unique classes by joining the array of uniques
-            fluid.set(consolidatedClasses, key, uniqueClasses.join(" "));
+
+            fluid.set(consolidatedClasses, key, resultArrayWithUniqueValues);
         });
 
-        return consolidatedClasses;
+        // 2. For each key/value pair in the consolidatedClasses object, turn the value from an array
+        // to a space-delimited string
+
+        var togo = fluid.transform(consolidatedClasses, function (selectorArray, key){
+            return selectorArray.join(" ");
+        });
+
+        return togo;
     };
 
 })(jQuery, fluid);

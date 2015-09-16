@@ -102,30 +102,30 @@ https://github.com/gpii/universal/LICENSE.txt
         var dataSet = model.dataSet;
         var color = model.color;
 
-        var c = [];
+        var consolidated = [];
         fluid.each(dataSet, function(item, index) {
-            var d = {
+            var oneConsolidated = {
                 id: item.id,
                 label: item.label,
                 value: item.value,
                 color: color(index)
             };
-            c.push(d);
+            consolidated.push(oneConsolidated);
         });
 
-        return c;
+        return consolidated;
 
     };
 
     gpii.chartAuthoring.pieChart.legend.draw = function (that) {
         var table = that.table,
-            l = that.options.legendOptions,
+            legendOptions = that.options.legendOptions,
             dataSet = that.model.dataSetWithColors,
             rowClass = that.classes.row,
             legendColorCellClass = that.classes.legendColorCell,
             legendLabelCellClass = that.classes.labelCell,
             legendValueCellClass = that.classes.valueCell,
-            sort = l.sort;
+            sort = legendOptions.sort;
         var tbody = table.selectAll("tbody");
 
         var rows = tbody.selectAll("tr")
