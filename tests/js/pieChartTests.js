@@ -53,6 +53,12 @@ https://github.com/gpii/universal/LICENSE.txt
             var value = fluid.get(that, [subcomponentName, "options", subcomponentName + "Options", option.name]);
             jqUnit[option.method]("The option \"" + option.name + "\" for creating " + subcomponentName + " has been distributed to the sub-component \"" + subcomponentName + "\"", that.options.pieChartOptions[option.name], value);
         });
+
+        // Verify colors
+        for (var i = 0; i < that.options.pieChartOptions.colors.length; i++) {
+            var colorScale = fluid.get(that, [subcomponentName, "options", subcomponentName + "Options", "colors"]);
+            jqUnit.assertEquals("The color scale function returns correct color code at index " + i, that.options.pieChartOptions.colors[i], colorScale(i));
+        }
     };
 
     gpii.tests.chartAuthoring.testPieChart = function (that) {
@@ -62,9 +68,6 @@ https://github.com/gpii/universal/LICENSE.txt
         }, {
             name: "height",
             method: "assertEquals"
-        }, {
-            name: "colors",
-            method: "assertDeepEq"
         }, {
             name: "sort",
             method: "assertFalse"
@@ -77,7 +80,7 @@ https://github.com/gpii/universal/LICENSE.txt
     };
 
     jqUnit.asyncTest("Test the pie chart", function () {
-        jqUnit.expect(12);
+        jqUnit.expect(22);
 
         gpii.tests.chartAuthoring.pieChart(".gpiic-ca-pieChart", {
             listeners: {

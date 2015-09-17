@@ -31,7 +31,9 @@ https://github.com/gpii/universal/LICENSE.txt
         pieOptions: {
             width: 300,
             height: 300,
-            colors: null, // An array of colors to fill slices generated for corresponding values of model.dataSet
+            // An array of colors to fill slices generated for corresponding values of model.dataSet
+            // Or, a d3 color scale that's generated based off an array of colors
+            colors: null,
             outerRadius: null,
             innerRadius: null,
             animationDuration: 750
@@ -77,7 +79,7 @@ https://github.com/gpii/universal/LICENSE.txt
         var svg = that.svg,
             pie = that.pie,
             arc = that.arc,
-            color = that.color,
+            color = that.colorScale,
             dataSet = that.model.dataSet,
             sliceClass = that.classes.slice,
             textClass = that.classes.text,
@@ -128,7 +130,6 @@ https://github.com/gpii/universal/LICENSE.txt
             return d.value;
         });
 
-
         texts.transition().duration(animationDuration).attr("transform", function (d) {
             return that.textTransform(d);
         });
@@ -155,8 +156,6 @@ https://github.com/gpii/universal/LICENSE.txt
                 return typeof (d) === "object" ? d.value : d;
             });
 
-        that.color = colors ? d3.scale.ordinal().range(colors) : d3.scale.category10();
-
         that.svg = that.jQueryToD3(container)
             .append("svg")
             .attr({
@@ -168,6 +167,8 @@ https://github.com/gpii/universal/LICENSE.txt
             .attr({
                 "transform": "translate(" + outerRadius + "," + outerRadius + ")"
             });
+
+        that.colorScale = (typeof(colors) === "function") ? colors : gpii.d3.getColorScale(colors);
 
         that.draw();
 

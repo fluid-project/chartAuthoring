@@ -30,6 +30,16 @@ https://github.com/gpii/universal/LICENSE.txt
     };
 
     /**
+     * Return a D3 color scale based on user supplied colors or the d3.scale.category10() defaults
+     * d3.scale.category10() constructs a new ordinal scale with a range of ten categorical colors:
+     * @param an array of color codes or undefined
+     * @return - a D3 color scale
+     */
+    gpii.d3.getColorScale = function (colors) {
+        return colors ? d3.scale.ordinal().range(colors) : d3.scale.category10();
+    };
+
+    /**
      * Validate the given string is in the form of a css class, such as ".gpii-css-name"
      * @param cssClass - string
      * @return - boolean

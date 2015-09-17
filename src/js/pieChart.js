@@ -15,12 +15,20 @@ https://github.com/gpii/universal/LICENSE.txt
     // Connects the drawing of the pie (gpii.chartAuthoring.pieChart.pie) and the legend (gpii.chartAuthoring.pieChart.legend)
     fluid.defaults("gpii.chartAuthoring.pieChart", {
         gradeNames: ["fluid.viewComponent", "autoInit"],
+        members: {
+            drawingOptions: {
+                expander: {
+                    funcName: "gpii.chartAuthoring.pieChart.consolidateDrawingOptions",
+                    args: ["{that}.options.pieChartOptions"]
+                }
+            }
+        },
         components: {
             pie: {
                 type: "gpii.chartAuthoring.pieChart.pie",
                 container: "{that}.dom.pie",
                 options: {
-                    pieOptions: "{pieChart}.options.pieChartOptions",
+                    pieOptions: "{pieChart}.drawingOptions",
                     model: {
                         dataSet: "{pieChart}.model.dataSet"
                     },
@@ -33,7 +41,7 @@ https://github.com/gpii/universal/LICENSE.txt
                 type: "gpii.chartAuthoring.pieChart.legend",
                 container: "{that}.dom.legend",
                 options: {
-                    legendOptions: "{pieChart}.options.pieChartOptions",
+                    legendOptions: "{pieChart}.drawingOptions",
                     model: {
                         dataSet: "{pieChart}.model.dataSet"
                     },
@@ -73,5 +81,11 @@ https://github.com/gpii/universal/LICENSE.txt
             }
         }
     });
+
+    gpii.chartAuthoring.pieChart.consolidateDrawingOptions = function (userOptions) {
+        var consolidatedOptions = fluid.copy(userOptions);
+        fluid.set(consolidatedOptions, "colors", gpii.d3.getColorScale(userOptions.colors));
+        return consolidatedOptions;
+    };
 
 })(jQuery, fluid);
