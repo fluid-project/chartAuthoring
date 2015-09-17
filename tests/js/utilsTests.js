@@ -27,7 +27,7 @@ https://github.com/gpii/universal/LICENSE.txt
 
     gpii.tests.mouseOverListenerCalled = false;
 
-    gpii.tests.mouseOverListener = function (data, i, that) {
+    gpii.tests.mouseOverListener = function () {
         gpii.tests.mouseOverListenerCalled = true;
     };
 

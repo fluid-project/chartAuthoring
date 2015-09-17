@@ -84,7 +84,7 @@ https://github.com/gpii/universal/LICENSE.txt
         // 2. For each key/value pair in the consolidatedClasses object, turn the value from an array
         // to a space-delimited string
 
-        var togo = fluid.transform(consolidatedClasses, function (selectorArray, key){
+        var togo = fluid.transform(consolidatedClasses, function (selectorArray){
             return selectorArray.join(" ");
         });
 

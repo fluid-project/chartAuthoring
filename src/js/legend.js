@@ -49,7 +49,7 @@ https://github.com/gpii/universal/LICENSE.txt
             legend: "gpii-ca-pieChart-legend",
             table: "gpii-ca-pieChart-legend-table",
             row: "gpii-ca-pieChart-legend-table-row",
-            legendColorCell: "gpii-ca-pieChart-legend-color-cell",
+            colorCell: "gpii-ca-pieChart-legend-color-cell",
             labelCell: "gpii-ca-pieChart-legend-label-cell",
             valueCell: "gpii-ca-pieChart-legend-value-cell"
         },
@@ -57,7 +57,7 @@ https://github.com/gpii/universal/LICENSE.txt
             legend: ".gpiic-ca-pieChart-legend",
             table: ".gpii-ca-pieChart-legend-table",
             row: ".gpii-ca-pieChart-legend-table-row",
-            legendColorCell: ".gpii-ca-pieChart-legend-color-cell",
+            colorCell: ".gpii-ca-pieChart-legend-color-cell",
             labelCell: ".gpii-ca-pieChart-legend-label-cell",
             valueCell: ".gpii-ca-pieChart-legend-value-cell"
         },
@@ -80,6 +80,14 @@ https://github.com/gpii/universal/LICENSE.txt
             draw: {
                 funcName: "gpii.chartAuthoring.pieChart.legend.draw",
                 args: ["{that}"]
+            },
+            sort: {
+                funcName: "gpii.chartAuthoring.pieChart.legend.sort",
+                args: ["{arguments}.0", "{arguments}.1"]
+            },
+            getColorCellStyle: {
+                funcName: "gpii.chartAuthoring.pieChart.legend.getColorCellStyle",
+                args: ["{arguments}.0"]
             }
         }
     });
@@ -91,7 +99,6 @@ https://github.com/gpii/universal/LICENSE.txt
 
         var consolidated = [];
         fluid.each(dataSet, function(item, i) {
-            console.log(colors(i));
             var oneConsolidated = {
                 id: item.id,
                 label: item.label,
@@ -110,9 +117,9 @@ https://github.com/gpii/universal/LICENSE.txt
             legendOptions = that.options.legendOptions,
             dataSet = that.model.dataSetWithColors,
             rowClass = that.classes.row,
-            legendColorCellClass = that.classes.legendColorCell,
-            legendLabelCellClass = that.classes.labelCell,
-            legendValueCellClass = that.classes.valueCell,
+            colorCellClass = that.classes.colorCell,
+            labelCellClass = that.classes.labelCell,
+            valueCellClass = that.classes.valueCell,
             sort = legendOptions.sort;
         var tbody = table.selectAll("tbody");
 
@@ -133,32 +140,30 @@ https://github.com/gpii/universal/LICENSE.txt
         addedRows
         .append("td")
         .attr({
-            "class": legendColorCellClass
+            "class": colorCellClass
         });
 
         addedRows
         .append("td")
         .attr({
-            "class": legendLabelCellClass
+            "class": labelCellClass
         });
 
         addedRows
         .append("td")
         .attr({
-            "class": legendValueCellClass
+            "class": valueCellClass
         });
 
         // Update cell legend colours, labels and values
         rows.each(function (d) {
-            d3.select(this).select("."+legendColorCellClass)
+            d3.select(this).select("." + colorCellClass)
             .attr({
-                "style": function (d) {
-                    return "background-color: " + d.color + ";";
-                }
+                "style": that.getColorCellStyle(d)
             });
-            d3.select(this).select("."+legendLabelCellClass)
+            d3.select(this).select("." + labelCellClass)
             .text(d.label);
-            d3.select(this).select("."+legendValueCellClass)
+            d3.select(this).select("." + valueCellClass)
             .text(d.value);
         });
 
@@ -167,9 +172,7 @@ https://github.com/gpii/universal/LICENSE.txt
         removedRows.remove();
 
         if (sort) {
-            rows.sort(function (a,b){
-                return b.value - a.value;
-            });
+            rows.sort(that.sort);
         }
     };
 
@@ -211,6 +214,14 @@ https://github.com/gpii/universal/LICENSE.txt
         that.draw();
 
         that.events.onLegendCreated.fire();
+    };
+
+    gpii.chartAuthoring.pieChart.legend.sort = function (a, b) {
+        return b.value - a.value;
+    };
+
+    gpii.chartAuthoring.pieChart.legend.getColorCellStyle = function (data) {
+        return "background-color: " + data.color + ";";
     };
 
 })(jQuery, fluid);

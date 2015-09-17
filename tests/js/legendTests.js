@@ -215,7 +215,7 @@ https://github.com/gpii/universal/LICENSE.txt
 
         jqUnit.assertEquals("A TR element has been created for each value in the dataset, with proper selectors", that.model.dataSet.length, that.locate("row").length);
 
-        var d3ColorCells = that.jQueryToD3($(that.locate("legendColorCell")));
+        var d3ColorCells = that.jQueryToD3($(that.locate("colorCell")));
         d3ColorCells.each(function (d) {
 
             jqUnit.assertEquals("The data colors are filled correctly in the legend", gpii.tests.chartAuthoring.hexToRGB(d.color), ($(this).css("background-color")));
