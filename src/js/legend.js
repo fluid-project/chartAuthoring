@@ -203,10 +203,10 @@ https://github.com/gpii/universal/LICENSE.txt
 
         if(that.options.strings.legendTitle !== null) {
             that.table.append("caption")
-                      .attr({
-                          "class": that.classes.caption
-                      })
-                      .text(that.options.strings.legendTitle);
+            .attr({
+                "class": that.classes.caption
+            })
+            .text(that.options.strings.legendTitle);
         }
 
         that.table.append("thead");
