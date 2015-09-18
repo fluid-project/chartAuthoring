@@ -22,6 +22,10 @@ https://github.com/gpii/universal/LICENSE.txt
                 container: "{that}.dom.pie",
                 options: {
                     pieOptions: "{pieChart}.options.pieChartOptions",
+                    strings: {
+                        pieTitle: "{pieChart}.options.pieChartOptions.pieTitle",
+                        pieDescription: "{pieChart}.options.pieChartOptions.pieDescription"
+                    },
                     model: {
                         dataSet: "{pieChart}.model.dataSet"
                     },
@@ -60,6 +64,8 @@ https://github.com/gpii/universal/LICENSE.txt
             // innerRadius: number,
             // animationDuration: number,
             // sort: boolean   // Whether or not to sort the data by values when creating the legend
+            // pieTitle: the accessible title to be applied to the pie chart
+            // pieDescription: the accessible description to be applied to the pie chart
         },
         selectors: {
             pie: ".gpiic-ca-pieChart-pie",

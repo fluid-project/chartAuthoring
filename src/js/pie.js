@@ -102,7 +102,7 @@ https://github.com/gpii/universal/LICENSE.txt
                     return color(i);
                 },
                 "d": arc,
-                "class": sliceClass
+                "class": sliceClass,
             })
             .each(function (d) {
                 this._current = d;
@@ -179,7 +179,9 @@ https://github.com/gpii/universal/LICENSE.txt
                 // Set aria role to image
                 "role": "img",
                 // Explicitly associate SVG title & desc via aria-describedby
-                "aria-describedby": pieTitleId + " " + pieDescId
+                "aria-describedby": pieTitleId + " " + pieDescId,
+                // Make it keyboard-accessible
+                "tabindex": "0"
             });
 
         that.svg
