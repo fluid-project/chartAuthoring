@@ -21,6 +21,10 @@ https://github.com/gpii/universal/LICENSE.txt
             height: "200",
             colors: ["#000000", "#ff0000", "#00ff00", "#0000ff", "#aabbcc", "#ccbbaa"]
         },
+        strings: {
+            pieTitle: "A pie chart used in the unit tests.",
+            pieDescription: "Description of the pie chart used in the unit tests."
+        },
         listeners: {
             "onPieCreated.addMouseoverListener": {
                 listener: "{that}.addD3Listeners",
@@ -46,6 +50,8 @@ https://github.com/gpii/universal/LICENSE.txt
         jqUnit.assertEquals("The height is set correctly on the pie chart", that.options.pieOptions.height === "auto" ? that.container.height() : that.options.pieOptions.height, pie.attr("height"));
         jqUnit.assertEquals("The pie slices have been created with the proper selectors", that.model.dataSet.length, that.locate("slice").length);
         jqUnit.assertEquals("The texts for pie slices have been created with the proper selectors", that.model.dataSet.length, that.locate("text").length);
+        jqUnit.assertEquals("The pie's title has been created", that.options.strings.pieTitle, that.locate("title").text())
+        jqUnit.assertEquals("The pie's description has been created", that.options.strings.pieDescription, that.locate("description").text())
 
         // Test that displayed values are in sync with the current model
         gpii.tests.chartAuthoring.testPieTextSyncWithModelDataSet(that);
@@ -91,7 +97,7 @@ https://github.com/gpii/universal/LICENSE.txt
     gpii.tests.chartAuthoring.numberArray = [5, 10, 20, 45, 6, 25];
 
     jqUnit.test("Test the pie chart component created based off an array of numbers", function () {
-        jqUnit.expect(25);
+        jqUnit.expect(27);
 
         var that = gpii.tests.chartAuthoring.pieChart.pie(".gpiic-ca-pieChart-numberArray", {
             model: {
@@ -159,7 +165,7 @@ https://github.com/gpii/universal/LICENSE.txt
     }];
 
     jqUnit.test("Test the pie chart component created based off an array of objects", function () {
-        jqUnit.expect(102);
+        jqUnit.expect(110);
 
         var that = gpii.tests.chartAuthoring.pieChart.pie(".gpiic-ca-pieChart-objectArray", {
             model: {
@@ -181,7 +187,7 @@ https://github.com/gpii/universal/LICENSE.txt
     });
 
     jqUnit.test("Test the pie chart component created with automatic scaling", function () {
-        jqUnit.expect(25);
+        jqUnit.expect(27);
 
         var that = gpii.tests.chartAuthoring.pieChart.pie(".gpiic-ca-pieChart-autoScale", {
             model: {
