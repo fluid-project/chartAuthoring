@@ -50,8 +50,8 @@ https://github.com/gpii/universal/LICENSE.txt
         jqUnit.assertEquals("The height is set correctly on the pie chart", that.options.pieOptions.height === "auto" ? that.container.height() : that.options.pieOptions.height, pie.attr("height"));
         jqUnit.assertEquals("The pie slices have been created with the proper selectors", that.model.dataSet.length, that.locate("slice").length);
         jqUnit.assertEquals("The texts for pie slices have been created with the proper selectors", that.model.dataSet.length, that.locate("text").length);
-        jqUnit.assertEquals("The pie's title has been created", that.options.strings.pieTitle, that.locate("title").text())
-        jqUnit.assertEquals("The pie's description has been created", that.options.strings.pieDescription, that.locate("description").text())
+        jqUnit.assertEquals("The pie's title has been created", that.options.strings.pieTitle, that.locate("title").text());
+        jqUnit.assertEquals("The pie's description has been created", that.options.strings.pieDescription, that.locate("description").text());
 
         // Test that displayed values are in sync with the current model
         gpii.tests.chartAuthoring.testPieTextSyncWithModelDataSet(that);

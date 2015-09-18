@@ -104,7 +104,7 @@ https://github.com/gpii/universal/LICENSE.txt
                     return color(i);
                 },
                 "d": arc,
-                "class": sliceClass,
+                "class": sliceClass
             })
             .each(function (d) {
                 this._current = d;
@@ -133,7 +133,7 @@ https://github.com/gpii/universal/LICENSE.txt
 
         // Update text values
         texts.text(function (d) {
-            return d.value
+            return d.value;
         });
 
 
