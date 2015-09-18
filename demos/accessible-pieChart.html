@@ -56,6 +56,7 @@
     </head>
 
     <body>
+        <h1>2014 Canadian Smartphone Market Share</h1>
 
         <div class="gpiic-ca-pieChart">
             <div class="gpiic-ca-pieChart-pie"></div>
@@ -67,29 +68,44 @@
                 model: {
                     dataSet:
                     [{
-                        id: "id0",
-                        value: 5,
-                        label: "label 0"
-                    }, {
-                        id: "id1",
-                        value: 10,
-                        label: "label 1"
-                    }, {
-                        id: "id2",
-                        value: 20,
-                        label: "label 2"
-                    }, {
-                        id: "id3",
+                        id: "android",
                         value: 45,
-                        label: "label 3"
+                        label: "Android"
+                    }, {
+                        id: "iphone",
+                        value: 34,
+                        label: "iPhone"
+                    }, {
+                        id: "blackberry",
+                        value: 15,
+                        label: "Blackberry"
+                    }, {
+                        id: "windows",
+                        value: 4,
+                        label: "Windows Phone"
+                    },{
+                        id: "other",
+                        value: 2,
+                        label: "Other"
                     }]
                 },
                 resources: {
                     template: {
                         resourceText: "<div class=\"gpiic-ca-pieChart-pie\"></div><div class=\"gpiic-ca-pieChart-legend\"></div>"
                     }
+                },
+                pieChartOptions: {
+                    pieTitle: "2014 Canadian smartphone market share",
+                    pieDescription: "A pie chart showing the 2014 Canadian smartphone market share by percentage.",
+                    legendTitle: "2014 Canadian smartphone market share",
+                    legendDescription: "The 2014 Canadian smartphone market share by percentage",
+                    width:500,
+                    height:500
                 }
             });
         </script>
+
+
+
     </body>
 </html>
