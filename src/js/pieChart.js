@@ -41,6 +41,9 @@ https://github.com/gpii/universal/LICENSE.txt
                 container: "{that}.dom.legend",
                 options: {
                     legendOptions: "{pieChart}.options.pieChartOptions",
+                    strings: {
+                        legendTitle: "{pieChart}.options.pieChartOptions.legendTitle"
+                    },
                     model: {
                         dataSet: "{pieChart}.model.dataSet"
                     },
