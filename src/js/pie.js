@@ -49,7 +49,9 @@ https://github.com/gpii/universal/LICENSE.txt
         selectors: {
             pie: ".gpiic-ca-pieChart-pie",
             slice: ".gpiic-ca-pieChart-slice",
-            text: ".gpiic-ca-pieChart-text"
+            text: ".gpiic-ca-pieChart-text",
+            title: ".gpiic-ca-pieChart-title",
+            description: ".gpiic-ca-pieChart-description"
         },
         events: {
             onPieCreated: null,  // Fire when the pie is created. Ready to register D3 DOM event listeners,
@@ -131,7 +133,7 @@ https://github.com/gpii/universal/LICENSE.txt
 
         // Update text values
         texts.text(function (d) {
-            return d.value;
+            return d.value
         });
 
 
@@ -153,6 +155,8 @@ https://github.com/gpii/universal/LICENSE.txt
             outerRadius = p.outerRadius || width / 2,
             innerRadius = p.innerRadius || 0,
             pieClass = that.classes.pie,
+            titleClass = that.classes.title,
+            descriptionClass = that.classes.description,
             pieTitleId = "fluid-id-"+fluid.allocateGuid(),
             pieDescId = "fluid-id-"+fluid.allocateGuid();
 
@@ -187,14 +191,16 @@ https://github.com/gpii/universal/LICENSE.txt
         that.svg
             .append("title")
             .attr({
-                "id": pieTitleId
+                "id": pieTitleId,
+                "class": titleClass
             })
             .text(that.options.strings.pieTitle);
 
         that.svg
             .append("desc")
             .attr({
-                "id": pieDescId
+                "id": pieDescId,
+                "class": descriptionClass
             })
             .text(that.options.strings.pieDescription);
 
