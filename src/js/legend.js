@@ -17,7 +17,8 @@ https://github.com/gpii/universal/LICENSE.txt
         strings: {
             legendColHeading:"Legend",
             labelColHeading:"Label",
-            valueColHeading:"Value"
+            valueColHeading:"Value" //,
+            // legendTitle:"" // title for the legend - translates to table caption
         },
         model: {
             // dataSet accepts:
@@ -63,6 +64,7 @@ https://github.com/gpii/universal/LICENSE.txt
             legend: ".gpiic-ca-pieChart-legend",
             table: ".gpii-ca-pieChart-legend-table",
             row: ".gpii-ca-pieChart-legend-table-row",
+            caption: ".gpii-ca-pieChart-legend-caption",
             legendColorCell: ".gpii-ca-pieChart-legend-color-cell",
             labelCell: ".gpii-ca-pieChart-legend-label-cell",
             valueCell: ".gpii-ca-pieChart-legend-value-cell"
@@ -199,6 +201,14 @@ https://github.com/gpii/universal/LICENSE.txt
             "class": tableClass
         });
 
+        if(that.options.strings.legendTitle !== null) {
+            that.table.append("caption")
+                      .attr({
+                          "class": that.classes.caption
+                      })
+                      .text(that.options.strings.legendTitle);
+        }
+
         that.table.append("thead");
         that.table.append("tbody");
         if(showLegendHeadings) {
@@ -218,9 +228,9 @@ https://github.com/gpii/universal/LICENSE.txt
 
             thead.append("th")
                 .attr({
-                "scope":"col"
-            })
-          .html(that.options.strings.valueColHeading);
+                    "scope":"col"
+                })
+                .html(that.options.strings.valueColHeading);
         }
 
         that.draw();

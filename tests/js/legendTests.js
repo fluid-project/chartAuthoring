@@ -27,6 +27,9 @@ https://github.com/gpii/universal/LICENSE.txt
         },
         members: {
             mouseOverListenerCalled: false
+        },
+        strings: {
+            legendTitle: "Legend Title"
         }
     });
 
@@ -217,7 +220,6 @@ https://github.com/gpii/universal/LICENSE.txt
 
         var d3ColorCells = that.jQueryToD3($(that.locate("legendColorCell")));
         d3ColorCells.each(function (d) {
-
             jqUnit.assertEquals("The data colors are filled correctly in the legend", gpii.tests.chartAuthoring.hexToRGB(d.color), ($(this).css("background-color")));
         });
 
@@ -231,6 +233,8 @@ https://github.com/gpii/universal/LICENSE.txt
         d3ValueCells.each(function (d) {
             jqUnit.assertEquals("The data values are applied correctly in the legend", d.value, ($(this).html()));
         });
+
+        jqUnit.assertEquals("The legend's title is applied as a caption", that.options.strings.legendTitle, that.locate("caption").text());
 
         gpii.tests.chartAuthoring.testLegendSyncWithModelDataSet(that, expectedDataSet);
 
@@ -264,7 +268,7 @@ https://github.com/gpii/universal/LICENSE.txt
     };
 
     jqUnit.test("Test the legend component created based off an array of objects, unsorted", function () {
-        jqUnit.expect(85);
+        jqUnit.expect(89);
 
         var that = gpii.tests.chartAuthoring.pieChart.legend(".gpii-ca-legend-objects-unsorted", {
             model: {
@@ -280,7 +284,7 @@ https://github.com/gpii/universal/LICENSE.txt
     });
 
     jqUnit.test("Test the legend component created based off an array of objects, sorted", function () {
-        jqUnit.expect(85);
+        jqUnit.expect(89);
 
         var that = gpii.tests.chartAuthoring.pieChart.legend(".gpii-ca-legend-objects-sorted", {
             model: {
