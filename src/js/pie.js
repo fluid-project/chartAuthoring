@@ -182,10 +182,8 @@ https://github.com/gpii/universal/LICENSE.txt
                 "viewBox": gpii.chartAuthoring.pieChart.getViewBoxConfiguration(0,0, width, height),
                 // Set aria role to image
                 "role": "img",
-                // Explicitly associate SVG title & desc via aria-describedby
-                "aria-describedby": pieTitleId + " " + pieDescId,
-                // Make it keyboard-accessible
-                "tabindex": "0"
+                // Explicitly associate SVG title & desc via aria-labelledby
+                "aria-labelledby": pieTitleId + " " + pieDescId
             });
 
         that.svg
