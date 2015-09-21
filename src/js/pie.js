@@ -104,7 +104,9 @@ https://github.com/gpii/universal/LICENSE.txt
                     return color(i);
                 },
                 "d": arc,
-                "class": sliceClass
+                "class": sliceClass,
+                // Use the 'presentation' role because these are child images of the larger SVG image - they shouldn't be identified as individual images, at least at the moment
+                "role": "presentation"
             })
             .each(function (d) {
                 this._current = d;
