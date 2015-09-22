@@ -75,23 +75,13 @@ https://github.com/gpii/universal/LICENSE.txt
         }
     });
 
-    gpii.chartAuthoring.pieChart.pie.draw = function (that) {
-        var svg = that.svg,
-            pie = that.pie,
-            arc = that.arc,
-            color = that.colorScale,
-            dataSet = that.model.dataSet,
-            sliceClass = that.classes.slice,
-            textClass = that.classes.text,
-            animationDuration = that.options.pieOptions.animationDuration;
-
-        var paths = svg.selectAll("path")
-            .data(pie(dataSet));
-        var texts = svg.selectAll("text")
-            .data(pie(dataSet));
-
+    gpii.chartAuthoring.pieChart.pie.addSlices = function (that) {
+        var color = that.colorScale,
+        arc = that.arc,
+        sliceClass = that.classes.slice,
+        textClass = that.classes.text;
         // Draw pie slices
-        paths.enter()
+        that.paths.enter()
             .append("path")
             .attr({
                 "fill": function(d, i) {
@@ -104,18 +94,9 @@ https://github.com/gpii/universal/LICENSE.txt
                 this._current = d;
             });
 
-        paths.transition().duration(animationDuration).attrTween("d", function (a) {
-            var i = d3.interpolate(this._current, a);
-            this._current = i(0);
-            return function(t) {
-                return arc(i(t));
-            };
-        });
-
-        paths.exit().remove();
 
         // Create texts for pie slices
-        texts.enter()
+        that.texts.enter()
             .append("text")
             .attr({
                 "text-anchor": "middle",
@@ -124,17 +105,53 @@ https://github.com/gpii/universal/LICENSE.txt
                     return that.textTransform(d);
                 }
             });
+    };
 
-        // Update text values
-        texts.text(function (d) {
+    gpii.chartAuthoring.pieChart.pie.updateSlices = function (that) {
+        // Update and redraw arcs of existing slices
+        var arc = that.arc,
+            animationDuration = that.options.pieOptions.animationDuration;
+
+        that.paths.transition().duration(animationDuration).attrTween("d", function (a) {
+            var i = d3.interpolate(this._current, a);
+            this._current = i(0);
+            return function(t) {
+                return arc(i(t));
+            };
+        });
+
+        // Update and reposition text labels for existing slices
+        that.texts.text(function (d) {
             return d.value;
         });
 
-        texts.transition().duration(animationDuration).attr("transform", function (d) {
+        that.texts.transition().duration(animationDuration).attr("transform", function (d) {
             return that.textTransform(d);
         });
 
-        texts.exit().remove();
+    };
+
+    gpii.chartAuthoring.pieChart.pie.removeSlices = function (that) {
+                that.paths.exit().remove();
+
+                that.texts.exit().remove();
+    };
+
+    gpii.chartAuthoring.pieChart.pie.draw = function (that) {
+        var svg = that.svg,
+            pie = that.pie,
+            dataSet = that.model.dataSet;
+
+        that.paths = svg.selectAll("path")
+            .data(pie(dataSet));
+        that.texts = svg.selectAll("text")
+            .data(pie(dataSet));
+
+        gpii.chartAuthoring.pieChart.pie.addSlices(that);
+
+        gpii.chartAuthoring.pieChart.pie.updateSlices(that);
+
+        gpii.chartAuthoring.pieChart.pie.removeSlices(that);
     };
 
     gpii.chartAuthoring.pieChart.pie.create = function (that) {
