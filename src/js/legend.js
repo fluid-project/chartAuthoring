@@ -119,14 +119,14 @@ https://github.com/gpii/universal/LICENSE.txt
             sort = legendOptions.sort;
         var tbody = table.selectAll("tbody");
 
-        var rows = tbody.selectAll("tr")
+        that.rows = tbody.selectAll("tr")
             .data(dataSet, function (d) {
                 return d.id;
             });
 
         // Add new rows for new data, apply appropriate classes for selectors and styling
 
-        var addedRows = rows.enter().append("tr");
+        var addedRows = that.rows.enter().append("tr");
 
         addedRows
         .attr({
@@ -152,7 +152,7 @@ https://github.com/gpii/universal/LICENSE.txt
         });
 
         // Update cell legend colours, labels and values
-        rows.each(function (d) {
+        that.rows.each(function (d) {
             d3.select(this).select(colorCellSelector)
             .attr({
                 "style": that.getColorCellStyle(d)
@@ -163,12 +163,12 @@ https://github.com/gpii/universal/LICENSE.txt
             .text(d.value);
         });
 
-        var removedRows = rows.exit();
+        var removedRows = that.rows.exit();
 
         removedRows.remove();
 
         if (sort) {
-            rows.sort(that.sort);
+            that.rows.sort(that.sort);
         }
     };
 
