@@ -63,14 +63,20 @@ https://github.com/gpii/universal/LICENSE.txt
     // Synthesize "styles" and "selectors" blocks to combine elements with the same key
     gpii.d3ViewComponent.synthesizeClasses = function (styles, selectors) {
 
-        var consolidatedClasses = {};
-
         // 1. Combine any matching styles and selectors by key into an array of class names
 
         // Do the selectors first to maintain gpiic/gpii-style ordering
-        fluid.each(selectors, function (selector, key) {
-            fluid.set(consolidatedClasses, key, [gpii.d3ViewComponent.extractSelectorName(selector)]);
+
+        var consolidatedClasses = fluid.transform(selectors, function (selector) {
+            return [gpii.d3ViewComponent.extractSelectorName(selector)];
         });
+
+        // Needed catch to handle the result of a nonexistent selectors block meaning object is not initialized
+        if(!consolidatedClasses) {
+            consolidatedClasses = {};
+        }
+
+        // Add any style values to consolidatedClasses
 
         fluid.each(styles, function (styleValue, key) {
             var resultArray = styleValue.split(" ");
@@ -80,7 +86,7 @@ https://github.com/gpii/universal/LICENSE.txt
                 resultArray = correspondingSelectorArray.concat(resultArray);
             }
             // Only keep unique values for each consolidated class array
-            var resultArrayWithUniqueValues = gpii.d3ViewComponent.removeArrayDuplicates(resultArray);            
+            var resultArrayWithUniqueValues = gpii.d3ViewComponent.removeArrayDuplicates(resultArray);
 
             fluid.set(consolidatedClasses, key, resultArrayWithUniqueValues);
         });
