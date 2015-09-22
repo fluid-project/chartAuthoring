@@ -105,8 +105,42 @@ https://github.com/gpii/universal/LICENSE.txt
 
     };
 
+    // Add new rows for new data, apply appropriate classes for selectors and styling
+
+    gpii.chartAuthoring.pieChart.legend.addNewRows = function(that) {
+        var rowClass = that.classes.row,
+            colorCellClass = that.classes.colorCell,
+            labelCellClass = that.classes.labelCell,
+            valueCellClass = that.classes.valueCell;
+
+            var addedRows = that.rows.enter().append("tr");
+
+            addedRows
+            .attr({
+                "class": rowClass
+            });
+
+            addedRows
+            .append("td")
+            .attr({
+                "class": colorCellClass
+            });
+
+            addedRows
+            .append("td")
+            .attr({
+                "class": labelCellClass
+            });
+
+            addedRows
+            .append("td")
+            .attr({
+                "class": valueCellClass
+            });
+    };
+
     // Update cell legend colours, labels and values
-    gpii.chartAuthoring.pieChart.legend.updateRows = function (that) {
+    gpii.chartAuthoring.pieChart.legend.addRows = function (that) {
         var colorCellSelector = that.options.selectors.colorCell,
             labelCellSelector = that.options.selectors.labelCell,
             valueCellSelector = that.options.selectors.valueCell;
@@ -123,14 +157,15 @@ https://github.com/gpii/universal/LICENSE.txt
         });
     };
 
+    gpii.chartAuthoring.pieChart.legend.removeRows = function (that) {
+        var removedRows = that.rows.exit();
+        removedRows.remove();
+    };
+
     gpii.chartAuthoring.pieChart.legend.draw = function (that) {
         var table = that.table,
             legendOptions = that.options.legendOptions,
             dataSet = that.model.dataSetWithColors,
-            rowClass = that.classes.row,
-            colorCellClass = that.classes.colorCell,
-            labelCellClass = that.classes.labelCell,
-            valueCellClass = that.classes.valueCell,
             sort = legendOptions.sort;
         var tbody = table.selectAll("tbody");
 
@@ -139,38 +174,11 @@ https://github.com/gpii/universal/LICENSE.txt
                 return d.id;
             });
 
-        // Add new rows for new data, apply appropriate classes for selectors and styling
-
-        var addedRows = that.rows.enter().append("tr");
-
-        addedRows
-        .attr({
-            "class": rowClass
-        });
-
-        addedRows
-        .append("td")
-        .attr({
-            "class": colorCellClass
-        });
-
-        addedRows
-        .append("td")
-        .attr({
-            "class": labelCellClass
-        });
-
-        addedRows
-        .append("td")
-        .attr({
-            "class": valueCellClass
-        });
+        gpii.chartAuthoring.pieChart.legend.addRows(that);
 
         gpii.chartAuthoring.pieChart.legend.updateRows(that);
 
-        var removedRows = that.rows.exit();
-
-        removedRows.remove();
+        gpii.chartAuthoring.pieChart.legend.removeRows(that);
 
         if (sort) {
             that.rows.sort(that.sort);
