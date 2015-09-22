@@ -97,12 +97,11 @@ https://github.com/gpii/universal/LICENSE.txt
         var dataSet = model.dataSet;
         var colors = (typeof(model.colors) === "function") ? model.colors : gpii.d3.getColorScale(model.colors);
 
-        var consolidated = fluid.transform(dataSet, function(item, i) {
-            fluid.set(item, "color", colors(i));
-            return item;
+        return fluid.transform(dataSet, function (data, idx) {
+            var consolidated = fluid.copy(data);
+            consolidated.color = colors(idx);
+            return consolidated;
         });
-
-        return consolidated;
 
     };
 
