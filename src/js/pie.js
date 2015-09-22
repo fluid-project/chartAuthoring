@@ -101,9 +101,7 @@ https://github.com/gpii/universal/LICENSE.txt
             .attr({
                 "text-anchor": "middle",
                 "class": textClass,
-                "transform": function (d) {
-                    return that.textTransform(d);
-                }
+                "transform": that.textTransform
             });
     };
 
