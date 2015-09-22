@@ -107,53 +107,55 @@ https://github.com/gpii/universal/LICENSE.txt
 
     // Add new rows for new data, apply appropriate classes for selectors and styling
 
-    gpii.chartAuthoring.pieChart.legend.addNewRows = function(that) {
+    gpii.chartAuthoring.pieChart.legend.addRows = function(that) {
         var rowClass = that.classes.row,
             colorCellClass = that.classes.colorCell,
             labelCellClass = that.classes.labelCell,
             valueCellClass = that.classes.valueCell;
 
-            var addedRows = that.rows.enter().append("tr");
+            var addedRows = that.rows.enter()
+                                    .append("tr");
 
-            addedRows
-            .attr({
+            addedRows.attr({
                 "class": rowClass
             });
 
-            addedRows
-            .append("td")
-            .attr({
-                "class": colorCellClass
-            });
+            addedRows.append("td")
+                        .attr({
+                            "class": colorCellClass
+                        });
 
-            addedRows
-            .append("td")
-            .attr({
-                "class": labelCellClass
-            });
+            addedRows.append("td")
+                        .attr({
+                            "class": labelCellClass
+                        });
 
-            addedRows
-            .append("td")
-            .attr({
-                "class": valueCellClass
-            });
+            addedRows.append("td")
+                        .attr({
+                            "class": valueCellClass
+                        });
     };
 
     // Update cell legend colours, labels and values
-    gpii.chartAuthoring.pieChart.legend.addRows = function (that) {
+    gpii.chartAuthoring.pieChart.legend.updateRows = function (that) {
         var colorCellSelector = that.options.selectors.colorCell,
             labelCellSelector = that.options.selectors.labelCell,
             valueCellSelector = that.options.selectors.valueCell;
 
         that.rows.each(function (d) {
-            d3.select(this).select(colorCellSelector)
-            .attr({
-                "style": that.getColorCellStyle(d)
-            });
-            d3.select(this).select(labelCellSelector)
-            .text(d.label);
-            d3.select(this).select(valueCellSelector)
-            .text(d.value);
+            d3.select(this)
+                .select(colorCellSelector)
+                .attr({
+                    "style": that.getColorCellStyle(d)
+                });
+
+            d3.select(this)
+                .select(labelCellSelector)
+                .text(d.label);
+
+            d3.select(this)
+                .select(valueCellSelector)
+                .text(d.value);
         });
     };
 
@@ -170,9 +172,9 @@ https://github.com/gpii/universal/LICENSE.txt
         var tbody = table.selectAll("tbody");
 
         that.rows = tbody.selectAll("tr")
-            .data(dataSet, function (d) {
-                return d.id;
-            });
+                            .data(dataSet, function (d) {
+                                return d.id;
+                            });
 
         gpii.chartAuthoring.pieChart.legend.addRows(that);
 
@@ -191,10 +193,10 @@ https://github.com/gpii/universal/LICENSE.txt
             showLegendHeadings = that.options.legendOptions.showLegendHeadings;
 
         that.table = that.jQueryToD3(container)
-            .append("table")
-            .attr({
-            "class": tableClass
-        });
+                            .append("table")
+                            .attr({
+                                "class": tableClass
+                            });
 
         that.table.append("thead");
         that.table.append("tbody");
@@ -202,22 +204,22 @@ https://github.com/gpii/universal/LICENSE.txt
             var thead = that.table.selectAll("thead");
 
             thead.append("th")
-                .attr({
-                    "scope":"col"
-                })
-                .html(that.options.strings.legendColHeading);
+                    .attr({
+                        "scope":"col"
+                    })
+                    .html(that.options.strings.legendColHeading);
 
             thead.append("th")
-                .attr({
-                    "scope":"col"
-                })
-                .html(that.options.strings.labelColHeading);
+                    .attr({
+                        "scope":"col"
+                    })
+                    .html(that.options.strings.labelColHeading);
 
             thead.append("th")
-                .attr({
-                "scope":"col"
-            })
-          .html(that.options.strings.valueColHeading);
+                    .attr({
+                    "scope":"col"
+                    })
+                    .html(that.options.strings.valueColHeading);
         }
 
         that.draw();
