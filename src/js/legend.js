@@ -55,11 +55,11 @@ https://github.com/gpii/universal/LICENSE.txt
         },
         selectors: {
             legend: ".gpiic-ca-pieChart-legend",
-            table: ".gpii-ca-pieChart-legend-table",
-            row: ".gpii-ca-pieChart-legend-table-row",
-            colorCell: ".gpii-ca-pieChart-legend-color-cell",
-            labelCell: ".gpii-ca-pieChart-legend-label-cell",
-            valueCell: ".gpii-ca-pieChart-legend-value-cell"
+            table: ".gpiic-ca-pieChart-legend-table",
+            row: ".gpiic-ca-pieChart-legend-table-row",
+            colorCell: ".gpiic-ca-pieChart-legend-color-cell",
+            labelCell: ".gpiic-ca-pieChart-legend-label-cell",
+            valueCell: ".gpiic-ca-pieChart-legend-value-cell"
         },
         events: {
             onLegendCreated: null  // Fire when the legend is created. Ready to register D3 DOM event listeners
@@ -111,8 +111,11 @@ https://github.com/gpii/universal/LICENSE.txt
             dataSet = that.model.dataSetWithColors,
             rowClass = that.classes.row,
             colorCellClass = that.classes.colorCell,
+            colorCellSelector = that.options.selectors.colorCell,
             labelCellClass = that.classes.labelCell,
+            labelCellSelector = that.options.selectors.labelCell,
             valueCellClass = that.classes.valueCell,
+            valueCellSelector = that.options.selectors.valueCell,
             sort = legendOptions.sort;
         var tbody = table.selectAll("tbody");
 
@@ -150,13 +153,13 @@ https://github.com/gpii/universal/LICENSE.txt
 
         // Update cell legend colours, labels and values
         rows.each(function (d) {
-            d3.select(this).select("." + colorCellClass)
+            d3.select(this).select(colorCellSelector)
             .attr({
                 "style": that.getColorCellStyle(d)
             });
-            d3.select(this).select("." + labelCellClass)
+            d3.select(this).select(labelCellSelector)
             .text(d.label);
-            d3.select(this).select("." + valueCellClass)
+            d3.select(this).select(valueCellSelector)
             .text(d.value);
         });
 

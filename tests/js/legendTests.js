@@ -191,9 +191,9 @@ https://github.com/gpii/universal/LICENSE.txt
 
         var rows = gpii.d3.jQueryToD3(that.locate("row"));
         rows.each(function (d,i) {
-            var displayedLabel = d3.select(this).select("."+that.classes.labelCell).text();
+            var displayedLabel = d3.select(this).select(that.options.selectors.labelCell).text();
             var expectedLabel = dataSet[i].label;
-            var displayedValue = d3.select(this).select("."+that.classes.valueCell).text();
+            var displayedValue = d3.select(this).select(that.options.selectors.valueCell).text();
             var expectedValue = dataSet[i].value;
             jqUnit.assertEquals("Displayed labels are in sync with the current model's labels", expectedLabel, displayedLabel);
             jqUnit.assertEquals("Displayed values are in sync with the current model's values", expectedValue, displayedValue);
