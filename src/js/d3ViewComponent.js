@@ -54,6 +54,12 @@ https://github.com/gpii/universal/LICENSE.txt
         }
     };
 
+    gpii.d3ViewComponent.removeArrayDuplicates = function (array) {
+        return array.filter(function (value, index, self) {
+            return self.indexOf(value) === index;
+        });
+    };
+
     // Synthesize "styles" and "selectors" blocks to combine elements with the same key
     gpii.d3ViewComponent.synthesizeClasses = function (styles, selectors) {
 
@@ -74,9 +80,7 @@ https://github.com/gpii/universal/LICENSE.txt
                 resultArray = correspondingSelectorArray.concat(resultArray);
             }
             // Only keep unique values for each consolidated class array
-            var resultArrayWithUniqueValues = resultArray.filter(function (value, index, self) {
-                return self.indexOf(value) === index;
-            });
+            var resultArrayWithUniqueValues = gpii.d3ViewComponent.removeArrayDuplicates(resultArray);            
 
             fluid.set(consolidatedClasses, key, resultArrayWithUniqueValues);
         });
