@@ -105,17 +105,32 @@ https://github.com/gpii/universal/LICENSE.txt
 
     };
 
+    // Update cell legend colours, labels and values
+    gpii.chartAuthoring.pieChart.legend.updateRows = function (that) {
+        var colorCellSelector = that.options.selectors.colorCell,
+            labelCellSelector = that.options.selectors.labelCell,
+            valueCellSelector = that.options.selectors.valueCell;
+
+        that.rows.each(function (d) {
+            d3.select(this).select(colorCellSelector)
+            .attr({
+                "style": that.getColorCellStyle(d)
+            });
+            d3.select(this).select(labelCellSelector)
+            .text(d.label);
+            d3.select(this).select(valueCellSelector)
+            .text(d.value);
+        });
+    };
+
     gpii.chartAuthoring.pieChart.legend.draw = function (that) {
         var table = that.table,
             legendOptions = that.options.legendOptions,
             dataSet = that.model.dataSetWithColors,
             rowClass = that.classes.row,
             colorCellClass = that.classes.colorCell,
-            colorCellSelector = that.options.selectors.colorCell,
             labelCellClass = that.classes.labelCell,
-            labelCellSelector = that.options.selectors.labelCell,
             valueCellClass = that.classes.valueCell,
-            valueCellSelector = that.options.selectors.valueCell,
             sort = legendOptions.sort;
         var tbody = table.selectAll("tbody");
 
@@ -151,17 +166,7 @@ https://github.com/gpii/universal/LICENSE.txt
             "class": valueCellClass
         });
 
-        // Update cell legend colours, labels and values
-        that.rows.each(function (d) {
-            d3.select(this).select(colorCellSelector)
-            .attr({
-                "style": that.getColorCellStyle(d)
-            });
-            d3.select(this).select(labelCellSelector)
-            .text(d.label);
-            d3.select(this).select(valueCellSelector)
-            .text(d.value);
-        });
+        gpii.chartAuthoring.pieChart.legend.updateRows(that);
 
         var removedRows = that.rows.exit();
 
