@@ -80,13 +80,14 @@ https://github.com/gpii/universal/LICENSE.txt
         arc = that.arc,
         sliceClass = that.classes.slice,
         textClass = that.classes.text;
+
         // Draw pie slices
         that.paths.enter()
             .append("path")
             .attr({
                 "fill": function(d, i) {
                     return color(i);
-                },
+                },                
                 "d": arc,
                 "class": sliceClass
             })
@@ -125,9 +126,7 @@ https://github.com/gpii/universal/LICENSE.txt
             return d.value;
         });
 
-        that.texts.transition().duration(animationDuration).attr("transform", function (d) {
-            return that.textTransform(d);
-        });
+        that.texts.transition().duration(animationDuration).attr("transform", that.textTransform);
 
     };
 
