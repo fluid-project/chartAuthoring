@@ -64,6 +64,36 @@ https://github.com/gpii/universal/LICENSE.txt
         });
     });
 
+    jqUnit.test("Test gpii.d3ViewComponent.isCssClass()", function () {
+        jqUnit.expect(5);
+
+        var cases = [{
+            msg: "Correctly extract the string that has one period at the start of the input",
+            input: ".gpii-ca",
+            expected: true
+        }, {
+            msg: "More than one periods in the input returns false",
+            input: ".gpii-ca.",
+            expected: false
+        }, {
+            msg: "No period at the start of the string returns false",
+            input: "gpii-ca.",
+            expected: false
+        }, {
+            msg: "Having spaces in the middle of the input string returns false",
+            input: ".gpii-ca .b",
+            expected: false
+        }, {
+            msg: "Having spaces in the middle of the input string returns false",
+            input: ".gpii-ca#b",
+            expected: false
+        }];
+
+        fluid.each(cases, function (oneCase) {
+            jqUnit[oneCase.expected ? "assertTrue" : "assertFalse"](oneCase.msg, gpii.d3ViewComponent.isCssClass(oneCase.input));
+        });
+    });
+
     jqUnit.test("Test gpii.d3ViewComponent.synthesizeClasses()", function () {
         jqUnit.expect(7);
 

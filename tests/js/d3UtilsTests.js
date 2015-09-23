@@ -66,36 +66,6 @@ https://github.com/gpii/universal/LICENSE.txt
                 jqUnit.assertEquals(oneCase.msg, oneCase.expected[i], colorScale(i));
             }
         });
-    });
-
-    jqUnit.test("Test gpii.isCssClass()", function () {
-        jqUnit.expect(5);
-
-        var cases = [{
-            msg: "Correctly extract the string that has one period at the start of the input",
-            input: ".gpii-ca",
-            expected: true
-        }, {
-            msg: "More than one periods in the input returns false",
-            input: ".gpii-ca.",
-            expected: false
-        }, {
-            msg: "No period at the start of the string returns false",
-            input: "gpii-ca.",
-            expected: false
-        }, {
-            msg: "Having spaces in the middle of the input string returns false",
-            input: ".gpii-ca .b",
-            expected: false
-        }, {
-            msg: "Having spaces in the middle of the input string returns false",
-            input: ".gpii-ca#b",
-            expected: false
-        }];
-
-        fluid.each(cases, function (oneCase) {
-            jqUnit[oneCase.expected ? "assertTrue" : "assertFalse"](oneCase.msg, gpii.isCssClass(oneCase.input));
-        });
-    });
+    });    
 
 })(jQuery, fluid);

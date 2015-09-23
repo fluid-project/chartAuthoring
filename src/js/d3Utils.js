@@ -39,15 +39,4 @@ https://github.com/gpii/universal/LICENSE.txt
         return colors ? d3.scale.ordinal().range(colors) : d3.scale.category10();
     };
 
-    /**
-     * Validate the given string is in the form of a css class, such as ".gpii-css-name"
-     * @param cssClass - string
-     * @return - boolean
-     */
-    gpii.isCssClass = function (cssClass) {
-        cssClass = cssClass.trim();
-        var pattern = /^\.[_a-zA-Z]+[_a-zA-Z0-9-]*$/;
-        return pattern.test(cssClass);
-    };
-
 })(jQuery, fluid);
