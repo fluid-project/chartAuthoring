@@ -87,7 +87,7 @@ https://github.com/gpii/universal/LICENSE.txt
             .attr({
                 "fill": function(d, i) {
                     return color(i);
-                },                
+                },
                 "d": arc,
                 "class": sliceClass
             })

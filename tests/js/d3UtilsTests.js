@@ -66,6 +66,6 @@ https://github.com/gpii/universal/LICENSE.txt
                 jqUnit.assertEquals(oneCase.msg, oneCase.expected[i], colorScale(i));
             }
         });
-    });    
+    });
 
 })(jQuery, fluid);
