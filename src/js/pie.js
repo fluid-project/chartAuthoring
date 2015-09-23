@@ -132,9 +132,9 @@ https://github.com/gpii/universal/LICENSE.txt
     };
 
     gpii.chartAuthoring.pieChart.pie.removeSlices = function (that) {
-                that.paths.exit().remove();
+        that.paths.exit().remove();
 
-                that.texts.exit().remove();
+        that.texts.exit().remove();
     };
 
     gpii.chartAuthoring.pieChart.pie.draw = function (that) {
