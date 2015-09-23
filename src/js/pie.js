@@ -91,6 +91,7 @@ https://github.com/gpii/universal/LICENSE.txt
                 "class": sliceClass
             })
             .each(function (d) {
+                // Store current values for later use in interpolation function when redrawing
                 this._current = d;
             });
 
@@ -110,11 +111,12 @@ https://github.com/gpii/universal/LICENSE.txt
         var arc = that.arc,
             animationDuration = that.options.pieOptions.animationDuration;
 
-        that.paths.transition().duration(animationDuration).attrTween("d", function (a) {
-            var i = d3.interpolate(this._current, a);
-            this._current = i(0);
+        // Standard D3 pie arc tweening transition, as per http://bl.ocks.org/mbostock/1346410
+        that.paths.transition().duration(animationDuration).attrTween("d", function (d) {
+            var interpolation = d3.interpolate(this._current, d);
+            this._current = interpolation(0);
             return function(t) {
-                return arc(i(t));
+                return arc(interpolation(t));
             };
         });
 
