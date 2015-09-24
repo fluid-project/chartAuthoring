@@ -83,9 +83,7 @@ https://github.com/gpii/universal/LICENSE.txt
         });
 
         // Needed catch to handle the result of a nonexistent selectors block meaning object is not initialized
-        if(!consolidatedClasses) {
-            consolidatedClasses = {};
-        }
+        consolidatedClasses = consolidatedClasses || {};
 
         // Add any style values to consolidatedClasses
 
