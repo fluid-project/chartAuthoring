@@ -79,13 +79,6 @@ https://github.com/gpii/universal/LICENSE.txt
         }
     });
 
-    // Scales the supplied colors using d3 and returns them as an array
-
-    gpii.chartAuthoring.pieChart.legend.getColorArray = function (colors) {
-        var colorScale = (typeof(colors) === "function") ? colors : gpii.d3.getColorScale(colors);
-        return colorScale.range();
-    };
-
     // Add new rows for new data, apply appropriate classes for selectors and styling
 
     gpii.chartAuthoring.pieChart.legend.addRows = function(that) {
@@ -227,15 +220,25 @@ https://github.com/gpii/universal/LICENSE.txt
     // added values
 
     gpii.chartAuthoring.pieChart.legend.addValueFromArray = function (objectArray, valueArray, newValueName) {
-        return fluid.transform(objectArray, function (object, idx) {
-            var consolidated = fluid.copy(object);
-            // Don't do anything if not passed an actual array in the value array
-            if(fluid.isArrayable(valueArray)) {
-                consolidated[newValueName] = valueArray[idx];
-            }
-            return consolidated;
-        });
+        if(fluid.isArrayable(valueArray)) {
+            return fluid.transform(objectArray, function (object, idx) {
+                var consolidated = fluid.copy(object);
+                // Don't do anything if not passed an actual array in the value array
+
+                    consolidated[newValueName] = valueArray[idx];
+
+                return consolidated;
+            });
+        } else {
+            return objectArray;
+        }
     };
 
+    // Scales the supplied colors using d3 and returns them as an array
+
+    gpii.chartAuthoring.pieChart.legend.getColorArray = function (colors) {
+        var colorScale = (typeof(colors) === "function") ? colors : gpii.d3.getColorScale(colors);
+        return colorScale.range();
+    };
 
 })(jQuery, fluid);
