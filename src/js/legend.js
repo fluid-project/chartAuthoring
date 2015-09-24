@@ -24,8 +24,6 @@ https://github.com/gpii/universal/LICENSE.txt
             // 1. an array of objects. Must contain "id", "value" and "label" variables.
             // Example: [{id: string, value: number, label: string} ... ]
             dataSet: []
-            // "dataSetWithColors" consolidates the dataset in original order with the array of colors, into a single array of objects
-            // dataSetWithColors: []
         },
         legendOptions: {
             // An array of colors to fill slices generated for corresponding values of model.dataSet
@@ -34,17 +32,6 @@ https://github.com/gpii/universal/LICENSE.txt
             sort: true, // Whether or not to sort the data by values when creating the legend
             showLegendHeadings: true // Whether or not to display column headings in the legend
         },
-        modelRelay: [{
-            target: "dataSetWithColors",
-            singleTransform: {
-                type: "fluid.transforms.free",
-                args: {
-                    "dataSet": "{that}.model.dataSet",
-                    "colors": "{that}.options.legendOptions.colors"
-                },
-                func: "gpii.chartAuthoring.pieChart.legend.consolidateDataAndColors"
-            }
-        }],
         styles: {
             legend: "gpii-ca-pieChart-legend",
             table: "gpii-ca-pieChart-legend-table",
@@ -92,17 +79,11 @@ https://github.com/gpii/universal/LICENSE.txt
         }
     });
 
-    // Takes the dataSet array and the color array, and returns a consolidated object array to ease sorting and other operations while keeping colors "correct"
-    gpii.chartAuthoring.pieChart.legend.consolidateDataAndColors = function (model) {
-        var dataSet = model.dataSet;
-        var colors = (typeof(model.colors) === "function") ? model.colors : gpii.d3.getColorScale(model.colors);
+    // Scales the supplied colors using d3 and returns them as an array
 
-        return fluid.transform(dataSet, function (data, idx) {
-            var consolidated = fluid.copy(data);
-            consolidated.color = colors(idx);
-            return consolidated;
-        });
-
+    gpii.chartAuthoring.pieChart.legend.getColorArray = function (colors) {
+        var colorScale = (typeof(colors) === "function") ? colors : gpii.d3.getColorScale(colors);
+        return colorScale.range();
     };
 
     // Add new rows for new data, apply appropriate classes for selectors and styling
@@ -167,8 +148,13 @@ https://github.com/gpii/universal/LICENSE.txt
     gpii.chartAuthoring.pieChart.legend.draw = function (that) {
         var table = that.table,
             legendOptions = that.options.legendOptions,
-            dataSet = that.model.dataSetWithColors,
+            colors = gpii.chartAuthoring.pieChart.legend.getColorArray(legendOptions.colors),
             sort = legendOptions.sort;
+
+        // Consolidate user-supplied colors with dataset at draw time
+
+        var dataSet = gpii.chartAuthoring.pieChart.legend.addValueFromArray(that.model.dataSet, colors, "color");
+
         var tbody = table.selectAll("tbody");
 
         that.rows = tbody.selectAll("tr")
@@ -234,5 +220,22 @@ https://github.com/gpii/universal/LICENSE.txt
     gpii.chartAuthoring.pieChart.legend.getColorCellStyle = function (data) {
         return "background-color: " + data.color + ";";
     };
+
+    // Given an array of objects, an array of values and new value name, loop
+    // the object array in index order, apply the value from the array at the
+    // same index to the value name, and return a new object array with the
+    // added values
+
+    gpii.chartAuthoring.pieChart.legend.addValueFromArray = function (objectArray, valueArray, newValueName) {
+        return fluid.transform(objectArray, function (object, idx) {
+            var consolidated = fluid.copy(object);
+            // Don't do anything if not passed an actual array in the value array
+            if(fluid.isArrayable(valueArray)) {
+                consolidated[newValueName] = valueArray[idx];
+            }
+            return consolidated;
+        });
+    };
+
 
 })(jQuery, fluid);
