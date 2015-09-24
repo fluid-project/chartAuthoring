@@ -263,7 +263,7 @@ https://github.com/gpii/universal/LICENSE.txt
 
     };
 
-    jqUnit.test("Test the legend component created based off an array of objects, unsorted", function () {
+    jqUnit.test("Test the legend component created based off an array of objects, unsorted, user-supplied colours", function () {
         jqUnit.expect(85);
 
         var that = gpii.tests.chartAuthoring.pieChart.legend(".gpii-ca-legend-objects-unsorted", {
@@ -279,7 +279,7 @@ https://github.com/gpii/universal/LICENSE.txt
 
     });
 
-    jqUnit.test("Test the legend component created based off an array of objects, sorted", function () {
+    jqUnit.test("Test the legend component created based off an array of objects, sorted, default colours", function () {
         jqUnit.expect(85);
 
         var that = gpii.tests.chartAuthoring.pieChart.legend(".gpii-ca-legend-objects-sorted", {
@@ -287,7 +287,8 @@ https://github.com/gpii/universal/LICENSE.txt
                 dataSet: gpii.tests.chartAuthoring.objectArray
             },
             legendOptions: {
-                sort:true
+                sort:true,
+                colors: null
             }
         });
 
