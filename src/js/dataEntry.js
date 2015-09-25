@@ -15,12 +15,12 @@ https://github.com/gpii/universal/LICENSE.txt
     fluid.defaults("gpii.chartAuthoring.dataEntry", {
         gradeNames: ["gpii.chartAuthoring.templateInjection", "gpii.chartAuthoring.valueBinding"],
         selectors: {
-            input: ".gpiic-ca-dataEntry-value",
+            value: ".gpiic-ca-dataEntry-value",
             percentage: ".gpiic-ca-dataEntry-percentage",
             label: ".gpiic-ca-dataEntry-label"
         },
         strings: {
-            inputPlaceholder: "Value",
+            valueInputPlaceholder: "Value",
             percentage: "%percentage%",
             // aria-label attribute for the Value form input
             valueInputAriaLabel: "Value",
@@ -49,7 +49,7 @@ https://github.com/gpii/universal/LICENSE.txt
             }
         }],
         bindings: {
-            input: "value",
+            value: "value",
             label: "label"
         },
         percentageDigits: 2,
@@ -67,10 +67,10 @@ https://github.com/gpii/universal/LICENSE.txt
         listeners: {
             "onCreate.updatePercentage": "{that}.updatePercentage",
             "onCreate.setInputAttrs": {
-                "this": "{that}.dom.input",
+                "this": "{that}.dom.value",
                 "method": "attr",
                 "args": {
-                    placeholder: "{that}.options.strings.inputPlaceholder",
+                    placeholder: "{that}.options.strings.valueInputPlaceholder",
                     "aria-label": "{that}.options.strings.valueInputAriaLabel"
                 }
             },

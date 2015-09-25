@@ -103,12 +103,12 @@ https://github.com/gpii/universal/LICENSE.txt
     };
 
     gpii.tests.chartAuthoring.dataEntryTester.verifyEntry = function (that, expected) {
-        gpii.tests.chartAuthoring.dataEntryTester.verifyInput("input", that.locate("input"), expected.value);
+        gpii.tests.chartAuthoring.dataEntryTester.verifyInput("value", that.locate("value"), expected.value);
         gpii.tests.chartAuthoring.dataEntryTester.verifyPercentage(that.locate("percentage"), expected.percentage);
     };
 
     gpii.tests.chartAuthoring.dataEntryTester.verifyAccessibility = function(that) {
-        var valueInput = that.locate("input");
+        var valueInput = that.locate("value");
         var labelInput = that.locate("label");
         jqUnit.assertEquals("An aria-label for the label input has been set", that.options.strings.labelInputAriaLabel, labelInput.attr("aria-label"));
         jqUnit.assertEquals("An aria-label for the value input has been set", that.options.strings.valueInputAriaLabel, valueInput.attr("aria-label"));
@@ -116,12 +116,12 @@ https://github.com/gpii/universal/LICENSE.txt
 
     gpii.tests.chartAuthoring.dataEntryTester.testRendering = function (that) {
         jqUnit.assertValue("The component should have been initialized.", that);
-        var input = that.locate("input");
+        var value = that.locate("value");
         var percentage = that.locate("percentage");
         var label = that.locate("label");
 
-        gpii.tests.chartAuthoring.dataEntryTester.verifyInput("input", input, that.model.value || "");
-        jqUnit.assertEquals("The input placeholder has been set", that.options.strings.inputPlaceholder, input.attr("placeholder"));
+        gpii.tests.chartAuthoring.dataEntryTester.verifyInput("value", value, that.model.value || "");
+        jqUnit.assertEquals("The value input placeholder has been set", that.options.strings.valueInputPlaceholder, value.attr("placeholder"));
 
         gpii.tests.chartAuthoring.dataEntryTester.verifyPercentage(percentage, "%");
 
