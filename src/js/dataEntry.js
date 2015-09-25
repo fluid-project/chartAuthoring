@@ -21,6 +21,7 @@ https://github.com/gpii/universal/LICENSE.txt
         },
         strings: {
             valueInputPlaceholder: "Value",
+            labelInputPlaceholder: "Label",
             percentage: "%percentage%",
             // aria-label attribute for the Value form input
             valueInputAriaLabel: "Value",
@@ -78,6 +79,7 @@ https://github.com/gpii/universal/LICENSE.txt
                 "this": "{that}.dom.label",
                 "method": "attr",
                 "args": {
+                    placeholder: "{that}.options.strings.labelInputPlaceholder",
                     "aria-label": "{that}.options.strings.labelInputAriaLabel"
                 }
             }
