@@ -122,6 +122,5 @@ https://github.com/gpii/universal/LICENSE.txt
             }
         });
         return pieChartData;
-    };
-
+    };        
 })(jQuery, fluid);

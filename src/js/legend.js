@@ -24,48 +24,29 @@ https://github.com/gpii/universal/LICENSE.txt
             // 1. an array of objects. Must contain "id", "value" and "label" variables.
             // Example: [{id: string, value: number, label: string} ... ]
             dataSet: []
-            // "dataSetWithColors" consolidates the dataset in original order with the array of colors, into a single array of objects
-            // dataSetWithColors: []
         },
         legendOptions: {
-            colors: null, // An array of colors for the legend generated for corresponding values of model.dataSet
+            // An array of colors to fill slices generated for corresponding values of model.dataSet
+            // Or, a d3 color scale that's generated based off an array of colors
+            colors: null,
             sort: true, // Whether or not to sort the data by values when creating the legend
             showLegendHeadings: true // Whether or not to display column headings in the legend
         },
-        members: {
-            color: {
-                expander: {
-                    funcName: "gpii.chartAuthoring.pieChart.legend.getColorScale",
-                    args: ["{that}.options.legendOptions.colors"]
-                }
-            }
-        },
-        modelRelay: [{
-            target: "dataSetWithColors",
-            singleTransform: {
-                type: "fluid.transforms.free",
-                args: {
-                    "dataSet": "{that}.model.dataSet",
-                    "color": "{that}.color"
-                },
-                func: "gpii.chartAuthoring.pieChart.legend.consolidateDataAndColors"
-            }
-        }],
         styles: {
             legend: "gpii-ca-pieChart-legend",
             table: "gpii-ca-pieChart-legend-table",
             row: "gpii-ca-pieChart-legend-table-row",
-            legendColorCell: "gpii-ca-pieChart-legend-color-cell",
+            colorCell: "gpii-ca-pieChart-legend-color-cell",
             labelCell: "gpii-ca-pieChart-legend-label-cell",
             valueCell: "gpii-ca-pieChart-legend-value-cell"
         },
         selectors: {
             legend: ".gpiic-ca-pieChart-legend",
-            table: ".gpii-ca-pieChart-legend-table",
-            row: ".gpii-ca-pieChart-legend-table-row",
-            legendColorCell: ".gpii-ca-pieChart-legend-color-cell",
-            labelCell: ".gpii-ca-pieChart-legend-label-cell",
-            valueCell: ".gpii-ca-pieChart-legend-value-cell"
+            table: ".gpiic-ca-pieChart-legend-table",
+            row: ".gpiic-ca-pieChart-legend-table-row",
+            colorCell: ".gpiic-ca-pieChart-legend-color-cell",
+            labelCell: ".gpiic-ca-pieChart-legend-label-cell",
+            valueCell: ".gpiic-ca-pieChart-legend-value-cell"
         },
         events: {
             onLegendCreated: null,  // Fire when the legend is created. Ready to register D3 DOM event listeners,
@@ -87,102 +68,102 @@ https://github.com/gpii/universal/LICENSE.txt
             draw: {
                 funcName: "gpii.chartAuthoring.pieChart.legend.draw",
                 args: ["{that}"]
+            },
+            sort: {
+                funcName: "gpii.chartAuthoring.pieChart.legend.sort",
+                args: ["{arguments}.0", "{arguments}.1"]
+            },
+            getColorCellStyle: {
+                funcName: "gpii.chartAuthoring.pieChart.legend.getColorCellStyle",
+                args: ["{arguments}.0"]
             }
         }
     });
 
-    // Return a D3 color scale based on user supplied colors or the d3.scale.category10() defaults
+    // Add new rows for new data, apply appropriate classes for selectors and styling
 
-    gpii.chartAuthoring.pieChart.legend.getColorScale = function (colors) {
-        return colors ? d3.scale.ordinal().range(colors) : d3.scale.category10();
-    };
+    gpii.chartAuthoring.pieChart.legend.addRows = function(that) {
+        var rowClass = that.classes.row,
+            colorCellClass = that.classes.colorCell,
+            labelCellClass = that.classes.labelCell,
+            valueCellClass = that.classes.valueCell;
 
-    // Takes the dataSet array and the color array, and returns a consolidated object array to ease sorting and other operations while keeping colors "correct"
+        var addedRows = that.rows.enter()
+                            .append("tr");
 
-    gpii.chartAuthoring.pieChart.legend.consolidateDataAndColors = function (model) {
-        var dataSet = model.dataSet;
-        var color = model.color;
-
-        var c = [];
-        fluid.each(dataSet, function(item, index) {
-            var d = {
-                id: item.id,
-                label: item.label,
-                value: item.value,
-                color: color(index)
-            };
-            c.push(d);
+        addedRows.attr({
+            "class": rowClass
         });
 
-        return c;
+        addedRows.append("td")
+            .attr({
+                "class": colorCellClass
+            });
 
+        addedRows.append("td")
+            .attr({
+                "class": labelCellClass
+            });
+
+        addedRows.append("td")
+            .attr({
+                "class": valueCellClass
+            });
+    };
+
+    // Update cell legend colours, labels and values
+    gpii.chartAuthoring.pieChart.legend.updateRows = function (that) {
+        var colorCellSelector = that.options.selectors.colorCell,
+            labelCellSelector = that.options.selectors.labelCell,
+            valueCellSelector = that.options.selectors.valueCell;
+
+        that.rows.each(function (d) {
+            d3.select(this)
+                .select(colorCellSelector)
+                .attr({
+                    "style": that.getColorCellStyle(d)
+                });
+
+            d3.select(this)
+                .select(labelCellSelector)
+                .text(d.label);
+
+            d3.select(this)
+                .select(valueCellSelector)
+                .text(d.value);
+        });
+    };
+
+    gpii.chartAuthoring.pieChart.legend.removeRows = function (that) {
+        var removedRows = that.rows.exit();
+        removedRows.remove();
     };
 
     gpii.chartAuthoring.pieChart.legend.draw = function (that) {
         var table = that.table,
-            l = that.options.legendOptions,
-            dataSet = that.model.dataSetWithColors,
-            rowClass = that.classes.row,
-            legendColorCellClass = that.classes.legendColorCell,
-            legendLabelCellClass = that.classes.labelCell,
-            legendValueCellClass = that.classes.valueCell,
-            sort = l.sort;
+            legendOptions = that.options.legendOptions,
+            colors = gpii.chartAuthoring.pieChart.legend.getColorArray(legendOptions.colors),
+            sort = legendOptions.sort;
+
+        // Consolidate user-supplied colors with dataset at draw time
+
+        var dataSet = gpii.chartAuthoring.pieChart.legend.addValueFromArray(that.model.dataSet, colors, "color");
+
         var tbody = table.selectAll("tbody");
 
-        var rows = tbody.selectAll("tr")
-            .data(dataSet, function (d) {
-                return d.id;
-            });
+        that.rows = tbody.selectAll("tr")
+                            .data(dataSet, function (d) {
+                                return d.id;
+                            });
 
-        // Add new rows for new data, apply appropriate classes for selectors and styling
+        gpii.chartAuthoring.pieChart.legend.addRows(that);
 
-        var addedRows = rows.enter().append("tr");
+        gpii.chartAuthoring.pieChart.legend.updateRows(that);
 
-        addedRows
-        .attr({
-            "class": rowClass
-        });
-
-        addedRows
-        .append("td")
-        .attr({
-            "class": legendColorCellClass
-        });
-
-        addedRows
-        .append("td")
-        .attr({
-            "class": legendLabelCellClass
-        });
-
-        addedRows
-        .append("td")
-        .attr({
-            "class": legendValueCellClass
-        });
-
-        // Update cell legend colours, labels and values
-        rows.each(function (d) {
-            d3.select(this).select("."+legendColorCellClass)
-            .attr({
-                "style": function (d) {
-                    return "background-color: " + d.color + ";";
-                }
-            });
-            d3.select(this).select("."+legendLabelCellClass)
-            .text(d.label);
-            d3.select(this).select("."+legendValueCellClass)
-            .text(d.value);
-        });
-
-        var removedRows = rows.exit();
-
-        removedRows.remove();
+        gpii.chartAuthoring.pieChart.legend.removeRows(that);
 
         if (sort) {
-            rows.sort(function (a,b){
-                return b.value - a.value;
-            });
+            that.rows.sort(that.sort);
         }
 
         that.events.onLegendRedrawn.fire();
@@ -196,8 +177,8 @@ https://github.com/gpii/universal/LICENSE.txt
         that.table = that.jQueryToD3(container)
             .append("table")
             .attr({
-            "class": tableClass
-        });
+                "class": tableClass
+            });
 
         that.table.append("thead");
         that.table.append("tbody");
@@ -218,14 +199,49 @@ https://github.com/gpii/universal/LICENSE.txt
 
             thead.append("th")
                 .attr({
-                "scope":"col"
-            })
-          .html(that.options.strings.valueColHeading);
+                    "scope":"col"
+                })
+                .html(that.options.strings.valueColHeading);
         }
 
         that.draw();
 
         that.events.onLegendCreated.fire();
+    };
+
+    gpii.chartAuthoring.pieChart.legend.sort = function (a, b) {
+        return b.value - a.value;
+    };
+
+    gpii.chartAuthoring.pieChart.legend.getColorCellStyle = function (data) {
+        return "background-color: " + data.color + ";";
+    };
+
+    // Given an array of objects, an array of values and new value name, loop
+    // the object array in index order, apply the value from the array at the
+    // same index to the value name, and return a new object array with the
+    // added values
+
+    gpii.chartAuthoring.pieChart.legend.addValueFromArray = function (objectArray, valueArray, newValueName) {
+        if(fluid.isArrayable(valueArray)) {
+            return fluid.transform(objectArray, function (object, idx) {
+                var consolidated = fluid.copy(object);
+                // Don't do anything if not passed an actual array in the value array
+
+                    consolidated[newValueName] = valueArray[idx];
+
+                return consolidated;
+            });
+        } else {
+            return objectArray;
+        }
+    };
+
+    // Scales the supplied colors using d3 and returns them as an array
+
+    gpii.chartAuthoring.pieChart.legend.getColorArray = function (colors) {
+        var colorScale = (typeof(colors) === "function") ? colors : gpii.d3.getColorScale(colors);
+        return colorScale.range();
     };
 
 })(jQuery, fluid);
