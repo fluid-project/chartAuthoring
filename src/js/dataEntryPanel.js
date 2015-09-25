@@ -1,26 +1,27 @@
-/*!
+/*
 Copyright 2015 OCAD University
 
-Licensed under the New BSD license. You may not use this file except in
-compliance with this License.
+Licensed under the Educational Community License (ECL), Version 2.0 or the New
+BSD license. You may not use this file except in compliance with one these
+Licenses.
 
-You may obtain a copy of the License at
-https://github.com/gpii/universal/LICENSE.txt
+You may obtain a copy of the ECL 2.0 License and BSD License at
+https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.txt
 */
 
 (function ($, fluid) {
 
     "use strict";
 
-    fluid.defaults("gpii.chartAuthoring.dataEntryPanel", {
-        gradeNames: ["gpii.chartAuthoring.templateInjection"],
+    fluid.defaults("floe.chartAuthoring.dataEntryPanel", {
+        gradeNames: ["floe.chartAuthoring.templateInjection"],
         selectors: {
-            dataEntryLabel: ".gpiic-ca-dataEntryPanel-dataEntryLabel",
-            dataEntries: ".gpiic-ca-dataEntryPanel-dataEntries",
-            dataEntry: ".gpiic-ca-dataEntryPanel-dataEntry",
-            totalValue: ".gpiic-ca-dataEntryPanel-totalValue",
-            totalPercentage: ".gpiic-ca-dataEntryPanel-totalPercentage",
-            totalLabel: ".gpiic-ca-dataEntryPanel-totalLabel"
+            dataEntryLabel: ".floec-ca-dataEntryPanel-dataEntryLabel",
+            dataEntries: ".floec-ca-dataEntryPanel-dataEntries",
+            dataEntry: ".floec-ca-dataEntryPanel-dataEntry",
+            totalValue: ".floec-ca-dataEntryPanel-totalValue",
+            totalPercentage: ".floec-ca-dataEntryPanel-totalPercentage",
+            totalLabel: ".floec-ca-dataEntryPanel-totalLabel"
         },
         strings: {
             dataEntryLabel: "Enter your values",
@@ -31,13 +32,13 @@ https://github.com/gpii/universal/LICENSE.txt
         dynamicComponents: {
             dataEntry: {
                 createOnEvent: "createDataEntryField",
-                type: "gpii.chartAuthoring.dataEntry",
+                type: "floe.chartAuthoring.dataEntry",
                 container: "{arguments}.0",
                 options: {
                     gradeNames: ["{that}.generateModelRelaysConnectionGrade"],
                     invokers: {
                         "generateModelRelaysConnectionGrade": {
-                            funcName: "gpii.chartAuthoring.dataEntryPanel.generateModelRelaysConnectionGrade",
+                            funcName: "floe.chartAuthoring.dataEntryPanel.generateModelRelaysConnectionGrade",
                             args: ["{that}.nickName", "{that}.id", ["dataEntries"]]
                         }
                     },
@@ -60,17 +61,17 @@ https://github.com/gpii/universal/LICENSE.txt
             source: "dataEntries",
             target: "total.value",
             singleTransform: {
-                type: "gpii.chartAuthoring.transforms.reduce",
+                type: "floe.chartAuthoring.transforms.reduce",
                 value: "{that}.model.dataEntries",
                 initialValue: null,
-                extractor: "gpii.chartAuthoring.transforms.reduce.valueExtractor",
-                func: "gpii.chartAuthoring.transforms.reduce.add"
+                extractor: "floe.chartAuthoring.transforms.reduce.valueExtractor",
+                func: "floe.chartAuthoring.transforms.reduce.add"
             }
         }, {
             source: "total.value",
             target: "total.percentage",
             singleTransform: {
-                type: "gpii.chartAuthoring.transforms.percentage",
+                type: "floe.chartAuthoring.transforms.percentage",
                 value: "{that}.model.total.value",
                 total: "{that}.model.total.value"
             }
@@ -80,11 +81,11 @@ https://github.com/gpii/universal/LICENSE.txt
             createDataEntryField: null
         },
         listeners: {
-            "onCreate.renderPanel": "gpii.chartAuthoring.dataEntryPanel.renderPanel"
+            "onCreate.renderPanel": "floe.chartAuthoring.dataEntryPanel.renderPanel"
         },
         modelListeners: {
             "total": {
-                listener: "gpii.chartAuthoring.dataEntryPanel.renderTotals",
+                listener: "floe.chartAuthoring.dataEntryPanel.renderTotals",
                 args: ["{that}"]
             }
         },
@@ -94,8 +95,8 @@ https://github.com/gpii/universal/LICENSE.txt
         }
     });
 
-    gpii.chartAuthoring.dataEntryPanel.generateModelRelaysConnectionGrade = function (nickName, id) {
-        var gradeName = "gpii.chartAuthoring.dataEntryPanel.modelRelayConnections." + fluid.allocateGuid();
+    floe.chartAuthoring.dataEntryPanel.generateModelRelaysConnectionGrade = function (nickName, id) {
+        var gradeName = "floe.chartAuthoring.dataEntryPanel.modelRelayConnections." + fluid.allocateGuid();
         var modelPathBase = "{dataEntryPanel}.model.dataEntries." + nickName + "-" + id + ".";
 
         fluid.defaults(gradeName, {
@@ -117,24 +118,24 @@ https://github.com/gpii/universal/LICENSE.txt
         return gradeName;
     };
 
-    gpii.chartAuthoring.dataEntryPanel.append = function (container, template) {
+    floe.chartAuthoring.dataEntryPanel.append = function (container, template) {
         template = $(template).clone();
         container.append(template);
         return template;
     };
 
-    gpii.chartAuthoring.dataEntryPanel.renderPanel = function (that) {
+    floe.chartAuthoring.dataEntryPanel.renderPanel = function (that) {
         that.locate("dataEntryLabel").text(that.options.strings.dataEntryLabel);
         that.locate("totalLabel").text(that.options.strings.totalLabel);
 
         var dataEntryContainerTemplate = that.locate("dataEntry").remove();
         for (var i = 1; i <= that.options.numDataEntryFields; i++) {
-            var deCont = gpii.chartAuthoring.dataEntryPanel.append(that.locate("dataEntries"), dataEntryContainerTemplate);
+            var deCont = floe.chartAuthoring.dataEntryPanel.append(that.locate("dataEntries"), dataEntryContainerTemplate);
             that.events.createDataEntryField.fire(deCont);
         }
     };
 
-    gpii.chartAuthoring.dataEntryPanel.renderTotals = function (that) {
+    floe.chartAuthoring.dataEntryPanel.renderTotals = function (that) {
         var percentage, totalToRender;
         var total = that.model.total.value;
 
@@ -147,7 +148,7 @@ https://github.com/gpii/universal/LICENSE.txt
         }
 
         that.locate("totalValue").text(totalToRender);
-        gpii.chartAuthoring.percentage.render(that.locate("totalPercentage"), percentage, that.options.strings.totalPercentage);
+        floe.chartAuthoring.percentage.render(that.locate("totalPercentage"), percentage, that.options.strings.totalPercentage);
     };
 
 })(jQuery, fluid);

@@ -5,62 +5,62 @@ Licensed under the New BSD license. You may not use this file except in
 compliance with this License.
 
 You may obtain a copy of the License at
-https://github.com/gpii/universal/LICENSE.txt
+https://github.com/floe/universal/LICENSE.txt
 */
 
 (function ($, fluid) {
 
     "use strict";
 
-    jqUnit.test("Test gpii.chartAuthoring.dataEntryPanel.append", function () {
+    jqUnit.test("Test floe.chartAuthoring.dataEntryPanel.append", function () {
         var container = $(".appendtest");
         var template = "<span class='appendtest-appended'>Appended</span>";
 
-        gpii.chartAuthoring.dataEntryPanel.append(container, template);
-        gpii.chartAuthoring.dataEntryPanel.append(container, $(template));
+        floe.chartAuthoring.dataEntryPanel.append(container, template);
+        floe.chartAuthoring.dataEntryPanel.append(container, $(template));
 
         jqUnit.assertEquals("The elements should be appended to the container", 2, container.find(".appendtest-appended").length);
     });
 
-    fluid.defaults("gpii.tests.chartAuthoring.dataEntryPanel", {
-        gradeNames: ["gpii.chartAuthoring.dataEntryPanel"],
+    fluid.defaults("floe.tests.chartAuthoring.dataEntryPanel", {
+        gradeNames: ["floe.chartAuthoring.dataEntryPanel"],
         resources: {
             template: {
                 resourceText: "<form>" +
                                 "<fieldset>" +
-                                "<legend class=\"gpiic-ca-dataEntryPanel-dataEntryLabel\">Entry</legend>" +
-                                "<ul class=\"gpiic-ca-dataEntryPanel-dataEntries\">" +
-                                "<li class=\"gpiic-ca-dataEntryPanel-dataEntry\"></li>" +
+                                "<legend class=\"floec-ca-dataEntryPanel-dataEntryLabel\">Entry</legend>" +
+                                "<ul class=\"floec-ca-dataEntryPanel-dataEntries\">" +
+                                "<li class=\"floec-ca-dataEntryPanel-dataEntry\"></li>" +
                                 "</ul>" +
-                                "<span class=\"gpiic-ca-dataEntryPanel-totalLabel\">Total</span>" +
-                                "<span class=\"gpiic-ca-dataEntryPanel-totalValue\">Value</span>" +
-                                "<span class=\"gpiic-ca-dataEntryPanel-totalPercentage\">%</span>" +
+                                "<span class=\"floec-ca-dataEntryPanel-totalLabel\">Total</span>" +
+                                "<span class=\"floec-ca-dataEntryPanel-totalValue\">Value</span>" +
+                                "<span class=\"floec-ca-dataEntryPanel-totalPercentage\">%</span>" +
                                 "</fieldset>" +
                                 "</form>"
             },
             dataEntry: {
-                resourceText: "<input type=\"text\" class=\"gpiic-ca-dataEntry-label\">" +
-                                "<input type=\"text\" class=\"gpiic-ca-dataEntry-value\">" +
-                                "<span class=\"gpiic-ca-dataEntry-percentage\"></span>"
+                resourceText: "<input type=\"text\" class=\"floec-ca-dataEntry-label\">" +
+                                "<input type=\"text\" class=\"floec-ca-dataEntry-value\">" +
+                                "<span class=\"floec-ca-dataEntry-percentage\"></span>"
 
             }
         }
     });
 
-    fluid.defaults("gpii.tests.chartAuthoring.dataEntryPanelTest", {
+    fluid.defaults("floe.tests.chartAuthoring.dataEntryPanelTest", {
         gradeNames: ["fluid.test.testEnvironment"],
         components: {
             dataEntryPanel: {
-                type: "gpii.tests.chartAuthoring.dataEntryPanel",
-                container: ".gpiic-ca-dataEntryPanel"
+                type: "floe.tests.chartAuthoring.dataEntryPanel",
+                container: ".floec-ca-dataEntryPanel"
             },
             dataEntryPanelTester: {
-                type: "gpii.tests.chartAuthoring.dataEntryPanelTester"
+                type: "floe.tests.chartAuthoring.dataEntryPanelTester"
             }
         }
     });
 
-    fluid.defaults("gpii.tests.chartAuthoring.dataEntryPanelTester", {
+    fluid.defaults("floe.tests.chartAuthoring.dataEntryPanelTester", {
         gradeNames: ["fluid.test.testCaseHolder"],
         testOptions: {
             totalsChanged: {
@@ -96,7 +96,7 @@ https://github.com/gpii/universal/LICENSE.txt
                 expect: 11,
                 name: "Test Initial Rendering",
                 type: "test",
-                func: "gpii.tests.chartAuthoring.dataEntryPanelTester.testRendering",
+                func: "floe.tests.chartAuthoring.dataEntryPanelTester.testRendering",
                 args: ["{dataEntryPanel}"]
             }, {
                 name: "Model Changed Sequence",
@@ -105,7 +105,7 @@ https://github.com/gpii/universal/LICENSE.txt
                     func: "{dataEntryPanel}.dataEntry.applier.change",
                     args: ["value", "{that}.options.testOptions.entryValue1"]
                 }, {
-                    listener: "gpii.tests.chartAuthoring.dataEntryPanelTester.verifyTotalOutput",
+                    listener: "floe.tests.chartAuthoring.dataEntryPanelTester.verifyTotalOutput",
                     args: ["{dataEntryPanel}", "{that}.options.testOptions.totalsExpected1"],
                     spec: {path: "total", priority: "last"},
                     changeEvent: "{dataEntryPanel}.applier.modelChanged"
@@ -113,7 +113,7 @@ https://github.com/gpii/universal/LICENSE.txt
                     func: "{dataEntryPanel}.dataEntry-1.applier.change",
                     args: ["value", "{that}.options.testOptions.entryValue2"]
                 }, {
-                    listener: "gpii.tests.chartAuthoring.dataEntryPanelTester.verifyTotalOutput",
+                    listener: "floe.tests.chartAuthoring.dataEntryPanelTester.verifyTotalOutput",
                     args: ["{dataEntryPanel}", "{that}.options.testOptions.totalsExpected2"],
                     spec: {path: "total", priority: "last"},
                     changeEvent: "{dataEntryPanel}.applier.modelChanged"
@@ -122,7 +122,7 @@ https://github.com/gpii/universal/LICENSE.txt
         }]
     });
 
-    gpii.tests.chartAuthoring.dataEntryPanelTester.testRendering = function (that) {
+    floe.tests.chartAuthoring.dataEntryPanelTester.testRendering = function (that) {
         var dataEntryLabel = that.locate("dataEntryLabel");
         jqUnit.assertEquals("The data entry label should be set", that.options.strings.dataEntryLabel, dataEntryLabel.text());
 
@@ -131,14 +131,14 @@ https://github.com/gpii/universal/LICENSE.txt
         jqUnit.assertEquals("There should be " + expectedDataEntryFields + " data entry components added", expectedDataEntryFields, that.locate("dataEntry").length);
         jqUnit.assertEquals("There should be " + expectedDataEntryFields + " data entries added to the model", expectedDataEntryFields, fluid.keys(that.model.dataEntries).length);
 
-        gpii.tests.chartAuthoring.dataEntryPanelTester.verifyTotalOutput(that, {
+        floe.tests.chartAuthoring.dataEntryPanelTester.verifyTotalOutput(that, {
             label: that.options.strings.totalLabel,
             value: that.options.strings.emptyTotalValue,
             percentage: "%"
         });
     };
 
-    gpii.tests.chartAuthoring.dataEntryPanelTester.verifyTotalOutput = function (that, expected) {
+    floe.tests.chartAuthoring.dataEntryPanelTester.verifyTotalOutput = function (that, expected) {
         jqUnit.assertEquals("The total label should be set", expected.label, that.locate("totalLabel").text());
         jqUnit.assertEquals("The total value should be set", expected.value, that.locate("totalValue").text());
         jqUnit.assertEquals("The total percentage should be set", expected.percentage, that.locate("totalPercentage").text());
@@ -151,7 +151,7 @@ https://github.com/gpii/universal/LICENSE.txt
 
     $(document).ready(function () {
         fluid.test.runTests([
-            "gpii.tests.chartAuthoring.dataEntryPanelTest"
+            "floe.tests.chartAuthoring.dataEntryPanelTest"
         ]);
     });
 

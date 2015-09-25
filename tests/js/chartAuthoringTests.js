@@ -5,15 +5,15 @@ Licensed under the New BSD license. You may not use this file except in
 compliance with this License.
 
 You may obtain a copy of the License at
-https://github.com/gpii/universal/LICENSE.txt
+https://github.com/floe/universal/LICENSE.txt
 */
 
 (function ($, fluid) {
 
     "use strict";
 
-    fluid.defaults("gpii.tests.chartAuthoring", {
-        gradeNames: ["gpii.chartAuthoring"],
+    fluid.defaults("floe.tests.chartAuthoring", {
+        gradeNames: ["floe.chartAuthoring"],
         templateLoader: {
             terms: {
                 templatePrefix: "../../src/html"
@@ -36,21 +36,21 @@ https://github.com/gpii/universal/LICENSE.txt
         }
     });
 
-    fluid.defaults("gpii.tests.chartAuthoringTest", {
+    fluid.defaults("floe.tests.chartAuthoringTest", {
         gradeNames: ["fluid.test.testEnvironment"],
         components: {
             chartAuthoring: {
-                type: "gpii.tests.chartAuthoring",
-                container: ".gpiic-chartAuthoring",
+                type: "floe.tests.chartAuthoring",
+                container: ".floec-chartAuthoring",
                 createOnEvent: "{chartAuthoringTester}.events.onTestCaseStart"
             },
             chartAuthoringTester: {
-                type: "gpii.tests.chartAuthoringTester"
+                type: "floe.tests.chartAuthoringTester"
             }
         }
     });
 
-    fluid.defaults("gpii.tests.chartAuthoringTester", {
+    fluid.defaults("floe.tests.chartAuthoringTester", {
         gradeNames: ["fluid.test.testCaseHolder"],
         modules: [{
             name: "Tests the data entry panel component",
@@ -58,7 +58,7 @@ https://github.com/gpii/universal/LICENSE.txt
                 name: "Chart Authoring Init",
                 expect: 6,
                 sequence: [{
-                    listener: "gpii.tests.chartAuthoringTester.verifyInit",
+                    listener: "floe.tests.chartAuthoringTester.verifyInit",
                     args: ["{chartAuthoring}"],
                     spec: {priority: "last"},
                     event: "{chartAuthoringTest chartAuthoring}.events.onTemplatesLoaded"
@@ -66,22 +66,22 @@ https://github.com/gpii/universal/LICENSE.txt
                     // To work around the issue when two listeners are registered back to back, the second one doesn't get triggered.
                     func: "fluid.identity"
                 }, {
-                    listener: "gpii.tests.chartAuthoringTester.verifyPanel",
-                    args: ["{gpii.tests.chartAuthoring}", "{gpii.tests.chartAuthoring}.dataEntryPanel"],
-                    event: "{gpii.tests.chartAuthoring}.events.onPanelCreated"
+                    listener: "floe.tests.chartAuthoringTester.verifyPanel",
+                    args: ["{floe.tests.chartAuthoring}", "{floe.tests.chartAuthoring}.dataEntryPanel"],
+                    event: "{floe.tests.chartAuthoring}.events.onPanelCreated"
                 }]
             }]
         }]
     });
 
-    gpii.tests.chartAuthoringTester.verifyInit = function (that) {
+    floe.tests.chartAuthoringTester.verifyInit = function (that) {
         fluid.each(that.templateLoader.resources, function (resource, resourceName) {
             jqUnit.assertValue("The resource text for " + resourceName + " should have been fetched", resource.resourceText);
         });
         jqUnit.assertEquals("The dataEntryPanel has not been rendered", "", that.container.html());
     };
 
-    gpii.tests.chartAuthoringTester.verifyPanel = function (that, dataEntryPanel) {
+    floe.tests.chartAuthoringTester.verifyPanel = function (that, dataEntryPanel) {
         fluid.each(that.templateLoader.resources, function (resource, resourceName) {
             jqUnit.assertDeepEq("Templates have been passed into the dataEntryPanel sub-component", resource.resourceText,
                 dataEntryPanel.options.resources[resourceName === "dataEntryPanel" ? "template": resourceName].resourceText);
@@ -91,7 +91,7 @@ https://github.com/gpii/universal/LICENSE.txt
 
     $(document).ready(function () {
         fluid.test.runTests([
-            "gpii.tests.chartAuthoringTest"
+            "floe.tests.chartAuthoringTest"
         ]);
     });
 

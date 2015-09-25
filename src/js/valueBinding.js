@@ -1,35 +1,35 @@
-/*!
+/*
 Copyright 2015 OCAD University
 
-Licensed under the New BSD license. You may not use this file except in
-compliance with this License.
+Licensed under the Educational Community License (ECL), Version 2.0 or the New
+BSD license. You may not use this file except in compliance with one these
+Licenses.
 
-You may obtain a copy of the License at
-https://github.com/gpii/universal/LICENSE.txt
+You may obtain a copy of the ECL 2.0 License and BSD License at
+https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.txt
 */
-
 (function ($, fluid) {
 
     "use strict";
 
-    fluid.defaults("gpii.chartAuthoring.valueBinding", {
+    fluid.defaults("floe.chartAuthoring.valueBinding", {
         gradeNames: ["fluid.viewComponent", "{that}.generateModelListenersConnectionGrade"],
         // A key/value of selectorName: model.path
         bindings: {},
         invokers: {
             generateModelListenersConnectionGrade: {
-                funcName: "gpii.chartAuthoring.valueBinding.generateModelListenersConnectionGrade",
-                args: ["{that}.options.bindings", "gpii.chartAuthoring.valueBinding.updateDOM"]
+                funcName: "floe.chartAuthoring.valueBinding.generateModelListenersConnectionGrade",
+                args: ["{that}.options.bindings", "floe.chartAuthoring.valueBinding.updateDOM"]
             },
-            bindDOMChange: "gpii.chartAuthoring.valueBinding.bindDOMChange"
+            bindDOMChange: "floe.chartAuthoring.valueBinding.bindDOMChange"
         },
         listeners: {
-            "onCreate.setInitialDOM": "gpii.chartAuthoring.valueBinding.setInitialDOM",
+            "onCreate.setInitialDOM": "floe.chartAuthoring.valueBinding.setInitialDOM",
             "onCreate.bindDOMChange": "{that}.bindDOMChange"
         }
     });
 
-    gpii.chartAuthoring.valueBinding.bindDOMChange = function (that) {
+    floe.chartAuthoring.valueBinding.bindDOMChange = function (that) {
         fluid.each(that.options.bindings, function (modelPath, selector) {
             var elm = that.locate(selector);
             elm.on("change", function () {
@@ -38,19 +38,19 @@ https://github.com/gpii/universal/LICENSE.txt
         });
     };
 
-    gpii.chartAuthoring.valueBinding.updateDOM = function (elm, value) {
+    floe.chartAuthoring.valueBinding.updateDOM = function (elm, value) {
         elm = $(elm);
         elm[elm.is("input") ? "val" : "text"](value);
     };
 
-    gpii.chartAuthoring.valueBinding.setInitialDOM = function (that) {
+    floe.chartAuthoring.valueBinding.setInitialDOM = function (that) {
         fluid.each(that.options.bindings, function (modelPath, selector) {
-            gpii.chartAuthoring.valueBinding.updateDOM(that.locate(selector), fluid.get(that.model, modelPath));
+            floe.chartAuthoring.valueBinding.updateDOM(that.locate(selector), fluid.get(that.model, modelPath));
         });
     };
 
-    gpii.chartAuthoring.valueBinding.generateModelListenersConnectionGrade = function (bindings, handlerName) {
-        var gradeName = "gpii.valueBindingModelConnections." + fluid.allocateGuid();
+    floe.chartAuthoring.valueBinding.generateModelListenersConnectionGrade = function (bindings, handlerName) {
+        var gradeName = "floe.valueBindingModelConnections." + fluid.allocateGuid();
         var modelListeners = {};
 
         fluid.each(bindings, function (modelPath, selector) {

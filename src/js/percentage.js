@@ -1,20 +1,21 @@
-/*!
+/*
 Copyright 2015 OCAD University
 
-Licensed under the New BSD license. You may not use this file except in
-compliance with this License.
+Licensed under the Educational Community License (ECL), Version 2.0 or the New
+BSD license. You may not use this file except in compliance with one these
+Licenses.
 
-You may obtain a copy of the License at
-https://github.com/gpii/universal/LICENSE.txt
+You may obtain a copy of the ECL 2.0 License and BSD License at
+https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.txt
 */
 
 (function ($, fluid) {
 
     "use strict";
 
-    fluid.registerNamespace("gpii.chartAuthoring.percentage");
+    fluid.registerNamespace("floe.chartAuthoring.percentage");
 
-    gpii.chartAuthoring.percentage.isNumber = function (value) {
+    floe.chartAuthoring.percentage.isNumber = function (value) {
         return typeof (value) === "number" && !isNaN(value);
     };
 
@@ -26,8 +27,8 @@ https://github.com/gpii/universal/LICENSE.txt
      * @return {Number}  - a floating point number representing the percentage.
      * Will return 0 if the total is 0.
      */
-    gpii.chartAuthoring.percentage.calculate = function (value, total) {
-        var isValid = gpii.chartAuthoring.percentage.isNumber(value) && gpii.chartAuthoring.percentage.isNumber(total);
+    floe.chartAuthoring.percentage.calculate = function (value, total) {
+        var isValid = floe.chartAuthoring.percentage.isNumber(value) && floe.chartAuthoring.percentage.isNumber(total);
         return !isValid ? null : !total ? 0 : (value / total) * 100;
     };
 
@@ -41,7 +42,7 @@ https://github.com/gpii/universal/LICENSE.txt
      * @param digits {Number} - an optional parameter for how many digits should appear after the decimal point.
      * By default it is 0.
      */
-    gpii.chartAuthoring.percentage.render = function (elm, percentage, template, digits) {
+    floe.chartAuthoring.percentage.render = function (elm, percentage, template, digits) {
         elm = $(elm);
         template = template || "%percentage";
 
