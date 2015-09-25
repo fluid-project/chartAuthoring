@@ -13,7 +13,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     "use strict";
 
-    fluid.defaults("gpii.chartAuthoring", {
+    fluid.defaults("floe.chartAuthoring", {
         gradeNames: ["fluid.viewComponent"],
         components: {
             templateLoader: {
@@ -25,7 +25,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 }
             },
             dataEntryPanel: {
-                type: "gpii.chartAuthoring.dataEntryPanel",
+                type: "floe.chartAuthoring.dataEntryPanel",
                 createOnEvent: "onTemplatesLoaded",
                 container: "{chartAuthoring}.container",
                 options: {

@@ -5,46 +5,46 @@ Licensed under the New BSD license. You may not use this file except in
 compliance with this License.
 
 You may obtain a copy of the License at
-https://github.com/gpii/universal/LICENSE.txt
+https://github.com/floe/universal/LICENSE.txt
 */
 
 (function ($, fluid) {
 
     "use strict";
 
-    fluid.registerNamespace("gpii.tests");
+    fluid.registerNamespace("floe.tests");
 
-    jqUnit.test("Test gpii.d3.jQueryToD3()", function () {
+    jqUnit.test("Test floe.d3.jQueryToD3()", function () {
         jqUnit.expect(3);
 
-        var jQueryContainer = $(".gpiic-container");
+        var jQueryContainer = $(".floec-container");
         jqUnit.assertNotUndefined("The source container is a jQuery container", jQueryContainer.jquery);
 
-        var d3Elem = gpii.d3.jQueryToD3(jQueryContainer);
+        var d3Elem = floe.d3.jQueryToD3(jQueryContainer);
         jqUnit.assertUndefined("The source container is a jQuery container", d3Elem[0].jquery);
         jqUnit.assertEquals("The jQuery element has been converted to D3 element", jQueryContainer[0], d3Elem[0][0]);
     });
 
-    gpii.tests.mouseOverListenerCalled = false;
+    floe.tests.mouseOverListenerCalled = false;
 
-    gpii.tests.mouseOverListener = function () {
-        gpii.tests.mouseOverListenerCalled = true;
+    floe.tests.mouseOverListener = function () {
+        floe.tests.mouseOverListenerCalled = true;
     };
 
-    jqUnit.test("Test gpii.d3.getColorScale()", function () {
+    jqUnit.test("Test floe.d3.getColorScale()", function () {
         jqUnit.expect(2);
 
-        var container = $(".gpiic-d3Listener");
-        gpii.d3.addD3Listeners(container, "mouseover", "gpii.tests.mouseOverListener");
+        var container = $(".floec-d3Listener");
+        floe.d3.addD3Listeners(container, "mouseover", "floe.tests.mouseOverListener");
 
-        jqUnit.assertFalse("The mouseover listener have not been triggered", gpii.tests.mouseOverListenerCalled);
-        var d3Container = gpii.d3.jQueryToD3(container);
+        jqUnit.assertFalse("The mouseover listener have not been triggered", floe.tests.mouseOverListenerCalled);
+        var d3Container = floe.d3.jQueryToD3(container);
         d3Container.on("mouseover")();
-        jqUnit.assertTrue("The mouseover listener have been registered", gpii.tests.mouseOverListenerCalled);
+        jqUnit.assertTrue("The mouseover listener have been registered", floe.tests.mouseOverListenerCalled);
 
     });
 
-    jqUnit.test("Test gpii.d3.getColorScale()", function () {
+    jqUnit.test("Test floe.d3.getColorScale()", function () {
         jqUnit.expect(18);
 
         var cases = [{
@@ -58,7 +58,7 @@ https://github.com/gpii/universal/LICENSE.txt
         }];
 
         fluid.each(cases, function (oneCase) {
-            var colorScale = gpii.d3.getColorScale(oneCase.input);
+            var colorScale = floe.d3.getColorScale(oneCase.input);
             jqUnit.assertEquals("The return color scale is a function", "function", typeof(colorScale));
             var length = oneCase.input ? oneCase.input.length : 10;
 

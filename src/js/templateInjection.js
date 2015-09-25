@@ -13,7 +13,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     "use strict";
 
-    fluid.defaults("gpii.chartAuthoring.templateInjection", {
+    fluid.defaults("floe.chartAuthoring.templateInjection", {
         gradeNames: ["fluid.viewComponent"],
         listeners: {
             "onCreate.injectTemplate": {

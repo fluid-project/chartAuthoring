@@ -18,30 +18,30 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // 2. Attach D3 DOM event listeners;
     // 3. Synthesize that.options.styles and that.options.selectors to combine elements with the same key into that.classes
 
-    fluid.defaults("gpii.d3ViewComponent", {
+    fluid.defaults("floe.d3ViewComponent", {
         gradeNames: ["fluid.viewComponent", "autoInit"],
         members: {
             classes: {
                 expander: {
-                    funcName: "gpii.d3ViewComponent.synthesizeClasses",
+                    funcName: "floe.d3ViewComponent.synthesizeClasses",
                     args: ["{that}.options.styles", "{that}.options.selectors"]
                 }
             }
         },
         invokers: {
             jQueryToD3: {
-                funcName: "gpii.d3.jQueryToD3",
+                funcName: "floe.d3.jQueryToD3",
                 args: ["{arguments}.0"]
             },
             addD3Listeners: {
-                funcName: "gpii.d3.addD3Listeners",
+                funcName: "floe.d3.addD3Listeners",
                 args: ["{arguments}.0", "{arguments}.1", "{arguments}.2", "{that}"]
             }
         }
     });
 
     /**
-     * Validate the given string is in the form of a css class, such as ".gpii-css-name"
+     * Validate the given string is in the form of a css class, such as ".floe-css-name"
      * @param cssClass - string
      * @return - boolean
      */
@@ -49,39 +49,39 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
      // Validate the given selector to ensure it is in the form "period plus classname". The current
      // implementation adds the given classname via the d3 "class" directive, so it couldn't handle
      // selectors in any other forms such as "#foo" or ".foo.bar"
-    gpii.d3ViewComponent.isCssClass = function (cssClass) {
+    floe.d3ViewComponent.isCssClass = function (cssClass) {
         cssClass = cssClass.trim();
         var pattern = /^\.[_a-zA-Z]+[_a-zA-Z0-9-]*$/;
         return pattern.test(cssClass);
     };
 
-    gpii.d3ViewComponent.extractSelectorName = function (selector) {
+    floe.d3ViewComponent.extractSelectorName = function (selector) {
         if (!selector) {
             return;
         }
         selector = selector.trim();
-        if (gpii.d3ViewComponent.isCssClass(selector)) {
+        if (floe.d3ViewComponent.isCssClass(selector)) {
             return selector.substring(1);
         } else {
             fluid.fail(selector + " is not a css class");
         }
     };
 
-    gpii.d3ViewComponent.removeArrayDuplicates = function (array) {
+    floe.d3ViewComponent.removeArrayDuplicates = function (array) {
         return array.filter(function (value, index, self) {
             return self.indexOf(value) === index;
         });
     };
 
     // Synthesize "styles" and "selectors" blocks to combine elements with the same key
-    gpii.d3ViewComponent.synthesizeClasses = function (styles, selectors) {
+    floe.d3ViewComponent.synthesizeClasses = function (styles, selectors) {
 
         // 1. Combine any matching styles and selectors by key into an array of class names
 
-        // Do the selectors first to maintain gpiic/gpii-style ordering
+        // Do the selectors first to maintain floec/floe-style ordering
 
         var consolidatedClasses = fluid.transform(selectors, function (selector) {
-            return [gpii.d3ViewComponent.extractSelectorName(selector)];
+            return [floe.d3ViewComponent.extractSelectorName(selector)];
         });
 
         // Needed catch to handle the result of a nonexistent selectors block meaning object is not initialized
@@ -97,7 +97,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 resultArray = correspondingSelectorArray.concat(resultArray);
             }
             // Only keep unique values for each consolidated class array
-            var resultArrayWithUniqueValues = gpii.d3ViewComponent.removeArrayDuplicates(resultArray);
+            var resultArrayWithUniqueValues = floe.d3ViewComponent.removeArrayDuplicates(resultArray);
 
             fluid.set(consolidatedClasses, key, resultArrayWithUniqueValues);
         });

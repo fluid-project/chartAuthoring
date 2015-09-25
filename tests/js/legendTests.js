@@ -5,24 +5,24 @@ Licensed under the New BSD license. You may not use this file except in
 compliance with this License.
 
 You may obtain a copy of the License at
-https://github.com/gpii/universal/LICENSE.txt
+https://github.com/floe/universal/LICENSE.txt
 */
 
 (function ($, fluid) {
 
     "use strict";
 
-    fluid.registerNamespace("gpii.tests.chartAuthoring");
+    fluid.registerNamespace("floe.tests.chartAuthoring");
 
-    fluid.defaults("gpii.tests.chartAuthoring.pieChart.legend", {
-        gradeNames: ["gpii.chartAuthoring.pieChart.legend", "autoInit"],
+    fluid.defaults("floe.tests.chartAuthoring.pieChart.legend", {
+        gradeNames: ["floe.chartAuthoring.pieChart.legend", "autoInit"],
         legendOptions: {
             colors: ["#000000", "#ff0000", "#00ff00", "#0000ff", "#aabbcc", "#ccbbaa"]
         },
         listeners: {
             "onLegendCreated.addMouseoverListener": {
                 listener: "{that}.addD3Listeners",
-                args: ["{that}.dom.row", "mouseover", "gpii.tests.chartAuthoring.mouseOverListener"]
+                args: ["{that}.dom.row", "mouseover", "floe.tests.chartAuthoring.mouseOverListener"]
             }
         },
         members: {
@@ -30,7 +30,7 @@ https://github.com/gpii/universal/LICENSE.txt
         }
     });
 
-    gpii.tests.chartAuthoring.objectArray = [{
+    floe.tests.chartAuthoring.objectArray = [{
         id: "id0",
         value: 15,
         label: "One"
@@ -48,7 +48,7 @@ https://github.com/gpii/universal/LICENSE.txt
         label: "Four"
     }];
 
-    gpii.tests.chartAuthoring.objectArrayAdd = [{
+    floe.tests.chartAuthoring.objectArrayAdd = [{
         id: "id0",
         value: 15,
         label: "One"
@@ -71,7 +71,7 @@ https://github.com/gpii/universal/LICENSE.txt
         label: "Five"
     }];
 
-    gpii.tests.chartAuthoring.objectArrayRemove = [{
+    floe.tests.chartAuthoring.objectArrayRemove = [{
         id: "id0",
         value: 15,
         label: "One"
@@ -85,7 +85,7 @@ https://github.com/gpii/universal/LICENSE.txt
         label: "Three"
     }];
 
-    gpii.tests.chartAuthoring.objectArrayChangeInPlace = [{
+    floe.tests.chartAuthoring.objectArrayChangeInPlace = [{
         id: "id0",
         value: 36,
         label: "I"
@@ -99,7 +99,7 @@ https://github.com/gpii/universal/LICENSE.txt
         label: "Three"
     }];
 
-    gpii.tests.chartAuthoring.objectArraySorted = [{
+    floe.tests.chartAuthoring.objectArraySorted = [{
         id: "id1",
         value: 67,
         label: "Two"
@@ -118,7 +118,7 @@ https://github.com/gpii/universal/LICENSE.txt
         label: "One"
     }];
 
-    gpii.tests.chartAuthoring.objectArrayAddSorted = [{
+    floe.tests.chartAuthoring.objectArrayAddSorted = [{
         id: "id1",
         value: 67,
         label: "Two"
@@ -142,7 +142,7 @@ https://github.com/gpii/universal/LICENSE.txt
         label: "One"
     }];
 
-    gpii.tests.chartAuthoring.objectArrayRemoveSorted = [{
+    floe.tests.chartAuthoring.objectArrayRemoveSorted = [{
         id: "id1",
         value: 67,
         label: "Two"
@@ -157,7 +157,7 @@ https://github.com/gpii/universal/LICENSE.txt
         label: "One"
     }];
 
-    gpii.tests.chartAuthoring.objectArrayChangeInPlaceSorted = [{
+    floe.tests.chartAuthoring.objectArrayChangeInPlaceSorted = [{
         id: "id1",
         value: 67,
         label: "II"
@@ -171,13 +171,13 @@ https://github.com/gpii/universal/LICENSE.txt
         label: "Three"
     }];
 
-    gpii.tests.chartAuthoring.mouseOverListener = function (data, i, that) {
+    floe.tests.chartAuthoring.mouseOverListener = function (data, i, that) {
         that.mouseOverListenerCalled = true;
     };
 
     // convenience function for easing testing of colors (jquery returns only RGB)
     // Based off http://stackoverflow.com/questions/4262417/jquery-hex-to-rgb-calculation-different-between-browsers
-    gpii.tests.chartAuthoring.hexToRGB = function (hexStr){
+    floe.tests.chartAuthoring.hexToRGB = function (hexStr){
         // note: hexStr should be #rrggbb
         var hex = parseInt(hexStr.substring(1), 16);
         var r = (hex & 0xff0000) >> 16;
@@ -186,10 +186,10 @@ https://github.com/gpii/universal/LICENSE.txt
         return "rgb(" + r + ", " + g + ", " + b + ")";
     };
 
-    gpii.tests.chartAuthoring.testLegendSyncWithModelDataSet = function(that, expectedDataSet) {
+    floe.tests.chartAuthoring.testLegendSyncWithModelDataSet = function(that, expectedDataSet) {
         var dataSet = expectedDataSet;
 
-        var rows = gpii.d3.jQueryToD3(that.locate("row"));
+        var rows = floe.d3.jQueryToD3(that.locate("row"));
         rows.each(function (d,i) {
             var displayedLabel = d3.select(this).select(that.options.selectors.labelCell).text();
             var expectedLabel = dataSet[i].label;
@@ -200,14 +200,14 @@ https://github.com/gpii/universal/LICENSE.txt
         });
     };
 
-    gpii.tests.chartAuthoring.testMouseOverListener = function (that) {
+    floe.tests.chartAuthoring.testMouseOverListener = function (that) {
         jqUnit.assertFalse("The mouseover listener for legend rows has not been triggered", that.mouseOverListenerCalled);
         var oneD3Row = that.jQueryToD3($(that.locate("row")[0]));
         oneD3Row.on("mouseover")();
         jqUnit.assertTrue("The mouseover listener for legend rows has been triggered", that.mouseOverListenerCalled);
     };
 
-    gpii.tests.chartAuthoring.validateLegend = function (that, expectedDataSet) {
+    floe.tests.chartAuthoring.validateLegend = function (that, expectedDataSet) {
         var table = that.locate("table");
 
         // Test the legend creation
@@ -218,7 +218,7 @@ https://github.com/gpii/universal/LICENSE.txt
         var d3ColorCells = that.jQueryToD3($(that.locate("colorCell")));
         d3ColorCells.each(function (d) {
 
-            jqUnit.assertEquals("The data colors are filled correctly in the legend", gpii.tests.chartAuthoring.hexToRGB(d.color), ($(this).css("background-color")));
+            jqUnit.assertEquals("The data colors are filled correctly in the legend", floe.tests.chartAuthoring.hexToRGB(d.color), ($(this).css("background-color")));
         });
 
         var d3LabelCells = that.jQueryToD3($(that.locate("labelCell")));
@@ -232,59 +232,59 @@ https://github.com/gpii/universal/LICENSE.txt
             jqUnit.assertEquals("The data values are applied correctly in the legend", d.value, ($(this).html()));
         });
 
-        gpii.tests.chartAuthoring.testLegendSyncWithModelDataSet(that, expectedDataSet);
+        floe.tests.chartAuthoring.testLegendSyncWithModelDataSet(that, expectedDataSet);
 
     };
 
-    gpii.tests.chartAuthoring.testLegend = function (that, objectArray, objectArrayAdd, objectArrayRemove, objectArrayChangeInPlace) {
+    floe.tests.chartAuthoring.testLegend = function (that, objectArray, objectArrayAdd, objectArrayRemove, objectArrayChangeInPlace) {
 
         // Legend is created from dataset
 
-        gpii.tests.chartAuthoring.validateLegend(that, objectArray);
+        floe.tests.chartAuthoring.validateLegend(that, objectArray);
 
-        gpii.tests.chartAuthoring.testMouseOverListener(that);
+        floe.tests.chartAuthoring.testMouseOverListener(that);
 
         // Legend is redrawn when data set changes
 
         // Item added to dataset
 
-        that.applier.change("dataSet", gpii.tests.chartAuthoring.objectArrayAdd);
-        gpii.tests.chartAuthoring.validateLegend(that, objectArrayAdd);
+        that.applier.change("dataSet", floe.tests.chartAuthoring.objectArrayAdd);
+        floe.tests.chartAuthoring.validateLegend(that, objectArrayAdd);
 
         // Item removed from dataset
 
-        that.applier.change("dataSet", gpii.tests.chartAuthoring.objectArrayRemove);
-        gpii.tests.chartAuthoring.validateLegend(that, objectArrayRemove);
+        that.applier.change("dataSet", floe.tests.chartAuthoring.objectArrayRemove);
+        floe.tests.chartAuthoring.validateLegend(that, objectArrayRemove);
 
         // Items changed in place
 
-        that.applier.change("dataSet", gpii.tests.chartAuthoring.objectArrayChangeInPlace);
-        gpii.tests.chartAuthoring.validateLegend(that, objectArrayChangeInPlace);
+        that.applier.change("dataSet", floe.tests.chartAuthoring.objectArrayChangeInPlace);
+        floe.tests.chartAuthoring.validateLegend(that, objectArrayChangeInPlace);
 
     };
 
     jqUnit.test("Test the legend component created based off an array of objects, unsorted, user-supplied colours", function () {
         jqUnit.expect(85);
 
-        var that = gpii.tests.chartAuthoring.pieChart.legend(".gpii-ca-legend-objects-unsorted", {
+        var that = floe.tests.chartAuthoring.pieChart.legend(".floe-ca-legend-objects-unsorted", {
             model: {
-                dataSet: gpii.tests.chartAuthoring.objectArray
+                dataSet: floe.tests.chartAuthoring.objectArray
             },
             legendOptions: {
                 sort:false
             }
         });
 
-        gpii.tests.chartAuthoring.testLegend(that, gpii.tests.chartAuthoring.objectArray, gpii.tests.chartAuthoring.objectArrayAdd, gpii.tests.chartAuthoring.objectArrayRemove, gpii.tests.chartAuthoring.objectArrayChangeInPlace);
+        floe.tests.chartAuthoring.testLegend(that, floe.tests.chartAuthoring.objectArray, floe.tests.chartAuthoring.objectArrayAdd, floe.tests.chartAuthoring.objectArrayRemove, floe.tests.chartAuthoring.objectArrayChangeInPlace);
 
     });
 
     jqUnit.test("Test the legend component created based off an array of objects, sorted, default colours", function () {
         jqUnit.expect(85);
 
-        var that = gpii.tests.chartAuthoring.pieChart.legend(".gpii-ca-legend-objects-sorted", {
+        var that = floe.tests.chartAuthoring.pieChart.legend(".floe-ca-legend-objects-sorted", {
             model: {
-                dataSet: gpii.tests.chartAuthoring.objectArray
+                dataSet: floe.tests.chartAuthoring.objectArray
             },
             legendOptions: {
                 sort:true,
@@ -292,7 +292,7 @@ https://github.com/gpii/universal/LICENSE.txt
             }
         });
 
-        gpii.tests.chartAuthoring.testLegend(that, gpii.tests.chartAuthoring.objectArraySorted, gpii.tests.chartAuthoring.objectArrayAddSorted, gpii.tests.chartAuthoring.objectArrayRemoveSorted, gpii.tests.chartAuthoring.objectArrayChangeInPlaceSorted);
+        floe.tests.chartAuthoring.testLegend(that, floe.tests.chartAuthoring.objectArraySorted, floe.tests.chartAuthoring.objectArrayAddSorted, floe.tests.chartAuthoring.objectArrayRemoveSorted, floe.tests.chartAuthoring.objectArrayChangeInPlaceSorted);
 
     });
 

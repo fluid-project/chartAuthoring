@@ -5,21 +5,21 @@ Licensed under the New BSD license. You may not use this file except in
 compliance with this License.
 
 You may obtain a copy of the License at
-https://github.com/gpii/universal/LICENSE.txt
+https://github.com/floe/universal/LICENSE.txt
 */
 
 (function ($, fluid) {
 
     "use strict";
 
-    fluid.registerNamespace("gpii.tests");
+    fluid.registerNamespace("floe.tests");
 
-    fluid.defaults("gpii.tests.d3ViewComponent", {
-        gradeNames: ["gpii.d3ViewComponent", "autoInit"],
+    fluid.defaults("floe.tests.d3ViewComponent", {
+        gradeNames: ["floe.d3ViewComponent", "autoInit"],
         listeners: {
             "onCreate.addMouseoverListener": {
                 listener: "{that}.addD3Listeners",
-                args: ["{that}.container", "mouseover", "gpii.tests.mouseOverListener"]
+                args: ["{that}.container", "mouseover", "floe.tests.mouseOverListener"]
             }
         },
         members: {
@@ -27,14 +27,14 @@ https://github.com/gpii/universal/LICENSE.txt
         }
     });
 
-    gpii.tests.mouseOverListener = function (data, i, that) {
+    floe.tests.mouseOverListener = function (data, i, that) {
         that.mouseOverListenerCalled = true;
     };
 
     jqUnit.test("Test d3ViewComponent API", function () {
         jqUnit.expect(3);
 
-        var that = gpii.tests.d3ViewComponent(".gpiic-d3");
+        var that = floe.tests.d3ViewComponent(".floec-d3");
 
         // The D3 DOM event listener is registered
         jqUnit.assertFalse("The mouseover listener for pie slices have not been triggered", that.mouseOverListenerCalled);
@@ -46,25 +46,25 @@ https://github.com/gpii/universal/LICENSE.txt
         jqUnit.assertTrue("The mouseover listener for pie slices have been registered", that.mouseOverListenerCalled);
     });
 
-    jqUnit.test("Test gpii.d3ViewComponent.extractSelectorName()", function () {
+    jqUnit.test("Test floe.d3ViewComponent.extractSelectorName()", function () {
         jqUnit.expect(2);
 
         var cases = [{
             msg: "Correctly extract the string that has one period at the start of the input",
-            input: ".gpii-ca",
-            expected: "gpii-ca"
+            input: ".floe-ca",
+            expected: "floe-ca"
         }, {
             msg: "The input string is trimmed",
-            input: "   .gpii-ca   ",
-            expected: "gpii-ca"
+            input: "   .floe-ca   ",
+            expected: "floe-ca"
         }];
 
         fluid.each(cases, function (oneCase) {
-            jqUnit.assertEquals(oneCase.msg, oneCase.expected, gpii.d3ViewComponent.extractSelectorName(oneCase.input));
+            jqUnit.assertEquals(oneCase.msg, oneCase.expected, floe.d3ViewComponent.extractSelectorName(oneCase.input));
         });
     });
 
-    jqUnit.test("Test gpii.d3ViewComponent.removeArrayDuplicates()", function () {
+    jqUnit.test("Test floe.d3ViewComponent.removeArrayDuplicates()", function () {
         jqUnit.expect(2);
 
         var cases = [{
@@ -79,41 +79,41 @@ https://github.com/gpii/universal/LICENSE.txt
         }];
 
         fluid.each(cases, function (oneCase) {
-            jqUnit.assertDeepEq(oneCase.msg, oneCase.expected, gpii.d3ViewComponent.removeArrayDuplicates(oneCase.input));
+            jqUnit.assertDeepEq(oneCase.msg, oneCase.expected, floe.d3ViewComponent.removeArrayDuplicates(oneCase.input));
         });
     });
 
-    jqUnit.test("Test gpii.d3ViewComponent.isCssClass()", function () {
+    jqUnit.test("Test floe.d3ViewComponent.isCssClass()", function () {
         jqUnit.expect(5);
 
         var cases = [{
             msg: "Correctly extract the string that has one period at the start of the input",
-            input: ".gpii-ca",
+            input: ".floe-ca",
             expected: true
         }, {
             msg: "More than one periods in the input returns false",
-            input: ".gpii-ca.",
+            input: ".floe-ca.",
             expected: false
         }, {
             msg: "No period at the start of the string returns false",
-            input: "gpii-ca.",
+            input: "floe-ca.",
             expected: false
         }, {
             msg: "Having spaces in the middle of the input string returns false",
-            input: ".gpii-ca .b",
+            input: ".floe-ca .b",
             expected: false
         }, {
             msg: "Having spaces in the middle of the input string returns false",
-            input: ".gpii-ca#b",
+            input: ".floe-ca#b",
             expected: false
         }];
 
         fluid.each(cases, function (oneCase) {
-            jqUnit[oneCase.expected ? "assertTrue" : "assertFalse"](oneCase.msg, gpii.d3ViewComponent.isCssClass(oneCase.input));
+            jqUnit[oneCase.expected ? "assertTrue" : "assertFalse"](oneCase.msg, floe.d3ViewComponent.isCssClass(oneCase.input));
         });
     });
 
-    jqUnit.test("Test gpii.d3ViewComponent.synthesizeClasses()", function () {
+    jqUnit.test("Test floe.d3ViewComponent.synthesizeClasses()", function () {
         jqUnit.expect(7);
 
         var cases = [{
@@ -189,23 +189,23 @@ https://github.com/gpii/universal/LICENSE.txt
                 b: "h-2 g"
             }
         }, {
-            msg: "When using gpiic/gpii selectors/styles, Infusion ordering convention is maintained",
+            msg: "When using floec/floe selectors/styles, Infusion ordering convention is maintained",
             styles: {
-                a: "gpii-abc1 gpii-abc2",
-                b: "gpii-efg3 gpii-efg4"
+                a: "floe-abc1 floe-abc2",
+                b: "floe-efg3 floe-efg4"
             },
             selectors: {
-                a: ".gpiic-abc",
-                b: ".gpiic-efg"
+                a: ".floec-abc",
+                b: ".floec-efg"
             },
             expected: {
-                a: "gpiic-abc gpii-abc1 gpii-abc2",
-                b: "gpiic-efg gpii-efg3 gpii-efg4"
+                a: "floec-abc floe-abc1 floe-abc2",
+                b: "floec-efg floe-efg3 floe-efg4"
             }
         }];
 
         fluid.each(cases, function (oneCase) {
-            jqUnit.assertDeepEq(oneCase.msg, oneCase.expected, gpii.d3ViewComponent.synthesizeClasses(oneCase.styles, oneCase.selectors));
+            jqUnit.assertDeepEq(oneCase.msg, oneCase.expected, floe.d3ViewComponent.synthesizeClasses(oneCase.styles, oneCase.selectors));
         });
     });
 

@@ -13,18 +13,18 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     "use strict";
 
-    fluid.registerNamespace("gpii.d3");
+    fluid.registerNamespace("floe.d3");
 
     /**
      * Convert jQuery DOM elements to D3 DOM elements.
      * @param domElem - a jQuery DOM element or an array of jQuery DOM elements
      */
-    gpii.d3.jQueryToD3 = function (elem) {
+    floe.d3.jQueryToD3 = function (elem) {
         return d3.selectAll(elem.toArray());
     };
 
-    gpii.d3.addD3Listeners = function (jQueryElem, eventName, listener, that) {
-        var d3Elem = gpii.d3.jQueryToD3(jQueryElem);
+    floe.d3.addD3Listeners = function (jQueryElem, eventName, listener, that) {
+        var d3Elem = floe.d3.jQueryToD3(jQueryElem);
         d3Elem.on(eventName, function (data, i) {
             fluid.invokeGlobalFunction(listener, [data, i, that]);
         });
@@ -36,7 +36,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
      * @param an array of color codes or undefined
      * @return - a D3 color scale
      */
-    gpii.d3.getColorScale = function (colors) {
+    floe.d3.getColorScale = function (colors) {
         return colors ? d3.scale.ordinal().range(colors) : d3.scale.category10();
     };
 
