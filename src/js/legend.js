@@ -220,12 +220,11 @@ https://github.com/gpii/universal/LICENSE.txt
     // added values
 
     gpii.chartAuthoring.pieChart.legend.addValueFromArray = function (objectArray, valueArray, newValueName) {
+        // Don't do anything if not passed an actual array in the value array
         if(fluid.isArrayable(valueArray)) {
             return fluid.transform(objectArray, function (object, idx) {
                 var consolidated = fluid.copy(object);
-                // Don't do anything if not passed an actual array in the value array
-
-                    consolidated[newValueName] = valueArray[idx];
+                consolidated[newValueName] = valueArray[idx];
 
                 return consolidated;
             });
