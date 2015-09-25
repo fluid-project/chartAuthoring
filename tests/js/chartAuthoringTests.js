@@ -5,7 +5,7 @@ Licensed under the New BSD license. You may not use this file except in
 compliance with this License.
 
 You may obtain a copy of the License at
-https://github.com/gpii/universal/LICENSE.txt
+https://github.com/floe/universal/LICENSE.txt
 */
 
 (function ($, fluid) {
@@ -14,13 +14,13 @@ https://github.com/gpii/universal/LICENSE.txt
 
     jqUnit.test("Test the data conversion function", function () {
         jqUnit.expect(1);
-        var convertedData = gpii.chartAuthoring.dataEntriesToPieChartData(gpii.tests.chartAuthoring.dataEntries);
-        jqUnit.assertDeepEq("Data conversion between data entries and chart works", gpii.tests.chartAuthoring.dataSet, convertedData);
+        var convertedData = floe.chartAuthoring.dataEntriesToPieChartData(floe.tests.chartAuthoring.dataEntries);
+        jqUnit.assertDeepEq("Data conversion between data entries and chart works", floe.tests.chartAuthoring.dataSet, convertedData);
     });
 
     // IoC tests
-    fluid.defaults("gpii.tests.chartAuthoring", {
-        gradeNames: ["gpii.chartAuthoring"],
+    fluid.defaults("floe.tests.chartAuthoring", {
+        gradeNames: ["floe.chartAuthoring"],
         templateLoader: {
             terms: {
                 templatePrefix: "../../src/html"
@@ -28,10 +28,10 @@ https://github.com/gpii/universal/LICENSE.txt
         },
         components: {
             dataEntryPanel: {
-                container: ".gpiic-dataEntryPanel"
+                container: ".floec-dataEntryPanel"
             },
             pieChart: {
-                container: ".gpiic-pieChart",
+                container: ".floec-pieChart",
                 options: {
                     listeners: {
                         "onPieChartRedrawn.escalate": {
@@ -48,7 +48,7 @@ https://github.com/gpii/universal/LICENSE.txt
     });
 
 
-    gpii.tests.chartAuthoring.dataEntries =
+    floe.tests.chartAuthoring.dataEntries =
     {
         entry1: {
             value: "100",
@@ -62,7 +62,7 @@ https://github.com/gpii/universal/LICENSE.txt
         }
     };
 
-    gpii.tests.chartAuthoring.dataSet =
+    floe.tests.chartAuthoring.dataSet =
     [
         {
             id: "entry1",
@@ -76,21 +76,21 @@ https://github.com/gpii/universal/LICENSE.txt
         }
     ];
 
-    fluid.defaults("gpii.tests.chartAuthoringTest", {
+    fluid.defaults("floe.tests.chartAuthoringTest", {
         gradeNames: ["fluid.test.testEnvironment"],
         components: {
             chartAuthoring: {
-                type: "gpii.tests.chartAuthoring",
-                container: ".gpiic-chartAuthoring",
+                type: "floe.tests.chartAuthoring",
+                container: ".floec-chartAuthoring",
                 createOnEvent: "{chartAuthoringTester}.events.onTestCaseStart"
             },
             chartAuthoringTester: {
-                type: "gpii.tests.chartAuthoringTester"
+                type: "floe.tests.chartAuthoringTester"
             }
         }
     });
 
-    fluid.defaults("gpii.tests.chartAuthoringTester", {
+    fluid.defaults("floe.tests.chartAuthoringTester", {
         gradeNames: ["fluid.test.testCaseHolder"],
         modules: [{
             name: "Test the chart authoring component",
@@ -98,7 +98,7 @@ https://github.com/gpii/universal/LICENSE.txt
                 name: "Chart Authoring Init",
                 expect: 11,
                 sequence: [{
-                    listener: "gpii.tests.chartAuthoringTester.verifyInit",
+                    listener: "floe.tests.chartAuthoringTester.verifyInit",
                     args: ["{chartAuthoring}"],
                     spec: {priority: "last"},
                     event: "{chartAuthoringTest chartAuthoring}.events.onTemplatesLoaded"
@@ -106,22 +106,22 @@ https://github.com/gpii/universal/LICENSE.txt
                     // To work around the issue when two listeners are registered back to back, the second one doesn't get triggered.
                     func: "fluid.identity"
                 }, {
-                    listener: "gpii.tests.chartAuthoringTester.verifyTool",
-                    args: ["{gpii.tests.chartAuthoring}"],
-                    event: "{gpii.tests.chartAuthoring}.events.onToolReady"
+                    listener: "floe.tests.chartAuthoringTester.verifyTool",
+                    args: ["{floe.tests.chartAuthoring}"],
+                    event: "{floe.tests.chartAuthoring}.events.onToolReady"
                 }, {
-                    func: "{gpii.tests.chartAuthoring}.dataEntryPanel.applier.change",
-                    args: ["dataEntries", gpii.tests.chartAuthoring.dataEntries]
+                    func: "{floe.tests.chartAuthoring}.dataEntryPanel.applier.change",
+                    args: ["dataEntries", floe.tests.chartAuthoring.dataEntries]
                 }, {
-                    listener: "gpii.tests.chartAuthoringTester.verifyRelay",
-                    args: ["{gpii.tests.chartAuthoring}"],
-                    event: "{gpii.tests.chartAuthoring}.events.onPieChartRedrawn"
+                    listener: "floe.tests.chartAuthoringTester.verifyRelay",
+                    args: ["{floe.tests.chartAuthoring}"],
+                    event: "{floe.tests.chartAuthoring}.events.onPieChartRedrawn"
                 }]
             }]
         }]
     });
 
-    gpii.tests.chartAuthoringTester.verifyInit = function (that) {
+    floe.tests.chartAuthoringTester.verifyInit = function (that) {
         fluid.each(that.templateLoader.resources, function (resource, resourceName) {
             jqUnit.assertValue("The resource text for " + resourceName + " should have been fetched", resource.resourceText);
         });
@@ -129,7 +129,7 @@ https://github.com/gpii/universal/LICENSE.txt
         jqUnit.assertEquals("The pieChart has not been rendered", null, that.pieChart);
     };
 
-    gpii.tests.chartAuthoringTester.verifyTool = function (that) {
+    floe.tests.chartAuthoringTester.verifyTool = function (that) {
         // TODO: rewrite this test to handle the new template situation
 
         var dataEntryPanelResources = that.dataEntryPanel.options.resources,
@@ -144,14 +144,14 @@ https://github.com/gpii/universal/LICENSE.txt
         jqUnit.assertNotEquals("The pieChart has been rendered", "", that.pieChart.container.html());
     };
 
-    gpii.tests.chartAuthoringTester.verifyRelay = function (that) {
+    floe.tests.chartAuthoringTester.verifyRelay = function (that) {
         // 1) Test that the models are kept in sync by the relay
-        jqUnit.assertDeepEq("Model is relayed between dataEntryPanel and pieChart", gpii.tests.chartAuthoring.dataSet, that.pieChart.model.dataSet);
+        jqUnit.assertDeepEq("Model is relayed between dataEntryPanel and pieChart", floe.tests.chartAuthoring.dataSet, that.pieChart.model.dataSet);
     };
 
     $(document).ready(function () {
         fluid.test.runTests([
-            "gpii.tests.chartAuthoringTest"
+            "floe.tests.chartAuthoringTest"
         ]);
     });
 

@@ -5,42 +5,42 @@ Licensed under the New BSD license. You may not use this file except in
 compliance with this License.
 
 You may obtain a copy of the License at
-https://github.com/gpii/universal/LICENSE.txt
+https://github.com/floe/universal/LICENSE.txt
 */
 
 (function ($, fluid) {
 
     "use strict";
 
-    fluid.defaults("gpii.tests.chartAuthoring.dataEntry", {
-        gradeNames: ["gpii.chartAuthoring.dataEntry"],
+    fluid.defaults("floe.tests.chartAuthoring.dataEntry", {
+        gradeNames: ["floe.chartAuthoring.dataEntry"],
         model: {
             total: 100
         },
         resources: {
             template: {
-                resourceText: "<input type=\"text\" class=\"gpiic-ca-dataEntry-label\">" +
-                                "<input type=\"text\" class=\"gpiic-ca-dataEntry-value\">" +
-                                "<span class=\"gpiic-ca-dataEntry-percentage\"></span>"
+                resourceText: "<input type=\"text\" class=\"floec-ca-dataEntry-label\">" +
+                                "<input type=\"text\" class=\"floec-ca-dataEntry-value\">" +
+                                "<span class=\"floec-ca-dataEntry-percentage\"></span>"
 
             }
         }
     });
 
-    fluid.defaults("gpii.tests.chartAuthoring.dataEntryTest", {
+    fluid.defaults("floe.tests.chartAuthoring.dataEntryTest", {
         gradeNames: ["fluid.test.testEnvironment"],
         components: {
             dataEntry: {
-                type: "gpii.tests.chartAuthoring.dataEntry",
-                container: ".gpiic-ca-dataEntry"
+                type: "floe.tests.chartAuthoring.dataEntry",
+                container: ".floec-ca-dataEntry"
             },
             dataEntryTester: {
-                type: "gpii.tests.chartAuthoring.dataEntryTester"
+                type: "floe.tests.chartAuthoring.dataEntryTester"
             }
         }
     });
 
-    fluid.defaults("gpii.tests.chartAuthoring.dataEntryTester", {
+    fluid.defaults("floe.tests.chartAuthoring.dataEntryTester", {
         gradeNames: ["fluid.test.testCaseHolder"],
         testOptions: {
             valueChange: 65,
@@ -53,7 +53,7 @@ https://github.com/gpii/universal/LICENSE.txt
                 expect: 5,
                 name: "Test Init",
                 type: "test",
-                func: "gpii.tests.chartAuthoring.dataEntryTester.testRendering",
+                func: "floe.tests.chartAuthoring.dataEntryTester.testRendering",
                 args: ["{dataEntry}"]
             }, {
                 expect: 3,
@@ -62,7 +62,7 @@ https://github.com/gpii/universal/LICENSE.txt
                     func: "{dataEntry}.applier.change",
                     args: ["value", "{that}.options.testOptions.valueChange"]
                 }, {
-                    listener: "gpii.tests.chartAuthoring.dataEntryTester.verifyEntry",
+                    listener: "floe.tests.chartAuthoring.dataEntryTester.verifyEntry",
                     args: ["{dataEntry}", {
                         value: "{that}.options.testOptions.valueChange",
                         percentage: "65.00%"
@@ -73,7 +73,7 @@ https://github.com/gpii/universal/LICENSE.txt
                     func: "{dataEntry}.applier.change",
                     args: ["label", "{that}.options.testOptions.labelChange"]
                 }, {
-                    listener: "gpii.tests.chartAuthoring.dataEntryTester.verifyInput",
+                    listener: "floe.tests.chartAuthoring.dataEntryTester.verifyInput",
                     args: ["label", "{dataEntry}.dom.label", "{that}.options.testOptions.labelChange"],
                     spec: {path: "label", priority: "last"},
                     changeEvent: "{dataEntry}.applier.modelChanged"
@@ -82,7 +82,7 @@ https://github.com/gpii/universal/LICENSE.txt
                 expect: 1,
                 name: "Change Input",
                 sequence: [{
-                    func: "gpii.tests.utils.triggerChangeEvent",
+                    func: "floe.tests.utils.triggerChangeEvent",
                     args: ["{dataEntry}.dom.input", "{that}.options.testOptions.domChange"]
                 }, {
                     listener: "jqUnit.assertEquals",
@@ -94,36 +94,36 @@ https://github.com/gpii/universal/LICENSE.txt
         }]
     });
 
-    gpii.tests.chartAuthoring.dataEntryTester.verifyInput = function (elmName, elm, expected) {
+    floe.tests.chartAuthoring.dataEntryTester.verifyInput = function (elmName, elm, expected) {
         jqUnit.assertEquals("The " + elmName + " value has been set", expected, elm.val());
     };
 
-    gpii.tests.chartAuthoring.dataEntryTester.verifyPercentage = function (elm, expected) {
+    floe.tests.chartAuthoring.dataEntryTester.verifyPercentage = function (elm, expected) {
         jqUnit.assertEquals("The percentage has been set", expected, elm.text());
     };
 
-    gpii.tests.chartAuthoring.dataEntryTester.verifyEntry = function (that, expected) {
-        gpii.tests.chartAuthoring.dataEntryTester.verifyInput("input", that.locate("input"), expected.value);
-        gpii.tests.chartAuthoring.dataEntryTester.verifyPercentage(that.locate("percentage"), expected.percentage);
+    floe.tests.chartAuthoring.dataEntryTester.verifyEntry = function (that, expected) {
+        floe.tests.chartAuthoring.dataEntryTester.verifyInput("input", that.locate("input"), expected.value);
+        floe.tests.chartAuthoring.dataEntryTester.verifyPercentage(that.locate("percentage"), expected.percentage);
     };
 
-    gpii.tests.chartAuthoring.dataEntryTester.testRendering = function (that) {
+    floe.tests.chartAuthoring.dataEntryTester.testRendering = function (that) {
         jqUnit.assertValue("The component should have been initialized.", that);
         var input = that.locate("input");
         var percentage = that.locate("percentage");
         var label = that.locate("label");
 
-        gpii.tests.chartAuthoring.dataEntryTester.verifyInput("input", input, that.model.value || "");
+        floe.tests.chartAuthoring.dataEntryTester.verifyInput("input", input, that.model.value || "");
         jqUnit.assertEquals("The input placeholder has been set", that.options.strings.inputPlaceholder, input.attr("placeholder"));
 
-        gpii.tests.chartAuthoring.dataEntryTester.verifyPercentage(percentage, "%");
+        floe.tests.chartAuthoring.dataEntryTester.verifyPercentage(percentage, "%");
 
-        gpii.tests.chartAuthoring.dataEntryTester.verifyInput("label", label, that.model.label || "");
+        floe.tests.chartAuthoring.dataEntryTester.verifyInput("label", label, that.model.label || "");
     };
 
     $(document).ready(function () {
         fluid.test.runTests([
-            "gpii.tests.chartAuthoring.dataEntryTest"
+            "floe.tests.chartAuthoring.dataEntryTest"
         ]);
     });
 

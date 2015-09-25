@@ -5,14 +5,14 @@ Licensed under the New BSD license. You may not use this file except in
 compliance with this License.
 
 You may obtain a copy of the License at
-https://github.com/gpii/universal/LICENSE.txt
+https://github.com/floe/universal/LICENSE.txt
 */
 
 (function ($, fluid) {
 
     "use strict";
 
-    fluid.defaults("gpii.chartAuthoring", {
+    fluid.defaults("floe.chartAuthoring", {
         gradeNames: ["fluid.viewComponent"],
         components: {
             templateLoader: {
@@ -24,7 +24,7 @@ https://github.com/gpii/universal/LICENSE.txt
                 }
             },
             dataEntryPanel: {
-                type: "gpii.chartAuthoring.dataEntryPanel",
+                type: "floe.chartAuthoring.dataEntryPanel",
                 createOnEvent: "onPieChartReady",
                 container: "{dataEntryPanel}.container",
                 options: {
@@ -34,11 +34,11 @@ https://github.com/gpii/universal/LICENSE.txt
                     },
                     modelRelay: {
                         source: "{that}.model.dataEntries",
-                        target: "{gpii.chartAuthoring.pieChart}.model.dataSet",
+                        target: "{floe.chartAuthoring.pieChart}.model.dataSet",
                         singleTransform: {
                             type: "fluid.transforms.free",
                             args: ["{that}.model.dataEntries"],
-                            func: "gpii.chartAuthoring.dataEntriesToPieChartData"
+                            func: "floe.chartAuthoring.dataEntriesToPieChartData"
                         },
                         forward: "liveOnly",
                         backward: "never"
@@ -49,7 +49,7 @@ https://github.com/gpii/universal/LICENSE.txt
                 }
             },
             pieChart: {
-                type: "gpii.chartAuthoring.pieChart",
+                type: "floe.chartAuthoring.pieChart",
                 createOnEvent: "onTemplatesLoaded",
                 container: "{pieChart}.container",
                 options: {
@@ -105,10 +105,10 @@ https://github.com/gpii/universal/LICENSE.txt
         }]
     });
 
-    // Given an object in the style of gpii.chartAuthoring.dataEntryPanel.model.dataEntries,
+    // Given an object in the style of floe.chartAuthoring.dataEntryPanel.model.dataEntries,
     // convert it to an array of objects in the style used by the pieChart components,
     // maintaining object constancy by using the dataEntry object name as the key
-    gpii.chartAuthoring.dataEntriesToPieChartData = function(dataEntries) {
+    floe.chartAuthoring.dataEntriesToPieChartData = function(dataEntries) {
 
         var pieChartData = [];
         fluid.each(dataEntries, function(item, key) {

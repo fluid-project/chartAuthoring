@@ -5,15 +5,15 @@ Licensed under the New BSD license. You may not use this file except in
 compliance with this License.
 
 You may obtain a copy of the License at
-https://github.com/gpii/universal/LICENSE.txt
+https://github.com/floe/universal/LICENSE.txt
 */
 
 (function ($, fluid) {
 
     "use strict";
 
-    fluid.defaults("gpii.chartAuthoring.pieChart.legend", {
-        gradeNames: ["gpii.d3ViewComponent", "autoInit"],
+    fluid.defaults("floe.chartAuthoring.pieChart.legend", {
+        gradeNames: ["floe.d3ViewComponent", "autoInit"],
         strings: {
             legendColHeading:"Legend",
             labelColHeading:"Label",
@@ -33,20 +33,20 @@ https://github.com/gpii/universal/LICENSE.txt
             showLegendHeadings: true // Whether or not to display column headings in the legend
         },
         styles: {
-            legend: "gpii-ca-pieChart-legend",
-            table: "gpii-ca-pieChart-legend-table",
-            row: "gpii-ca-pieChart-legend-table-row",
-            colorCell: "gpii-ca-pieChart-legend-color-cell",
-            labelCell: "gpii-ca-pieChart-legend-label-cell",
-            valueCell: "gpii-ca-pieChart-legend-value-cell"
+            legend: "floe-ca-pieChart-legend",
+            table: "floe-ca-pieChart-legend-table",
+            row: "floe-ca-pieChart-legend-table-row",
+            colorCell: "floe-ca-pieChart-legend-color-cell",
+            labelCell: "floe-ca-pieChart-legend-label-cell",
+            valueCell: "floe-ca-pieChart-legend-value-cell"
         },
         selectors: {
-            legend: ".gpiic-ca-pieChart-legend",
-            table: ".gpiic-ca-pieChart-legend-table",
-            row: ".gpiic-ca-pieChart-legend-table-row",
-            colorCell: ".gpiic-ca-pieChart-legend-color-cell",
-            labelCell: ".gpiic-ca-pieChart-legend-label-cell",
-            valueCell: ".gpiic-ca-pieChart-legend-value-cell"
+            legend: ".floec-ca-pieChart-legend",
+            table: ".floec-ca-pieChart-legend-table",
+            row: ".floec-ca-pieChart-legend-table-row",
+            colorCell: ".floec-ca-pieChart-legend-color-cell",
+            labelCell: ".floec-ca-pieChart-legend-label-cell",
+            valueCell: ".floec-ca-pieChart-legend-value-cell"
         },
         events: {
             onLegendCreated: null,  // Fire when the legend is created. Ready to register D3 DOM event listeners,
@@ -54,7 +54,7 @@ https://github.com/gpii/universal/LICENSE.txt
         },
         listeners: {
             "onCreate.create": {
-                funcName: "gpii.chartAuthoring.pieChart.legend.create",
+                funcName: "floe.chartAuthoring.pieChart.legend.create",
                 args: ["{that}"]
             }
         },
@@ -66,15 +66,15 @@ https://github.com/gpii/universal/LICENSE.txt
         },
         invokers: {
             draw: {
-                funcName: "gpii.chartAuthoring.pieChart.legend.draw",
+                funcName: "floe.chartAuthoring.pieChart.legend.draw",
                 args: ["{that}"]
             },
             sort: {
-                funcName: "gpii.chartAuthoring.pieChart.legend.sort",
+                funcName: "floe.chartAuthoring.pieChart.legend.sort",
                 args: ["{arguments}.0", "{arguments}.1"]
             },
             getColorCellStyle: {
-                funcName: "gpii.chartAuthoring.pieChart.legend.getColorCellStyle",
+                funcName: "floe.chartAuthoring.pieChart.legend.getColorCellStyle",
                 args: ["{arguments}.0"]
             }
         }
@@ -82,7 +82,7 @@ https://github.com/gpii/universal/LICENSE.txt
 
     // Add new rows for new data, apply appropriate classes for selectors and styling
 
-    gpii.chartAuthoring.pieChart.legend.addRows = function(that) {
+    floe.chartAuthoring.pieChart.legend.addRows = function(that) {
         var rowClass = that.classes.row,
             colorCellClass = that.classes.colorCell,
             labelCellClass = that.classes.labelCell,
@@ -112,7 +112,7 @@ https://github.com/gpii/universal/LICENSE.txt
     };
 
     // Update cell legend colours, labels and values
-    gpii.chartAuthoring.pieChart.legend.updateRows = function (that) {
+    floe.chartAuthoring.pieChart.legend.updateRows = function (that) {
         var colorCellSelector = that.options.selectors.colorCell,
             labelCellSelector = that.options.selectors.labelCell,
             valueCellSelector = that.options.selectors.valueCell;
@@ -134,20 +134,20 @@ https://github.com/gpii/universal/LICENSE.txt
         });
     };
 
-    gpii.chartAuthoring.pieChart.legend.removeRows = function (that) {
+    floe.chartAuthoring.pieChart.legend.removeRows = function (that) {
         var removedRows = that.rows.exit();
         removedRows.remove();
     };
 
-    gpii.chartAuthoring.pieChart.legend.draw = function (that) {
+    floe.chartAuthoring.pieChart.legend.draw = function (that) {
         var table = that.table,
             legendOptions = that.options.legendOptions,
-            colors = gpii.chartAuthoring.pieChart.legend.getColorArray(legendOptions.colors),
+            colors = floe.chartAuthoring.pieChart.legend.getColorArray(legendOptions.colors),
             sort = legendOptions.sort;
 
         // Consolidate user-supplied colors with dataset at draw time
 
-        var dataSet = gpii.chartAuthoring.pieChart.legend.addValueFromArray(that.model.dataSet, colors, "color");
+        var dataSet = floe.chartAuthoring.pieChart.legend.addValueFromArray(that.model.dataSet, colors, "color");
 
         var tbody = table.selectAll("tbody");
 
@@ -156,11 +156,11 @@ https://github.com/gpii/universal/LICENSE.txt
                                 return d.id;
                             });
 
-        gpii.chartAuthoring.pieChart.legend.addRows(that);
+        floe.chartAuthoring.pieChart.legend.addRows(that);
 
-        gpii.chartAuthoring.pieChart.legend.updateRows(that);
+        floe.chartAuthoring.pieChart.legend.updateRows(that);
 
-        gpii.chartAuthoring.pieChart.legend.removeRows(that);
+        floe.chartAuthoring.pieChart.legend.removeRows(that);
 
         if (sort) {
             that.rows.sort(that.sort);
@@ -169,7 +169,7 @@ https://github.com/gpii/universal/LICENSE.txt
         that.events.onLegendRedrawn.fire();
     };
 
-    gpii.chartAuthoring.pieChart.legend.create = function (that) {
+    floe.chartAuthoring.pieChart.legend.create = function (that) {
         var container = that.container,
             tableClass = that.classes.table,
             showLegendHeadings = that.options.legendOptions.showLegendHeadings;
@@ -209,11 +209,11 @@ https://github.com/gpii/universal/LICENSE.txt
         that.events.onLegendCreated.fire();
     };
 
-    gpii.chartAuthoring.pieChart.legend.sort = function (a, b) {
+    floe.chartAuthoring.pieChart.legend.sort = function (a, b) {
         return b.value - a.value;
     };
 
-    gpii.chartAuthoring.pieChart.legend.getColorCellStyle = function (data) {
+    floe.chartAuthoring.pieChart.legend.getColorCellStyle = function (data) {
         return "background-color: " + data.color + ";";
     };
 
@@ -222,7 +222,7 @@ https://github.com/gpii/universal/LICENSE.txt
     // same index to the value name, and return a new object array with the
     // added values
 
-    gpii.chartAuthoring.pieChart.legend.addValueFromArray = function (objectArray, valueArray, newValueName) {
+    floe.chartAuthoring.pieChart.legend.addValueFromArray = function (objectArray, valueArray, newValueName) {
         // Don't do anything if not passed an actual array in the value array
         if(fluid.isArrayable(valueArray)) {
             return fluid.transform(objectArray, function (object, idx) {
@@ -238,8 +238,8 @@ https://github.com/gpii/universal/LICENSE.txt
 
     // Scales the supplied colors using d3 and returns them as an array
 
-    gpii.chartAuthoring.pieChart.legend.getColorArray = function (colors) {
-        var colorScale = (typeof(colors) === "function") ? colors : gpii.d3.getColorScale(colors);
+    floe.chartAuthoring.pieChart.legend.getColorArray = function (colors) {
+        var colorScale = (typeof(colors) === "function") ? colors : floe.d3.getColorScale(colors);
         return colorScale.range();
     };
 

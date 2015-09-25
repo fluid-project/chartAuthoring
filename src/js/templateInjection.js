@@ -5,14 +5,14 @@ Licensed under the New BSD license. You may not use this file except in
 compliance with this License.
 
 You may obtain a copy of the License at
-https://github.com/gpii/universal/LICENSE.txt
+https://github.com/floe/universal/LICENSE.txt
 */
 
 (function ($, fluid) {
 
     "use strict";
 
-    fluid.defaults("gpii.chartAuthoring.templateInjection", {
+    fluid.defaults("floe.chartAuthoring.templateInjection", {
         gradeNames: ["fluid.viewComponent"],
         listeners: {
             "onCreate.injectTemplate": {

@@ -5,19 +5,19 @@ Licensed under the New BSD license. You may not use this file except in
 compliance with this License.
 
 You may obtain a copy of the License at
-https://github.com/gpii/universal/LICENSE.txt
+https://github.com/floe/universal/LICENSE.txt
 */
 
 (function ($, fluid) {
 
     "use strict";
 
-    fluid.defaults("gpii.chartAuthoring.dataEntry", {
-        gradeNames: ["gpii.chartAuthoring.templateInjection", "gpii.chartAuthoring.valueBinding"],
+    fluid.defaults("floe.chartAuthoring.dataEntry", {
+        gradeNames: ["floe.chartAuthoring.templateInjection", "floe.chartAuthoring.valueBinding"],
         selectors: {
-            input: ".gpiic-ca-dataEntry-value",
-            percentage: ".gpiic-ca-dataEntry-percentage",
-            label: ".gpiic-ca-dataEntry-label"
+            input: ".floec-ca-dataEntry-value",
+            percentage: ".floec-ca-dataEntry-percentage",
+            label: ".floec-ca-dataEntry-label"
         },
         strings: {
             inputPlaceholder: "Value",
@@ -33,13 +33,13 @@ https://github.com/gpii/universal/LICENSE.txt
             source: "value",
             target: "value",
             singleTransform: {
-                type: "gpii.chartAuthoring.transforms.stringToNumber"
+                type: "floe.chartAuthoring.transforms.stringToNumber"
             }
         },{
             source: "",
             target: "percentage",
             singleTransform: {
-                type: "gpii.chartAuthoring.transforms.percentage",
+                type: "floe.chartAuthoring.transforms.percentage",
                 value: "{that}.model.value",
                 total: "{that}.model.total"
             }
@@ -51,7 +51,7 @@ https://github.com/gpii/universal/LICENSE.txt
         percentageDigits: 2,
         invokers: {
             updatePercentage: {
-                funcName: "gpii.chartAuthoring.percentage.render",
+                funcName: "floe.chartAuthoring.percentage.render",
                 args: [
                     "{that}.dom.percentage",
                     "{that}.model.percentage",

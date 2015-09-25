@@ -22,57 +22,57 @@
 
         <title>Chart Authoring Tool</title>
         <style>
-            .gpiic-ca-pieChart-pie {
+            .floec-ca-pieChart-pie {
                 float: left;
                 width: 400px;
             }
-            .gpiic-ca-pieChart-legend {
+            .floec-ca-pieChart-legend {
                 float: left;
                 width: 300px;
             }
-            .gpii-ca-pieChart-legend-table {
+            .floe-ca-pieChart-legend-table {
                 border: 1px solid black;
             }
-            .gpii-ca-pieChart-legend-table thead th {
-                border: 1px solid black;
-                padding: 2px;
-            }
-            .gpii-ca-pieChart-legend-table-row {
-                border: 1px solid black;
-            }
-            .gpii-ca-pieChart-legend-table-row td {
+            .floe-ca-pieChart-legend-table thead th {
                 border: 1px solid black;
                 padding: 2px;
             }
-            #gpiic-chartAuthoring-dataEntryPanel {
+            .floe-ca-pieChart-legend-table-row {
+                border: 1px solid black;
+            }
+            .floe-ca-pieChart-legend-table-row td {
+                border: 1px solid black;
+                padding: 2px;
+            }
+            #floec-chartAuthoring-dataEntryPanel {
                 clear: both;
             }
         </style>
     </head>
 
     <body>
-        <div id="gpiic-chartAuthoring">
-        <div id="gpiic-chartAuthoring-pieChart"></div>
-        <div id="gpiic-chartAuthoring-dataEntryPanel"></div>
+        <div id="floec-chartAuthoring">
+        <div id="floec-chartAuthoring-pieChart"></div>
+        <div id="floec-chartAuthoring-dataEntryPanel"></div>
         </div>
 
         <title>Chart Authoring Tool</title>
     </head>
 
     <body>
-        <div id="gpiic-chartAuthoring"></div>
+        <div id="floec-chartAuthoring"></div>
         <script type="text/javascript">
-            gpii.chartAuthoring("#gpiic-chartAuthoring", {
+            floe.chartAuthoring("#floec-chartAuthoring", {
                 templateLoader: {
                     terms: {
                         templatePrefix: "../src/html"
                     }
                 },
                 dataEntryPanel: {
-                    container: "#gpiic-chartAuthoring-dataEntryPanel"
+                    container: "#floec-chartAuthoring-dataEntryPanel"
                 },
                 pieChart: {
-                    container: "#gpiic-chartAuthoring-pieChart"
+                    container: "#floec-chartAuthoring-pieChart"
 
                 }
             });
