@@ -45,15 +45,16 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
      * @param cssClass - string
      * @return - boolean
      */
+
+     // Validate the given selector to ensure it is in the form "period plus classname". The current
+     // implementation adds the given classname via the d3 "class" directive, so it couldn't handle
+     // selectors in any other forms such as "#foo" or ".foo.bar"
     gpii.d3ViewComponent.isCssClass = function (cssClass) {
         cssClass = cssClass.trim();
         var pattern = /^\.[_a-zA-Z]+[_a-zA-Z0-9-]*$/;
         return pattern.test(cssClass);
     };
 
-    // Validate the given selector to ensure it is in the form "period plus classname". The current
-    // implementation adds the given classname via the d3 "class" directive, so it couldn't handle
-    // selectors in any other forms such as "#foo" or ".foo.bar"
     gpii.d3ViewComponent.extractSelectorName = function (selector) {
         if (!selector) {
             return;
