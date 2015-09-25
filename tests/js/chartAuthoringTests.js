@@ -131,8 +131,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     };
 
     floe.tests.chartAuthoringTester.verifyTool = function (that) {
-        // TODO: rewrite this test to handle the new template situation
-
         var dataEntryPanelResources = that.dataEntryPanel.options.resources,
             pieChartResources = that.pieChart.options.resources,
             templateLoaderResources = that.templateLoader.resources;
@@ -146,7 +144,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     };
 
     floe.tests.chartAuthoringTester.verifyRelay = function (that) {
-        // 1) Test that the models are kept in sync by the relay
         jqUnit.assertDeepEq("Model is relayed between dataEntryPanel and pieChart", floe.tests.chartAuthoring.dataSet, that.pieChart.model.dataSet);
     };
 
