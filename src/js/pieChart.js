@@ -15,13 +15,21 @@ https://github.com/gpii/universal/LICENSE.txt
     // Connects the drawing of the pie (gpii.chartAuthoring.pieChart.pie) and the legend (gpii.chartAuthoring.pieChart.legend)
     fluid.defaults("gpii.chartAuthoring.pieChart", {
         gradeNames: ["gpii.chartAuthoring.templateInjection", "autoInit"],
+        members: {
+            drawingOptions: {
+                expander: {
+                    funcName: "gpii.chartAuthoring.pieChart.consolidateDrawingOptions",
+                    args: ["{that}.options.pieChartOptions"]
+                }
+            }
+        },
         components: {
             pie: {
                 type: "gpii.chartAuthoring.pieChart.pie",
                 createOnEvent: "onParentReady",
                 container: "{that}.dom.pie",
                 options: {
-                    pieOptions: "{pieChart}.options.pieChartOptions",
+                pieOptions: "{pieChart}.drawingOptions",
                     strings: {
                         pieTitle: "{pieChart}.options.pieChartOptions.pieTitle",
                         pieDescription: "{pieChart}.options.pieChartOptions.pieDescription"
@@ -40,7 +48,7 @@ https://github.com/gpii/universal/LICENSE.txt
                 createOnEvent: "onParentReady",
                 container: "{that}.dom.legend",
                 options: {
-                    legendOptions: "{pieChart}.options.pieChartOptions",
+                    legendOptions: "{pieChart}.drawingOptions",
                     strings: {
                         legendTitle: "{pieChart}.options.pieChartOptions.legendTitle"
                     },
@@ -105,6 +113,12 @@ https://github.com/gpii/universal/LICENSE.txt
 
     gpii.chartAuthoring.pieChart.renderTemplate = function (that) {
         that.events.onParentReady.fire();
+    };
+
+    gpii.chartAuthoring.pieChart.consolidateDrawingOptions = function (userOptions) {
+        var consolidatedOptions = fluid.copy(userOptions);
+        fluid.set(consolidatedOptions, "colors", gpii.d3.getColorScale(userOptions.colors));
+        return consolidatedOptions;
     };
 
 })(jQuery, fluid);

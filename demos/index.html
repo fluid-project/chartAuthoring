@@ -3,9 +3,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
         <link rel="stylesheet" href="../src/lib/infusion/src/lib/normalize/css/normalize.css" />
-
         <script type="text/javascript" src="../src/lib/infusion/infusion-custom.js"></script>
         <script type="text/javascript" src="../src/lib/d3/d3.js"></script>
         <script type="text/javascript" src="../src/js/valueBinding.js"></script>
@@ -19,7 +17,7 @@
         <script type="text/javascript" src="../src/js/legend.js"></script>
         <script type="text/javascript" src="../src/js/pie.js"></script>
         <script type="text/javascript" src="../src/js/pieChart.js"></script>
-        <script type="text/javascript" src="../src/js/utils.js"></script>
+        <script type="text/javascript" src="../src/js/d3Utils.js"></script>
 
 
         <title>Chart Authoring Tool</title>
@@ -63,7 +61,11 @@
         <div id="gpiic-chartAuthoring-pieChart"></div>
         </div>
 
+        <title>Chart Authoring Tool</title>
+    </head>
 
+    <body>
+        <div id="gpiic-chartAuthoring"></div>
         <script type="text/javascript">
             gpii.chartAuthoring("#gpiic-chartAuthoring", {
                 templateLoader: {
@@ -76,6 +78,7 @@
                 },
                 pieChart: {
                     container: "#gpiic-chartAuthoring-pieChart"
+
                 }
             });
         </script>

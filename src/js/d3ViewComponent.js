@@ -13,8 +13,8 @@ https://github.com/gpii/universal/LICENSE.txt
     "use strict";
 
     // The D3 view component that is able to:
-    // 1. convert jQuery DOM elements to D3 elements;
-    // 2. register D3 DOM event listeners;
+    // 1. Convert jQuery DOM elements to D3 elements;
+    // 2. Attach D3 DOM event listeners;
     // 3. Synthesize that.options.styles and that.options.selectors to combine elements with the same key into that.classes
 
     fluid.defaults("gpii.d3ViewComponent", {
@@ -39,59 +39,75 @@ https://github.com/gpii/universal/LICENSE.txt
         }
     });
 
-    // Validate the given selector to ensure it is indeed of the form "period plus classname" since the element
-    // is achieved through adding a classname via the d3 "class" directivethe and the current implementation
-    // couldn't handle any other form.
+    /**
+     * Validate the given string is in the form of a css class, such as ".gpii-css-name"
+     * @param cssClass - string
+     * @return - boolean
+     */
+    gpii.d3ViewComponent.isCssClass = function (cssClass) {
+        cssClass = cssClass.trim();
+        var pattern = /^\.[_a-zA-Z]+[_a-zA-Z0-9-]*$/;
+        return pattern.test(cssClass);
+    };
+
+    // Validate the given selector to ensure it is in the form "period plus classname". The current
+    // implementation adds the given classname via the d3 "class" directive, so it couldn't handle
+    // selectors in any other forms such as "#foo" or ".foo.bar"
     gpii.d3ViewComponent.extractSelectorName = function (selector) {
         if (!selector) {
             return;
         }
         selector = selector.trim();
-        if (gpii.isCssClass(selector)) {
+        if (gpii.d3ViewComponent.isCssClass(selector)) {
             return selector.substring(1);
         } else {
             fluid.fail(selector + " is not a css class");
         }
     };
 
+    gpii.d3ViewComponent.removeArrayDuplicates = function (array) {
+        return array.filter(function (value, index, self) {
+            return self.indexOf(value) === index;
+        });
+    };
+
     // Synthesize "styles" and "selectors" blocks to combine elements with the same key
     gpii.d3ViewComponent.synthesizeClasses = function (styles, selectors) {
 
-        var consolidatedClasses = {};
-
-        // 1. Combine any matching styles and selectors by key into a single string of class names
+        // 1. Combine any matching styles and selectors by key into an array of class names
 
         // Do the selectors first to maintain gpiic/gpii-style ordering
-        fluid.each(selectors, function (selector, key) {
-            fluid.set(consolidatedClasses, key, gpii.d3ViewComponent.extractSelectorName(selector));
+
+        var consolidatedClasses = fluid.transform(selectors, function (selector) {
+            return [gpii.d3ViewComponent.extractSelectorName(selector)];
         });
+
+        // Needed catch to handle the result of a nonexistent selectors block meaning object is not initialized
+        consolidatedClasses = consolidatedClasses || {};
+
+        // Add any style values to consolidatedClasses
 
         fluid.each(styles, function (styleValue, key) {
-            var correspondingSelector = fluid.get(consolidatedClasses, key);
-            if(correspondingSelector) {
-                var combinedValues = fluid.get(consolidatedClasses, key) + " " + styleValue;
-                fluid.set(consolidatedClasses, key, combinedValues);
-            } else {fluid.set(consolidatedClasses, key, styleValue);}
+            var resultArray = styleValue.split(" ");
+            var correspondingSelectorArray = fluid.get(consolidatedClasses, key);
 
+            if(correspondingSelectorArray) {
+                resultArray = correspondingSelectorArray.concat(resultArray);
+            }
+            // Only keep unique values for each consolidated class array
+            var resultArrayWithUniqueValues = gpii.d3ViewComponent.removeArrayDuplicates(resultArray);
+
+            fluid.set(consolidatedClasses, key, resultArrayWithUniqueValues);
         });
 
-        // 2. For each key in the consolidatedClasses object, split its value into an array of string values separated by spaces,
-        // filter for unique strings, and make a new value based on the array of uniques
+        // 2. For each key/value pair in the consolidatedClasses object, turn the value from an array
+        // to a space-delimited string
 
-        fluid.each(consolidatedClasses, function(classes, key) {
-            var splitClasses = classes.split(" ");
-
-            var uniqueClasses = [];
-
-            // Add classes to the uniqueClasses array if they aren't already there
-            fluid.each(splitClasses, function(currentClass) {
-                if ($.inArray(currentClass, uniqueClasses) === -1) {uniqueClasses.push(currentClass);}
-            });
-            // Update each key to contain only the unique classes by joining the array of uniques
-            fluid.set(consolidatedClasses, key, uniqueClasses.join(" "));
+        var togo = fluid.transform(consolidatedClasses, function (selectorArray){
+            return selectorArray.join(" ");
         });
 
-        return consolidatedClasses;
+        return togo;
     };
 
 })(jQuery, fluid);
