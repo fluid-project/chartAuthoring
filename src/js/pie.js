@@ -5,7 +5,7 @@ Licensed under the New BSD license. You may not use this file except in
 compliance with this License.
 
 You may obtain a copy of the License at
-https://github.com/gpii/universal/LICENSE.txt
+https://github.com/floe/universal/LICENSE.txt
 */
 
 (function ($, fluid) {
@@ -19,8 +19,8 @@ https://github.com/gpii/universal/LICENSE.txt
     // 3. able to configure the color of each pie slice
     // 4. update the pie when the data set changes, including adding or removing slices
 
-    fluid.defaults("gpii.chartAuthoring.pieChart.pie", {
-        gradeNames: ["gpii.d3ViewComponent", "autoInit"],
+    fluid.defaults("floe.chartAuthoring.pieChart.pie", {
+        gradeNames: ["floe.d3ViewComponent", "autoInit"],
         model: {
             // dataSet accepts:
             // 1. an array of primitive values, such as numbers;
@@ -44,16 +44,16 @@ https://github.com/gpii/universal/LICENSE.txt
             pieDescription: "A pie chart."
         },
         styles: {
-            pie: "gpii-ca-pieChart-pie",
-            slice: "gpii-ca-pieChart-slice",
-            text: "gpii-ca-pieChart-text"
+            pie: "floe-ca-pieChart-pie",
+            slice: "floe-ca-pieChart-slice",
+            text: "floe-ca-pieChart-text"
         },
         selectors: {
-            pie: ".gpiic-ca-pieChart-pie",
-            slice: ".gpiic-ca-pieChart-slice",
-            text: ".gpiic-ca-pieChart-text",
-            title: ".gpiic-ca-pieChart-title",
-            description: ".gpiic-ca-pieChart-description"
+            pie: ".floec-ca-pieChart-pie",
+            slice: ".floec-ca-pieChart-slice",
+            text: ".floec-ca-pieChart-text",
+            title: ".floec-ca-pieChart-title",
+            description: ".floec-ca-pieChart-description"
         },
         events: {
             onPieCreated: null,  // Fire when the pie is created. Ready to register D3 DOM event listeners,
@@ -61,7 +61,7 @@ https://github.com/gpii/universal/LICENSE.txt
         },
         listeners: {
             "onCreate.create": {
-                funcName: "gpii.chartAuthoring.pieChart.pie.create",
+                funcName: "floe.chartAuthoring.pieChart.pie.create",
                 args: ["{that}"]
             }
         },
@@ -73,17 +73,17 @@ https://github.com/gpii/universal/LICENSE.txt
         },
         invokers: {
             draw: {
-                funcName: "gpii.chartAuthoring.pieChart.pie.draw",
+                funcName: "floe.chartAuthoring.pieChart.pie.draw",
                 args: ["{that}"]
             },
             textTransform: {
-                funcName: "gpii.chartAuthoring.pieChart.textTransform",
+                funcName: "floe.chartAuthoring.pieChart.textTransform",
                 args: ["{that}.arc", "{arguments}.0"]
             }
         }
     });
 
-    gpii.chartAuthoring.pieChart.pie.addSlices = function (that) {
+    floe.chartAuthoring.pieChart.pie.addSlices = function (that) {
         var color = that.colorScale,
         arc = that.arc,
         sliceClass = that.classes.slice,
@@ -117,7 +117,7 @@ https://github.com/gpii/universal/LICENSE.txt
             });
     };
 
-    gpii.chartAuthoring.pieChart.pie.updateSlices = function (that) {
+    floe.chartAuthoring.pieChart.pie.updateSlices = function (that) {
         // Update and redraw arcs of existing slices
         var arc = that.arc,
             animationDuration = that.options.pieOptions.animationDuration;
@@ -140,13 +140,13 @@ https://github.com/gpii/universal/LICENSE.txt
 
     };
 
-    gpii.chartAuthoring.pieChart.pie.removeSlices = function (that) {
+    floe.chartAuthoring.pieChart.pie.removeSlices = function (that) {
         that.paths.exit().remove();
 
         that.texts.exit().remove();
     };
 
-    gpii.chartAuthoring.pieChart.pie.draw = function (that) {
+    floe.chartAuthoring.pieChart.pie.draw = function (that) {
         var pieGroup = that.pieGroup,
             pie = that.pie,
             dataSet = that.model.dataSet;
@@ -156,20 +156,20 @@ https://github.com/gpii/universal/LICENSE.txt
         that.texts = pieGroup.selectAll("text")
             .data(pie(dataSet));
 
-        gpii.chartAuthoring.pieChart.pie.addSlices(that);
+        floe.chartAuthoring.pieChart.pie.addSlices(that);
 
-        gpii.chartAuthoring.pieChart.pie.updateSlices(that);
+        floe.chartAuthoring.pieChart.pie.updateSlices(that);
 
-        gpii.chartAuthoring.pieChart.pie.removeSlices(that);
+        floe.chartAuthoring.pieChart.pie.removeSlices(that);
 
         that.events.onPieRedrawn.fire();
     };
 
-    gpii.chartAuthoring.pieChart.pie.create = function (that) {
+    floe.chartAuthoring.pieChart.pie.create = function (that) {
         var container = that.container,
             p = that.options.pieOptions,
-            width = p.width === "auto" ? gpii.chartAuthoring.pieChart.pie.calcAutoscaleWidth(that) : p.width,
-            height = p.height === "auto" ? gpii.chartAuthoring.pieChart.pie.calcAutoscaleHeight(that) : p.height,
+            width = p.width === "auto" ? floe.chartAuthoring.pieChart.pie.calcAutoscaleWidth(that) : p.width,
+            height = p.height === "auto" ? floe.chartAuthoring.pieChart.pie.calcAutoscaleHeight(that) : p.height,
             colors = p.colors,
             outerRadius = p.outerRadius || width / 2,
             innerRadius = p.innerRadius || 0,
@@ -179,7 +179,7 @@ https://github.com/gpii/universal/LICENSE.txt
             pieTitleId = "fluid-id-"+fluid.allocateGuid(),
             pieDescId = "fluid-id-"+fluid.allocateGuid();
 
-        gpii.chartAuthoring.pieChart.pie.calcAutoscaleWidth(that);
+        floe.chartAuthoring.pieChart.pie.calcAutoscaleWidth(that);
 
         that.arc = d3.svg.arc()
             .innerRadius(innerRadius)
@@ -196,7 +196,7 @@ https://github.com/gpii/universal/LICENSE.txt
                 "width": width,
                 "height": height,
                 "class": pieClass,
-                "viewBox": gpii.chartAuthoring.pieChart.getViewBoxConfiguration(0,0, width, height),
+                "viewBox": floe.chartAuthoring.pieChart.getViewBoxConfiguration(0,0, width, height),
                 // Set aria role to image
                 "role": "img",
                 // Explicitly associate SVG title & desc via aria-labelledby
@@ -224,28 +224,28 @@ https://github.com/gpii/universal/LICENSE.txt
                 "transform": "translate(" + outerRadius + "," + outerRadius + ")"
             });
 
-        that.colorScale = (typeof(colors) === "function") ? colors : gpii.d3.getColorScale(colors);
+        that.colorScale = (typeof(colors) === "function") ? colors : floe.d3.getColorScale(colors);
 
         that.draw();
 
         that.events.onPieCreated.fire();
     };
 
-    gpii.chartAuthoring.pieChart.textTransform = function (arc, d) {
+    floe.chartAuthoring.pieChart.textTransform = function (arc, d) {
         return "translate(" + arc.centroid(d) + ")";
     };
 
-    gpii.chartAuthoring.pieChart.getViewBoxConfiguration = function (x, y, width, height) {
+    floe.chartAuthoring.pieChart.getViewBoxConfiguration = function (x, y, width, height) {
         return x + "," + y + "," + width + "," + height;
     };
 
     // Returns automatically calculated width based on container width;
-    gpii.chartAuthoring.pieChart.pie.calcAutoscaleWidth = function (that) {
+    floe.chartAuthoring.pieChart.pie.calcAutoscaleWidth = function (that) {
         return that.container.width();
     };
 
     // Returns automatically calculated height based on container height;
-    gpii.chartAuthoring.pieChart.pie.calcAutoscaleHeight = function (that) {
+    floe.chartAuthoring.pieChart.pie.calcAutoscaleHeight = function (that) {
         return that.container.width();
     };
 

@@ -5,16 +5,16 @@ Licensed under the New BSD license. You may not use this file except in
 compliance with this License.
 
 You may obtain a copy of the License at
-https://github.com/gpii/universal/LICENSE.txt
+https://github.com/floe/universal/LICENSE.txt
 */
 
 (function ($, fluid) {
 
     "use strict";
 
-    fluid.registerNamespace("gpii.tests.chartAuthoring");
+    fluid.registerNamespace("floe.tests.chartAuthoring");
 
-    gpii.tests.chartAuthoring.objectArray = [{
+    floe.tests.chartAuthoring.objectArray = [{
         id: "id0",
         value: 5,
         label: "label 0"
@@ -32,8 +32,8 @@ https://github.com/gpii/universal/LICENSE.txt
         label: "label 3"
     }];
 
-    fluid.defaults("gpii.tests.chartAuthoring.pieChart", {
-        gradeNames: ["gpii.chartAuthoring.pieChart", "autoInit"],
+    fluid.defaults("floe.tests.chartAuthoring.pieChart", {
+        gradeNames: ["floe.chartAuthoring.pieChart", "autoInit"],
         pieChartOptions: {
             width: 200,
             height: 200,
@@ -41,11 +41,11 @@ https://github.com/gpii/universal/LICENSE.txt
             sort: false
         },
         model: {
-            dataSet: gpii.tests.chartAuthoring.objectArray
+            dataSet: floe.tests.chartAuthoring.objectArray
         }
     });
 
-    gpii.tests.chartAuthoring.testSubcomponent = function (that, subcomponentName, optionsToVerify) {
+    floe.tests.chartAuthoring.testSubcomponent = function (that, subcomponentName, optionsToVerify) {
         jqUnit.assertNotNull("The sub-component \"" + subcomponentName + "\" has been instantiated", that[subcomponentName]);
         jqUnit.assertDeepEq("The model value for \"dataSet\" has been distributed to the sub-component \"" + subcomponentName + "\"", that.model.dataSet, that[subcomponentName].model.dataSet);
 
@@ -61,7 +61,7 @@ https://github.com/gpii/universal/LICENSE.txt
         }
     };
 
-    gpii.tests.chartAuthoring.testPieChart = function (that) {
+    floe.tests.chartAuthoring.testPieChart = function (that) {
         var optionsToVerify = [{
             name: "width",
             method: "assertEquals"
@@ -73,8 +73,8 @@ https://github.com/gpii/universal/LICENSE.txt
             method: "assertFalse"
         }];
 
-        gpii.tests.chartAuthoring.testSubcomponent(that, "pie", optionsToVerify);
-        gpii.tests.chartAuthoring.testSubcomponent(that, "legend", optionsToVerify);
+        floe.tests.chartAuthoring.testSubcomponent(that, "pie", optionsToVerify);
+        floe.tests.chartAuthoring.testSubcomponent(that, "legend", optionsToVerify);
 
         jqUnit.start();
     };
@@ -82,13 +82,13 @@ https://github.com/gpii/universal/LICENSE.txt
     jqUnit.asyncTest("Test the pie chart", function () {
         jqUnit.expect(22);
 
-        gpii.tests.chartAuthoring.pieChart(".gpiic-ca-pieChart", {
+        floe.tests.chartAuthoring.pieChart(".floec-ca-pieChart", {
             listeners: {
-                "onPieChartReady.runTest": "gpii.tests.chartAuthoring.testPieChart"
+                "onPieChartReady.runTest": "floe.tests.chartAuthoring.testPieChart"
             },
             resources: {
                 template: {
-                    resourceText: "<div class=\"gpiic-ca-pieChart-pie\"></div><div class=\"gpiic-ca-pieChart-legend\"></div>"
+                    resourceText: "<div class=\"floec-ca-pieChart-pie\"></div><div class=\"floec-ca-pieChart-legend\"></div>"
                 }
             }
         });

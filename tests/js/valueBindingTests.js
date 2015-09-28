@@ -5,15 +5,15 @@ Licensed under the New BSD license. You may not use this file except in
 compliance with this License.
 
 You may obtain a copy of the License at
-https://github.com/gpii/universal/LICENSE.txt
+https://github.com/floe/universal/LICENSE.txt
 */
 
 (function ($, fluid) {
 
     "use strict";
 
-    fluid.defaults("gpii.tests.chartAuthoring.valueBinding", {
-        gradeNames: ["gpii.chartAuthoring.valueBinding"],
+    fluid.defaults("floe.tests.chartAuthoring.valueBinding", {
+        gradeNames: ["floe.chartAuthoring.valueBinding"],
         selectors: {
             unidirectional: "label",
             bidirectional: "input"
@@ -30,20 +30,20 @@ https://github.com/gpii/universal/LICENSE.txt
         }
     });
 
-    fluid.defaults("gpii.tests.chartAuthoring.valueBindingTests", {
+    fluid.defaults("floe.tests.chartAuthoring.valueBindingTests", {
         gradeNames: ["fluid.test.testEnvironment"],
         components: {
             valueBinding: {
-                type: "gpii.tests.chartAuthoring.valueBinding",
-                container: ".gpiic-ca-valueBinding"
+                type: "floe.tests.chartAuthoring.valueBinding",
+                container: ".floec-ca-valueBinding"
             },
             valueBindingTester: {
-                type: "gpii.tests.chartAuthoring.valueBindingTester"
+                type: "floe.tests.chartAuthoring.valueBindingTester"
             }
         }
     });
 
-    fluid.defaults("gpii.tests.chartAuthoring.valueBindingTester", {
+    fluid.defaults("floe.tests.chartAuthoring.valueBindingTester", {
         gradeNames: ["fluid.test.testCaseHolder"],
         modules: [{
             name: "Tests value binding",
@@ -51,7 +51,7 @@ https://github.com/gpii/universal/LICENSE.txt
                 expect: 3,
                 name: "Test Init",
                 type: "test",
-                func: "gpii.tests.chartAuthoring.valueBindingTester.verifyInit",
+                func: "floe.tests.chartAuthoring.valueBindingTester.verifyInit",
                 args: ["{valueBinding}"]
             }, {
                 expect: 4,
@@ -60,7 +60,7 @@ https://github.com/gpii/universal/LICENSE.txt
                     func: "{valueBinding}.applier.change",
                     args: ["val1", "label"]
                 }, {
-                    listener: "gpii.tests.chartAuthoring.valueBindingTester.verifyValueBinding",
+                    listener: "floe.tests.chartAuthoring.valueBindingTester.verifyValueBinding",
                     args: ["{valueBinding}", {
                         val1: "label",
                         nested: {
@@ -73,7 +73,7 @@ https://github.com/gpii/universal/LICENSE.txt
                     func: "{valueBinding}.applier.change",
                     args: ["nested.val2", "input"]
                 }, {
-                    listener: "gpii.tests.chartAuthoring.valueBindingTester.verifyValueBinding",
+                    listener: "floe.tests.chartAuthoring.valueBindingTester.verifyValueBinding",
                     args: ["{valueBinding}", {
                         val1: "label",
                         nested: {
@@ -87,10 +87,10 @@ https://github.com/gpii/universal/LICENSE.txt
                 expect: 2,
                 name: "Update Model from DOM",
                 sequence: [{
-                    func: "gpii.tests.utils.triggerChangeEvent",
+                    func: "floe.tests.utils.triggerChangeEvent",
                     args: ["{valueBinding}.dom.bidirectional", "updated input value"]
                 }, {
-                    listener: "gpii.tests.chartAuthoring.valueBindingTester.verifyValueBinding",
+                    listener: "floe.tests.chartAuthoring.valueBindingTester.verifyValueBinding",
                     args: ["{valueBinding}", {
                         val1: "label",
                         nested: {
@@ -104,12 +104,12 @@ https://github.com/gpii/universal/LICENSE.txt
         }]
     });
 
-    gpii.tests.chartAuthoring.valueBindingTester.verifyInit = function (that) {
+    floe.tests.chartAuthoring.valueBindingTester.verifyInit = function (that) {
         jqUnit.assertValue("The component should have been initialized.", that);
-        gpii.tests.chartAuthoring.valueBindingTester.verifyValueBinding(that, that.model);
+        floe.tests.chartAuthoring.valueBindingTester.verifyValueBinding(that, that.model);
     };
 
-    gpii.tests.chartAuthoring.valueBindingTester.verifyValueBinding = function (that, expectedModel) {
+    floe.tests.chartAuthoring.valueBindingTester.verifyValueBinding = function (that, expectedModel) {
         fluid.each(that.options.bindings, function (modelPath, selector) {
             var elm = that.locate(selector);
             var val = elm.is("input") ? elm.val() : elm.text();
@@ -119,7 +119,7 @@ https://github.com/gpii/universal/LICENSE.txt
 
     $(document).ready(function () {
         fluid.test.runTests([
-            "gpii.tests.chartAuthoring.valueBindingTests"
+            "floe.tests.chartAuthoring.valueBindingTests"
         ]);
     });
 

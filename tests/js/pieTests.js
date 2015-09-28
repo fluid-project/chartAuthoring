@@ -5,17 +5,17 @@ Licensed under the New BSD license. You may not use this file except in
 compliance with this License.
 
 You may obtain a copy of the License at
-https://github.com/gpii/universal/LICENSE.txt
+https://github.com/floe/universal/LICENSE.txt
 */
 
 (function ($, fluid) {
 
     "use strict";
 
-    fluid.registerNamespace("gpii.tests.chartAuthoring");
+    fluid.registerNamespace("floe.tests.chartAuthoring");
 
-    fluid.defaults("gpii.tests.chartAuthoring.pieChart.pie", {
-        gradeNames: ["gpii.chartAuthoring.pieChart.pie", "autoInit"],
+    fluid.defaults("floe.tests.chartAuthoring.pieChart.pie", {
+        gradeNames: ["floe.chartAuthoring.pieChart.pie", "autoInit"],
         pieOptions: {
             width: "200",
             height: "200",
@@ -28,7 +28,7 @@ https://github.com/gpii/universal/LICENSE.txt
         listeners: {
             "onPieCreated.addMouseoverListener": {
                 listener: "{that}.addD3Listeners",
-                args: ["{that}.dom.slice", "mouseover", "gpii.tests.chartAuthoring.mouseOverListener"]
+                args: ["{that}.dom.slice", "mouseover", "floe.tests.chartAuthoring.mouseOverListener"]
             }
         },
         members: {
@@ -36,11 +36,11 @@ https://github.com/gpii/universal/LICENSE.txt
         }
     });
 
-    gpii.tests.chartAuthoring.mouseOverListener = function (data, i, that) {
+    floe.tests.chartAuthoring.mouseOverListener = function (data, i, that) {
         that.mouseOverListenerCalled = true;
     };
 
-    gpii.tests.chartAuthoring.validatePie = function (that, testSliceDataFunc) {
+    floe.tests.chartAuthoring.validatePie = function (that, testSliceDataFunc) {
         var pie = that.locate("pie");
 
         // Test the drawing
@@ -54,7 +54,7 @@ https://github.com/gpii/universal/LICENSE.txt
         jqUnit.assertEquals("The pie's description has been created", that.options.strings.pieDescription, that.locate("description").text());
 
         // Test that displayed values are in sync with the current model
-        gpii.tests.chartAuthoring.testPieTextSyncWithModelDataSet(that);
+        floe.tests.chartAuthoring.testPieTextSyncWithModelDataSet(that);
 
         // Each slice receives the corresponding data object
         var d3Slices = that.jQueryToD3($(that.locate("slice")));
@@ -64,8 +64,8 @@ https://github.com/gpii/universal/LICENSE.txt
         });
     };
 
-    gpii.tests.chartAuthoring.runCommonTests = function (that, testSliceDataFunc) {
-        gpii.tests.chartAuthoring.validatePie(that, testSliceDataFunc);
+    floe.tests.chartAuthoring.runCommonTests = function (that, testSliceDataFunc) {
+        floe.tests.chartAuthoring.validatePie(that, testSliceDataFunc);
 
         // The D3 DOM event listener is registered
         jqUnit.assertFalse("The mouseover listener for pie slices have not been triggered", that.mouseOverListenerCalled);
@@ -74,9 +74,9 @@ https://github.com/gpii/universal/LICENSE.txt
         jqUnit.assertTrue("The mouseover listener for pie slices have been registered", that.mouseOverListenerCalled);
     };
 
-    gpii.tests.chartAuthoring.testPieTextSyncWithModelDataSet = function(that) {
+    floe.tests.chartAuthoring.testPieTextSyncWithModelDataSet = function(that) {
         var dataSet = that.model.dataSet;
-        var d3Elem = gpii.d3.jQueryToD3(that.locate("text"));
+        var d3Elem = floe.d3.jQueryToD3(that.locate("text"));
         d3Elem.each(function (d,i) {
             var displayedValue = d3.select(this).text();
             var expectedValue = typeof (dataSet[i]) === "object" ? dataSet[i].value : dataSet[i];
@@ -84,31 +84,31 @@ https://github.com/gpii/universal/LICENSE.txt
         });
     };
 
-    gpii.tests.chartAuthoring.testPrimitiveData = function (d) {
+    floe.tests.chartAuthoring.testPrimitiveData = function (d) {
         jqUnit.assertEquals("The corresponding value is associated with this slice", d.value, d.data);
     };
 
-    gpii.tests.chartAuthoring.testObjectData = function (d, i) {
+    floe.tests.chartAuthoring.testObjectData = function (d, i) {
         jqUnit.assertEquals("The corresponding data object is associated with this slice", "object", typeof(d.data));
         jqUnit.assertEquals("The passed in data id is correct", "id" + i, d.data.id);
         jqUnit.assertEquals("The passed in data value is correct", d.data.value, d.value);
     };
 
-    gpii.tests.chartAuthoring.numberArray = [5, 10, 20, 45, 6, 25];
+    floe.tests.chartAuthoring.numberArray = [5, 10, 20, 45, 6, 25];
 
     jqUnit.test("Test the pie chart component created based off an array of numbers", function () {
         jqUnit.expect(27);
 
-        var that = gpii.tests.chartAuthoring.pieChart.pie(".gpiic-ca-pieChart-numberArray", {
+        var that = floe.tests.chartAuthoring.pieChart.pie(".floec-ca-pieChart-numberArray", {
             model: {
-                dataSet: gpii.tests.chartAuthoring.numberArray
+                dataSet: floe.tests.chartAuthoring.numberArray
             }
         });
 
-        gpii.tests.chartAuthoring.runCommonTests(that, gpii.tests.chartAuthoring.testPrimitiveData);
+        floe.tests.chartAuthoring.runCommonTests(that, floe.tests.chartAuthoring.testPrimitiveData);
     });
 
-    gpii.tests.chartAuthoring.objectArray = [{
+    floe.tests.chartAuthoring.objectArray = [{
         id: "id0",
         value: 5
     }, {
@@ -122,7 +122,7 @@ https://github.com/gpii/universal/LICENSE.txt
         value: 45
     }];
 
-    gpii.tests.chartAuthoring.objectArrayAdd = [{
+    floe.tests.chartAuthoring.objectArrayAdd = [{
         id: "id0",
         value: 5
     }, {
@@ -142,7 +142,7 @@ https://github.com/gpii/universal/LICENSE.txt
         value: 25
     }];
 
-    gpii.tests.chartAuthoring.objectArrayRemove = [{
+    floe.tests.chartAuthoring.objectArrayRemove = [{
         id: "id0",
         value: 5
     }, {
@@ -153,7 +153,7 @@ https://github.com/gpii/universal/LICENSE.txt
         value: 45
     }];
 
-    gpii.tests.chartAuthoring.objectArrayChangeInPlace = [{
+    floe.tests.chartAuthoring.objectArrayChangeInPlace = [{
         id: "id0",
         value: 25
     }, {
@@ -167,31 +167,31 @@ https://github.com/gpii/universal/LICENSE.txt
     jqUnit.test("Test the pie chart component created based off an array of objects", function () {
         jqUnit.expect(110);
 
-        var that = gpii.tests.chartAuthoring.pieChart.pie(".gpiic-ca-pieChart-objectArray", {
+        var that = floe.tests.chartAuthoring.pieChart.pie(".floec-ca-pieChart-objectArray", {
             model: {
-                dataSet: gpii.tests.chartAuthoring.objectArray
+                dataSet: floe.tests.chartAuthoring.objectArray
             }
         });
 
-        gpii.tests.chartAuthoring.runCommonTests(that, gpii.tests.chartAuthoring.testObjectData);
+        floe.tests.chartAuthoring.runCommonTests(that, floe.tests.chartAuthoring.testObjectData);
 
         // Pie is re-drawn when the data set changes
-        that.applier.change("dataSet", gpii.tests.chartAuthoring.objectArrayAdd);
-        gpii.tests.chartAuthoring.validatePie(that, gpii.tests.chartAuthoring.testObjectData);
+        that.applier.change("dataSet", floe.tests.chartAuthoring.objectArrayAdd);
+        floe.tests.chartAuthoring.validatePie(that, floe.tests.chartAuthoring.testObjectData);
 
-        that.applier.change("dataSet", gpii.tests.chartAuthoring.objectArrayRemove);
-        gpii.tests.chartAuthoring.validatePie(that, gpii.tests.chartAuthoring.testObjectData);
+        that.applier.change("dataSet", floe.tests.chartAuthoring.objectArrayRemove);
+        floe.tests.chartAuthoring.validatePie(that, floe.tests.chartAuthoring.testObjectData);
 
-        that.applier.change("dataSet", gpii.tests.chartAuthoring.objectArrayChangeInPlace);
-        gpii.tests.chartAuthoring.validatePie(that, gpii.tests.chartAuthoring.testObjectData);
+        that.applier.change("dataSet", floe.tests.chartAuthoring.objectArrayChangeInPlace);
+        floe.tests.chartAuthoring.validatePie(that, floe.tests.chartAuthoring.testObjectData);
     });
 
     jqUnit.test("Test the pie chart component created with automatic scaling", function () {
         jqUnit.expect(27);
 
-        var that = gpii.tests.chartAuthoring.pieChart.pie(".gpiic-ca-pieChart-autoScale", {
+        var that = floe.tests.chartAuthoring.pieChart.pie(".floec-ca-pieChart-autoScale", {
             model: {
-                dataSet: gpii.tests.chartAuthoring.numberArray
+                dataSet: floe.tests.chartAuthoring.numberArray
             },
             pieOptions: {
                 width: "auto",
@@ -199,7 +199,7 @@ https://github.com/gpii/universal/LICENSE.txt
             }
         });
 
-        gpii.tests.chartAuthoring.runCommonTests(that, gpii.tests.chartAuthoring.testPrimitiveData);
+        floe.tests.chartAuthoring.runCommonTests(that, floe.tests.chartAuthoring.testPrimitiveData);
     });
 
 })(jQuery, fluid);

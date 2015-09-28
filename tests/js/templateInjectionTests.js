@@ -5,15 +5,15 @@ Licensed under the New BSD license. You may not use this file except in
 compliance with this License.
 
 You may obtain a copy of the License at
-https://github.com/gpii/universal/LICENSE.txt
+https://github.com/floe/universal/LICENSE.txt
 */
 
 (function ($, fluid) {
 
     "use strict";
 
-    fluid.defaults("gpii.tests.chartAuthoring.templateInjection", {
-        gradeNames: ["gpii.chartAuthoring.templateInjection"],
+    fluid.defaults("floe.tests.chartAuthoring.templateInjection", {
+        gradeNames: ["floe.chartAuthoring.templateInjection"],
         selectors: {
             injected: ".injected"
         },
@@ -25,7 +25,7 @@ https://github.com/gpii/universal/LICENSE.txt
     });
 
     jqUnit.test("Template Injection", function () {
-        var that = gpii.tests.chartAuthoring.templateInjection(".gpiic-ca-templateInjection");
+        var that = floe.tests.chartAuthoring.templateInjection(".floec-ca-templateInjection");
 
         jqUnit.exists("The injected markup should exist", that.locate("injected"));
     });

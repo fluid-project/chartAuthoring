@@ -5,27 +5,27 @@ Licensed under the New BSD license. You may not use this file except in
 compliance with this License.
 
 You may obtain a copy of the License at
-https://github.com/gpii/universal/LICENSE.txt
+https://github.com/floe/universal/LICENSE.txt
 */
 
 (function ($, fluid) {
 
     "use strict";
 
-    // Connects the drawing of the pie (gpii.chartAuthoring.pieChart.pie) and the legend (gpii.chartAuthoring.pieChart.legend)
-    fluid.defaults("gpii.chartAuthoring.pieChart", {
-        gradeNames: ["gpii.chartAuthoring.templateInjection", "autoInit"],
+    // Connects the drawing of the pie (floe.chartAuthoring.pieChart.pie) and the legend (floe.chartAuthoring.pieChart.legend)
+    fluid.defaults("floe.chartAuthoring.pieChart", {
+        gradeNames: ["floe.chartAuthoring.templateInjection", "autoInit"],
         members: {
             drawingOptions: {
                 expander: {
-                    funcName: "gpii.chartAuthoring.pieChart.consolidateDrawingOptions",
+                    funcName: "floe.chartAuthoring.pieChart.consolidateDrawingOptions",
                     args: ["{that}.options.pieChartOptions"]
                 }
             }
         },
         components: {
             pie: {
-                type: "gpii.chartAuthoring.pieChart.pie",
+                type: "floe.chartAuthoring.pieChart.pie",
                 createOnEvent: "onParentReady",
                 container: "{that}.dom.pie",
                 options: {
@@ -44,7 +44,7 @@ https://github.com/gpii/universal/LICENSE.txt
                 }
             },
             legend: {
-                type: "gpii.chartAuthoring.pieChart.legend",
+                type: "floe.chartAuthoring.pieChart.legend",
                 createOnEvent: "onParentReady",
                 container: "{that}.dom.legend",
                 options: {
@@ -79,11 +79,11 @@ https://github.com/gpii/universal/LICENSE.txt
             // pieDescription: the accessible description to be applied to the pie chart
         },
         selectors: {
-            pie: ".gpiic-ca-pieChart-pie",
-            legend: ".gpiic-ca-pieChart-legend"
+            pie: ".floec-ca-pieChart-pie",
+            legend: ".floec-ca-pieChart-legend"
         },
         listeners: {
-            "onCreate.renderTemplate": "gpii.chartAuthoring.pieChart.renderTemplate"
+            "onCreate.renderTemplate": "floe.chartAuthoring.pieChart.renderTemplate"
         },
         events: {
             onPieCreated: null,
@@ -111,13 +111,13 @@ https://github.com/gpii/universal/LICENSE.txt
         }
     });
 
-    gpii.chartAuthoring.pieChart.renderTemplate = function (that) {
+    floe.chartAuthoring.pieChart.renderTemplate = function (that) {
         that.events.onParentReady.fire();
     };
 
-    gpii.chartAuthoring.pieChart.consolidateDrawingOptions = function (userOptions) {
+    floe.chartAuthoring.pieChart.consolidateDrawingOptions = function (userOptions) {
         var consolidatedOptions = fluid.copy(userOptions);
-        fluid.set(consolidatedOptions, "colors", gpii.d3.getColorScale(userOptions.colors));
+        fluid.set(consolidatedOptions, "colors", floe.d3.getColorScale(userOptions.colors));
         return consolidatedOptions;
     };
 
