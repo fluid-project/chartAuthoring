@@ -1,0 +1,25 @@
+.floec-ca-pieChart-pie {
+    float: left;
+    width: 400px;
+}
+.floec-ca-pieChart-legend {
+    float: left;
+    width: 300px;
+}
+.floe-ca-pieChart-legend-table {
+    border: 1px solid black;
+}
+.floe-ca-pieChart-legend-table thead th {
+    border: 1px solid black;
+    padding: 2px;
+}
+.floe-ca-pieChart-legend-table-row {
+    border: 1px solid black;
+}
+.floe-ca-pieChart-legend-table-row td {
+    border: 1px solid black;
+    padding: 2px;
+}
+#floec-chartAuthoring-dataEntryPanel {
+    clear: both;
+}
