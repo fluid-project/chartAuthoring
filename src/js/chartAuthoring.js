@@ -48,8 +48,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                         forward: "liveOnly",
                         backward: "never"
                     },
-                    events: {
-                        onCreate: "{chartAuthoring}.events.onPanelReady"
+                    listeners: {
+                        "onCreate.escalate": {
+                            funcName: "{chartAuthoring}.events.onPanelReady.fire"
+                        }
                     }
                 }
             },
