@@ -50,7 +50,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                     },
                     listeners: {
                         "onCreate.escalate": {
-                            funcName: "{chartAuthoring}.events.onPanelReady.fire"
+                            funcName: "{chartAuthoring}.events.onPanelReady.fire",
+                            priority: "last"                            
                         }
                     }
                 }
