@@ -27,7 +27,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         components: {
             pie: {
                 type: "floe.chartAuthoring.pieChart.pie",
-                createOnEvent: "onParentReady",
+                createOnEvent: "onTemplateInjected",
                 container: "{that}.dom.pie",
                 options: {
                     pieOptions: "{pieChart}.drawingOptions",
@@ -42,7 +42,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             },
             legend: {
                 type: "floe.chartAuthoring.pieChart.legend",
-                createOnEvent: "onParentReady",
+                createOnEvent: "onTemplateInjected",
                 container: "{that}.dom.legend",
                 options: {
                     legendOptions: "{pieChart}.drawingOptions",
@@ -95,7 +95,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                     onLegendRedrawn: "onLegendRedrawn"
                 }
             },
-            onParentReady: null
+            onTemplateInjected: null
         },
         // Supplied by implementer
         resources: {
@@ -104,7 +104,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     });
 
     floe.chartAuthoring.pieChart.renderTemplate = function (that) {
-        that.events.onParentReady.fire();
+        that.events.onTemplateInjected.fire();
     };
 
     floe.chartAuthoring.pieChart.consolidateDrawingOptions = function (userOptions) {
