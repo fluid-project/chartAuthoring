@@ -74,9 +74,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             pie: ".floec-ca-pieChart-pie",
             legend: ".floec-ca-pieChart-legend"
         },
-        listeners: {
-            "onCreate.renderTemplate": "floe.chartAuthoring.pieChart.renderTemplate"
-        },
         events: {
             onPieCreated: null,
             onLegendCreated: null,
@@ -94,18 +91,13 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                     onPieRedrawn: "onPieRedrawn",
                     onLegendRedrawn: "onLegendRedrawn"
                 }
-            },
-            onTemplateInjected: null
+            }
         },
         // Supplied by implementer
         resources: {
             template: {}
         }
     });
-
-    floe.chartAuthoring.pieChart.renderTemplate = function (that) {
-        that.events.onTemplateInjected.fire();
-    };
 
     floe.chartAuthoring.pieChart.consolidateDrawingOptions = function (userOptions) {
         var consolidatedOptions = fluid.copy(userOptions);
