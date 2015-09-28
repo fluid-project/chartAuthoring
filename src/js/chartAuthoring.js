@@ -51,7 +51,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                     listeners: {
                         "onCreate.escalate": {
                             funcName: "{chartAuthoring}.events.onPanelReady.fire",
-                            priority: "last"                            
+                            priority: "last"
                         }
                     }
                 }
@@ -65,9 +65,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                         template: "{templateLoader}.resources.pieChart"
                     },
                     listeners: {
-                        "onPieChartReady.escalate": {
-                            funcName: "{chartAuthoring}.events.onPieChartReady.fire"
-                        }
+                        "onPieChartReady.escalate": "{chartAuthoring}.events.onPieChartReady.fire"
+
                     }
                 }
             }
