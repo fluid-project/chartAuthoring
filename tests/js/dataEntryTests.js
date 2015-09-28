@@ -83,7 +83,7 @@ https://github.com/gpii/universal/LICENSE.txt
                 name: "Change Input",
                 sequence: [{
                     func: "gpii.tests.utils.triggerChangeEvent",
-                    args: ["{dataEntry}.dom.input", "{that}.options.testOptions.domChange"]
+                    args: ["{dataEntry}.dom.value", "{that}.options.testOptions.domChange"]
                 }, {
                     listener: "jqUnit.assertEquals",
                     args: ["model.input should have been updated", "{that}.options.testOptions.domChange", "{dataEntry}.model.value"],
