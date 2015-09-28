@@ -28,7 +28,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             }
         },
         components: {
-            dataEntryPanel: {                
+            dataEntryPanel: {
             },
             pieChart: {
                 options: {
@@ -124,8 +124,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         fluid.each(that.templateLoader.resources, function (resource, resourceName) {
             jqUnit.assertValue("The resource text for " + resourceName + " should have been fetched", resource.resourceText);
         });
-        jqUnit.assertEquals("The dataEntryPanel has not been rendered", null, that.dataEntryPanel);
-        jqUnit.assertEquals("The pieChart has not been rendered", null, that.pieChart);
+        jqUnit.assertUndefined("The dataEntryPanel has not been instantiated", that.dataEntryPanel);
+        jqUnit.assertUndefined("The pieChart has not been instantiated", that.pieChart);
     };
 
     floe.tests.chartAuthoringTester.verifyTool = function (that) {
@@ -137,8 +137,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         jqUnit.assertDeepEq("Template has been passed into the dataEntry sub-component of the dataEntryPanel sub-component", dataEntryPanelResources.dataEntry.resourceText, templateLoaderResources.dataEntry.resourceText);
         jqUnit.assertDeepEq("Template has been passed into the pieChart sub-component", pieChartResources.template.resourceText, templateLoaderResources.pieChart.resourceText);
 
-        jqUnit.assertNotEquals("The dataEntryPanel has been rendered", "", that.dataEntryPanel.container.html());
-        jqUnit.assertNotEquals("The pieChart has been rendered", "", that.pieChart.container.html());
+        jqUnit.assertNotUndefined("The dataEntryPanel has been rendered", that.dataEntryPanel.container.html());
+        jqUnit.assertNotUndefined("The pieChart has been rendered", that.pieChart.container.html());
     };
 
     floe.tests.chartAuthoringTester.verifyRelay = function (that) {
