@@ -28,11 +28,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             }
         },
         components: {
-            dataEntryPanel: {
-                container: ".floec-dataEntryPanel"
+            dataEntryPanel: {                
             },
             pieChart: {
-                container: ".floec-pieChart",
                 options: {
                     listeners: {
                         "onPieChartRedrawn.escalate": {

@@ -15,6 +15,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     fluid.defaults("floe.chartAuthoring", {
         gradeNames: ["fluid.viewComponent"],
+        selectors: {
+            dataEntryPanel: ".floec-dataEntryPanel",
+            pieChart: ".floec-pieChart"
+        },
         components: {
             templateLoader: {
                 type: "fluid.prefs.resourceLoader",
@@ -27,7 +31,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             dataEntryPanel: {
                 type: "floe.chartAuthoring.dataEntryPanel",
                 createOnEvent: "onPieChartReady",
-                container: "{dataEntryPanel}.container",
+                container: "{that}.dom.dataEntryPanel",
                 options: {
                     resources: {
                         template: "{templateLoader}.resources.dataEntryPanel",
@@ -52,7 +56,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             pieChart: {
                 type: "floe.chartAuthoring.pieChart",
                 createOnEvent: "onTemplatesLoaded",
-                container: "{pieChart}.container",
+                container: "{that}.dom.pieChart",
                 options: {
                     resources: {
                         template: "{templateLoader}.resources.pieChart"
@@ -93,16 +97,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             source: "{that}.options.templateLoader",
             removeSource: true,
             target: "{that > templateLoader}.options"
-        },
-        {
-            source: "{that}.options.dataEntryPanel.container",
-            removeSource: true,
-            target: "{that > dataEntryPanel}.container"
-        },
-        {
-            source: "{that}.options.pieChart.container",
-            removeSource: true,
-            target: "{that > pieChart}.container"
         }]
     });
 
