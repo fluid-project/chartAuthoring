@@ -115,6 +115,16 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             source: "{that}.options.templateLoader",
             removeSource: true,
             target: "{that > templateLoader}.options"
+        },
+        {
+            source: "{that}.options.pieChart",
+            removeSource: true,
+            target: "{that pieChart}.options"
+        },
+        {
+            source: "{that}.options.dataEntryPanel",
+            removeSource: true,
+            target: "{that dataEntryPanel}.options"
         }]
     });
 

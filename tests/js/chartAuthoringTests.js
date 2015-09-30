@@ -27,25 +27,12 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 templatePrefix: "../../src/html"
             }
         },
-        components: {
-            chartAuthoringInterface: {
-                options: {
-                    components: {
-                        dataEntryPanel: {
-                        },
-                        pieChart: {
-                            options: {
-                                listeners: {
-                                    "onPieChartRedrawn.escalate": {
-                                        listener: "{chartAuthoring}.events.onPieChartRedrawn.fire",
-                                        priority: "last"
-                                    }
-                                }
-                            }
-                        }
-                    }
+        pieChart: {
+            listeners: {
+                "onPieChartRedrawn.escalate": {
+                    listener: "{chartAuthoring}.events.onPieChartRedrawn.fire",
+                    priority: "last"
                 }
-
             }
         },
         events: {
