@@ -28,7 +28,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                     }
                 }
             },
-            chartRenderer: {
+            chartAuthoringTemplate: {
                 type: "floe.chartAuthoring.templateInjection",
                 createOnEvent: "onTemplatesLoaded",
                 container: "{that}.dom.container",
@@ -37,7 +37,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                         template: "{templateLoader}.resources.chartAuthoring"
                     },
                     listeners: {
-                        "onCreate.escalate": "{chartAuthoring}.events.onChartRendererReady.fire"
+                        "onCreate.escalate": "{chartAuthoring}.events.onChartAuthoringTemplateReady.fire"
                     }
                 }
             },
@@ -71,7 +71,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             },
             pieChart: {
                 type: "floe.chartAuthoring.pieChart",
-                createOnEvent: "onChartRendererReady",
+                createOnEvent: "onChartAuthoringTemplateReady",
                 container: "{that}.dom.pieChart",
                 options: {
                     resources: {
@@ -85,7 +85,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         },
         events: {
             onTemplatesLoaded: null,
-            onChartRendererReady: null,
+            onChartAuthoringTemplateReady: null,
             onPanelReady: null,
             onPieChartReady: null,
             onToolReady: {
