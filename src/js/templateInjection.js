@@ -23,8 +23,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 "priority": "first"
             },
             "onCreate.templateInjected": {
-                "listener": "floe.chartAuthoring.templateInjection.templateInjected",
-                "priority": "after:injectTemplate"
+                "listener": "{that}.events.onTemplateInjected.fire"
             }
         },
         // Integrators need to specify the resource text to use as the HTML template
@@ -37,9 +36,4 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             onTemplateInjected: null
         }
     });
-
-    floe.chartAuthoring.templateInjection.templateInjected = function(that) {
-        that.events.onTemplateInjected.fire();
-    };
-
 })(jQuery, fluid);
