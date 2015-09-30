@@ -28,17 +28,24 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             }
         },
         components: {
-            dataEntryPanel: {
-            },
-            pieChart: {
+            chartAuthoringInterface: {
                 options: {
-                    listeners: {
-                        "onPieChartRedrawn.escalate": {
-                            listener: "{chartAuthoring}.events.onPieChartRedrawn.fire",
-                            priority: "last"
+                    components: {
+                        dataEntryPanel: {
+                        },
+                        pieChart: {
+                            options: {
+                                listeners: {
+                                    "onPieChartRedrawn.escalate": {
+                                        listener: "{chartAuthoring}.events.onPieChartRedrawn.fire",
+                                        priority: "last"
+                                    }
+                                }
+                            }
                         }
                     }
                 }
+
             }
         },
         events: {
@@ -109,7 +116,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                     args: ["{floe.tests.chartAuthoring}"],
                     event: "{floe.tests.chartAuthoring}.events.onToolReady"
                 }, {
-                    func: "{floe.tests.chartAuthoring}.dataEntryPanel.applier.change",
+                    func: "{floe.tests.chartAuthoring}.chartAuthoringInterface.dataEntryPanel.applier.change",
                     args: ["dataEntries", floe.tests.chartAuthoring.dataEntries]
                 }, {
                     listener: "floe.tests.chartAuthoringTester.verifyRelay",
@@ -129,20 +136,20 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     };
 
     floe.tests.chartAuthoringTester.verifyTool = function (that) {
-        var dataEntryPanelResources = that.dataEntryPanel.options.resources,
-            pieChartResources = that.pieChart.options.resources,
+        var dataEntryPanelResources = that.chartAuthoringInterface.dataEntryPanel.options.resources,
+            pieChartResources = that.chartAuthoringInterface.pieChart.options.resources,
             templateLoaderResources = that.templateLoader.resources;
 
         jqUnit.assertDeepEq("Template has been passed into the dataEntryPanel sub-component", dataEntryPanelResources.template.resourceText, templateLoaderResources.dataEntryPanel.resourceText);
         jqUnit.assertDeepEq("Template has been passed into the dataEntry sub-component of the dataEntryPanel sub-component", dataEntryPanelResources.dataEntry.resourceText, templateLoaderResources.dataEntry.resourceText);
         jqUnit.assertDeepEq("Template has been passed into the pieChart sub-component", pieChartResources.template.resourceText, templateLoaderResources.pieChart.resourceText);
 
-        jqUnit.assertNotUndefined("The dataEntryPanel has been rendered", that.dataEntryPanel.container.html());
-        jqUnit.assertNotUndefined("The pieChart has been rendered", that.pieChart.container.html());
+        jqUnit.assertNotUndefined("The dataEntryPanel has been rendered", that.chartAuthoringInterface.dataEntryPanel.container.html());
+        jqUnit.assertNotUndefined("The pieChart has been rendered", that.chartAuthoringInterface.pieChart.container.html());
     };
 
     floe.tests.chartAuthoringTester.verifyRelay = function (that) {
-        jqUnit.assertDeepEq("Model is relayed between dataEntryPanel and pieChart", floe.tests.chartAuthoring.dataSet, that.pieChart.model.dataSet);
+        jqUnit.assertDeepEq("Model is relayed between dataEntryPanel and pieChart", floe.tests.chartAuthoring.dataSet, that.chartAuthoringInterface.pieChart.model.dataSet);
     };
 
     $(document).ready(function () {
