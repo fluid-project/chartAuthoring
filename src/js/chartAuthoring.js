@@ -28,6 +28,19 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                     }
                 }
             },
+            chartRenderer: {
+                type: "floe.chartAuthoring.templateInjection",
+                createOnEvent: "onTemplatesLoaded",
+                container: "{that}.dom.container",
+                options: {
+                    resources: {
+                        template: "{templateLoader}.resources.chartAuthoring"
+                    },
+                    listeners: {
+                        "onCreate.escalate": "{chartAuthoring}.events.onChartRendererReady.fire"
+                    }
+                }
+            },
             dataEntryPanel: {
                 type: "floe.chartAuthoring.dataEntryPanel",
                 createOnEvent: "onPieChartReady",
@@ -58,7 +71,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             },
             pieChart: {
                 type: "floe.chartAuthoring.pieChart",
-                createOnEvent: "onTemplatesLoaded",
+                createOnEvent: "onChartRendererReady",
                 container: "{that}.dom.pieChart",
                 options: {
                     resources: {
@@ -66,13 +79,13 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                     },
                     listeners: {
                         "onPieChartReady.escalate": "{chartAuthoring}.events.onPieChartReady.fire"
-
                     }
                 }
             }
         },
         events: {
             onTemplatesLoaded: null,
+            onChartRendererReady: null,
             onPanelReady: null,
             onPieChartReady: null,
             onToolReady: {
@@ -90,6 +103,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 templatePrefix: ""
             },
             resources: {
+                chartAuthoring: "%templatePrefix/chartAuthoringTemplate.html",
                 dataEntryPanel: "%templatePrefix/dataEntryPanelTemplate.html",
                 dataEntry: "%templatePrefix/dataEntryTemplate.html",
                 pieChart: "%templatePrefix/pieChartTemplate.html"

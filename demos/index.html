@@ -25,27 +25,14 @@
     </head>
 
     <body>
-        <div id="floec-chartAuthoring">
-            <div id="floec-chartAuthoring-pieChart"></div>
-            <div id="floec-chartAuthoring-dataEntryPanel"></div>
-        </div>
+        <div id="floec-chartAuthoring"></div>
 
         <script type="text/javascript">
             floe.chartAuthoring("#floec-chartAuthoring", {
-                selectors: {
-                    dataEntryPanel: "#floec-chartAuthoring-pieChart",
-                    pieChart: "#floec-chartAuthoring-dataEntryPanel"
-                },
                 templateLoader: {
                     terms: {
                         templatePrefix: "../src/html"
                     }
-                },
-                dataEntryPanel: {
-                    container: "#floec-chartAuthoring-dataEntryPanel"
-                },
-                pieChart: {
-                    container: "#floec-chartAuthoring-pieChart"
                 }
             });
         </script>
