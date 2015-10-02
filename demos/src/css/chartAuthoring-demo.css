@@ -1,10 +1,11 @@
 .floe-ca-pieChart-pie {
     float: left;
-    width: 400px;
+    width: 30em;
 }
 .floe-ca-pieChart-legend {
     float: left;
-    width: 300px;
+    width: 20em;
+    margin: 2em;
 }
 .floe-ca-pieChart-legend-table {
     border: 1px solid black;

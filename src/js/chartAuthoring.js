@@ -56,9 +56,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                                         type: "fluid.transforms.free",
                                         args: ["{that}.model.dataEntries"],
                                         func: "floe.chartAuthoring.dataEntriesToPieChartData"
-                                    },
-                                    forward: "liveOnly",
-                                    backward: "never"
+                                    }
                                 },
                                 listeners: {
                                     "onCreate.escalate": {
