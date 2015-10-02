@@ -37,7 +37,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                         template: "{templateLoader}.resources.chartAuthoring"
                     },
                     listeners: {
-                        "onCreate.escalate": "{chartAuthoring}.events.onChartAuthoringInterfaceReady.fire"
+                        "onTemplateInjected.escalate": "{chartAuthoring}.events.onChartAuthoringInterfaceReady.fire"
                     },
                     components: {
                         dataEntryPanel: {
