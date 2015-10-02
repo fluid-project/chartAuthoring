@@ -89,7 +89,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             name: "Test the chart authoring component",
             tests: [{
                 name: "Chart Authoring Init",
-                expect: 12,
+                expect: 14,
                 sequence: [{
                     listener: "floe.tests.chartAuthoringTester.verifyInit",
                     args: ["{chartAuthoring}"],
@@ -123,14 +123,18 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     };
 
     floe.tests.chartAuthoringTester.verifyTool = function (that) {
-        var dataEntryPanelResources = that.chartAuthoringInterface.dataEntryPanel.options.resources,
+        console.log(that);
+        var chartAuthoringInterfaceResources = that.chartAuthoringInterface.options.resources,
+            dataEntryPanelResources = that.chartAuthoringInterface.dataEntryPanel.options.resources,
             pieChartResources = that.chartAuthoringInterface.pieChart.options.resources,
             templateLoaderResources = that.templateLoader.resources;
 
+        jqUnit.assertDeepEq("Template has been passed into the chartAuthoringInterface sub-component", chartAuthoringInterfaceResources.template.resourceText, templateLoaderResources.chartAuthoringInterface.resourceText);
         jqUnit.assertDeepEq("Template has been passed into the dataEntryPanel sub-component", dataEntryPanelResources.template.resourceText, templateLoaderResources.dataEntryPanel.resourceText);
         jqUnit.assertDeepEq("Template has been passed into the dataEntry sub-component of the dataEntryPanel sub-component", dataEntryPanelResources.dataEntry.resourceText, templateLoaderResources.dataEntry.resourceText);
         jqUnit.assertDeepEq("Template has been passed into the pieChart sub-component", pieChartResources.template.resourceText, templateLoaderResources.pieChart.resourceText);
 
+        jqUnit.assertNotUndefined("The chartAuthoringInterface has been rendered", that.chartAuthoringInterface.container.html());
         jqUnit.assertNotUndefined("The dataEntryPanel has been rendered", that.chartAuthoringInterface.dataEntryPanel.container.html());
         jqUnit.assertNotUndefined("The pieChart has been rendered", that.chartAuthoringInterface.pieChart.container.html());
     };
