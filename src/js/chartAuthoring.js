@@ -34,7 +34,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 container: "{that}.dom.container",
                 options: {
                     resources: {
-                        template: "{templateLoader}.resources.chartAuthoring"
+                        template: "{templateLoader}.resources.chartAuthoringInterface"
                     },
                     listeners: {
                         "onTemplateInjected.escalate": "{chartAuthoring}.events.onChartAuthoringInterfaceReady.fire"
@@ -103,7 +103,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 templatePrefix: ""
             },
             resources: {
-                chartAuthoring: "%templatePrefix/chartAuthoringInterfaceTemplate.html",
+                chartAuthoringInterface: "%templatePrefix/chartAuthoringInterfaceTemplate.html",
                 dataEntryPanel: "%templatePrefix/dataEntryPanelTemplate.html",
                 dataEntry: "%templatePrefix/dataEntryTemplate.html",
                 pieChart: "%templatePrefix/pieChartTemplate.html"
