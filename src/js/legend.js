@@ -50,7 +50,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             valueCell: ".floec-ca-pieChart-legend-value-cell"
         },
         events: {
-            onLegendCreated: null  // Fire when the legend is created. Ready to register D3 DOM event listeners
+            onLegendCreated: null,  // Fire when the legend is created. Ready to register D3 DOM event listeners,
+            onLegendRedrawn: null // Fire when the legend is redrawn.
         },
         listeners: {
             "onCreate.create": {
@@ -165,6 +166,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         if (sort) {
             that.rows.sort(that.sort);
         }
+
+        that.events.onLegendRedrawn.fire();
     };
 
     floe.chartAuthoring.pieChart.legend.create = function (that) {

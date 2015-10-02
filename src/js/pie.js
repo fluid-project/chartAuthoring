@@ -50,7 +50,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             text: ".floec-ca-pieChart-text"
         },
         events: {
-            onPieCreated: null  // Fire when the pie is created. Ready to register D3 DOM event listeners
+            onPieCreated: null,  // Fire when the pie is created. Ready to register D3 DOM event listeners,
+            onPieRedrawn: null // Fire when the pie is redrawn.
         },
         listeners: {
             "onCreate.create": {
@@ -152,6 +153,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         floe.chartAuthoring.pieChart.pie.updateSlices(that);
 
         floe.chartAuthoring.pieChart.pie.removeSlices(that);
+
+        that.events.onPieRedrawn.fire();
     };
 
     floe.chartAuthoring.pieChart.pie.create = function (that) {

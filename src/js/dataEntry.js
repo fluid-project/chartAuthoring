@@ -27,7 +27,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         model: {
             value: null,
             label: "",
-            perecentage: null,
+            percentage: null,
             total: null
         },
         modelRelay: [{

@@ -1,0 +1,33 @@
+.floec-ca-pieChart-pie {
+    float: left;
+    width: 30em;
+}
+.floec-ca-pieChart-legend {
+    float: left;
+    width: 20em;
+    margin: 2em;
+    min-height: 5em;
+}
+.floe-ca-pieChart-legend-table {
+    border: 1px solid black;
+}
+.floe-ca-pieChart-legend-table thead th {
+    border: 1px solid black;
+    padding: 2px;
+}
+.floe-ca-pieChart-legend-table-row {
+    border: 1px solid black;
+}
+.floe-ca-pieChart-legend-table-row td {
+    border: 1px solid black;
+    padding: 2px;
+}
+
+.floec-dataEntryPanel {
+    clear: both;
+    width:50em;
+}
+
+.floec-dataEntryPanel li {
+    list-style:none;
+}
