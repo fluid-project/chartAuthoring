@@ -123,7 +123,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     };
 
     floe.tests.chartAuthoringTester.verifyTool = function (that) {
-        console.log(that);
         var chartAuthoringInterfaceResources = that.chartAuthoringInterface.options.resources,
             dataEntryPanelResources = that.chartAuthoringInterface.dataEntryPanel.options.resources,
             pieChartResources = that.chartAuthoringInterface.pieChart.options.resources,
