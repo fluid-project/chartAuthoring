@@ -1,11 +1,12 @@
-/*!
+/*
 Copyright 2015 OCAD University
 
-Licensed under the New BSD license. You may not use this file except in
-compliance with this License.
+Licensed under the Educational Community License (ECL), Version 2.0 or the New
+BSD license. You may not use this file except in compliance with one these
+Licenses.
 
-You may obtain a copy of the License at
-https://github.com/floe/universal/LICENSE.txt
+You may obtain a copy of the ECL 2.0 License and BSD License at
+https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.txt
 */
 
 (function ($, fluid) {
@@ -44,15 +45,17 @@ https://github.com/floe/universal/LICENSE.txt
      * @param cssClass - string
      * @return - boolean
      */
+
+     // Validate the given selector to ensure it is in the form "period plus classname". The current
+     // implementation adds the given classname via the d3 "class" directive, so it couldn't handle
+     // selectors in any other forms such as "#foo" or ".foo.bar"
+
     floe.d3ViewComponent.isCssClass = function (cssClass) {
         cssClass = cssClass.trim();
         var pattern = /^\.[_a-zA-Z]+[_a-zA-Z0-9-]*$/;
         return pattern.test(cssClass);
     };
 
-    // Validate the given selector to ensure it is in the form "period plus classname". The current
-    // implementation adds the given classname via the d3 "class" directive, so it couldn't handle
-    // selectors in any other forms such as "#foo" or ".foo.bar"
     floe.d3ViewComponent.extractSelectorName = function (selector) {
         if (!selector) {
             return;

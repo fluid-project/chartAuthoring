@@ -1,11 +1,12 @@
-/*!
+/*
 Copyright 2015 OCAD University
 
-Licensed under the New BSD license. You may not use this file except in
-compliance with this License.
+Licensed under the Educational Community License (ECL), Version 2.0 or the New
+BSD license. You may not use this file except in compliance with one these
+Licenses.
 
-You may obtain a copy of the License at
-https://github.com/floe/universal/LICENSE.txt
+You may obtain a copy of the ECL 2.0 License and BSD License at
+https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.txt
 */
 
 (function ($, fluid) {
@@ -20,6 +21,9 @@ https://github.com/floe/universal/LICENSE.txt
                 "method": "html",
                 "args": ["{that}.options.resources.template.resourceText"],
                 "priority": "first"
+            },
+            "onCreate.templateInjected": {
+                "listener": "{that}.events.onTemplateInjected.fire"
             }
         },
         // Integrators need to specify the resource text to use as the HTML template
@@ -27,7 +31,9 @@ https://github.com/floe/universal/LICENSE.txt
             template: {
                 resourceText: ""
             }
+        },
+        events: {
+            onTemplateInjected: null
         }
     });
-
 })(jQuery, fluid);

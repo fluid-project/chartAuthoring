@@ -1,11 +1,12 @@
-/*!
+/*
 Copyright 2015 OCAD University
 
-Licensed under the New BSD license. You may not use this file except in
-compliance with this License.
+Licensed under the Educational Community License (ECL), Version 2.0 or the New
+BSD license. You may not use this file except in compliance with one these
+Licenses.
 
-You may obtain a copy of the License at
-https://github.com/floe/universal/LICENSE.txt
+You may obtain a copy of the ECL 2.0 License and BSD License at
+https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.txt
 */
 
 (function ($, fluid) {
@@ -26,19 +27,11 @@ https://github.com/floe/universal/LICENSE.txt
                 templatePrefix: "../../src/html"
             }
         },
-        components: {
-            dataEntryPanel: {
-                container: ".floec-dataEntryPanel"
-            },
-            pieChart: {
-                container: ".floec-pieChart",
-                options: {
-                    listeners: {
-                        "onPieChartRedrawn.escalate": {
-                            listener: "{chartAuthoring}.events.onPieChartRedrawn.fire",
-                            priority: "last"
-                        }
-                    }
+        pieChart: {
+            listeners: {
+                "onPieChartRedrawn.escalate": {
+                    listener: "{chartAuthoring}.events.onPieChartRedrawn.fire",
+                    priority: "last"
                 }
             }
         },
@@ -96,7 +89,7 @@ https://github.com/floe/universal/LICENSE.txt
             name: "Test the chart authoring component",
             tests: [{
                 name: "Chart Authoring Init",
-                expect: 11,
+                expect: 14,
                 sequence: [{
                     listener: "floe.tests.chartAuthoringTester.verifyInit",
                     args: ["{chartAuthoring}"],
@@ -110,7 +103,7 @@ https://github.com/floe/universal/LICENSE.txt
                     args: ["{floe.tests.chartAuthoring}"],
                     event: "{floe.tests.chartAuthoring}.events.onToolReady"
                 }, {
-                    func: "{floe.tests.chartAuthoring}.dataEntryPanel.applier.change",
+                    func: "{floe.tests.chartAuthoring}.chartAuthoringInterface.dataEntryPanel.applier.change",
                     args: ["dataEntries", floe.tests.chartAuthoring.dataEntries]
                 }, {
                     listener: "floe.tests.chartAuthoringTester.verifyRelay",
@@ -125,28 +118,29 @@ https://github.com/floe/universal/LICENSE.txt
         fluid.each(that.templateLoader.resources, function (resource, resourceName) {
             jqUnit.assertValue("The resource text for " + resourceName + " should have been fetched", resource.resourceText);
         });
-        jqUnit.assertEquals("The dataEntryPanel has not been rendered", null, that.dataEntryPanel);
-        jqUnit.assertEquals("The pieChart has not been rendered", null, that.pieChart);
+        jqUnit.assertUndefined("The dataEntryPanel has not been instantiated", that.dataEntryPanel);
+        jqUnit.assertUndefined("The pieChart has not been instantiated", that.pieChart);
     };
 
     floe.tests.chartAuthoringTester.verifyTool = function (that) {
-        // TODO: rewrite this test to handle the new template situation
 
-        var dataEntryPanelResources = that.dataEntryPanel.options.resources,
-            pieChartResources = that.pieChart.options.resources,
+        var chartAuthoringInterfaceResources = that.chartAuthoringInterface.options.resources,
+            dataEntryPanelResources = that.chartAuthoringInterface.dataEntryPanel.options.resources,
+            pieChartResources = that.chartAuthoringInterface.pieChart.options.resources,
             templateLoaderResources = that.templateLoader.resources;
 
+        jqUnit.assertDeepEq("Template has been passed into the chartAuthoringInterface sub-component", chartAuthoringInterfaceResources.template.resourceText, templateLoaderResources.chartAuthoringInterface.resourceText);
         jqUnit.assertDeepEq("Template has been passed into the dataEntryPanel sub-component", dataEntryPanelResources.template.resourceText, templateLoaderResources.dataEntryPanel.resourceText);
         jqUnit.assertDeepEq("Template has been passed into the dataEntry sub-component of the dataEntryPanel sub-component", dataEntryPanelResources.dataEntry.resourceText, templateLoaderResources.dataEntry.resourceText);
         jqUnit.assertDeepEq("Template has been passed into the pieChart sub-component", pieChartResources.template.resourceText, templateLoaderResources.pieChart.resourceText);
 
-        jqUnit.assertNotEquals("The dataEntryPanel has been rendered", "", that.dataEntryPanel.container.html());
-        jqUnit.assertNotEquals("The pieChart has been rendered", "", that.pieChart.container.html());
+        jqUnit.assertNotUndefined("The chartAuthoringInterface has been rendered", that.chartAuthoringInterface.container.html());
+        jqUnit.assertNotUndefined("The dataEntryPanel has been rendered", that.chartAuthoringInterface.dataEntryPanel.container.html());
+        jqUnit.assertNotUndefined("The pieChart has been rendered", that.chartAuthoringInterface.pieChart.container.html());
     };
 
     floe.tests.chartAuthoringTester.verifyRelay = function (that) {
-        // 1) Test that the models are kept in sync by the relay
-        jqUnit.assertDeepEq("Model is relayed between dataEntryPanel and pieChart", floe.tests.chartAuthoring.dataSet, that.pieChart.model.dataSet);
+        jqUnit.assertDeepEq("Model is relayed between dataEntryPanel and pieChart", floe.tests.chartAuthoring.dataSet, that.chartAuthoringInterface.pieChart.model.dataSet);
     };
 
     $(document).ready(function () {

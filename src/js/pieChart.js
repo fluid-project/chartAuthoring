@@ -1,11 +1,12 @@
-/*!
+/*
 Copyright 2015 OCAD University
 
-Licensed under the New BSD license. You may not use this file except in
-compliance with this License.
+Licensed under the Educational Community License (ECL), Version 2.0 or the New
+BSD license. You may not use this file except in compliance with one these
+Licenses.
 
-You may obtain a copy of the License at
-https://github.com/floe/universal/LICENSE.txt
+You may obtain a copy of the ECL 2.0 License and BSD License at
+https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.txt
 */
 
 (function ($, fluid) {
@@ -26,7 +27,7 @@ https://github.com/floe/universal/LICENSE.txt
         components: {
             pie: {
                 type: "floe.chartAuthoring.pieChart.pie",
-                createOnEvent: "onParentReady",
+                createOnEvent: "onTemplateInjected",
                 container: "{that}.dom.pie",
                 options: {
                 pieOptions: "{pieChart}.drawingOptions",
@@ -45,7 +46,7 @@ https://github.com/floe/universal/LICENSE.txt
             },
             legend: {
                 type: "floe.chartAuthoring.pieChart.legend",
-                createOnEvent: "onParentReady",
+                createOnEvent: "onTemplateInjected",
                 container: "{that}.dom.legend",
                 options: {
                     legendOptions: "{pieChart}.drawingOptions",
@@ -82,9 +83,6 @@ https://github.com/floe/universal/LICENSE.txt
             pie: ".floec-ca-pieChart-pie",
             legend: ".floec-ca-pieChart-legend"
         },
-        listeners: {
-            "onCreate.renderTemplate": "floe.chartAuthoring.pieChart.renderTemplate"
-        },
         events: {
             onPieCreated: null,
             onLegendCreated: null,
@@ -102,19 +100,13 @@ https://github.com/floe/universal/LICENSE.txt
                     onPieRedrawn: "onPieRedrawn",
                     onLegendRedrawn: "onLegendRedrawn"
                 }
-            },
-            onParentReady: null
+            }
         },
         // Supplied by implementer
         resources: {
             template: {}
         }
     });
-
-    floe.chartAuthoring.pieChart.renderTemplate = function (that) {
-        that.events.onParentReady.fire();
-    };
-
     floe.chartAuthoring.pieChart.consolidateDrawingOptions = function (userOptions) {
         var consolidatedOptions = fluid.copy(userOptions);
         fluid.set(consolidatedOptions, "colors", floe.d3.getColorScale(userOptions.colors));

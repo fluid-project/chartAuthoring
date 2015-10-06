@@ -1,11 +1,12 @@
-/*!
+/*
 Copyright 2015 OCAD University
 
-Licensed under the New BSD license. You may not use this file except in
-compliance with this License.
+Licensed under the Educational Community License (ECL), Version 2.0 or the New
+BSD license. You may not use this file except in compliance with one these
+Licenses.
 
-You may obtain a copy of the License at
-https://github.com/floe/universal/LICENSE.txt
+You may obtain a copy of the ECL 2.0 License and BSD License at
+https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.txt
 */
 
 (function ($, fluid) {
@@ -14,6 +15,10 @@ https://github.com/floe/universal/LICENSE.txt
 
     fluid.defaults("floe.chartAuthoring", {
         gradeNames: ["fluid.viewComponent"],
+        selectors: {
+            dataEntryPanel: ".floec-dataEntryPanel",
+            pieChart: ".floec-pieChart"
+        },
         components: {
             templateLoader: {
                 type: "fluid.prefs.resourceLoader",
@@ -23,42 +28,56 @@ https://github.com/floe/universal/LICENSE.txt
                     }
                 }
             },
-            dataEntryPanel: {
-                type: "floe.chartAuthoring.dataEntryPanel",
-                createOnEvent: "onPieChartReady",
-                container: "{dataEntryPanel}.container",
-                options: {
-                    resources: {
-                        template: "{templateLoader}.resources.dataEntryPanel",
-                        dataEntry: "{templateLoader}.resources.dataEntry"
-                    },
-                    modelRelay: {
-                        source: "{that}.model.dataEntries",
-                        target: "{floe.chartAuthoring.pieChart}.model.dataSet",
-                        singleTransform: {
-                            type: "fluid.transforms.free",
-                            args: ["{that}.model.dataEntries"],
-                            func: "floe.chartAuthoring.dataEntriesToPieChartData"
-                        },
-                        forward: "liveOnly",
-                        backward: "never"
-                    },
-                    events: {
-                        onCreate: "{chartAuthoring}.events.onPanelReady"
-                    }
-                }
-            },
-            pieChart: {
-                type: "floe.chartAuthoring.pieChart",
+            chartAuthoringInterface: {
+                type: "floe.chartAuthoring.templateInjection",
                 createOnEvent: "onTemplatesLoaded",
-                container: "{pieChart}.container",
+                container: "{that}.dom.container",
                 options: {
                     resources: {
-                        template: "{templateLoader}.resources.pieChart"
+                        template: "{templateLoader}.resources.chartAuthoringInterface"
                     },
                     listeners: {
-                        "onPieChartReady.escalate": {
-                            funcName: "{chartAuthoring}.events.onPieChartReady.fire"
+                        "onTemplateInjected.escalate": "{chartAuthoring}.events.onChartAuthoringInterfaceReady.fire"
+                    },
+                    components: {
+                        dataEntryPanel: {
+                            type: "floe.chartAuthoring.dataEntryPanel",
+                            createOnEvent: "{chartAuthoring}.events.onPieChartReady",
+                            container: "{chartAuthoring}.dom.dataEntryPanel",
+                            options: {
+                                resources: {
+                                    template: "{templateLoader}.resources.dataEntryPanel",
+                                    dataEntry: "{templateLoader}.resources.dataEntry"
+                                },
+                                modelRelay: {
+                                    source: "{that}.model.dataEntries",
+                                    target: "{floe.chartAuthoring.pieChart}.model.dataSet",
+                                    singleTransform: {
+                                        type: "fluid.transforms.free",
+                                        args: ["{that}.model.dataEntries"],
+                                        func: "floe.chartAuthoring.dataEntriesToPieChartData"
+                                    }
+                                },
+                                listeners: {
+                                    "onCreate.escalate": {
+                                        funcName: "{chartAuthoring}.events.onPanelReady.fire",
+                                        priority: "last"
+                                    }
+                                }
+                            }
+                        },
+                        pieChart: {
+                            type: "floe.chartAuthoring.pieChart",
+                            createOnEvent: "{chartAuthoring}.events.onChartAuthoringInterfaceReady",
+                            container: "{chartAuthoring}.dom.pieChart",
+                            options: {
+                                resources: {
+                                    template: "{templateLoader}.resources.pieChart"
+                                },
+                                listeners: {
+                                    "onPieChartReady.escalate": "{chartAuthoring}.events.onPieChartReady.fire"
+                                }
+                            }
                         }
                     }
                 }
@@ -66,6 +85,7 @@ https://github.com/floe/universal/LICENSE.txt
         },
         events: {
             onTemplatesLoaded: null,
+            onChartAuthoringInterfaceReady: null,
             onPanelReady: null,
             onPieChartReady: null,
             onToolReady: {
@@ -83,6 +103,7 @@ https://github.com/floe/universal/LICENSE.txt
                 templatePrefix: ""
             },
             resources: {
+                chartAuthoringInterface: "%templatePrefix/chartAuthoringInterfaceTemplate.html",
                 dataEntryPanel: "%templatePrefix/dataEntryPanelTemplate.html",
                 dataEntry: "%templatePrefix/dataEntryTemplate.html",
                 pieChart: "%templatePrefix/pieChartTemplate.html"
@@ -94,14 +115,14 @@ https://github.com/floe/universal/LICENSE.txt
             target: "{that > templateLoader}.options"
         },
         {
-            source: "{that}.options.dataEntryPanel.container",
+            source: "{that}.options.pieChart",
             removeSource: true,
-            target: "{that > dataEntryPanel}.container"
+            target: "{that pieChart}.options"
         },
         {
-            source: "{that}.options.pieChart.container",
+            source: "{that}.options.dataEntryPanel",
             removeSource: true,
-            target: "{that > pieChart}.container"
+            target: "{that dataEntryPanel}.options"
         }]
     });
 
@@ -122,5 +143,5 @@ https://github.com/floe/universal/LICENSE.txt
             }
         });
         return pieChartData;
-    };        
+    };
 })(jQuery, fluid);
