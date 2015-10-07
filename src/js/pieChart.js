@@ -30,7 +30,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 createOnEvent: "onTemplateInjected",
                 container: "{that}.dom.pie",
                 options: {
-                pieOptions: "{pieChart}.drawingOptions",
+                    pieOptions: "{pieChart}.drawingOptions",
                     strings: {
                         pieTitle: "{pieChart}.options.pieChartOptions.pieTitle",
                         pieDescription: "{pieChart}.options.pieChartOptions.pieDescription"
