@@ -1,4 +1,4 @@
-/*! infusion - v2.0.0-SNAPSHOT Thursday, August 20th, 2015, 9:57:16 AM*/
+/*! infusion - v2.0.0-dev Wednesday, October 7th, 2015, 10:00:39 AM*/
 /*!
  * jQuery JavaScript Library v1.11.0
  * http://jquery.com/
@@ -11874,13 +11874,13 @@ https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
 
 /* global console */
 
-var fluid_2_0 = fluid_2_0 || {};
-var fluid = fluid || fluid_2_0;
+var fluid_2_0_0_beta_1 = fluid_2_0_0_beta_1 || {};
+var fluid = fluid || fluid_2_0_0_beta_1;
 
 (function ($, fluid) {
     "use strict";
 
-    fluid.version = "Infusion 2.0-SNAPSHOT";
+    fluid.version = "Infusion 2.0.0-dev";
 
     // Export this for use in environments like node.js, where it is useful for
     // configuring stack trace behaviour
@@ -11943,7 +11943,7 @@ var fluid = fluid || fluid_2_0;
         renderer = renderer || fluid.renderOneActivity;
         return fluid.transform(activityStack, renderer);
     };
-    
+
     // Definitions for ThreadLocals, the static and dynamic environment - lifted here from
     // FluidIoC.js so that we can issue calls to fluid.describeActivity for debugging purposes
     // in the core framework
@@ -12022,13 +12022,13 @@ var fluid = fluid || fluid_2_0;
         this.stack = new Error().stack;
     };
     fluid.FluidError.prototype = new Error();
-    
+
     // The framework's built-in "log" failure handler - this logs the supplied message as well as any framework activity in progress via fluid.log
     fluid.logFailure = function (args, activity) {
         fluid.log.apply(null, [fluid.logLevel.FAIL, "ASSERTION FAILED: "].concat(args));
         fluid.logActivity(activity);
     };
-    
+
     fluid.renderLoggingArg = function (arg) {
         return fluid.isPrimitive(arg) || !fluid.isPlainObject(arg) ? arg : JSON.stringify(arg);
     };
@@ -12181,7 +12181,7 @@ var fluid = fluid || fluid_2_0;
         } // FLUID-5226: This inventive strategy taken from jQuery detects whether the object's prototype is directly Object.prototype by virtue of having an "isPrototypeOf" direct member
         return !totest.constructor || !totest.constructor.prototype || Object.prototype.hasOwnProperty.call(totest.constructor.prototype, "isPrototypeOf");
     };
-    
+
     /** Returns <code>primitive</code>, <code>array</code> or <code>object</code> depending on whether the supplied object has
      * one of those types, by use of the <code>fluid.isPrimitive</code>, <code>fluid.isPlainObject</code> and <code>fluid.isArrayable</code> utilities
      */
@@ -12212,7 +12212,7 @@ var fluid = fluid || fluid_2_0;
     };
 
     /** A function which raises a failure if executed */
-    
+
     fluid.notImplemented = function () {
         fluid.fail("This operation is not implemented");
     };
@@ -12226,7 +12226,7 @@ var fluid = fluid || fluid_2_0;
     fluid.isUncopyable = function (totest) {
         return fluid.isPrimitive(totest) || fluid.isDOMish(totest) || !fluid.isPlainObject(totest);
     };
-    
+
     fluid.copyRecurse = function (tocopy, segs) {
         if (segs.length > fluid.strategyRecursionBailout) {
             fluid.fail("Runaway recursion encountered in fluid.copy - reached path depth of " + fluid.strategyRecursionBailout + " via path of " + segs.join(".") +
@@ -12535,14 +12535,14 @@ var fluid = fluid || fluid_2_0;
         });
         return togo;
     };
-    
+
     /** Applies a stable sorting algorithm to the supplied array and comparator (note that Array.sort in JavaScript is not specified
      * to be stable). The algorithm used will be an insertion sort, which whilst quadratic in time, will perform well
      * on small array sizes.
      * @param array {Array} The array to be sorted. This input array will be modified in place.
      * @param func {Function} A comparator returning >0, 0, or <0 on pairs of elements representing their sort order (same contract as Array.sort comparator)
      */
-    
+
     fluid.stableSort = function (array, func) {
         for (var i = 0; i < array.length; i++) {
             var k = array[i];
@@ -12552,11 +12552,11 @@ var fluid = fluid || fluid_2_0;
             array[j] = k;
         }
     };
-    
+
     /** Converts a hash into an object by hoisting out the object's keys into an array element via the supplied String "key", and then transforming via an optional further function, which receives the signature
      * (newElement, oldElement, key) where newElement is the freshly cloned element, oldElement is the original hash's element, and key is the key of the element.
      * If the function is not supplied, the old element is simply deep-cloned onto the new element (same effect
-     * as transform fluid.transforms.objectToArray) 
+     * as transform fluid.transforms.objectToArray)
      */
     fluid.hashToArray = function (hash, keyName, func) {
         var togo = [];
@@ -12573,7 +12573,7 @@ var fluid = fluid || fluid_2_0;
         return togo;
     };
 
-    /** Converts an array consisting of a mixture of arrays and non-arrays into the concatenation of any inner arrays 
+    /** Converts an array consisting of a mixture of arrays and non-arrays into the concatenation of any inner arrays
      * with the non-array elements
      */
     fluid.flatten = function (array) {
@@ -12630,14 +12630,14 @@ var fluid = fluid || fluid_2_0;
       * use internal to the framework **/
 
     fluid.marker = function () {};
-    
+
     fluid.makeMarker = function (value, extra) {
         var togo = Object.create(fluid.marker.prototype);
         togo.value = value;
         $.extend(togo, extra);
         return Object.freeze(togo);
     };
-    
+
     /** A special "marker object" representing that a distinguished
      * (probably context-dependent) value should be substituted.
      */
@@ -12662,7 +12662,7 @@ var fluid = fluid || fluid_2_0;
         }
         return totest.value === type.value;
     };
-    
+
     fluid.logLevelsSpec = {
         "FATAL":      0,
         "FAIL":       5,
@@ -12679,7 +12679,7 @@ var fluid = fluid || fluid_2_0;
         return fluid.makeMarker(key, {priority: value});
     });
     var logLevelStack = [fluid.logLevel.IMPORTANT]; // The stack of active logging levels, with the current level at index 0
-    
+
 
     // Model functions
     fluid.model = {}; // cannot call registerNamespace yet since it depends on fluid.model
@@ -12823,7 +12823,7 @@ var fluid = fluid || fluid_2_0;
         }
         return fluid.model.accessSimple(root, EL, fluid.NO_VALUE, environment, initSegs, false);
     };
-    
+
     /** Even more optimised version which assumes segs are parsed and no configuration **/
     fluid.getImmediate = function (root, segs, i) {
         var limit = (i === undefined ? segs.length: i + 1);
@@ -12945,9 +12945,9 @@ var fluid = fluid || fluid_2_0;
     fluid.allocateGuid = function () {
         return fluid_prefix + (fluid_guid++);
     };
-    
+
     // Fluid priority system for encoding relative positions of, e.g. listeners, transforms, options, in lists
-    
+
     fluid.extremePriority = 4e9; // around 2^32 - allows headroom of 21 fractional bits for sub-priorities
     fluid.priorityTypes = {
         first: -1,
@@ -12963,24 +12963,24 @@ var fluid = fluid || fluid_2_0;
         testing: 10,
         authoring: 20
     };
-    
-    // unsupported, NON-API function    
+
+    // unsupported, NON-API function
     fluid.parsePriorityConstraint = function (constraint, fixedOnly, site) {
         var segs = constraint.split(":");
         var type = segs[0];
         var lookup = fluid.priorityTypes[type];
         if (lookup === undefined) {
-            fluid.fail("Invalid priority constraint type in constraint " + constraint + ": the only supported values are " + fluid.keys(fluid.priorityType).join(", "));
+            fluid.fail("Invalid constraint type in priority field " + constraint + ": the only supported values are " + fluid.keys(fluid.priorityTypes).join(", ") + " or numeric");
         }
         if (fixedOnly && lookup === 0) {
-            fluid.fail("Constraint-based priority in constraint " + constraint + " is not supported in a " + site + " record - you must use either a numeric value or first, last");
+            fluid.fail("Constraint type in priority field " + constraint + " is not supported in a " + site + " record - you must use either a numeric value or first, last");
         }
         return {
             type: segs[0],
             target: segs[1]
         };
     };
-    
+
     // unsupported, NON-API function
     fluid.parsePriority = function (priority, count, fixedOnly, site) {
         priority = priority || 0;
@@ -13007,10 +13007,10 @@ var fluid = fluid || fluid_2_0;
         if (togo.fixed !== null) {
             togo.fixed += togo.count / 1024; // use some fractional bits to encode count bias
         }
-        
+
         return togo;
     };
-    
+
     fluid.renderPriority = function (parsed) {
         return parsed.constraint ? (parsed.constraint.target ? parsed.constraint.type + ":" + parsed.constraint.target : parsed.constraint.type ) : Math.floor(parsed.fixed);
     };
@@ -13024,7 +13024,7 @@ var fluid = fluid || fluid_2_0;
             return (recA.priority.fixed === null) - (recB.priority.fixed === null);
         }
     };
-    
+
     fluid.honourConstraint = function (array, firstConstraint, c) {
         var constraint = array[c].priority.constraint;
         var matchIndex = fluid.find(array, function (element, index) {
@@ -13047,14 +13047,14 @@ var fluid = fluid || fluid_2_0;
     };
 
     // unsupported, NON-API function
-    // Priorities accepted from users have higher numbers representing high priority (sort first) - 
+    // Priorities accepted from users have higher numbers representing high priority (sort first) -
     fluid.sortByPriority = function (array) {
         fluid.stableSort(array, fluid.compareByPriority);
 
         var firstConstraint = fluid.find(array, function (element, index) {
             return element.priority.constraint && fluid.priorityTypes[element.priority.constraint.type] === 0 ? index : undefined;
         }, array.length);
-        
+
         while (true) {
             if (firstConstraint === array.length) {
                 return array;
@@ -13157,7 +13157,7 @@ var fluid = fluid || fluid_2_0;
             that.listeners = {};
             that.byId = {};
             that.sortedListeners = [];
-            that.addListener = function (listener, namespace, priority, predicate, softNamespace) {
+            that.addListener = function (listener, namespace, priority, softNamespace, listenerId) {
                 if (that.destroyed) {
                     fluid.fail("Cannot add listener to destroyed event firer " + that.name);
                 }
@@ -13167,12 +13167,14 @@ var fluid = fluid || fluid_2_0;
                 if (typeof(listener) === "string") {
                     listener = {globalName: listener};
                 }
-                var id = fluid.event.identifyListener(listener);
+                var id = listenerId || fluid.event.identifyListener(listener);
                 namespace = namespace || id;
-                var record = {listener: listener, predicate: predicate,
+                var record = {listener: listener,
                     namespace: namespace,
                     softNamespace: softNamespace,
-                    priority: fluid.parsePriority(priority, that.sortedListeners.length, false, "listeners")};
+                    listenerId: listenerId,
+                    priority: fluid.parsePriority(priority, that.sortedListeners.length, false, "listeners")
+                };
                 that.byId[id] = record;
 
                 var thisListeners = (that.listeners[namespace] = fluid.makeArray(that.listeners[namespace]));
@@ -13200,8 +13202,9 @@ var fluid = fluid || fluid_2_0;
                 if (typeof (listener) === "string") {
                     namespace = listener;
                     record = that.listeners[namespace];
-                    if (!record) {
-                        return;
+                    if (!record) { // it was an id and not a namespace - take the namespace from its record later
+                        id = namespace;
+                        namespace = null;
                     }
                 }
                 else if (typeof(listener) === "function") {
@@ -13215,18 +13218,17 @@ var fluid = fluid || fluid_2_0;
                 namespace = namespace || (rec && rec.namespace) || id;
                 delete that.byId[id];
                 record = that.listeners[namespace];
-                if (!record) {
-                    return;
-                }
-                if (softNamespace) {
-                    fluid.remove_if(record, function (thisLis) {
-                        return thisLis.listener.$$fluid_guid === id;
-                    });
-                } else {
-                    record.shift();
-                }
-                if (record.length === 0) {
-                    delete that.listeners[namespace];
+                if (record) {
+                    if (softNamespace) {
+                        fluid.remove_if(record, function (thisLis) {
+                            return thisLis.listener.$$fluid_guid === id || thisLis.listenerId === id;
+                        });
+                    } else {
+                        record.shift();
+                    }
+                    if (record.length === 0) {
+                        delete that.listeners[namespace];
+                    }
                 }
                 that.sortedListeners = fluid.event.sortListeners(that.listeners);
             },
@@ -13238,12 +13240,8 @@ var fluid = fluid || fluid_2_0;
                     var lisrec = listeners[i];
                     lisrec.listener = fluid.event.resolveListener(lisrec.listener);
                     var listener = lisrec.listener;
-    
-                    if (lisrec.predicate && !lisrec.predicate(listener, arguments)) {
-                        continue;
-                    }
-                    var value;
                     var ret = listener.apply(null, arguments);
+                    var value;
                     if (options.preventable && ret === false || that.destroyed) {
                         value = false;
                     }
@@ -13266,7 +13264,7 @@ var fluid = fluid || fluid_2_0;
         } else if (typeof (value) === "function" || typeof (value) === "string") {
             wrapper(firer).addListener(value, namespace);
         } else if (value && typeof (value) === "object") {
-            wrapper(firer).addListener(value.listener, namespace || value.namespace, value.priority, value.predicate, value.softNamespace);
+            wrapper(firer).addListener(value.listener, namespace || value.namespace, value.priority, value.softNamespace, value.listenerId);
         }
     };
 
@@ -13353,7 +13351,7 @@ var fluid = fluid || fluid_2_0;
             return target;
         };
     };
-    
+
     fluid.validateListenersImplemented = function (that) {
         var errors = [];
         fluid.each(that.events, function (event, name) {
@@ -13376,14 +13374,14 @@ var fluid = fluid || fluid_2_0;
     fluid.arrayConcatPolicy = function (target, source) {
         return fluid.makeArray(target).concat(fluid.makeArray(source));
     };
-    
+
     /*** FLUID ERROR SYSTEM ***/
-    
+
     fluid.failureEvent = fluid.makeEventFirer({name: "failure event"});
-    
+
     fluid.failureEvent.addListener(fluid.builtinFail, "fail");
     fluid.failureEvent.addListener(fluid.logFailure, "log", "before:fail");
-    
+
     /**
      * Configure the behaviour of fluid.fail by pushing or popping a disposition record onto a stack.
      * @param {Number|Function} condition
@@ -13403,13 +13401,13 @@ var fluid = fluid || fluid_2_0;
     };
 
     /*** DEFAULTS AND OPTIONS MERGING SYSTEM ***/
-    
+
     // A function to tag the types of all Fluid components
     fluid.componentConstructor = function () {};
 
     /** Create a "type tag" component with no state but simply a type name and id. The most
      *  minimal form of Fluid component */
-    // No longer a publically supported function - we don't abolish this because it is too annoying to prevent 
+    // No longer a publically supported function - we don't abolish this because it is too annoying to prevent
     // circularity during the bootup of the IoC system if we try to construct full components before it is complete
     // unsupported, non-API function
     fluid.typeTag = function (name) {
@@ -13432,7 +13430,8 @@ var fluid = fluid || fluid_2_0;
         else {
             gradeNames = fluid.makeArray(gradeNames);
         }
-        fluid.each(gradeNames, function (gradeName) {
+        for (var i = gradeNames.length - 1; i >= 0; -- i) {
+            var gradeName = gradeNames[i];
             if (gradeName && !gs.gradeHash[gradeName]) {
                 var isDynamic = gradeName.charAt(0) === "{";
                 var options = (isDynamic ? null : (raw ? fluid.rawDefaults(gradeName) : fluid.getGradedDefaults(gradeName))) || {};
@@ -13442,8 +13441,8 @@ var fluid = fluid || fluid_2_0;
                 gs.gradeChain.push(gradeName);
                 gs.optionsChain.push(options);
                 var oGradeNames = fluid.makeArray(options.gradeNames);
-                for (var i = 0; i < oGradeNames.length; ++ i) {
-                    var oGradeName = oGradeNames[i];
+                for (var j = oGradeNames.length - 1; j >= 0; -- j) { // from stronger to weaker grades
+                    var oGradeName = oGradeNames[j];
                     if (raw) {
                         resolveGradesImpl(gs, oGradeName);
                     } else {
@@ -13454,7 +13453,7 @@ var fluid = fluid || fluid_2_0;
                     }
                 }
             }
-        });
+        }
         return gs;
     };
 
@@ -13466,8 +13465,9 @@ var fluid = fluid || fluid_2_0;
             gradeHash: {},
             optionsChain: []
         };
-        // stronger grades appear to the left in defaults - dynamic grades are stronger still - FLUID-5085
-        return resolveGradesImpl(gradeStruct, (fluid.makeArray(gradeNames).reverse() || []).concat([defaultName]), true);
+        // stronger grades appear to the right in defaults - dynamic grades are stronger still - FLUID-5085
+        // we supply these in reverse order to resolveGradesImpl with weak grades at the right
+        return resolveGradesImpl(gradeStruct, [defaultName].concat(fluid.makeArray(gradeNames)), true);
     };
 
     var mergedDefaultsCache = {};
@@ -13493,7 +13493,7 @@ var fluid = fluid || fluid_2_0;
         }
         mergeArgs = [mergePolicy, {}].concat(mergeArgs);
         var mergedDefaults = fluid.merge.apply(null, mergeArgs);
-        mergedDefaults.gradeNames = gradeStruct.gradeChain;
+        mergedDefaults.gradeNames = gradeStruct.gradeChain.reverse();
         return {defaults: mergedDefaults, lastTick: gradeStruct && gradeStruct.lastTick};
     };
 
@@ -13522,8 +13522,8 @@ var fluid = fluid || fluid_2_0;
         }
         return mergedDefaults.defaults;
     };
-    
-    // unsupported, NON-API function    
+
+    // unsupported, NON-API function
     fluid.upgradePrimitiveFunc = function (rec, key) {
         if (rec && fluid.isPrimitive(rec)) {
             var togo = {};
@@ -13664,8 +13664,10 @@ var fluid = fluid || fluid_2_0;
     };
 
     // Cheapskate implementation which avoids dependency on DataBinding.js
+    // TODO: This is apparently still used by the core merging algorithm, for reasons we no longer understand, even though
+    // it has long been disused by DataBinding itself
     fluid.model.mergeModel = function (target, source) {
-        if (!fluid.isPrimitive(target)) {
+        if (fluid.isPlainObject(target)) {
             var copySource = fluid.copy(source);
             $.extend(true, source, target);
             $.extend(true, source, copySource);
@@ -13831,7 +13833,7 @@ var fluid = fluid || fluid_2_0;
             }
             else {
                 if (target !== fluid.inEvaluationMarker) { // TODO: blatant "coding to the test" - this enables the simplest "re-trunking" in
-                    // FluidIoCTests to function. In practice, we need to throw away this implementation entirely in favour of the 
+                    // FluidIoCTests to function. In practice, we need to throw away this implementation entirely in favour of the
                     // "iterative deepening" model coming with FLUID-4925
                     target[name] = fluid.inEvaluationMarker;
                 }
@@ -14041,7 +14043,7 @@ var fluid = fluid || fluid_2_0;
             fluid.model.applyChangeRequest(target, {type: "DELETE", segs: segs});
         }
     };
-    
+
     /**
      * Merges the component's declared defaults, as obtained from fluid.defaults(),
      * with the user's specified overrides.
@@ -14133,13 +14135,13 @@ var fluid = fluid || fluid_2_0;
         fluid.deliverOptionsStrategy(that, options, mergeOptions); // do this early to broadcast and receive "distributeOptions"
 
         fluid.computeComponentAccessor(that, userOptions && userOptions.localRecord);
-        
+
         var transformOptions = fluid.driveStrategy(options, "transformOptions", mergeOptions.strategy);
         if (transformOptions) {
             fluid.transformOptionsBlocks(mergeBlocks, transformOptions, ["user", "subcomponentRecord"]);
             updateBlocks(); // because the possibly simple blocks may have changed target
         }
-        
+
         if (!baseMergeOptions.target.mergePolicy) {
             computeMergePolicy();
         }
@@ -14175,15 +14177,15 @@ var fluid = fluid || fluid_2_0;
         });
         return fluid.invokeGlobalFunction(name, args);
     };
-    
+
     fluid.noNamespaceDistributionPrefix = "no-namespace-distribution-";
-    
+
     fluid.mergeOneDistribution = function (target, source, key) {
         var namespace = source.namespace || key || fluid.noNamespaceDistributionPrefix + fluid.allocateGuid();
         source.namespace = namespace;
         target[namespace] = source;
     };
-    
+
     fluid.distributeOptionsPolicy = function (target, source) {
         target = target || {};
         if (fluid.isArrayable(source)) {
@@ -14199,10 +14201,10 @@ var fluid = fluid || fluid_2_0;
         }
         return target;
     };
-    
+
     fluid.mergingArray = function () {};
     fluid.mergingArray.prototype = [];
-    
+
     // Defer all evaluation of all nested members to resolve FLUID-5668
     fluid.membersMergePolicy = function (target, source) {
         target = target || {};
@@ -14218,9 +14220,9 @@ var fluid = fluid || fluid_2_0;
         });
         return target;
     };
-    
+
     fluid.invokerStrategies = fluid.arrayToHash(["func", "funcName", "listener", "this", "method"]);
-    
+
     // Resolve FLUID-5741, FLUID-5184 by ensuring that we avoid mixing incompatible invoker strategies
     fluid.invokersMergePolicy = function (target, source) {
         target = target || {};
@@ -14274,7 +14276,7 @@ var fluid = fluid || fluid_2_0;
             afterDestroy: null
         }
     });
-    
+
     fluid.defaults("fluid.emptySubcomponent", {
         gradeNames: ["fluid.component"]
     });
@@ -14331,7 +14333,7 @@ var fluid = fluid || fluid_2_0;
 
         fluid.instantiateFirers(that, options);
         fluid.mergeListeners(that, that.events, options.listeners);
-        
+
         return that;
     };
 
@@ -14440,7 +14442,7 @@ var fluid = fluid || fluid_2_0;
     // unsupported, non-API function
     fluid.parseSelector = function (selstring, strategy) {
         var togo = [];
-        selstring = $.trim(selstring);
+        selstring = selstring.trim();
         //ws-(ss*)[ws/>]
         var regexp = strategy.regexp;
         regexp.lastIndex = 0;
@@ -14523,7 +14525,7 @@ var fluid = fluid || fluid_2_0;
         return template;
     };
 
-})(jQuery, fluid_2_0);
+})(jQuery, fluid_2_0_0_beta_1);
 ;/*!
  Copyright unscriptable.com / John Hann 2011
  Copyright Lucendo Development Ltd. 2014
@@ -14531,7 +14533,7 @@ var fluid = fluid || fluid_2_0;
  License MIT
 */
 
-var fluid_2_0 = fluid_2_0 || {};
+var fluid_2_0_0_beta_1 = fluid_2_0_0_beta_1 || {};
 
 (function ($, fluid) {
     "use strict";
@@ -14783,7 +14785,7 @@ var fluid_2_0 = fluid_2_0 || {};
     };
     
     
-})(jQuery, fluid_2_0);;/*
+})(jQuery, fluid_2_0_0_beta_1);;/*
 Copyright 2007-2010 University of Cambridge
 Copyright 2007-2009 University of Toronto
 Copyright 2010-2011 Lucendo Development Ltd.
@@ -14801,7 +14803,7 @@ https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
 /** This file contains functions which depend on the presence of a DOM document
  * but which do not depend on the contents of Fluid.js **/
 
-var fluid_2_0 = fluid_2_0 || {};
+var fluid_2_0_0_beta_1 = fluid_2_0_0_beta_1 || {};
 
 (function ($, fluid) {
     "use strict";
@@ -14959,7 +14961,7 @@ var fluid_2_0 = fluid_2_0 || {};
         };
     });
 
-})(jQuery, fluid_2_0);
+})(jQuery, fluid_2_0_0_beta_1);
 ;/*
 Copyright 2008-2010 University of Cambridge
 Copyright 2008-2009 University of Toronto
@@ -14972,7 +14974,7 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
 */
 
-var fluid_2_0 = fluid_2_0 || {};
+var fluid_2_0_0_beta_1 = fluid_2_0_0_beta_1 || {};
 
 (function ($, fluid) {
     "use strict";
@@ -15075,7 +15077,7 @@ var fluid_2_0 = fluid_2_0 || {};
         return text;
     };
 
-})(jQuery, fluid_2_0);
+})(jQuery, fluid_2_0_0_beta_1);
 ;/*
 Copyright 2008-2010 University of Cambridge
 Copyright 2008-2009 University of Toronto
@@ -15089,7 +15091,7 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
 */
 
-fluid_2_0 = fluid_2_0 || {};
+fluid_2_0_0_beta_1 = fluid_2_0_0_beta_1 || {};
 
 (function ($, fluid) {
     "use strict";
@@ -15192,7 +15194,7 @@ fluid_2_0 = fluid_2_0 || {};
         return messageString;
     };
 
-})(jQuery, fluid_2_0);
+})(jQuery, fluid_2_0_0_beta_1);
 ;/*
 Copyright 2007-2010 University of Cambridge
 Copyright 2007-2009 University of Toronto
@@ -15208,8 +15210,8 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
 */
 
-var fluid_2_0 = fluid_2_0 || {};
-var fluid = fluid || fluid_2_0;
+var fluid_2_0_0_beta_1 = fluid_2_0_0_beta_1 || {};
+var fluid = fluid || fluid_2_0_0_beta_1;
 
 (function ($, fluid) {
     "use strict";
@@ -15490,7 +15492,7 @@ var fluid = fluid || fluid_2_0;
         return togo;
     };
 
-})(jQuery, fluid_2_0);
+})(jQuery, fluid_2_0_0_beta_1);
 ;/*
 Copyright 2011-2013 OCAD University
 Copyright 2010-2015 Lucendo Development Ltd.
@@ -15503,7 +15505,7 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
 */
 
-var fluid_2_0 = fluid_2_0 || {};
+var fluid_2_0_0_beta_1 = fluid_2_0_0_beta_1 || {};
 
 (function ($, fluid) {
     "use strict";
@@ -16334,18 +16336,18 @@ var fluid_2_0 = fluid_2_0 || {};
     fluid.clearListeners = function (shadow) {
         // TODO: bug here - "afterDestroy" listeners will be unregistered already unless they come from this component
         fluid.each(shadow.listeners, function (rec) {
-            rec.event.removeListener(rec.listener);
+            rec.event.removeListener(rec.listenerId || rec.listener);
         });
         delete shadow.listeners;
     };
 
-    fluid.recordListener = function (event, listener, shadow) {
+    fluid.recordListener = function (event, listener, shadow, listenerId) {
         if (event.ownerId !== shadow.that.id) { // don't bother recording listeners registered from this component itself
             var listeners = shadow.listeners;
             if (!listeners) {
                 listeners = shadow.listeners = [];
             }
-            listeners.push({event: event, listener: listener});
+            listeners.push({event: event, listener: listener, listenerId: listenerId});
         }
     };
     
@@ -17042,8 +17044,8 @@ var fluid_2_0 = fluid_2_0 || {};
     fluid.event.makeTrackedListenerAdder = function (source) {
         var shadow = fluid.shadowForComponent(source);
         return function (event) {
-            return {addListener: function (listener) {
-                    fluid.recordListener(event, listener, shadow);
+            return {addListener: function (listener, namespace, priority, softNamespace, listenerId) {
+                    fluid.recordListener(event, listener, shadow, listenerId);
                     event.addListener.apply(null, arguments);
                 }
             };
@@ -17089,7 +17091,7 @@ var fluid_2_0 = fluid_2_0 || {};
             fluid.popActivity();
             return togo;
         };
-        fluid.event.impersonateListener(listener, togo);
+        fluid.event.impersonateListener(listener, togo); // still necessary for FLUID-5254 even though framework's listeners now get explicit guids
         return togo;
     };
 
@@ -17141,6 +17143,7 @@ var fluid_2_0 = fluid_2_0 || {};
                 firer = true;
             }
             expanded.listener = (standard && (expanded.args && listener !== "fluid.notImplemented" || firer)) ? fluid.event.dispatchListener(that, listener, eventName, expanded) : listener;
+            expanded.listenerId = fluid.allocateGuid();
             return expanded;
         });
         var togo = {
@@ -17205,7 +17208,7 @@ var fluid_2_0 = fluid_2_0 || {};
             }
         }
         else {
-            firer = {typeName: "fluid.event.firer"}; // jslint:ok - already defined
+            firer = {typeName: "fluid.event.firer"};
             firer.fire = function () {
                 var outerArgs = fluid.makeArray(arguments);
                 fluid.pushActivity("fireSynthetic", "firing synthetic event %eventName ", {eventName: eventName});
@@ -17213,9 +17216,9 @@ var fluid_2_0 = fluid_2_0 || {};
                 fluid.popActivity();
                 return togo;
             };
-            firer.addListener = function (listener, namespace, priority, predicate, softNamespace) {
+            firer.addListener = function (listener, namespace, priority, softNamespace, listenerId) {
                 var dispatcher = fluid.event.dispatchListener(that, listener, eventName, eventSpec);
-                adder(origin).addListener(dispatcher, namespace, priority, predicate, softNamespace);
+                adder(origin).addListener(dispatcher, namespace, priority, softNamespace, listenerId);
             };
             firer.removeListener = function (listener) {
                 origin.removeListener(listener);
@@ -17716,7 +17719,7 @@ var fluid_2_0 = fluid_2_0 || {};
         return source.expander.value ? source.expander.value : source.expander.tree;
     };
 
-})(jQuery, fluid_2_0);
+})(jQuery, fluid_2_0_0_beta_1);
 ;/*
 Copyright 2008-2010 University of Cambridge
 Copyright 2008-2009 University of Toronto
@@ -17731,7 +17734,7 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
 */
 
-var fluid_2_0 = fluid_2_0 || {};
+var fluid_2_0_0_beta_1 = fluid_2_0_0_beta_1 || {};
 
 (function ($, fluid) {
     "use strict";
@@ -18706,6 +18709,7 @@ var fluid_2_0 = fluid_2_0 || {};
         if (typeof(a) !== "number" || typeof(b) !== "number") {
             return a === b;
         } else {
+            // Don't use isNaN because of https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_Objects/isNaN#Confusing_special-case_behavior
             if (a === b || a !== a && b !== b) { // Either the same concrete number or both NaN
                 return true;
             } else {
@@ -19074,7 +19078,7 @@ var fluid_2_0 = fluid_2_0 || {};
         return that;
     };
 
-})(jQuery, fluid_2_0);
+})(jQuery, fluid_2_0_0_beta_1);
 ;/*
 Copyright 2010 University of Toronto
 Copyright 2010-2011 OCAD University
@@ -19087,8 +19091,8 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
 */
 
-var fluid_2_0 = fluid_2_0 || {};
-var fluid = fluid || fluid_2_0;
+var fluid_2_0_0_beta_1 = fluid_2_0_0_beta_1 || {};
+var fluid = fluid || fluid_2_0_0_beta_1;
 
 (function ($, fluid) {
     "use strict";
@@ -19739,7 +19743,7 @@ var fluid = fluid || fluid_2_0;
         };
     };
 
-})(jQuery, fluid_2_0);
+})(jQuery, fluid_2_0_0_beta_1);
 ;/*
 Copyright 2010 University of Toronto
 Copyright 2010-2011 OCAD University
@@ -19753,8 +19757,8 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
 */
 
-var fluid_2_0 = fluid_2_0 || {};
-var fluid = fluid || fluid_2_0;
+var fluid_2_0_0_beta_1 = fluid_2_0_0_beta_1 || {};
+var fluid = fluid || fluid_2_0_0_beta_1;
 
 (function ($, fluid) {
     "use strict";
@@ -20415,7 +20419,7 @@ var fluid = fluid || fluid_2_0;
         return fluid.invokeGlobalFunction(transformSpec.func, args);
     };
 
-})(jQuery, fluid_2_0);
+})(jQuery, fluid_2_0_0_beta_1);
 ;/*
 Copyright 2008-2010 University of Cambridge
 Copyright 2008-2010 University of Toronto
@@ -20430,8 +20434,8 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
 */
 
-var fluid_2_0 = fluid_2_0 || {};
-var fluid = fluid || fluid_2_0;
+var fluid_2_0_0_beta_1 = fluid_2_0_0_beta_1 || {};
+var fluid = fluid || fluid_2_0_0_beta_1;
 
 (function ($, fluid) {
     "use strict";
@@ -20482,7 +20486,7 @@ var fluid = fluid || fluid_2_0;
     };
 
     fluid.thatistBridge("fluid", fluid);
-    fluid.thatistBridge("fluid_2_0", fluid_2_0);
+    fluid.thatistBridge("fluid_2_0_0_beta_1", fluid_2_0_0_beta_1);
 
 /*************************************************************************
  * Tabindex normalization - compensate for browser differences in naming
@@ -21038,7 +21042,7 @@ var fluid = fluid || fluid_2_0;
     };
 
 
-})(jQuery, fluid_2_0);
+})(jQuery, fluid_2_0_0_beta_1);
 ;/*
 Copyright 2010-2011 Lucendo Development Ltd.
 Copyright 2010-2011 OCAD University
@@ -21054,7 +21058,7 @@ https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
 /** This file contains functions which depend on the presence of a DOM document
  *  and which depend on the contents of Fluid.js **/
 
-var fluid_2_0 = fluid_2_0 || {};
+var fluid_2_0_0_beta_1 = fluid_2_0_0_beta_1 || {};
 
 (function ($, fluid) {
     "use strict";
@@ -21298,6 +21302,11 @@ var fluid_2_0 = fluid_2_0 || {};
      * @param {Object} that the component instance to attach the new DOM Binder to
      */
     fluid.initDomBinder = function (that, selectors) {
+        if (!that.container) {
+            fluid.fail("fluid.initDomBinder called for component with typeName " + that.typeName +
+                " without an initialised container - this has probably resulted from placing \"fluid.viewComponent\" in incorrect position in grade merging order. " +
+                " Make sure to place it to the right of any non-view grades in the gradeNames list to ensure that it overrides properly: resolved gradeNames is ", that.options.gradeNames, " for component ", that);
+        }
         that.dom = fluid.createDomBinder(that.container, selectors || that.options.selectors || {});
         that.locate = that.dom.locate;
         return that.dom;
@@ -21701,7 +21710,7 @@ var fluid_2_0 = fluid_2_0 || {};
         backDelay: 100
     });
 
-})(jQuery, fluid_2_0);
+})(jQuery, fluid_2_0_0_beta_1);
 ;/*
 Copyright 2010-2011 OCAD University
 Copyright 2010-2011 Lucendo Development Ltd.
@@ -21714,7 +21723,7 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
 */
 
-var fluid_2_0 = fluid_2_0 || {};
+var fluid_2_0_0_beta_1 = fluid_2_0_0_beta_1 || {};
 
 (function ($, fluid) {
     "use strict";
@@ -22138,7 +22147,7 @@ var fluid_2_0 = fluid_2_0 || {};
     };
 
 
-})(jQuery, fluid_2_0);
+})(jQuery, fluid_2_0_0_beta_1);
 ;/*
 Copyright 2008-2009 University of Toronto
 Copyright 2010-2011 OCAD University
@@ -22152,7 +22161,7 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
 */
 
-var fluid_2_0 = fluid_2_0 || {};
+var fluid_2_0_0_beta_1 = fluid_2_0_0_beta_1 || {};
 
 (function ($, fluid) {
     "use strict";
@@ -22395,7 +22404,7 @@ var fluid_2_0 = fluid_2_0 || {};
         }
     });
 
-})(jQuery, fluid_2_0);
+})(jQuery, fluid_2_0_0_beta_1);
 
 ;/*
 Copyright 2008-2009 University of Toronto
@@ -22410,7 +22419,7 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
 */
 
-var fluid_2_0 = fluid_2_0 || {};
+var fluid_2_0_0_beta_1 = fluid_2_0_0_beta_1 || {};
 
 (function ($, fluid) {
     "use strict";
@@ -22429,7 +22438,7 @@ var fluid_2_0 = fluid_2_0 || {};
         $("head").append("<style type='text/css'>.fl-progEnhance-basic, .fl-ProgEnhance-basic { display: none; } .fl-progEnhance-enhanced, .fl-ProgEnhance-enhanced { display: block; }</style>");
     }
 
-})(jQuery, fluid_2_0);
+})(jQuery, fluid_2_0_0_beta_1);
 ;// =========================================================================
 //
 // tinyxmlsax.js - an XML SAX parser in JavaScript compressed for downloading
@@ -22482,7 +22491,7 @@ freely, subject to the following restrictions:
     distribution.
  */
 
-var fluid_2_0 = fluid_2_0 || {};
+var fluid_2_0_0_beta_1 = fluid_2_0_0_beta_1 || {};
 
 (function ($, fluid) {
     "use strict";
@@ -22906,7 +22915,7 @@ var fluid_2_0 = fluid_2_0 || {};
         return strD.substring(iB, iE).split(strF).join(strR);
     };
 
-})(jQuery, fluid_2_0);
+})(jQuery, fluid_2_0_0_beta_1);
 ;/*
 Copyright 2008-2010 University of Cambridge
 Copyright 2008-2009 University of Toronto
@@ -22920,7 +22929,7 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
 */
 
-fluid_2_0 = fluid_2_0 || {};
+fluid_2_0_0_beta_1 = fluid_2_0_0_beta_1 || {};
 
 (function ($, fluid) {
     "use strict";
@@ -23379,7 +23388,7 @@ parseloop:
         return togo;
     };
 
-})(jQuery, fluid_2_0);
+})(jQuery, fluid_2_0_0_beta_1);
 ;/*
 Copyright 2008-2010 University of Cambridge
 Copyright 2008-2009 University of Toronto
@@ -23393,7 +23402,7 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
 */
 
-fluid_2_0 = fluid_2_0 || {};
+fluid_2_0_0_beta_1 = fluid_2_0_0_beta_1 || {};
 
 (function ($, fluid) {
     "use strict";
@@ -25027,7 +25036,7 @@ fluid_2_0 = fluid_2_0 || {};
         return fluid.render({node: node, armouring: options.armouring}, node, tree, options);
     };
 
-})(jQuery, fluid_2_0);
+})(jQuery, fluid_2_0_0_beta_1);
 ;/*
 Copyright 2008-2010 University of Cambridge
 Copyright 2008-2009 University of Toronto
@@ -25041,7 +25050,7 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
 */
 
-fluid_2_0 = fluid_2_0 || {};
+fluid_2_0_0_beta_1 = fluid_2_0_0_beta_1 || {};
 
 (function ($, fluid) {
     "use strict";
@@ -25685,7 +25694,7 @@ fluid_2_0 = fluid_2_0 || {};
         };
     };
 
-})(jQuery, fluid_2_0);
+})(jQuery, fluid_2_0_0_beta_1);
 ;/*
 Copyright 2011 OCAD University
 Copyright 2011 Lucendo Development Ltd.
@@ -25698,7 +25707,7 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
 */
 
-var fluid_2_0 = fluid_2_0 || {};
+var fluid_2_0_0_beta_1 = fluid_2_0_0_beta_1 || {};
 
 (function ($, fluid) {
     "use strict";
@@ -25800,7 +25809,7 @@ var fluid_2_0 = fluid_2_0 || {};
         that.events[that.model.isShowing ? "onPanelShow" : "onPanelHide"].fire();
     };
 
-})(jQuery, fluid_2_0);
+})(jQuery, fluid_2_0_0_beta_1);
 ;/*!
  * jQuery UI Draggable 1.10.4
  * http://jqueryui.com
@@ -31052,7 +31061,7 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
 */
 
-var fluid_2_0 = fluid_2_0 || {};
+var fluid_2_0_0_beta_1 = fluid_2_0_0_beta_1 || {};
 
 (function ($, fluid) {
     "use strict";
@@ -31223,7 +31232,7 @@ var fluid_2_0 = fluid_2_0 || {};
         return $.extend(true, {}, sliderOptions, model, range);
     };
 
-})(jQuery, fluid_2_0);
+})(jQuery, fluid_2_0_0_beta_1);
 ;/*
 Copyright 2011-2015 OCAD University
 Copyright 2011 Lucendo Development Ltd.
@@ -31236,7 +31245,7 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
 */
 
-var fluid_2_0 = fluid_2_0 || {};
+var fluid_2_0_0_beta_1 = fluid_2_0_0_beta_1 || {};
 
 (function ($, fluid) {
     "use strict";
@@ -31462,7 +31471,7 @@ var fluid_2_0 = fluid_2_0 || {};
     fluid.registerNamespace("fluid.tableOfContents.modelBuilder.headingCalculator");
 
     fluid.tableOfContents.modelBuilder.headingCalculator.getHeadingLevel = function (that, heading) {
-        return $.inArray(heading.tagName, that.options.levels) + 1;
+        return that.options.levels.indexOf(heading.tagName) + 1;
     };
 
     fluid.defaults("fluid.tableOfContents.modelBuilder.headingCalculator", {
@@ -31623,7 +31632,7 @@ var fluid_2_0 = fluid_2_0 || {};
 
     });
 
-})(jQuery, fluid_2_0);
+})(jQuery, fluid_2_0_0_beta_1);
 ;/*
 Copyright 2015 OCAD University
 
@@ -31637,7 +31646,7 @@ https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
 
 /* global speechSynthesis, SpeechSynthesisUtterance*/
 
-var fluid_2_0 = fluid_2_0 || {};
+var fluid_2_0_0_beta_1 = fluid_2_0_0_beta_1 || {};
 
 (function ($, fluid) {
     "use strict";
@@ -31831,7 +31840,7 @@ var fluid_2_0 = fluid_2_0 || {};
         speechSynthesis.cancel();
     };
 
-})(jQuery, fluid_2_0);
+})(jQuery, fluid_2_0_0_beta_1);
 ;/*
 Copyright 2009-2010 University of Cambridge
 Copyright 2011 Lucendo Development Ltd.
@@ -31844,7 +31853,7 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
 */
 
-var fluid_2_0 = fluid_2_0 || {};
+var fluid_2_0_0_beta_1 = fluid_2_0_0_beta_1 || {};
 
 (function ($, fluid) {
     "use strict";
@@ -31990,7 +31999,7 @@ var fluid_2_0 = fluid_2_0 || {};
         return back + front;
     };
 
-})(jQuery, fluid_2_0);
+})(jQuery, fluid_2_0_0_beta_1);
 ;/*
 Copyright 2009 University of Toronto
 Copyright 2011-2013 OCAD University
@@ -32003,7 +32012,7 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
 */
 
-var fluid_2_0 = fluid_2_0 || {};
+var fluid_2_0_0_beta_1 = fluid_2_0_0_beta_1 || {};
 
 (function ($, fluid) {
     "use strict";
@@ -32157,7 +32166,7 @@ var fluid_2_0 = fluid_2_0 || {};
         }
     });
 
-})(jQuery, fluid_2_0);
+})(jQuery, fluid_2_0_0_beta_1);
 ;/*
 Copyright 2009 University of Toronto
 Copyright 2010-2011 OCAD University
@@ -32171,7 +32180,7 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
 */
 
-var fluid_2_0 = fluid_2_0 || {};
+var fluid_2_0_0_beta_1 = fluid_2_0_0_beta_1 || {};
 
 (function ($, fluid) {
     "use strict";
@@ -32188,7 +32197,9 @@ var fluid_2_0 = fluid_2_0 || {};
             // TODO: This information is supposed to be generated from the JSON
             // schema describing various preferences. For now it's kept in top
             // level prefsEditor to avoid further duplication.
-            initialModel: {}
+            initialModel: {
+                preferences: {}  // To keep initial preferences
+            }
         }
     });
 
@@ -32268,15 +32279,11 @@ var fluid_2_0 = fluid_2_0 || {};
         }
     });
     
-    // TODO: It is likely that "originalUserOptions" is now unnecessary
-    // Note that the original implementation in fact never succeeded in avoiding 
-    // to distribute defaults in any case
-
     fluid.pageEnhancer.init = function (that) {
-        that.uiEnhancer.updateModel(that.getSettings());
+        that.uiEnhancer.updateModel(fluid.get(that.getSettings(), "preferences"));
     };
 
-})(jQuery, fluid_2_0);
+})(jQuery, fluid_2_0_0_beta_1);
 ;/*
 Copyright 2009 University of Toronto
 Copyright 2010-2015 OCAD University
@@ -32290,7 +32297,7 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
 */
 
-var fluid_2_0 = fluid_2_0 || {};
+var fluid_2_0_0_beta_1 = fluid_2_0_0_beta_1 || {};
 
 (function ($, fluid) {
     "use strict";
@@ -32306,7 +32313,7 @@ var fluid_2_0 = fluid_2_0 || {};
      * @param {Object} options
      */
     fluid.defaults("fluid.prefs.prefsEditorLoader", {
-        gradeNames: ["fluid.viewComponent", "fluid.prefs.settingsGetter", "fluid.prefs.initialModel"],
+        gradeNames: ["fluid.prefs.settingsGetter", "fluid.prefs.initialModel", "fluid.viewComponent"],
         defaultLocale: "en",
         members: {
             settings: {
@@ -32508,8 +32515,8 @@ var fluid_2_0 = fluid_2_0 || {};
     fluid.defaults("fluid.prefs.uiEnhancerRelay", {
         gradeNames: ["fluid.modelComponent"],
         listeners: {
-            onCreate: "{that}.addListener",
-            onDestroy: "{that}.removeListener"
+            "onCreate.addListener": "{that}.addListener",
+            "onDestroy.removeListener": "{that}.removeListener"
         },
         events: {
             updateEnhancerModel: "{fluid.prefs.prefsEditor}.events.onUpdateEnhancerModel"
@@ -32525,7 +32532,7 @@ var fluid_2_0 = fluid_2_0 || {};
             },
             updateEnhancerModel: {
                 funcName: "fluid.prefs.uiEnhancerRelay.updateEnhancerModel",
-                args: ["{uiEnhancer}", "{fluid.prefs.prefsEditor}.model"]
+                args: ["{uiEnhancer}", "{fluid.prefs.prefsEditor}.model.preferences"]
             }
         }
     });
@@ -32552,7 +32559,7 @@ var fluid_2_0 = fluid_2_0 || {};
      * @param {Object} options
      */
     fluid.defaults("fluid.prefs.prefsEditor", {
-        gradeNames: ["fluid.viewComponent", "fluid.prefs.settingsGetter", "fluid.prefs.settingsSetter", "fluid.prefs.initialModel"],
+        gradeNames: ["fluid.prefs.settingsGetter", "fluid.prefs.settingsSetter", "fluid.prefs.initialModel", "fluid.viewComponent"],
         invokers: {
             /**
              * Updates the change applier and fires modelChanged on subcomponent fluid.prefs.controls
@@ -32562,7 +32569,7 @@ var fluid_2_0 = fluid_2_0 || {};
              */
             fetch: {
                 funcName: "fluid.prefs.prefsEditor.fetch",
-                args: ["{that}"]
+                args: ["{that}", "{arguments}.0"]
             },
             applyChanges: {
                 funcName: "fluid.prefs.prefsEditor.applyChanges",
@@ -32594,7 +32601,8 @@ var fluid_2_0 = fluid_2_0 || {};
         events: {
             onSave: null,
             onCancel: null,
-            onReset: null,
+            beforeReset: null,
+            afterReset: null,
             onAutoSave: null,
             modelChanged: null,
             onPrefsEditorRefresh: null,
@@ -32603,8 +32611,8 @@ var fluid_2_0 = fluid_2_0 || {};
             onReady: null
         },
         listeners: {
-            onCreate: "fluid.prefs.prefsEditor.init",
-            onAutoSave: "{that}.save"
+            "onCreate.init": "fluid.prefs.prefsEditor.init",
+            "onAutoSave.save": "{that}.save"
         },
         modelListeners: {
             "": [{
@@ -32628,7 +32636,7 @@ var fluid_2_0 = fluid_2_0 || {};
         that.events.onUpdateEnhancerModel.fire();
     };
 
-    fluid.prefs.prefsEditor.fetch = function (that) {
+    fluid.prefs.prefsEditor.fetch = function (that, eventName) {
         var completeModel = that.getSettings();
         completeModel = $.extend(true, {}, that.initialModel, completeModel);
         // TODO: This may not be completely effective if the root model is smaller than
@@ -32641,38 +32649,65 @@ var fluid_2_0 = fluid_2_0 || {};
         // and this implementation doesn't seem to be causing a problem at present so we had
         // just better leave it the way it is for now.
         that.applier.change("", completeModel);
+        if (eventName) {
+            that.events[eventName].fire(that);
+        }
         that.events.onPrefsEditorRefresh.fire();
         that.applyChanges();
     };
 
     /**
-     * Saves the current model and fires onSave
+     * Sends the prefsEditor.model to the store and fires onSave
+     * @param that: A fluid.prefs.prefsEditor instance
+     * @return the saved model
      */
     fluid.prefs.prefsEditor.save = function (that) {
-        var savedSelections = fluid.copy(that.model);
+        if (!that.model) {  // Don't save a reset model
+            return;
+        }
 
-        fluid.each(savedSelections, function (value, key) {
-            if (fluid.get(that.initialModel, key) === value) {
-                delete savedSelections[key];
-            }
-        });
-        that.events.onSave.fire(savedSelections);
-        that.setSettings(savedSelections);
+        var modelToSave = fluid.copy(that.model),
+            initialModel = that.initialModel,
+            stats = {changes: 0, unchanged: 0, changeMap: {}},
+            changedPrefs = {};
+
+        // To address https://issues.fluidproject.org/browse/FLUID-4686
+        fluid.model.diff(modelToSave.preferences, fluid.get(initialModel, ["preferences"]), stats);
+
+        if (stats.changes === 0) {
+            delete modelToSave.preferences;
+        } else {
+            fluid.each(stats.changeMap, function (state, pref) {
+                fluid.set(changedPrefs, pref, modelToSave.preferences[pref]);
+            });
+            modelToSave.preferences = changedPrefs;
+        }
+
+        that.events.onSave.fire(modelToSave);
+        that.setSettings(modelToSave);
+        return modelToSave;
     };
 
     fluid.prefs.prefsEditor.saveAndApply = function (that) {
-        that.save();
-        that.events.onPrefsEditorRefresh.fire();
-        that.applyChanges();
+        var prevSettings = that.getSettings(),
+            changedSelections = that.save();
+
+        // Only when preferences are changed, re-render panels and trigger enactors to apply changes
+        if (!fluid.model.diff(fluid.get(changedSelections, "preferences"), fluid.get(prevSettings, "preferences"))) {
+            that.events.onPrefsEditorRefresh.fire();
+            that.applyChanges();
+        }
     };
 
     /**
-     * Resets the selections to the integrator's defaults and fires onReset
+     * Resets the selections to the integrator's defaults and fires afterReset
      */
     fluid.prefs.prefsEditor.reset = function (that) {
+        that.events.beforeReset.fire(that);
+        that.applier.fireChangeRequest({path: "", type: "DELETE"});
         that.applier.change("", fluid.copy(that.initialModel));
         that.events.onPrefsEditorRefresh.fire();
-        that.events.onReset.fire(that);
+        that.events.afterReset.fire(that);
     };
 
     /**
@@ -32700,10 +32735,8 @@ var fluid_2_0 = fluid_2_0 || {};
 
         that.container.append(that.options.resources.template.resourceText);
         bindHandlers(that);
-        // This creates subcomponents - we can find default model afterwards
-        that.events.onPrefsEditorMarkupReady.fire(that);
 
-        that.fetch();
+        that.fetch("onPrefsEditorMarkupReady");
         that.events.onReady.fire(that);
     };
 
@@ -32743,7 +32776,7 @@ var fluid_2_0 = fluid_2_0 || {};
                 funcName: "fluid.prefs.preview.updateModel",
                 args: [
                     "{preview}",
-                    "{prefsEditor}.model"
+                    "{prefsEditor}.model.preferences"
                 ]
             }
         },
@@ -32753,18 +32786,18 @@ var fluid_2_0 = fluid_2_0 || {};
         listeners: {
             "onCreate.startLoadingContainer": "fluid.prefs.preview.startLoadingContainer",
             "{prefsEditor}.events.modelChanged": "{that}.updateModel",
-            onReady: "{that}.updateModel"
+            "onReady.updateModel": "{that}.updateModel"
         },
         templateUrl: "%prefix/PrefsEditorPreview.html"
     });
 
-    fluid.prefs.preview.updateModel = function (that, model) {
+    fluid.prefs.preview.updateModel = function (that, preferences) {
         /**
          * SetTimeout is temp fix for http://issues.fluidproject.org/browse/FLUID-2248
          */
         setTimeout(function () {
             if (that.enhancer) {
-                that.enhancer.updateModel(model);
+                that.enhancer.updateModel(preferences);
             }
         }, 0);
     };
@@ -32778,7 +32811,7 @@ var fluid_2_0 = fluid_2_0 || {};
         that.container.attr("src", templateUrl);
     };
 
-})(jQuery, fluid_2_0);
+})(jQuery, fluid_2_0_0_beta_1);
 ;/*
 Copyright 2013-2015 OCAD University
 
@@ -32790,7 +32823,7 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
 */
 
-var fluid_2_0 = fluid_2_0 || {};
+var fluid_2_0_0_beta_1 = fluid_2_0_0_beta_1 || {};
 
 
 (function ($, fluid) {
@@ -32838,7 +32871,7 @@ var fluid_2_0 = fluid_2_0 || {};
      ***********************************************/
 
     fluid.defaults("fluid.prefs.panel", {
-        gradeNames: ["fluid.rendererComponent", "fluid.prefs.msgLookup"],
+        gradeNames: ["fluid.prefs.msgLookup", "fluid.rendererComponent"],
         events: {
             onDomBind: null
         },
@@ -32968,7 +33001,7 @@ var fluid_2_0 = fluid_2_0 || {};
         target = fluid.makeArray(target);
         source = fluid.makeArray(source);
         fluid.each(source, function (selector) {
-            if ($.inArray(selector, target) < 0) {
+            if (target.indexOf(selector) < 0) {
                 target.push(selector);
             }
         });
@@ -33272,7 +33305,7 @@ var fluid_2_0 = fluid_2_0 || {};
             if (fluid.prefs.compositePanel.isPanel(compOpts.type, compOpts.options)) {
                 var opts = fluid.prefs.compositePanel.prefetchComponentOptions(compOpts.type, compOpts.options);
                 fluid.each(opts.selectors, function (selector, selName) {
-                    if (!opts.selectorsToIgnore || $.inArray(selName, opts.selectorsToIgnore) < 0) {
+                    if (!opts.selectorsToIgnore || opts.selectorsToIgnore.indexOf(selName) < 0) {
                         fluid.set(selectors,  fluid.prefs.compositePanel.rebaseSelectorName(compName, selName), selectors[compName] + " " + selector);
                     }
                 });
@@ -33441,7 +33474,8 @@ var fluid_2_0 = fluid_2_0 || {};
             label: ".flc-prefsEditor-min-text-size-label",
             smallIcon: ".flc-prefsEditor-min-text-size-smallIcon",
             largeIcon: ".flc-prefsEditor-min-text-size-largeIcon",
-            multiplier: ".flc-prefsEditor-multiplier"
+            multiplier: ".flc-prefsEditor-multiplier",
+            textSizeDescr: ".flc-prefsEditor-text-size-descr"
         },
         selectorsToIgnore: ["textSize"],
         components: {
@@ -33462,7 +33496,8 @@ var fluid_2_0 = fluid_2_0 || {};
             label: {messagekey: "textSizeLabel"},
             smallIcon: {messagekey: "textSizeSmallIcon"},
             largeIcon: {messagekey: "textSizeLargeIcon"},
-            multiplier: {messagekey: "multiplier"}
+            multiplier: {messagekey: "multiplier"},
+            textSizeDescr: {messagekey: "textSizeDescr"}
         },
         sliderOptions: {
             orientation: "horizontal",
@@ -33488,13 +33523,15 @@ var fluid_2_0 = fluid_2_0 || {};
         },
         selectors: {
             textFont: ".flc-prefsEditor-text-font",
-            label: ".flc-prefsEditor-text-font-label"
+            label: ".flc-prefsEditor-text-font-label",
+            textFontDescr: ".flc-prefsEditor-text-font-descr"
         },
         stringArrayIndex: {
             textFont: ["textFont-default", "textFont-times", "textFont-comic", "textFont-arial", "textFont-verdana"]
         },
         protoTree: {
             label: {messagekey: "textFontLabel"},
+            textFontDescr: {messagekey: "textFontDescr"},
             textFont: {
                 optionnames: "${{that}.msgLookup.textFont}",
                 optionlist: "${{that}.options.controlValues.textFont}",
@@ -33542,7 +33579,8 @@ var fluid_2_0 = fluid_2_0 || {};
             label: ".flc-prefsEditor-line-space-label",
             narrowIcon: ".flc-prefsEditor-line-space-narrowIcon",
             wideIcon: ".flc-prefsEditor-line-space-wideIcon",
-            multiplier: ".flc-prefsEditor-multiplier"
+            multiplier: ".flc-prefsEditor-multiplier",
+            lineSpaceDescr: ".flc-prefsEditor-line-space-descr"
         },
         selectorsToIgnore: ["lineSpace"],
         components: {
@@ -33563,7 +33601,8 @@ var fluid_2_0 = fluid_2_0 || {};
             label: {messagekey: "lineSpaceLabel"},
             narrowIcon: {messagekey: "lineSpaceNarrowIcon"},
             wideIcon: {messagekey: "lineSpaceWideIcon"},
-            multiplier: {messagekey: "multiplier"}
+            multiplier: {messagekey: "multiplier"},
+            lineSpaceDescr: {messagekey: "lineSpaceDescr"}
         },
         sliderOptions: {
             orientation: "horizontal",
@@ -33594,7 +33633,8 @@ var fluid_2_0 = fluid_2_0 || {};
             themeRow: ".flc-prefsEditor-themeRow",
             themeLabel: ".flc-prefsEditor-theme-label",
             themeInput: ".flc-prefsEditor-themeInput",
-            label: ".flc-prefsEditor-contrast-label"
+            label: ".flc-prefsEditor-contrast-label",
+            contrastDescr: ".flc-prefsEditor-contrast-descr"
         },
         styles: {
             defaultThemeLabel: "fl-prefsEditor-contrast-defaultThemeLabel"
@@ -33605,6 +33645,7 @@ var fluid_2_0 = fluid_2_0 || {};
         repeatingSelectors: ["themeRow"],
         protoTree: {
             label: {messagekey: "contrastLabel"},
+            contrastDescr: {messagekey: "contrastDescr"},
             expander: {
                 type: "fluid.renderer.selection.inputs",
                 rowID: "themeRow",
@@ -33679,11 +33720,11 @@ var fluid_2_0 = fluid_2_0 || {};
         selectors: {
             toc: ".flc-prefsEditor-toc",
             label: ".flc-prefsEditor-toc-label",
-            choiceLabel: ".flc-prefsEditor-toc-choice-label"
+            tocDescr: ".flc-prefsEditor-toc-descr"
         },
         protoTree: {
             label: {messagekey: "tocLabel"},
-            choiceLabel: {messagekey: "tocChoiceLabel"},
+            tocDescr: {messagekey: "tocDescr"},
             toc: "${toc}"
         }
     });
@@ -33774,7 +33815,7 @@ var fluid_2_0 = fluid_2_0 || {};
         });
     };
 
-})(jQuery, fluid_2_0);
+})(jQuery, fluid_2_0_0_beta_1);
 ;/*
 Copyright 2014-2015 OCAD University
 
@@ -33786,7 +33827,7 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
 */
 
-var fluid_2_0 = fluid_2_0 || {};
+var fluid_2_0_0_beta_1 = fluid_2_0_0_beta_1 || {};
 
 (function ($, fluid) {
     "use strict";
@@ -33804,16 +33845,16 @@ var fluid_2_0 = fluid_2_0 || {};
         selectors: {
             speak: ".flc-prefsEditor-speak",
             label: ".flc-prefsEditor-speak-label",
-            choiceLabel: ".flc-prefsEditor-speak-choice-label"
+            speakDescr: ".flc-prefsEditor-speak-descr"
         },
         protoTree: {
             label: {messagekey: "speakLabel"},
-            choiceLabel: {messagekey: "speakChoiceLabel"},
+            speakDescr: {messagekey: "speakDescr"},
             speak: "${speak}"
         }
     });
 
-})(jQuery, fluid_2_0);
+})(jQuery, fluid_2_0_0_beta_1);
 ;/*
 Copyright 2013 OCAD University
 
@@ -33825,7 +33866,7 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
 */
 
-var fluid_2_0 = fluid_2_0 || {};
+var fluid_2_0_0_beta_1 = fluid_2_0_0_beta_1 || {};
 
 (function ($, fluid) {
     "use strict";
@@ -33888,7 +33929,7 @@ var fluid_2_0 = fluid_2_0 || {};
      *******************************************************************************/
 
     fluid.defaults("fluid.prefs.enactor.classSwapper", {
-        gradeNames: ["fluid.viewComponent", "fluid.prefs.enactor"],
+        gradeNames: ["fluid.prefs.enactor", "fluid.viewComponent"],
         classes: {},  // Must be supplied by implementors
         invokers: {
             clearClasses: {
@@ -33944,7 +33985,7 @@ var fluid_2_0 = fluid_2_0 || {};
 
     // Note that the implementors need to provide the container for this view component
     fluid.defaults("fluid.prefs.enactor.emphasizeLinks", {
-        gradeNames: ["fluid.viewComponent", "fluid.prefs.enactor.styleElements"],
+        gradeNames: ["fluid.prefs.enactor.styleElements", "fluid.viewComponent"],
         preferenceMap: {
             "fluid.prefs.emphasizeLinks": {
                 "model.value": "default"
@@ -33962,7 +34003,7 @@ var fluid_2_0 = fluid_2_0 || {};
 
     // Note that the implementors need to provide the container for this view component
     fluid.defaults("fluid.prefs.enactor.inputsLarger", {
-        gradeNames: ["fluid.viewComponent", "fluid.prefs.enactor.styleElements"],
+        gradeNames: ["fluid.prefs.enactor.styleElements", "fluid.viewComponent"],
         preferenceMap: {
             "fluid.prefs.inputsLarger": {
                 "model.value": "default"
@@ -34032,7 +34073,7 @@ var fluid_2_0 = fluid_2_0 || {};
 
     // Note that the implementors need to provide the container for this view component
     fluid.defaults("fluid.prefs.enactor.textSize", {
-        gradeNames: ["fluid.viewComponent", "fluid.prefs.enactor"],
+        gradeNames: ["fluid.prefs.enactor", "fluid.viewComponent"],
         preferenceMap: {
             "fluid.prefs.textSize": {
                 "model.value": "default"
@@ -34088,7 +34129,7 @@ var fluid_2_0 = fluid_2_0 || {};
 
     // Note that the implementors need to provide the container for this view component
     fluid.defaults("fluid.prefs.enactor.lineSpace", {
-        gradeNames: ["fluid.viewComponent", "fluid.prefs.enactor"],
+        gradeNames: ["fluid.prefs.enactor", "fluid.viewComponent"],
         preferenceMap: {
             "fluid.prefs.lineSpace": {
                 "model.value": "default"
@@ -34146,7 +34187,7 @@ var fluid_2_0 = fluid_2_0 || {};
 
         // Continuing the work-around of jQuery + IE bug - http://bugs.jquery.com/ticket/2671
         if (lineHeight.match(/[0-9]$/)) {
-            return lineHeight;
+            return Number(lineHeight);
         }
 
         return Math.round(parseFloat(lineHeight) / fontSize * 100) / 100;
@@ -34176,7 +34217,7 @@ var fluid_2_0 = fluid_2_0 || {};
 
     // Note that the implementors need to provide the container for this view component
     fluid.defaults("fluid.prefs.enactor.tableOfContents", {
-        gradeNames: ["fluid.viewComponent", "fluid.prefs.enactor"],
+        gradeNames: ["fluid.prefs.enactor", "fluid.viewComponent"],
         preferenceMap: {
             "fluid.prefs.tableOfContents": {
                 "model.toc": "default"
@@ -34243,7 +34284,7 @@ var fluid_2_0 = fluid_2_0 || {};
         }
     };
 
-})(jQuery, fluid_2_0);
+})(jQuery, fluid_2_0_0_beta_1);
 ;/*
 Copyright 2013-2015 OCAD University
 
@@ -34255,7 +34296,7 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
 */
 
-var fluid_2_0 = fluid_2_0 || {};
+var fluid_2_0_0_beta_1 = fluid_2_0_0_beta_1 || {};
 
 (function ($, fluid) {
     "use strict";
@@ -34317,7 +34358,7 @@ var fluid_2_0 = fluid_2_0 || {};
      *******************************************************************************/
 
     fluid.defaults("fluid.prefs.enactor.selfVoicing", {
-        gradeNames: ["fluid.viewComponent", "fluid.prefs.enactor.speak"],
+        gradeNames: ["fluid.prefs.enactor.speak", "fluid.viewComponent"],
         modelListeners: {
             "enabled": {
                 listener: "{that}.handleSelfVoicing",
@@ -34378,7 +34419,7 @@ var fluid_2_0 = fluid_2_0 || {};
         });
     };
 
-})(jQuery, fluid_2_0);
+})(jQuery, fluid_2_0_0_beta_1);
 ;/*
 Copyright 2013-2015 OCAD University
 
@@ -34390,15 +34431,15 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
 */
 
-var fluid_2_0 = fluid_2_0 || {};
+var fluid_2_0_0_beta_1 = fluid_2_0_0_beta_1 || {};
 
 (function ($, fluid) {
     "use strict";
 
     /*******************************************************************************
-     * Starter Root Model
+     * Starter prefsEditor Model
      *
-     * Provides the default values for the starter enhancer/panels models
+     * Provides the default values for the starter prefsEditor model
      *******************************************************************************/
 
     fluid.defaults("fluid.prefs.initialModel.starter", {
@@ -34408,13 +34449,15 @@ var fluid_2_0 = fluid_2_0 || {};
             // schema describing various preferences. For now it's kept in top
             // level prefsEditor to avoid further duplication.
             initialModel: {
-                textFont: "default",          // key from classname map
-                theme: "default",             // key from classname map
-                textSize: 1,                  // in points
-                lineSpace: 1,                 // in ems
-                toc: false,                  // boolean
-                links: false,                // boolean
-                inputsLarger: false          // boolean
+                preferences: {
+                    textFont: "default",          // key from classname map
+                    theme: "default",             // key from classname map
+                    textSize: 1,                  // in points
+                    lineSpace: 1,                 // in ems
+                    toc: false,                   // boolean
+                    links: false,                 // boolean
+                    inputsLarger: false           // boolean
+                }
             }
         }
     });
@@ -34478,7 +34521,7 @@ var fluid_2_0 = fluid_2_0 || {};
 
     fluid.defaults("fluid.uiEnhancer.starterEnactors", {
         gradeNames: ["fluid.uiEnhancer", "fluid.uiEnhancer.cssClassEnhancerBase", "fluid.uiEnhancer.browserTextEnhancerBase"],
-        model: "{fluid.prefs.initialModel}.initialModel",
+        model: "{fluid.prefs.initialModel}.initialModel.preferences",
         components: {
             textSize: {
                 type: "fluid.prefs.enactor.textSize",
@@ -34577,7 +34620,7 @@ var fluid_2_0 = fluid_2_0 || {};
                 options: {
                     gradeNames: "fluid.prefs.prefsEditorConnections",
                     model: {
-                        textSize: "{prefsEditor}.model.textSize"
+                        textSize: "{prefsEditor}.model.preferences.textSize"
                     },
                     messageBase: "{messageLoader}.resources.textSize.resourceText",
                     resources: {
@@ -34592,7 +34635,7 @@ var fluid_2_0 = fluid_2_0 || {};
                 options: {
                     gradeNames: "fluid.prefs.prefsEditorConnections",
                     model: {
-                        lineSpace: "{prefsEditor}.model.lineSpace"
+                        lineSpace: "{prefsEditor}.model.preferences.lineSpace"
                     },
                     messageBase: "{messageLoader}.resources.lineSpace.resourceText",
                     resources: {
@@ -34608,7 +34651,7 @@ var fluid_2_0 = fluid_2_0 || {};
                     gradeNames: "fluid.prefs.prefsEditorConnections",
                     classnameMap: "{uiEnhancer}.options.classnameMap",
                     model: {
-                        value: "{prefsEditor}.model.textFont"
+                        value: "{prefsEditor}.model.preferences.textFont"
                     },
                     messageBase: "{messageLoader}.resources.textFont.resourceText",
                     resources: {
@@ -34624,7 +34667,7 @@ var fluid_2_0 = fluid_2_0 || {};
                     gradeNames: "fluid.prefs.prefsEditorConnections",
                     classnameMap: "{uiEnhancer}.options.classnameMap",
                     model: {
-                        value: "{prefsEditor}.model.theme"
+                        value: "{prefsEditor}.model.preferences.theme"
                     },
                     messageBase: "{messageLoader}.resources.contrast.resourceText",
                     resources: {
@@ -34639,7 +34682,7 @@ var fluid_2_0 = fluid_2_0 || {};
                 options: {
                     gradeNames: "fluid.prefs.prefsEditorConnections",
                     model: {
-                        toc: "{prefsEditor}.model.toc"
+                        toc: "{prefsEditor}.model.preferences.toc"
                     },
                     messageBase: "{messageLoader}.resources.layoutControls.resourceText",
                     resources: {
@@ -34659,8 +34702,8 @@ var fluid_2_0 = fluid_2_0 || {};
                     },
                     selectorsToIgnore: ["emphasizeLinks", "inputsLarger"],
                     model: {
-                        fluid_prefs_emphasizeLinks: "{prefsEditor}.model.links",
-                        fluid_prefs_inputsLarger: "{prefsEditor}.model.inputsLarger"
+                        fluid_prefs_emphasizeLinks: "{prefsEditor}.model.preferences.links",
+                        fluid_prefs_inputsLarger: "{prefsEditor}.model.preferences.inputsLarger"
                     },
                     components: {
                         emphasizeLinks: {
@@ -34761,7 +34804,7 @@ var fluid_2_0 = fluid_2_0 || {};
         }
     });
 
-})(jQuery, fluid_2_0);
+})(jQuery, fluid_2_0_0_beta_1);
 ;/*
 Copyright 2011-2015 OCAD University
 Copyright 2011 Lucendo Development Ltd.
@@ -34774,7 +34817,7 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
 */
 
-var fluid_2_0 = fluid_2_0 || {};
+var fluid_2_0_0_beta_1 = fluid_2_0_0_beta_1 || {};
 
 (function ($, fluid) {
     "use strict";
@@ -34907,7 +34950,7 @@ var fluid_2_0 = fluid_2_0 || {};
                             listener: "{separatedPanel}.bindReset",
                             args: ["{that}.reset"]
                         },
-                        onReset: "{that}.applyChanges",
+                        afterReset: "{that}.applyChanges",
                         onReady: {
                             listener: "{separatedPanel}.events.onReady",
                             args: "{separatedPanel}"
@@ -35003,9 +35046,9 @@ var fluid_2_0 = fluid_2_0 || {};
         });
 
         prefsEditor.events.onPrefsEditorRefresh.addListener(function () {
-            iframeEnhancer.updateModel(prefsEditor.model);
+            iframeEnhancer.updateModel(prefsEditor.model.preferences);
         });
-        prefsEditor.events.onReset.addListener(function (prefsEditor) {
+        prefsEditor.events.afterReset.addListener(function (prefsEditor) {
             fluid.prefs.separatedPanel.updateView(prefsEditor);
         });
         prefsEditor.events.onSignificantDOMChange.addListener(function () {
@@ -35049,7 +35092,7 @@ var fluid_2_0 = fluid_2_0 || {};
         setTimeout(callback, 1);
     };
 
-})(jQuery, fluid_2_0);
+})(jQuery, fluid_2_0_0_beta_1);
 ;/*
 Copyright 2011 OCAD University
 Copyright 2011 Lucendo Development Ltd.
@@ -35062,7 +35105,7 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
 */
 
-var fluid_2_0 = fluid_2_0 || {};
+var fluid_2_0_0_beta_1 = fluid_2_0_0_beta_1 || {};
 
 (function ($, fluid) {
     "use strict";
@@ -35078,7 +35121,7 @@ var fluid_2_0 = fluid_2_0 || {};
                 container: "{that}.container",
                 options: {
                     listeners: {
-                        onReset: [{
+                        afterReset: [{
                             listener: "{that}.applyChanges"
                         }, {
                             listener: "{that}.save"
@@ -35096,7 +35139,7 @@ var fluid_2_0 = fluid_2_0 || {};
         }
     });
 
-})(jQuery, fluid_2_0);
+})(jQuery, fluid_2_0_0_beta_1);
 ;/*
 Copyright 2011 OCAD University
 Copyright 2011 Lucendo Development Ltd.
@@ -35109,7 +35152,7 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
 */
 
-var fluid_2_0 = fluid_2_0 || {};
+var fluid_2_0_0_beta_1 = fluid_2_0_0_beta_1 || {};
 
 (function ($, fluid) {
     "use strict";
@@ -35173,7 +35216,7 @@ var fluid_2_0 = fluid_2_0 || {};
         }]
     });
 
-})(jQuery, fluid_2_0);
+})(jQuery, fluid_2_0_0_beta_1);
 ;/*
 Copyright 2013 OCAD University
 
@@ -35185,7 +35228,7 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
 */
 
-var fluid_2_0 = fluid_2_0 || {};
+var fluid_2_0_0_beta_1 = fluid_2_0_0_beta_1 || {};
 
 (function ($, fluid) {
     "use strict";
@@ -35302,7 +35345,7 @@ var fluid_2_0 = fluid_2_0 || {};
         }
     });
 
-})(jQuery, fluid_2_0);
+})(jQuery, fluid_2_0_0_beta_1);
 ;/*
 Copyright 2013-2015 OCAD University
 
@@ -35314,7 +35357,7 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
 */
 
-var fluid_2_0 = fluid_2_0 || {};
+var fluid_2_0_0_beta_1 = fluid_2_0_0_beta_1 || {};
 
 
 (function ($, fluid) {
@@ -35474,7 +35517,7 @@ var fluid_2_0 = fluid_2_0 || {};
                             internalModelName: internalModelName,
                             externalModelName: flattenedPrefKey
                         });
-                        fluid.set(initialModel, ["members", "initialModel", flattenedPrefKey], prefSchema[primaryPath]);
+                        fluid.set(initialModel, ["members", "initialModel", "preferences", flattenedPrefKey], prefSchema[primaryPath]);
                     } else {
                         fluid.set(opts, internalPath, prefSchema[primaryPath]);
                     }
@@ -35592,7 +35635,7 @@ var fluid_2_0 = fluid_2_0 || {};
                                 internalModelName: safeSubPanelPrefsKey,
                                 externalModelName: safeSubPanelPrefsKey
                             });
-                            fluid.set(initialModel, ["members", "initialModel", safeSubPanelPrefsKey], prefSchema[primaryPath]);
+                            fluid.set(initialModel, ["members", "initialModel", "preferences", safeSubPanelPrefsKey], prefSchema[primaryPath]);
                         } else {
                             opts = opts || {options: {}};
                             fluid.set(opts, "options." + internalPath, prefSchema[primaryPath]);
@@ -35675,7 +35718,7 @@ var fluid_2_0 = fluid_2_0 || {};
             // TODO: Replace this cumbersome scheme with one based on an extensible lookup to handlers
             var type = "panel";
             // Ignore the subpanels that are only for composing composite panels
-            if (category[type] && $.inArray(prefName, auxSchema.panelsToIgnore) === -1) {
+            if (category[type] && !fluid.contains(auxSchema.panelsToIgnore, prefName)) {
                 fluid.prefs.expandSchemaComponents(auxSchema, "panels", category.type, category[type], fluid.get(indexes, type),
                     fluid.get(elementCommonOptions, type), fluid.get(elementCommonOptions, type + "Model"), mappedDefaults);
             }
@@ -35742,7 +35785,7 @@ var fluid_2_0 = fluid_2_0 || {};
                 "options.messageBase": "{messageLoader}.resources.%prefKey.resourceText"
             },
             panelModel: {
-                "%internalModelName": "{prefsEditor}.model.%externalModelName"
+                "%internalModelName": "{prefsEditor}.model.preferences.%externalModelName"
             },
             compositePanelBasedOnSub: {
                 "%subPrefKey": "{templateLoader}.resources.%subPrefKey"
@@ -35797,7 +35840,7 @@ var fluid_2_0 = fluid_2_0 || {};
         return fluid.keys(defaults.preferenceMap);
     };
 
-})(jQuery, fluid_2_0);
+})(jQuery, fluid_2_0_0_beta_1);
 ;/*
 Copyright 2013-2015 OCAD University
 
@@ -35809,7 +35852,7 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
 */
 
-var fluid_2_0 = fluid_2_0 || {};
+var fluid_2_0_0_beta_1 = fluid_2_0_0_beta_1 || {};
 
 (function (fluid) {
     "use strict";
@@ -36046,7 +36089,7 @@ var fluid_2_0 = fluid_2_0 || {};
             }
         }
     });
-})(fluid_2_0);
+})(fluid_2_0_0_beta_1);
 ;/*
 Copyright 2015 OCAD University
 
@@ -36058,7 +36101,7 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
 */
 
-var fluid_2_0 = fluid_2_0 || {};
+var fluid_2_0_0_beta_1 = fluid_2_0_0_beta_1 || {};
 
 (function (fluid) {
     "use strict";
@@ -36115,7 +36158,7 @@ var fluid_2_0 = fluid_2_0 || {};
         }
     });
 
-})(fluid_2_0);
+})(fluid_2_0_0_beta_1);
 ;/*
 Copyright 2013-2015 OCAD University
 
@@ -36127,7 +36170,7 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
 */
 
-var fluid_2_0 = fluid_2_0 || {};
+var fluid_2_0_0_beta_1 = fluid_2_0_0_beta_1 || {};
 
 
 (function ($, fluid) {
@@ -36144,7 +36187,7 @@ var fluid_2_0 = fluid_2_0 || {};
             expander: {
                 func: "fluid.prefs.builder.generateGrade",
                 args: ["prefsEditor", "{that}.options.auxSchema.namespace", {
-                    gradeNames: ["fluid.viewComponent", "fluid.prefs.assembler.prefsEd"],
+                    gradeNames: ["fluid.prefs.assembler.prefsEd", "fluid.viewComponent"],
                     componentGrades: "{that}.options.constructedGrades",
                     loaderGrades: "{that}.options.auxSchema.loaderGrades"
                 }]
@@ -36323,4 +36366,202 @@ var fluid_2_0 = fluid_2_0 || {};
         return fluid.invokeGlobalFunction(builder.options.assembledPrefsEditorGrade, [container, options.prefsEditor]);
     };
 
-})(jQuery, fluid_2_0);
+})(jQuery, fluid_2_0_0_beta_1);
+;/*
+Copyright 2014 OCAD University
+
+Licensed under the Educational Community License (ECL), Version 2.0 or the New
+BSD license. You may not use this file except in compliance with one these
+Licenses.
+
+You may obtain a copy of the ECL 2.0 License and BSD License at
+https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
+
+*/
+
+var fluid_2_0_0_beta_1 = fluid_2_0_0_beta_1 || {};
+
+(function ($, fluid) {
+
+    "use strict";
+
+    fluid.registerNamespace("fluid.overviewPanel");
+
+    fluid.overviewPanel.makeBooleanListener = function (that, selector, method, path, value) {
+        var elem = that.locate(selector);
+        elem[method](function (evt) {
+            that.applier.change(path, value === "toggle" ? !that.model[path] : value);
+            evt.preventDefault();
+        });
+    };
+
+    fluid.defaults("fluid.overviewPanel", {
+        gradeNames: ["fluid.rendererComponent"],
+        resources: {
+            template: {
+                href: "../html/overviewPanelTemplate.html"
+            }
+        },
+        listeners: {
+            "onCreate.setVisibility": "{that}.setVisibility",
+            "onCreate.showTemplate": "fluid.overviewPanel.showTemplate",
+            "afterRender.registerToggleListener": {
+                "funcName": "fluid.overviewPanel.makeBooleanListener",
+                "args": ["{that}", "toggleControl", "click", "showPanel", "toggle"]
+            },
+            "afterRender.registerCloseListener": {
+                "funcName": "fluid.overviewPanel.makeBooleanListener",
+                "args": ["{that}", "closeControl", "click", "showPanel", false]
+            },
+            "afterRender.setLinkHrefs": {
+                "funcName": "fluid.overviewPanel.setLinkHrefs",
+                "args": ["{that}", "{that}.options.links"]
+            },
+            "afterRender.setToggleControlAria": {
+                "this": "{that}.dom.toggleControl",
+                "method": "attr",
+                "args": {
+                    "role": "button",
+                    "aria-controls": "{that}.containerId"
+                }
+            },
+            "afterRender.setCloseControlAria": {
+                "this": "{that}.dom.closeControl",
+                "method": "attr",
+                "args": {
+                    "role": "button",
+                    "aria-label": "{that}.options.strings.closePanelLabel",
+                    "aria-controls": "{that}.containerId"
+                }
+            },
+            "afterRender.setAriaStates": "{that}.setAriaStates"
+        },
+        model: {
+            showPanel: true
+        },
+        modelListeners: {
+            "showPanel.setVisibility": "{that}.setVisibility",
+            "showPanel.setAriaStates": "{that}.setAriaStates"
+        },
+        members: {
+            containerId: {
+                expander: {
+                    // create an id for that.container, if it does not have one already,
+                    // and set that.containerId to the id value
+                    funcName: "fluid.allocateSimpleId",
+                    args: "{that}.container"
+                }
+            }
+        },
+        invokers: {
+            setVisibility: {
+                funcName: "fluid.overviewPanel.setVisibility",
+                args: ["{that}", "{that}.model.showPanel"]
+            },
+            setAriaStates: {
+                funcName: "fluid.overviewPanel.setAriaStates",
+                args: ["{that}", "{that}.model.showPanel"]
+            }
+        },
+        selectors: {
+            toggleControl: ".flc-overviewPanel-toggleControl",
+            titleBegin: ".flc-overviewPanel-title-begin",
+            titleLink: ".flc-overviewPanel-titleLink",
+            titleLinkText: ".flc-overviewPanel-title-linkText",
+            titleEnd: ".flc-overviewPanel-title-end",
+            componentName: ".flc-overviewPanel-componentName",
+            description: ".flc-overviewPanel-description",
+            instructionsHeading: ".flc-overviewPanel-instructionsHeading",
+            instructions: ".flc-overviewPanel-instructions",
+            demoCodeLink: ".flc-overviewPanel-demoCodeLink",
+            demoCodeLinkText: ".flc-overviewPanel-demoCodeLinkText",
+            infusionCodeLink: ".flc-overviewPanel-infusionCodeLink",
+            infusionCodeLinkText: ".flc-overviewPanel-infusionCodeLinkText",
+            apiLink: ".flc-overviewPanel-apiLink",
+            apiLinkText: ".flc-overviewPanel-apiLinkText",
+            designLink: ".flc-overviewPanel-designLink",
+            designLinkText: ".flc-overviewPanel-designLinkText",
+            feedbackText: ".flc-overviewPanel-feedbackText",
+            feedbackLink: ".flc-overviewPanel-feedbackLink",
+            feedbackLinkText: ".flc-overviewPanel-feedbackLinkText",
+            closeControl: ".flc-overviewPanel-closeControl",
+            closeText: ".flc-overviewPanel-closeText"
+        },
+        selectorsToIgnore: ["toggleControl", "titleLink", "demoCodeLink", "infusionCodeLink", "apiLink", "designLink", "feedbackLink", "closeControl"],
+        protoTree: {
+            titleBegin: {messagekey: "titleBegin"},
+            titleLinkText: {messagekey: "titleLinkText"},
+            titleEnd: {messagekey: "titleEnd"},
+            componentName: {messagekey: "componentName"},
+            description: {markup: "${{that}.options.markup.description}"},
+            instructionsHeading: {messagekey: "instructionsHeading"},
+            instructions: {markup: "${{that}.options.markup.instructions}"},
+            demoCodeLinkText: {messagekey: "demoCodeLinkText"},
+            infusionCodeLinkText: {messagekey: "infusionCodeLinkText"},
+            apiLinkText: {messagekey: "apiLinkText"},
+            designLinkText: {messagekey: "designLinkText"},
+            feedbackText: {messagekey: "feedbackText"},
+            feedbackLinkText: {messagekey: "feedbackLinkText"},
+            closeText: {messagekey: "closeText"}
+        },
+        styles: {
+            hidden: "fl-overviewPanel-hidden"
+        },
+        strings: {
+            titleBegin: "An",
+            titleLinkText: "Infusion",
+            titleEnd: "component demo",
+            componentName: "Component Name",
+            instructionsHeading: "Instructions",
+            demoCodeLinkText: "demo code",
+            infusionCodeLinkText: "get Infusion",
+            apiLinkText: "API",
+            designLinkText: "design",
+            feedbackText: "Found a bug? Have a question?",
+            feedbackLinkText: "Let us know!",
+            closeText: "close",
+            openPanelLabel: "Open the overview panel",
+            closePanelLabel: "Close the overview panel"
+        },
+        markup: {
+            description: "A description of the component should appear here. It should say: <ul><li>What the component does.</li><li>Why it is interesting / useful.</li></ul>",
+            instructions: "<p>Do this to do this. Do that to do that.</p>"
+        },
+        links: {
+            titleLink: "http://fluidproject.org/infusion.html",
+            demoCodeLink: "#",
+            infusionCodeLink: "https://github.com/fluid-project/infusion/",
+            apiLink: "#",
+            designLink: "#",
+            feedbackLink: "#"
+        }
+    });
+
+    fluid.overviewPanel.setVisibility = function (that, showPanel) {
+        that.container.toggleClass(that.options.styles.hidden, !showPanel);
+    };
+
+    fluid.overviewPanel.showTemplate = function (that) {
+        fluid.fetchResources(that.options.resources, function () {
+            that.refreshView();
+        });
+    };
+
+    fluid.overviewPanel.setLinkHrefs = function (that, linkMap) {
+        fluid.each(linkMap, function (linkHref, selector) {
+            that.locate(selector).attr("href", linkHref);
+        });
+    };
+
+    fluid.overviewPanel.setAriaStates = function (that, showPanel) {
+        that.locate("toggleControl").attr("aria-pressed", !showPanel);
+        that.locate("toggleControl").attr("aria-expanded", showPanel);
+        that.locate("closeControl").attr("aria-expanded", showPanel);
+        if (showPanel) {
+            that.locate("toggleControl").attr("aria-label", that.options.strings.closePanelLabel);
+        } else {
+            that.locate("toggleControl").attr("aria-label", that.options.strings.openPanelLabel);
+        }
+    };
+
+})(jQuery, fluid_2_0_0_beta_1);
