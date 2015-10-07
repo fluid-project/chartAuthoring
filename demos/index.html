@@ -4,6 +4,9 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="../src/lib/infusion/src/lib/normalize/css/normalize.css" />
+        <link rel="stylesheet" type="text/css" href="../src/lib/infusion/src/framework/core/css/fluid.css" />
+        <link rel="stylesheet" type="text/css" href="../src/lib/infusion/src/components/overviewPanel/css/OverviewPanel.css" />
+
         <script type="text/javascript" src="../src/lib/infusion/infusion-custom.js"></script>
         <script type="text/javascript" src="../src/lib/d3/d3.js"></script>
         <script type="text/javascript" src="../src/js/valueBinding.js"></script>
@@ -25,7 +28,35 @@
     </head>
 
     <body>
+
+        <div id="floec-overviewPanel" class="fl-overviewPanel-container"></div>
+
         <div id="floec-chartAuthoring"></div>
+
+        <script type="text/javascript">
+            fluid.overviewPanel("#floec-overviewPanel", {
+                resources: {
+                    template: {
+                        href: "../src/lib/infusion/src/components/overviewPanel/html/overviewPanelTemplate.html"
+                    }
+                },
+                strings: {
+                    componentName: "Chart Authoring Tool",
+                    feedbackText: "Have a comment?",
+                    feedbackLinkText: "Email us"
+                },
+                markup: {
+                    description: "The Chart Authoring Tool supports the authoring, export and embedding of highly accessible charts. Eventually, these charts will feature sonified representation of their data in addition to visual display.",
+                    instructions: "<p>Enter labels and data for your pie chart in the data entry area. The pie chart and its corresponding legend will update each time you update your data.</p>"
+                },
+                links: {
+                    titleLink: "http://fluidproject.org/infusion.html",
+                    demoCodeLink: "https://github.com/fluid-project/chartAuthoring/tree/master/demos",
+                    infusionCodeLink: "https://github.com/fluid-project/infusion",
+                    feedbackLink: "mailto:infusion-users@fluidproject.org?subject=Chart Authoring Tool feedback"
+                }
+            });
+        </script>
 
         <script type="text/javascript">
             floe.chartAuthoring("#floec-chartAuthoring", {
