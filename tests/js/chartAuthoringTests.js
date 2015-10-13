@@ -89,7 +89,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             name: "Test the chart authoring component",
             tests: [{
                 name: "Chart Authoring Init",
-                expect: 14,
+                expect: 15,
                 sequence: [{
                     listener: "floe.tests.chartAuthoringTester.verifyInit",
                     args: ["{chartAuthoring}"],
@@ -127,7 +127,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var chartAuthoringInterfaceResources = that.chartAuthoringInterface.options.resources,
             dataEntryPanelResources = that.chartAuthoringInterface.dataEntryPanel.options.resources,
             pieChartResources = that.chartAuthoringInterface.pieChart.options.resources,
-            templateLoaderResources = that.templateLoader.resources;
+            templateLoaderResources = that.templateLoader.resources,            
+            legendTableId = that.chartAuthoringInterface.pieChart.legend.locate("table").attr("id"),
+            pieChartPieId = that.chartAuthoringInterface.pieChart.pie.locate("pie").attr("id"),
+            dataEntryFormAriaControlsAttr = that.chartAuthoringInterface.dataEntryPanel.locate("dataEntryForm").attr("aria-controls");
 
         jqUnit.assertDeepEq("Template has been passed into the chartAuthoringInterface sub-component", chartAuthoringInterfaceResources.template.resourceText, templateLoaderResources.chartAuthoringInterface.resourceText);
         jqUnit.assertDeepEq("Template has been passed into the dataEntryPanel sub-component", dataEntryPanelResources.template.resourceText, templateLoaderResources.dataEntryPanel.resourceText);
@@ -137,6 +140,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         jqUnit.assertNotUndefined("The chartAuthoringInterface has been rendered", that.chartAuthoringInterface.container.html());
         jqUnit.assertNotUndefined("The dataEntryPanel has been rendered", that.chartAuthoringInterface.dataEntryPanel.container.html());
         jqUnit.assertNotUndefined("The pieChart has been rendered", that.chartAuthoringInterface.pieChart.container.html());
+
+        jqUnit.assertDeepEq("The data entry form has an aria-controls attribute properly referencing the pie and legend", dataEntryFormAriaControlsAttr, legendTableId + " " + pieChartPieId);
+
+
     };
 
     floe.tests.chartAuthoringTester.verifyRelay = function (that) {

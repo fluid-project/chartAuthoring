@@ -96,6 +96,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 args: ["{that}"]
             }
         },
+        listeners: {
+            "onToolReady.addAriaConnections": "floe.chartAuthoring.addAriaConnections"
+        },
         // The terms and/or resources need to be set to the appropriate locations
         // by the integrator.
         templateLoader: {
@@ -144,4 +147,19 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         });
         return pieChartData;
     };
+
+    // Adds aria attributes that only make sense within the context of the overall chart authoring tool
+    // Specifically, adds:
+    // - a unique ID for the pie's SVG and the legend's table
+    // - an aria-controls attribute for the dataEntryPanel's form referencing the unique IDs 
+    floe.chartAuthoring.addAriaConnections = function(that) {
+        var legendId = "floe-id-"+fluid.allocateGuid(),
+            pieId = "floe-id-"+fluid.allocateGuid();
+
+        that.chartAuthoringInterface.pieChart.legend.locate("table").attr("id",legendId);
+        that.chartAuthoringInterface.pieChart.pie.locate("pie").attr("id",pieId);
+
+        that.chartAuthoringInterface.dataEntryPanel.locate("dataEntryForm").attr("aria-controls", legendId + " " + pieId);
+    };
+
 })(jQuery, fluid);
