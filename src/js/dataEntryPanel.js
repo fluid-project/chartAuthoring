@@ -16,6 +16,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     fluid.defaults("floe.chartAuthoring.dataEntryPanel", {
         gradeNames: ["floe.chartAuthoring.templateInjection"],
         selectors: {
+            dataEntryForm: ".floec-ca-dataEntryPanel-dataEntryForm",
             dataEntryLabel: ".floec-ca-dataEntryPanel-dataEntryLabel",
             dataEntries: ".floec-ca-dataEntryPanel-dataEntries",
             dataEntry: ".floec-ca-dataEntryPanel-dataEntry",
