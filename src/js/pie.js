@@ -198,7 +198,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 // Set aria role to image
                 "role": "img",
                 // Explicitly associate SVG title & desc via aria-labelledby
-                "aria-labelledby": pieTitleId + " " + pieDescId
+                "aria-labelledby": pieTitleId + " " + pieDescId,
+                "aria-live": "polite",
+                "aria-relevant": "all"
             });
 
         that.svg

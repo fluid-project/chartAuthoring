@@ -180,7 +180,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         that.table = that.jQueryToD3(container)
             .append("table")
             .attr({
-                "class": tableClass
+                "class": tableClass,
+                "aria-live": "polite",
+                "aria-relevant": "all"
             });
 
         if(that.options.strings.legendTitle !== null) {
