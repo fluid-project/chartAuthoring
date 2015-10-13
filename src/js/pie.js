@@ -30,7 +30,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             dataSet: []
         },
         pieOptions: {
-            // Width & height can be supplied as fixed, or as "auto" to automatically scale to width/height of container
             width: 300,
             height: 300,
             // An array of colors to fill slices generated for corresponding values of model.dataSet
@@ -169,8 +168,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.chartAuthoring.pieChart.pie.create = function (that) {
         var container = that.container,
             p = that.options.pieOptions,
-            width = p.width === "auto" ? floe.chartAuthoring.pieChart.pie.calcAutoscaleWidth(that) : p.width,
-            height = p.height === "auto" ? floe.chartAuthoring.pieChart.pie.calcAutoscaleHeight(that) : p.height,
+            width = p.width,
+            height = p.height,
             colors = p.colors,
             outerRadius = p.outerRadius || width / 2,
             innerRadius = p.innerRadius || 0,
@@ -179,8 +178,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             descriptionClass = that.classes.description,
             pieTitleId = "fluid-id-"+fluid.allocateGuid(),
             pieDescId = "fluid-id-"+fluid.allocateGuid();
-
-        floe.chartAuthoring.pieChart.pie.calcAutoscaleWidth(that);
 
         that.arc = d3.svg.arc()
             .innerRadius(innerRadius)
@@ -239,15 +236,4 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.chartAuthoring.pieChart.getViewBoxConfiguration = function (x, y, width, height) {
         return x + "," + y + "," + width + "," + height;
     };
-
-    // Returns automatically calculated width based on container width;
-    floe.chartAuthoring.pieChart.pie.calcAutoscaleWidth = function (that) {
-        return that.container.width();
-    };
-
-    // Returns automatically calculated height based on container height;
-    floe.chartAuthoring.pieChart.pie.calcAutoscaleHeight = function (that) {
-        return that.container.width();
-    };
-
 })(jQuery, fluid);

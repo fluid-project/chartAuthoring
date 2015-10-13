@@ -47,8 +47,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         // Test the drawing
         jqUnit.assertNotEquals("The SVG element is created with the proper selector", 0, pie.length);
 
-        jqUnit.assertEquals("The width is set correctly on the pie chart", that.options.pieOptions.width === "auto" ? that.container.width() : that.options.pieOptions.width, pie.attr("width"));
-        jqUnit.assertEquals("The height is set correctly on the pie chart", that.options.pieOptions.height === "auto" ? that.container.height() : that.options.pieOptions.height, pie.attr("height"));
+        jqUnit.assertEquals("The width is set correctly on the pie chart", that.options.pieOptions.width, pie.attr("width"));
+        jqUnit.assertEquals("The height is set correctly on the pie chart", that.options.pieOptions.height, pie.attr("height"));
         jqUnit.assertEquals("The pie slices have been created with the proper selectors", that.model.dataSet.length, that.locate("slice").length);
         jqUnit.assertEquals("The texts for pie slices have been created with the proper selectors", that.model.dataSet.length, that.locate("text").length);
         jqUnit.assertEquals("The pie's title has been created", that.options.strings.pieTitle, that.locate("title").text());
@@ -184,21 +184,5 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         that.applier.change("dataSet", floe.tests.chartAuthoring.objectArrayChangeInPlace);
         floe.tests.chartAuthoring.validatePie(that, floe.tests.chartAuthoring.testObjectData);
     });
-
-    jqUnit.test("Test the pie chart component created with automatic scaling", function () {
-        jqUnit.expect(27);
-
-        var that = floe.tests.chartAuthoring.pieChart.pie(".floec-ca-pieChart-autoScale", {
-            model: {
-                dataSet: floe.tests.chartAuthoring.numberArray
-            },
-            pieOptions: {
-                width: "auto",
-                height: "auto"
-            }
-        });
-
-        floe.tests.chartAuthoring.runCommonTests(that, floe.tests.chartAuthoring.testPrimitiveData);
-    });
-
+    
 })(jQuery, fluid);
