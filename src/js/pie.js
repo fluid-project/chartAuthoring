@@ -176,8 +176,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             pieClass = that.classes.pie,
             titleClass = that.classes.title,
             descriptionClass = that.classes.description,
-            pieTitleId = "fluid-id-"+fluid.allocateGuid(),
-            pieDescId = "fluid-id-"+fluid.allocateGuid();
+            pieTitleId = "floe-id-"+fluid.allocateGuid(),
+            pieDescId = "floe-id-"+fluid.allocateGuid();
 
         that.arc = d3.svg.arc()
             .innerRadius(innerRadius)
