@@ -113,11 +113,19 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         return togo;
     };
 
+
+    // Given a jQuery object (acquired from that.locate or similar), this function
+    // generates a unique ID  attribute for it and returns that ID, or returns
+    // the existing one if already defined
     floe.d3ViewComponent.getOrCreateId = function(jQueryObj) {
         if (jQueryObj.attr("id") === undefined) {
-            jQueryObj.attr("id", "floe-id-"+fluid.allocateGuid());
+            var floeId = "floe-id-"+fluid.allocateGuid();
+            jQueryObj.attr("id", floeId);
+            return floeId;
+        } else {
+            return jQueryObj.attr("id");
         }
-        return jQueryObj.attr("id");
+
     };
 
 })(jQuery, fluid);
