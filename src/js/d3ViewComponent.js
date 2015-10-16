@@ -113,4 +113,11 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         return togo;
     };
 
+    floe.d3ViewComponent.getOrCreateId = function(jQueryObj) {
+        if (jQueryObj.attr("id") === undefined) {
+            jQueryObj.attr("id", "floe-id-"+fluid.allocateGuid());
+        }
+        return jQueryObj.attr("id");
+    };
+
 })(jQuery, fluid);

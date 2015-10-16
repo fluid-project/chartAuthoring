@@ -150,14 +150,11 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     // Adds aria attributes that only make sense within the context of the overall chart authoring tool
     // Specifically, adds:
-    // - a unique ID for the pie's SVG and the legend's table
-    // - an aria-controls attribute for the dataEntryPanel's form referencing the unique IDs 
+    // - an aria-controls attribute for the dataEntryPanel's form referencing the unique IDs of the pie and legend 
     floe.chartAuthoring.addAriaConnections = function(that) {
-        var legendId = "floe-id-"+fluid.allocateGuid(),
-            pieId = "floe-id-"+fluid.allocateGuid();
 
-        that.chartAuthoringInterface.pieChart.legend.locate("table").attr("id",legendId);
-        that.chartAuthoringInterface.pieChart.pie.locate("pie").attr("id",pieId);
+        var legendId = floe.d3ViewComponent.getOrCreateId(that.chartAuthoringInterface.pieChart.legend.locate("table")),
+            pieId = floe.d3ViewComponent.getOrCreateId(that.chartAuthoringInterface.pieChart.pie.locate("pie"));
 
         that.chartAuthoringInterface.dataEntryPanel.locate("dataEntryForm").attr("aria-controls", legendId + " " + pieId);
     };
