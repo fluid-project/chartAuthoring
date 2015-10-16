@@ -130,6 +130,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             templateLoaderResources = that.templateLoader.resources,
             legendTableId = that.chartAuthoringInterface.pieChart.legend.locate("table").attr("id"),
             pieChartPieId = that.chartAuthoringInterface.pieChart.pie.locate("pie").attr("id"),
+            dataEntryFormTotalId = that.chartAuthoringInterface.dataEntryPanel.locate("totalValue").attr("id"),
             dataEntryFormAriaControlsAttr = that.chartAuthoringInterface.dataEntryPanel.locate("dataEntryForm").attr("aria-controls");
 
         jqUnit.assertDeepEq("Template has been passed into the chartAuthoringInterface sub-component", chartAuthoringInterfaceResources.template.resourceText, templateLoaderResources.chartAuthoringInterface.resourceText);
@@ -141,7 +142,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         jqUnit.assertNotUndefined("The dataEntryPanel has been rendered", that.chartAuthoringInterface.dataEntryPanel.container.html());
         jqUnit.assertNotUndefined("The pieChart has been rendered", that.chartAuthoringInterface.pieChart.container.html());
 
-        jqUnit.assertDeepEq("The data entry form has an aria-controls attribute properly referencing the pie and legend", dataEntryFormAriaControlsAttr, legendTableId + " " + pieChartPieId);
+        jqUnit.assertDeepEq("The data entry form has an aria-controls attribute properly referencing the pie, legend and total", dataEntryFormAriaControlsAttr, legendTableId + " " + pieChartPieId + " " + dataEntryFormTotalId);
 
 
     };
