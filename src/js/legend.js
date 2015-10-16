@@ -124,7 +124,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             d3.select(this)
                 .select(colorCellSelector)
                 .attr({
-                    "style": that.getColorCellStyle(d)
+                    "style": that.getColorCellStyle(d),
+                    // presentation role for these cells, since they have no non-visual semantic meaning
+                    "role": "presentation"
                 });
 
             d3.select(this)
