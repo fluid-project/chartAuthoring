@@ -113,7 +113,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         return togo;
     };
 
-
     // Given a jQuery object (acquired from that.locate or similar), this function
     // generates a unique ID  attribute for it and returns that ID, or returns
     // the existing one if already defined

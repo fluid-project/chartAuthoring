@@ -127,7 +127,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var chartAuthoringInterfaceResources = that.chartAuthoringInterface.options.resources,
             dataEntryPanelResources = that.chartAuthoringInterface.dataEntryPanel.options.resources,
             pieChartResources = that.chartAuthoringInterface.pieChart.options.resources,
-            templateLoaderResources = that.templateLoader.resources,            
+            templateLoaderResources = that.templateLoader.resources,
             legendTableId = that.chartAuthoringInterface.pieChart.legend.locate("table").attr("id"),
             pieChartPieId = that.chartAuthoringInterface.pieChart.pie.locate("pie").attr("id"),
             dataEntryFormAriaControlsAttr = that.chartAuthoringInterface.dataEntryPanel.locate("dataEntryForm").attr("aria-controls");
