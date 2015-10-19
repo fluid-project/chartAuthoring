@@ -175,9 +175,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             innerRadius = p.innerRadius || 0,
             pieClass = that.classes.pie,
             titleClass = that.classes.title,
-            descriptionClass = that.classes.description,
-            pieTitleId = floe.d3ViewComponent.getOrCreateId(that.locate("title")),
-            pieDescId = floe.d3ViewComponent.getOrCreateId(that.locate("description"));
+            descriptionClass = that.classes.description;
 
         that.arc = d3.svg.arc()
             .innerRadius(innerRadius)
@@ -197,8 +195,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 "viewBox": floe.chartAuthoring.pieChart.getViewBoxConfiguration(0,0, width, height),
                 // Set aria role to image
                 "role": "img",
-                // Explicitly associate SVG title & desc via aria-labelledby
-                "aria-labelledby": pieTitleId + " " + pieDescId,
                 "aria-live": "polite",
                 "aria-relevant": "all"
             });
@@ -206,18 +202,29 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         that.svg
             .append("title")
             .attr({
-                "id": pieTitleId,
                 "class": titleClass
             })
             .text(that.options.strings.pieTitle);
 
+        // Allocate ID for the title element
+        var pieTitleId = fluid.allocateSimpleId(that.locate("title"));
+
         that.svg
             .append("desc")
             .attr({
-                "id": pieDescId,
                 "class": descriptionClass
             })
             .text(that.options.strings.pieDescription);
+
+        // Allocate ID for the desc element
+        var pieDescId = fluid.allocateSimpleId(that.locate("description"));
+
+        // Now that they've been created and have IDs, explicitly associate SVG
+        // title & desc via aria-labelledby
+        that.svg.attr({
+            "aria-labelledby": pieTitleId + " " + pieDescId
+        });
+
 
         that.pieGroup = that.svg.append("g")
             .attr({

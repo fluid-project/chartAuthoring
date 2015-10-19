@@ -153,9 +153,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // - an aria-controls attribute for the dataEntryPanel's form referencing the unique IDs of the pie and legend
     floe.chartAuthoring.addAriaConnections = function(that) {
 
-        var legendId = floe.d3ViewComponent.getOrCreateId(that.chartAuthoringInterface.pieChart.legend.locate("table")),
-            pieId = floe.d3ViewComponent.getOrCreateId(that.chartAuthoringInterface.pieChart.pie.locate("pie")),
-            totalId = floe.d3ViewComponent.getOrCreateId(that.chartAuthoringInterface.dataEntryPanel.locate("totalValue"));
+        var legendId = fluid.allocateSimpleId(that.chartAuthoringInterface.pieChart.legend.locate("table")),
+            pieId = fluid.allocateSimpleId(that.chartAuthoringInterface.pieChart.pie.locate("pie")),
+            totalId = fluid.allocateSimpleId(that.chartAuthoringInterface.dataEntryPanel.locate("totalValue"));
 
 
         that.chartAuthoringInterface.dataEntryPanel.locate("dataEntryForm").attr("aria-controls", legendId + " " + pieId + " " + totalId);
