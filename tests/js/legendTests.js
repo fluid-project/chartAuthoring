@@ -255,6 +255,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var d3ColorCells = that.jQueryToD3($(that.locate("colorCell")));
         d3ColorCells.each(function (d) {
             jqUnit.assertEquals("The data colors are filled correctly in the legend", floe.tests.chartAuthoring.hexToRGB(d.color), ($(this).css("background-color")));
+            jqUnit.assertEquals("The color cells have role=presentation", "presentation", ($(this).attr("role")));
         });
 
         var d3LabelCells = that.jQueryToD3($(that.locate("labelCell")));
@@ -302,7 +303,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     };
 
     jqUnit.test("Test the legend component created based off an array of objects, unsorted, user-supplied colours", function () {
-        jqUnit.expect(104);
+        jqUnit.expect(119);
 
         var that = floe.tests.chartAuthoring.pieChart.legend(".floe-ca-legend-objects-unsorted", {
             model: {
@@ -318,7 +319,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     });
 
     jqUnit.test("Test the legend component created based off an array of objects, sorted, default colours", function () {
-        jqUnit.expect(104);
+        jqUnit.expect(119);
 
         var that = floe.tests.chartAuthoring.pieChart.legend(".floe-ca-legend-objects-sorted", {
             model: {
