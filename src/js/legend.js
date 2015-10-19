@@ -254,7 +254,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // Scales the supplied colors using d3 and returns them as an array
 
     floe.chartAuthoring.pieChart.legend.getColorArray = function (colors) {
-        var colorScale = (typeof(colors) === "function") ? colors : floe.d3.getColorScale(colors);
+        var colorScale = (typeof(colors) === "function") ? colors : floe.d3.getColorScale(colors);        
         return colorScale.range();
     };
 
