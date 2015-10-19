@@ -73,7 +73,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 args: ["{that}"]
             },
             sort: {
-                funcName: "floe.chartAuthoring.pieChart.legend.sort",
+                funcName: "floe.chartAuthoring.pieChart.legend.sortAscending",
                 args: ["{arguments}.0", "{arguments}.1"]
             },
             getColorCellStyle: {
@@ -224,7 +224,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         that.events.onLegendCreated.fire();
     };
 
-    floe.chartAuthoring.pieChart.legend.sort = function (a, b) {
+    floe.chartAuthoring.pieChart.legend.sortAscending = function (a, b) {
         return b.value - a.value;
     };
 
@@ -254,7 +254,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // Scales the supplied colors using d3 and returns them as an array
 
     floe.chartAuthoring.pieChart.legend.getColorArray = function (colors) {
-        var colorScale = (typeof(colors) === "function") ? colors : floe.d3.getColorScale(colors);        
+        var colorScale = (typeof(colors) === "function") ? colors : floe.d3.getColorScale(colors);
         return colorScale.range();
     };
 
