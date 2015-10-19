@@ -334,11 +334,17 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     });
 
-    jqUnit.test("Test ascending sort behaviour", function () {
+    jqUnit.test("Test ascending sort function", function () {
         var unsorted = [{value: 5}, {value: 8}, {value: 6}, {value: 1}];
         var expectedSorted = [{value: 8},  {value: 6}, {value: 5}, {value: 1}];
-        jqUnit.assertDeepEq("Ascending sort behaving as expected", expectedSorted, unsorted.sort(floe.chartAuthoring.pieChart.legend.sortAscending));
+        jqUnit.assertDeepEq("Ascending sort function behaving as expected", expectedSorted, unsorted.sort(floe.chartAuthoring.pieChart.legend.sortAscending));
     });
 
+    jqUnit.test("Test addValueFromArray function", function () {
+        var objectArray = [{name: "Alice"}, {name: "Bob"}];
+        var valueArray = ["true", "false"];
+        var expectedTransformedArray = [{name: "Alice", trusted: "true"}, {name: "Bob", trusted: "false"}];
+        jqUnit.assertDeepEq("addValueFromArray function behaving as expected", expectedTransformedArray, floe.chartAuthoring.pieChart.legend.addValueFromArray(objectArray, valueArray, "trusted"));
+    });
 
 })(jQuery, fluid);
