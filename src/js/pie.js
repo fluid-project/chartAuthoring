@@ -193,10 +193,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 "height": height,
                 "class": pieClass,
                 "viewBox": floe.chartAuthoring.pieChart.getViewBoxConfiguration(0,0, width, height),
-                // Set aria role to image
-                "role": "img",
-                "aria-live": "polite",
-                "aria-relevant": "all"
+                // Set aria role to image - this causes the pie to appear as a
+                // static image to AT rather than as a number of separate
+                // images                
+                "role": "img"
             });
 
         that.svg
