@@ -94,7 +94,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 func: "jqUnit.assertValue",
                 args: ["The component should have been initialized.", "{dataEntryPanel}"]
             }, {
-                expect: 11,
+                expect: 13,
                 name: "Test Initial Rendering",
                 type: "test",
                 func: "floe.tests.chartAuthoring.dataEntryPanelTester.testRendering",
@@ -137,6 +137,16 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             value: that.options.strings.emptyTotalValue,
             percentage: "%"
         });
+
+        // Test application of aria-labelledby to displayed total
+        var totalLabelId = that.locate("totalLabel").attr("id");
+        var totalValue = that.locate("totalValue");
+        jqUnit.assertEquals("Total label is connected to displayed total by aria-labelledby", totalLabelId, totalValue.attr("aria-labelledby"));
+
+        // Test application of aria-live to displayed total
+
+        jqUnit.assertEquals("Total value is set to aria-live appropriately", "polite", totalValue.attr("aria-live"));
+
     };
 
     floe.tests.chartAuthoring.dataEntryPanelTester.verifyTotalOutput = function (that, expected) {
