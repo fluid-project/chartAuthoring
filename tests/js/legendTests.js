@@ -212,7 +212,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // convenience function for easing testing of colors (jquery returns only RGB)
     // Based off http://stackoverflow.com/questions/4262417/jquery-hex-to-rgb-calculation-different-between-browsers
     floe.tests.chartAuthoring.hexToRGB = function (hexStr){
-        // note: hexStr should be #rrggbb        
+        // note: hexStr should be #rrggbb
         var hex = parseInt(hexStr.substring(1), 16);
         var r = (hex & 0xff0000) >> 16;
         var g = (hex & 0x00ff00) >> 8;
@@ -332,6 +332,12 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         floe.tests.chartAuthoring.testLegend(that, floe.tests.chartAuthoring.objectArraySorted, floe.tests.chartAuthoring.objectArrayAddSorted, floe.tests.chartAuthoring.objectArrayRemoveSorted, floe.tests.chartAuthoring.objectArrayChangeInPlaceSorted);
 
+    });
+
+    jqUnit.test("Test ascending sort behaviour", function () {
+        var unsorted = [{value: 5}, {value: 8}, {value: 6}, {value: 1}];
+        var expectedSorted = [{value: 8},  {value: 6}, {value: 5}, {value: 1}];
+        jqUnit.assertDeepEq("Ascending sort behaving as expected", expectedSorted, unsorted.sort(floe.chartAuthoring.pieChart.legend.sortAscending));
     });
 
 
