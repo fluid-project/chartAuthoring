@@ -28,148 +28,181 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         },
         members: {
             mouseOverListenerCalled: false
+        },
+        strings: {
+            legendTitle: "Legend Title"
         }
     });
 
     floe.tests.chartAuthoring.objectArray = [{
         id: "id0",
         value: 15,
-        label: "One"
+        label: "One",
+        color: "#000000"
     }, {
         id: "id1",
         value: 67,
-        label: "Two"
+        label: "Two",
+        color: "#ff0000"
     }, {
         id: "id2",
         value: 20,
-        label: "Three"
+        label: "Three",
+        color: "#00ff00"
     }, {
         id: "id3",
         value: 45,
-        label: "Four"
+        label: "Four",
+        color:  "#0000ff"
     }];
 
     floe.tests.chartAuthoring.objectArrayAdd = [{
         id: "id0",
         value: 15,
-        label: "One"
+        label: "One",
+        color: "#000000"
     }, {
         id: "id1",
         value: 67,
-        label: "Two"
+        label: "Two",
+        color: "#ff0000"
     }, {
         id: "id2",
         value: 20,
-        label: "Three"
+        label: "Three",
+        color: "#00ff00"
     }, {
         id: "id3",
         value: 45,
-        label: "Four"
+        label: "Four",
+        color:  "#0000ff"
     },
     {
         id: "id4",
         value: 26,
-        label: "Five"
+        label: "Five",
+        color: "#aabbcc"
     }];
 
     floe.tests.chartAuthoring.objectArrayRemove = [{
         id: "id0",
         value: 15,
-        label: "One"
+        label: "One",
+        color: "#000000"
     }, {
         id: "id1",
         value: 67,
-        label: "Two"
+        label: "Two",
+        color: "#ff0000"
     }, {
         id: "id2",
         value: 20,
-        label: "Three"
+        label: "Three",
+        color: "#00ff00"
     }];
 
     floe.tests.chartAuthoring.objectArrayChangeInPlace = [{
         id: "id0",
         value: 36,
-        label: "I"
+        label: "I",
+        color: "#000000"
     }, {
         id: "id1",
         value: 67,
-        label: "II"
+        label: "II",
+        color: "#ff0000"
     }, {
         id: "id2",
         value: 26,
-        label: "Three"
+        label: "Three",
+        color: "#00ff00"
     }];
 
     floe.tests.chartAuthoring.objectArraySorted = [{
         id: "id1",
         value: 67,
-        label: "Two"
+        label: "Two",
+        color: "#ff7f0e"
     }, {
         id: "id3",
         value: 45,
-        label: "Four"
+        label: "Four",
+        color: "#d62728"
     },
     {
         id: "id2",
         value: 20,
-        label: "Three"
+        label: "Three",
+        color: "#2ca02c"
     }, {
         id: "id0",
         value: 15,
-        label: "One"
+        label: "One",
+        color: "#1f77b4"
     }];
 
     floe.tests.chartAuthoring.objectArrayAddSorted = [{
         id: "id1",
         value: 67,
-        label: "Two"
+        label: "Two",
+        color: "#ff7f0e"
     }, {
         id: "id3",
         value: 45,
-        label: "Four"
+        label: "Four",
+        color: "#d62728"
     },
     {
         id: "id4",
         value: 26,
-        label: "Five"
+        label: "Five",
+        color: "#9467bd"
     },
     {
         id: "id2",
         value: 20,
-        label: "Three"
+        label: "Three",
+        color: "#2ca02c"
     }, {
         id: "id0",
         value: 15,
-        label: "One"
+        label: "One",
+        color: "#1f77b4"
     }];
 
     floe.tests.chartAuthoring.objectArrayRemoveSorted = [{
         id: "id1",
         value: 67,
-        label: "Two"
+        label: "Two",
+        color: "#ff7f0e"
     },
     {
         id: "id2",
         value: 20,
-        label: "Three"
+        label: "Three",
+        color: "#2ca02c"
     }, {
         id: "id0",
         value: 15,
-        label: "One"
+        label: "One",
+        color: "#1f77b4"
     }];
 
     floe.tests.chartAuthoring.objectArrayChangeInPlaceSorted = [{
         id: "id1",
         value: 67,
-        label: "II"
+        label: "II",
+        color: "#ff7f0e"
     }, {
         id: "id0",
         value: 36,
-        label: "I"
+        label: "I",
+        color: "#1f77b4"
     }, {
         id: "id2",
         value: 26,
-        label: "Three"
+        label: "Three",
+        color: "#2ca02c"
     }];
 
     floe.tests.chartAuthoring.mouseOverListener = function (data, i, that) {
@@ -189,13 +222,16 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     floe.tests.chartAuthoring.testLegendSyncWithModelDataSet = function(that, expectedDataSet) {
         var dataSet = expectedDataSet;
-
         var rows = floe.d3.jQueryToD3(that.locate("row"));
         rows.each(function (d,i) {
-            var displayedLabel = d3.select(this).select(that.options.selectors.labelCell).text();
-            var expectedLabel = dataSet[i].label;
-            var displayedValue = d3.select(this).select(that.options.selectors.valueCell).text();
-            var expectedValue = dataSet[i].value;
+            var displayedColor = d3.select(this).select(that.options.selectors.colorCell).style("background-color"),
+                expectedColor = dataSet[i].color,
+                displayedLabel = d3.select(this).select(that.options.selectors.labelCell).text(),
+                expectedLabel = dataSet[i].label,
+                displayedValue = d3.select(this).select(that.options.selectors.valueCell).text(),
+                expectedValue = dataSet[i].value;
+
+            jqUnit.assertEquals("Displayed colors are in sync with the current model's colors", displayedColor, floe.tests.chartAuthoring.hexToRGB(expectedColor));
             jqUnit.assertEquals("Displayed labels are in sync with the current model's labels", expectedLabel, displayedLabel);
             jqUnit.assertEquals("Displayed values are in sync with the current model's values", expectedValue, displayedValue);
         });
@@ -218,8 +254,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         var d3ColorCells = that.jQueryToD3($(that.locate("colorCell")));
         d3ColorCells.each(function (d) {
-
             jqUnit.assertEquals("The data colors are filled correctly in the legend", floe.tests.chartAuthoring.hexToRGB(d.color), ($(this).css("background-color")));
+            jqUnit.assertEquals("The color cells have role=presentation", "presentation", ($(this).attr("role")));
         });
 
         var d3LabelCells = that.jQueryToD3($(that.locate("labelCell")));
@@ -232,6 +268,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         d3ValueCells.each(function (d) {
             jqUnit.assertEquals("The data values are applied correctly in the legend", d.value, ($(this).html()));
         });
+
+        jqUnit.assertEquals("The legend's title is applied as a caption", that.options.strings.legendTitle, that.locate("caption").text());
 
         floe.tests.chartAuthoring.testLegendSyncWithModelDataSet(that, expectedDataSet);
 
@@ -265,7 +303,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     };
 
     jqUnit.test("Test the legend component created based off an array of objects, unsorted, user-supplied colours", function () {
-        jqUnit.expect(85);
+        jqUnit.expect(119);
 
         var that = floe.tests.chartAuthoring.pieChart.legend(".floe-ca-legend-objects-unsorted", {
             model: {
@@ -281,7 +319,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     });
 
     jqUnit.test("Test the legend component created based off an array of objects, sorted, default colours", function () {
-        jqUnit.expect(85);
+        jqUnit.expect(119);
 
         var that = floe.tests.chartAuthoring.pieChart.legend(".floe-ca-legend-objects-sorted", {
             model: {
@@ -297,5 +335,17 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     });
 
+    jqUnit.test("Test ascending sort function", function () {
+        var unsorted = [{value: 5}, {value: 8}, {value: 6}, {value: 1}];
+        var expectedSorted = [{value: 8},  {value: 6}, {value: 5}, {value: 1}];
+        jqUnit.assertDeepEq("Ascending sort function behaving as expected", expectedSorted, unsorted.sort(floe.chartAuthoring.pieChart.legend.sortAscending));
+    });
+
+    jqUnit.test("Test addValueFromArray function", function () {
+        var objectArray = [{name: "Alice"}, {name: "Bob"}];
+        var valueArray = ["true", "false"];
+        var expectedTransformedArray = [{name: "Alice", trusted: "true"}, {name: "Bob", trusted: "false"}];
+        jqUnit.assertDeepEq("addValueFromArray function behaving as expected", expectedTransformedArray, floe.chartAuthoring.pieChart.legend.addValueFromArray(objectArray, valueArray, "trusted"));
+    });
 
 })(jQuery, fluid);

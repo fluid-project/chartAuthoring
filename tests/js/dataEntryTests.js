@@ -51,7 +51,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         modules: [{
             name: "Tests the data entry component",
             tests: [{
-                expect: 5,
+                expect: 7,
                 name: "Test Init",
                 type: "test",
                 func: "floe.tests.chartAuthoring.dataEntryTester.testRendering",
@@ -84,7 +84,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 name: "Change Input",
                 sequence: [{
                     func: "floe.tests.utils.triggerChangeEvent",
-                    args: ["{dataEntry}.dom.input", "{that}.options.testOptions.domChange"]
+                    args: ["{dataEntry}.dom.value", "{that}.options.testOptions.domChange"]
                 }, {
                     listener: "jqUnit.assertEquals",
                     args: ["model.input should have been updated", "{that}.options.testOptions.domChange", "{dataEntry}.model.value"],
@@ -104,22 +104,31 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     };
 
     floe.tests.chartAuthoring.dataEntryTester.verifyEntry = function (that, expected) {
-        floe.tests.chartAuthoring.dataEntryTester.verifyInput("input", that.locate("input"), expected.value);
+        floe.tests.chartAuthoring.dataEntryTester.verifyInput("value", that.locate("value"), expected.value);
         floe.tests.chartAuthoring.dataEntryTester.verifyPercentage(that.locate("percentage"), expected.percentage);
+    };
+
+    floe.tests.chartAuthoring.dataEntryTester.verifyAccessibility = function(that) {
+        var valueInput = that.locate("value");
+        var labelInput = that.locate("label");
+        jqUnit.assertEquals("An aria-label for the label input has been set", that.options.strings.labelInputAriaLabel, labelInput.attr("aria-label"));
+        jqUnit.assertEquals("An aria-label for the value input has been set", that.options.strings.valueInputAriaLabel, valueInput.attr("aria-label"));
     };
 
     floe.tests.chartAuthoring.dataEntryTester.testRendering = function (that) {
         jqUnit.assertValue("The component should have been initialized.", that);
-        var input = that.locate("input");
+        var value = that.locate("value");
         var percentage = that.locate("percentage");
         var label = that.locate("label");
 
-        floe.tests.chartAuthoring.dataEntryTester.verifyInput("input", input, that.model.value || "");
-        jqUnit.assertEquals("The input placeholder has been set", that.options.strings.inputPlaceholder, input.attr("placeholder"));
+        floe.tests.chartAuthoring.dataEntryTester.verifyInput("value", value, that.model.value || "");
+        jqUnit.assertEquals("The value input placeholder has been set", that.options.strings.valueInputPlaceholder, value.attr("placeholder"));
 
         floe.tests.chartAuthoring.dataEntryTester.verifyPercentage(percentage, "%");
 
         floe.tests.chartAuthoring.dataEntryTester.verifyInput("label", label, that.model.label || "");
+
+        floe.tests.chartAuthoring.dataEntryTester.verifyAccessibility(that);
     };
 
     $(document).ready(function () {

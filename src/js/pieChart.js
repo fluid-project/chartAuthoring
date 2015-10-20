@@ -31,6 +31,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 container: "{that}.dom.pie",
                 options: {
                     pieOptions: "{pieChart}.drawingOptions",
+                    strings: {
+                        pieTitle: "{pieChart}.options.pieChartOptions.pieTitle",
+                        pieDescription: "{pieChart}.options.pieChartOptions.pieDescription"
+                    },
                     model: {
                         dataSet: "{pieChart}.model.dataSet"
                     },
@@ -46,6 +50,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 container: "{that}.dom.legend",
                 options: {
                     legendOptions: "{pieChart}.drawingOptions",
+                    strings: {
+                        legendTitle: "{pieChart}.options.pieChartOptions.legendTitle"
+                    },
                     model: {
                         dataSet: "{pieChart}.model.dataSet"
                     },
@@ -69,6 +76,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             // innerRadius: number,
             // animationDuration: number,
             // sort: boolean   // Whether or not to sort the data by values when creating the legend
+            // pieTitle: the accessible title to be applied to the pie chart
+            // pieDescription: the accessible description to be applied to the pie chart
         },
         selectors: {
             pie: ".floec-ca-pieChart-pie",
@@ -98,7 +107,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             template: {}
         }
     });
-
     floe.chartAuthoring.pieChart.consolidateDrawingOptions = function (userOptions) {
         var consolidatedOptions = fluid.copy(userOptions);
         fluid.set(consolidatedOptions, "colors", floe.d3.getColorScale(userOptions.colors));

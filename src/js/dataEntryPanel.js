@@ -16,6 +16,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     fluid.defaults("floe.chartAuthoring.dataEntryPanel", {
         gradeNames: ["floe.chartAuthoring.templateInjection"],
         selectors: {
+            dataEntryForm: ".floec-ca-dataEntryPanel-dataEntryForm",
             dataEntryLabel: ".floec-ca-dataEntryPanel-dataEntryLabel",
             dataEntries: ".floec-ca-dataEntryPanel-dataEntries",
             dataEntry: ".floec-ca-dataEntryPanel-dataEntry",
@@ -126,7 +127,19 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     floe.chartAuthoring.dataEntryPanel.renderPanel = function (that) {
         that.locate("dataEntryLabel").text(that.options.strings.dataEntryLabel);
-        that.locate("totalLabel").text(that.options.strings.totalLabel);
+        var totalLabel = that.locate("totalLabel");
+        totalLabel.text(that.options.strings.totalLabel);
+
+        // Allocate ID to total label
+        var totalLabelId = fluid.allocateSimpleId(totalLabel);
+
+        // Connect total label and displayed total via aria-labelledby,
+        // indicate displayed total is a live region
+        var totalValue = that.locate("totalValue");
+        totalValue.attr({
+            "aria-labelledby":totalLabelId,
+            "aria-live": "polite"
+        });
 
         var dataEntryContainerTemplate = that.locate("dataEntry").remove();
         for (var i = 1; i <= that.options.numDataEntryFields; i++) {

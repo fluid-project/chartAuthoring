@@ -39,6 +39,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             innerRadius: null,
             animationDuration: 750
         },
+        strings: {
+            pieTitle: "Pie Chart",
+            pieDescription: "A pie chart."
+        },
         styles: {
             pie: "floe-ca-pieChart-pie",
             slice: "floe-ca-pieChart-slice",
@@ -47,7 +51,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         selectors: {
             pie: ".floec-ca-pieChart-pie",
             slice: ".floec-ca-pieChart-slice",
-            text: ".floec-ca-pieChart-text"
+            text: ".floec-ca-pieChart-text",
+            title: ".floec-ca-pieChart-title",
+            description: ".floec-ca-pieChart-description"
         },
         events: {
             onPieCreated: null,  // Fire when the pie is created. Ready to register D3 DOM event listeners,
@@ -91,7 +97,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                     return color(i);
                 },
                 "d": arc,
-                "class": sliceClass
+                "class": sliceClass,
+                // Use the 'presentation' role because these are child images of the larger SVG image - they shouldn't be identified as individual images, at least at the moment
+                "role": "presentation"
             })
             .each(function (d) {
                 // Store current values for later use in interpolation function when redrawing
@@ -139,13 +147,13 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     };
 
     floe.chartAuthoring.pieChart.pie.draw = function (that) {
-        var svg = that.svg,
+        var pieGroup = that.pieGroup,
             pie = that.pie,
             dataSet = that.model.dataSet;
 
-        that.paths = svg.selectAll("path")
+        that.paths = pieGroup.selectAll("path")
             .data(pie(dataSet));
-        that.texts = svg.selectAll("text")
+        that.texts = pieGroup.selectAll("text")
             .data(pie(dataSet));
 
         floe.chartAuthoring.pieChart.pie.addSlices(that);
@@ -165,7 +173,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             colors = p.colors,
             outerRadius = p.outerRadius || width / 2,
             innerRadius = p.innerRadius || 0,
-            pieClass = that.classes.pie;
+            pieClass = that.classes.pie,
+            titleClass = that.classes.title,
+            descriptionClass = that.classes.description;
 
         that.arc = d3.svg.arc()
             .innerRadius(innerRadius)
@@ -181,9 +191,42 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             .attr({
                 "width": width,
                 "height": height,
-                "class": pieClass
+                "class": pieClass,
+                "viewBox": floe.chartAuthoring.pieChart.getViewBoxConfiguration(0,0, width, height),
+                // Set aria role to image - this causes the pie to appear as a
+                // static image to AT rather than as a number of separate
+                // images                
+                "role": "img"
+            });
+
+        that.svg
+            .append("title")
+            .attr({
+                "class": titleClass
             })
-            .append("g")
+            .text(that.options.strings.pieTitle);
+
+        // Allocate ID for the title element
+        var pieTitleId = fluid.allocateSimpleId(that.locate("title"));
+
+        that.svg
+            .append("desc")
+            .attr({
+                "class": descriptionClass
+            })
+            .text(that.options.strings.pieDescription);
+
+        // Allocate ID for the desc element
+        var pieDescId = fluid.allocateSimpleId(that.locate("description"));
+
+        // Now that they've been created and have IDs, explicitly associate SVG
+        // title & desc via aria-labelledby
+        that.svg.attr({
+            "aria-labelledby": pieTitleId + " " + pieDescId
+        });
+
+
+        that.pieGroup = that.svg.append("g")
             .attr({
                 "transform": "translate(" + outerRadius + "," + outerRadius + ")"
             });
@@ -199,4 +242,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         return "translate(" + arc.centroid(d) + ")";
     };
 
+    floe.chartAuthoring.pieChart.getViewBoxConfiguration = function (x, y, width, height) {
+        return x + "," + y + "," + width + "," + height;
+    };
 })(jQuery, fluid);

@@ -18,7 +18,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         strings: {
             legendColHeading:"Legend",
             labelColHeading:"Label",
-            valueColHeading:"Value"
+            valueColHeading:"Value" //,
+            // legendTitle:"" // title for the legend - translates to table caption
         },
         model: {
             // dataSet accepts:
@@ -45,6 +46,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             legend: ".floec-ca-pieChart-legend",
             table: ".floec-ca-pieChart-legend-table",
             row: ".floec-ca-pieChart-legend-table-row",
+            caption: ".floec-ca-pieChart-legend-caption",
             colorCell: ".floec-ca-pieChart-legend-color-cell",
             labelCell: ".floec-ca-pieChart-legend-label-cell",
             valueCell: ".floec-ca-pieChart-legend-value-cell"
@@ -71,7 +73,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 args: ["{that}"]
             },
             sort: {
-                funcName: "floe.chartAuthoring.pieChart.legend.sort",
+                funcName: "floe.chartAuthoring.pieChart.legend.sortAscending",
                 args: ["{arguments}.0", "{arguments}.1"]
             },
             getColorCellStyle: {
@@ -122,7 +124,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             d3.select(this)
                 .select(colorCellSelector)
                 .attr({
-                    "style": that.getColorCellStyle(d)
+                    "style": that.getColorCellStyle(d),
+                    // presentation role for these cells, since they have no non-visual semantic meaning
+                    "role": "presentation"
                 });
 
             d3.select(this)
@@ -178,8 +182,18 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         that.table = that.jQueryToD3(container)
             .append("table")
             .attr({
-                "class": tableClass
+                "class": tableClass,
+                "aria-live": "polite",
+                "aria-relevant": "all"
             });
+
+        if(that.options.strings.legendTitle !== null) {
+            that.table.append("caption")
+            .attr({
+                "class": that.classes.caption
+            })
+            .text(that.options.strings.legendTitle);
+        }
 
         that.table.append("thead");
         that.table.append("tbody");
@@ -210,7 +224,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         that.events.onLegendCreated.fire();
     };
 
-    floe.chartAuthoring.pieChart.legend.sort = function (a, b) {
+    floe.chartAuthoring.pieChart.legend.sortAscending = function (a, b) {
         return b.value - a.value;
     };
 
