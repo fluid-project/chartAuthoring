@@ -1,11 +1,12 @@
-/*!
+/*
 Copyright 2015 OCAD University
 
-Licensed under the New BSD license. You may not use this file except in
-compliance with this License.
+Licensed under the Educational Community License (ECL), Version 2.0 or the New
+BSD license. You may not use this file except in compliance with one these
+Licenses.
 
-You may obtain a copy of the License at
-https://github.com/floe/universal/LICENSE.txt
+You may obtain a copy of the ECL 2.0 License and BSD License at
+https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.txt
 */
 
 (function ($, fluid) {
@@ -17,9 +18,13 @@ https://github.com/floe/universal/LICENSE.txt
     fluid.defaults("floe.tests.chartAuthoring.pieChart.pie", {
         gradeNames: ["floe.chartAuthoring.pieChart.pie", "autoInit"],
         pieOptions: {
-            width: 200,
-            height: 200,
+            width: "200",
+            height: "200",
             colors: ["#000000", "#ff0000", "#00ff00", "#0000ff", "#aabbcc", "#ccbbaa"]
+        },
+        strings: {
+            pieTitle: "A pie chart used in the unit tests.",
+            pieDescription: "Description of the pie chart used in the unit tests."
         },
         listeners: {
             "onPieCreated.addMouseoverListener": {
@@ -37,14 +42,21 @@ https://github.com/floe/universal/LICENSE.txt
     };
 
     floe.tests.chartAuthoring.validatePie = function (that, testSliceDataFunc) {
-        var pie = that.locate("pie");
+        var pie = that.locate("pie"),
+            pieTitleId = that.locate("title").attr("id"),
+            pieDescId = that.locate("description").attr("id"),
+            pieAriaLabelledByAttr = pie.attr("aria-labelledby");
 
         // Test the drawing
         jqUnit.assertNotEquals("The SVG element is created with the proper selector", 0, pie.length);
+
         jqUnit.assertEquals("The width is set correctly on the pie chart", that.options.pieOptions.width, pie.attr("width"));
         jqUnit.assertEquals("The height is set correctly on the pie chart", that.options.pieOptions.height, pie.attr("height"));
         jqUnit.assertEquals("The pie slices have been created with the proper selectors", that.model.dataSet.length, that.locate("slice").length);
         jqUnit.assertEquals("The texts for pie slices have been created with the proper selectors", that.model.dataSet.length, that.locate("text").length);
+        jqUnit.assertEquals("The pie's title has been created", that.options.strings.pieTitle, that.locate("title").text());
+        jqUnit.assertEquals("The pie's description has been created", that.options.strings.pieDescription, that.locate("description").text());
+        jqUnit.assertDeepEq("The pie's title and description are connected through the aria-labelledby attribute of the pie SVG", pieAriaLabelledByAttr, pieTitleId + " " + pieDescId);
 
         // Test that displayed values are in sync with the current model
         floe.tests.chartAuthoring.testPieTextSyncWithModelDataSet(that);
@@ -90,7 +102,7 @@ https://github.com/floe/universal/LICENSE.txt
     floe.tests.chartAuthoring.numberArray = [5, 10, 20, 45, 6, 25];
 
     jqUnit.test("Test the pie chart component created based off an array of numbers", function () {
-        jqUnit.expect(25);
+        jqUnit.expect(28);
 
         var that = floe.tests.chartAuthoring.pieChart.pie(".floec-ca-pieChart-numberArray", {
             model: {
@@ -158,7 +170,7 @@ https://github.com/floe/universal/LICENSE.txt
     }];
 
     jqUnit.test("Test the pie chart component created based off an array of objects", function () {
-        jqUnit.expect(102);
+        jqUnit.expect(114);
 
         var that = floe.tests.chartAuthoring.pieChart.pie(".floec-ca-pieChart-objectArray", {
             model: {
@@ -171,10 +183,8 @@ https://github.com/floe/universal/LICENSE.txt
         // Pie is re-drawn when the data set changes
         that.applier.change("dataSet", floe.tests.chartAuthoring.objectArrayAdd);
         floe.tests.chartAuthoring.validatePie(that, floe.tests.chartAuthoring.testObjectData);
-
         that.applier.change("dataSet", floe.tests.chartAuthoring.objectArrayRemove);
         floe.tests.chartAuthoring.validatePie(that, floe.tests.chartAuthoring.testObjectData);
-
         that.applier.change("dataSet", floe.tests.chartAuthoring.objectArrayChangeInPlace);
         floe.tests.chartAuthoring.validatePie(that, floe.tests.chartAuthoring.testObjectData);
     });

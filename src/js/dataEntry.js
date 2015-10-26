@@ -16,18 +16,23 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     fluid.defaults("floe.chartAuthoring.dataEntry", {
         gradeNames: ["floe.chartAuthoring.templateInjection", "floe.chartAuthoring.valueBinding"],
         selectors: {
-            input: ".floec-ca-dataEntry-value",
+            value: ".floec-ca-dataEntry-value",
             percentage: ".floec-ca-dataEntry-percentage",
             label: ".floec-ca-dataEntry-label"
         },
         strings: {
-            inputPlaceholder: "Value",
-            percentage: "%percentage%"
+            valueInputPlaceholder: "Value",
+            labelInputPlaceholder: "Label",
+            percentage: "%percentage%",
+            // aria-label attribute for the Value form input
+            valueInputAriaLabel: "Value",
+            // aria-label attribute for the Label form input
+            labelInputAriaLabel: "Label"
         },
         model: {
             value: null,
             label: "",
-            perecentage: null,
+            percentage: null,
             total: null
         },
         modelRelay: [{
@@ -46,7 +51,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             }
         }],
         bindings: {
-            input: "value",
+            value: "value",
             label: "label"
         },
         percentageDigits: 2,
@@ -64,10 +69,19 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         listeners: {
             "onCreate.updatePercentage": "{that}.updatePercentage",
             "onCreate.setInputAttrs": {
-                "this": "{that}.dom.input",
+                "this": "{that}.dom.value",
                 "method": "attr",
                 "args": {
-                    placeholder: "{that}.options.strings.inputPlaceholder"
+                    placeholder: "{that}.options.strings.valueInputPlaceholder",
+                    "aria-label": "{that}.options.strings.valueInputAriaLabel"
+                }
+            },
+            "onCreate.setLabelAttrs": {
+                "this": "{that}.dom.label",
+                "method": "attr",
+                "args": {
+                    placeholder: "{that}.options.strings.labelInputPlaceholder",
+                    "aria-label": "{that}.options.strings.labelInputAriaLabel"
                 }
             }
         },

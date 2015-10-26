@@ -1,11 +1,12 @@
-/*!
+/*
 Copyright 2015 OCAD University
 
-Licensed under the New BSD license. You may not use this file except in
-compliance with this License.
+Licensed under the Educational Community License (ECL), Version 2.0 or the New
+BSD license. You may not use this file except in compliance with one these
+Licenses.
 
-You may obtain a copy of the License at
-https://github.com/floe/universal/LICENSE.txt
+You may obtain a copy of the ECL 2.0 License and BSD License at
+https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.txt
 */
 
 (function ($, fluid) {
@@ -93,7 +94,7 @@ https://github.com/floe/universal/LICENSE.txt
                 func: "jqUnit.assertValue",
                 args: ["The component should have been initialized.", "{dataEntryPanel}"]
             }, {
-                expect: 11,
+                expect: 13,
                 name: "Test Initial Rendering",
                 type: "test",
                 func: "floe.tests.chartAuthoring.dataEntryPanelTester.testRendering",
@@ -136,6 +137,16 @@ https://github.com/floe/universal/LICENSE.txt
             value: that.options.strings.emptyTotalValue,
             percentage: "%"
         });
+
+        // Test application of aria-labelledby to displayed total
+        var totalLabelId = that.locate("totalLabel").attr("id");
+        var totalValue = that.locate("totalValue");
+        jqUnit.assertEquals("Total label is connected to displayed total by aria-labelledby", totalLabelId, totalValue.attr("aria-labelledby"));
+
+        // Test application of aria-live to displayed total
+
+        jqUnit.assertEquals("Total value is set to aria-live appropriately", "polite", totalValue.attr("aria-live"));
+
     };
 
     floe.tests.chartAuthoring.dataEntryPanelTester.verifyTotalOutput = function (that, expected) {
