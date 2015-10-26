@@ -42,17 +42,21 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     };
 
     floe.tests.chartAuthoring.validatePie = function (that, testSliceDataFunc) {
-        var pie = that.locate("pie");
+        var pie = that.locate("pie"),
+            pieTitleId = that.locate("title").attr("id"),
+            pieDescId = that.locate("description").attr("id"),
+            pieAriaLabelledByAttr = pie.attr("aria-labelledby");
 
         // Test the drawing
         jqUnit.assertNotEquals("The SVG element is created with the proper selector", 0, pie.length);
 
-        jqUnit.assertEquals("The width is set correctly on the pie chart", that.options.pieOptions.width === "auto" ? that.container.width() : that.options.pieOptions.width, pie.attr("width"));
-        jqUnit.assertEquals("The height is set correctly on the pie chart", that.options.pieOptions.height === "auto" ? that.container.height() : that.options.pieOptions.height, pie.attr("height"));
+        jqUnit.assertEquals("The width is set correctly on the pie chart", that.options.pieOptions.width, pie.attr("width"));
+        jqUnit.assertEquals("The height is set correctly on the pie chart", that.options.pieOptions.height, pie.attr("height"));
         jqUnit.assertEquals("The pie slices have been created with the proper selectors", that.model.dataSet.length, that.locate("slice").length);
         jqUnit.assertEquals("The texts for pie slices have been created with the proper selectors", that.model.dataSet.length, that.locate("text").length);
         jqUnit.assertEquals("The pie's title has been created", that.options.strings.pieTitle, that.locate("title").text());
         jqUnit.assertEquals("The pie's description has been created", that.options.strings.pieDescription, that.locate("description").text());
+        jqUnit.assertDeepEq("The pie's title and description are connected through the aria-labelledby attribute of the pie SVG", pieAriaLabelledByAttr, pieTitleId + " " + pieDescId);
 
         // Test that displayed values are in sync with the current model
         floe.tests.chartAuthoring.testPieTextSyncWithModelDataSet(that);
@@ -98,7 +102,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.tests.chartAuthoring.numberArray = [5, 10, 20, 45, 6, 25];
 
     jqUnit.test("Test the pie chart component created based off an array of numbers", function () {
-        jqUnit.expect(27);
+        jqUnit.expect(28);
 
         var that = floe.tests.chartAuthoring.pieChart.pie(".floec-ca-pieChart-numberArray", {
             model: {
@@ -166,7 +170,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     }];
 
     jqUnit.test("Test the pie chart component created based off an array of objects", function () {
-        jqUnit.expect(110);
+        jqUnit.expect(114);
 
         var that = floe.tests.chartAuthoring.pieChart.pie(".floec-ca-pieChart-objectArray", {
             model: {
@@ -183,22 +187,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         floe.tests.chartAuthoring.validatePie(that, floe.tests.chartAuthoring.testObjectData);
         that.applier.change("dataSet", floe.tests.chartAuthoring.objectArrayChangeInPlace);
         floe.tests.chartAuthoring.validatePie(that, floe.tests.chartAuthoring.testObjectData);
-    });
-
-    jqUnit.test("Test the pie chart component created with automatic scaling", function () {
-        jqUnit.expect(27);
-
-        var that = floe.tests.chartAuthoring.pieChart.pie(".floec-ca-pieChart-autoScale", {
-            model: {
-                dataSet: floe.tests.chartAuthoring.numberArray
-            },
-            pieOptions: {
-                width: "auto",
-                height: "auto"
-            }
-        });
-
-        floe.tests.chartAuthoring.runCommonTests(that, floe.tests.chartAuthoring.testPrimitiveData);
     });
 
 })(jQuery, fluid);
