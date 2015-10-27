@@ -96,7 +96,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     });
 
     floe.tests.chartAuthoring.dataEntryTester.verifyInput = function (elmName, elm, expected) {
-        floe.tests.utils.assertEqualsAsStrings("The " + elmName + " value has been set", expected, elm.val());
+        jqUnit.assertEquals("The " + elmName + " value has been set", expected, elm.val());
     };
 
     floe.tests.chartAuthoring.dataEntryTester.verifyPercentage = function (elm, expected) {
@@ -104,7 +104,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     };
 
     floe.tests.chartAuthoring.dataEntryTester.verifyEntry = function (that, expected) {
-        floe.tests.chartAuthoring.dataEntryTester.verifyInput("value", that.locate("value"), expected.value);
+        // Coerce expected.value to string for comparison with rendered value in HTML
+        floe.tests.chartAuthoring.dataEntryTester.verifyInput("value", that.locate("value"), String(expected.value));
         floe.tests.chartAuthoring.dataEntryTester.verifyPercentage(that.locate("percentage"), expected.percentage);
     };
 

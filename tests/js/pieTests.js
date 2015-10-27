@@ -85,7 +85,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         d3Elem.each(function (d,i) {
             var displayedValue = d3.select(this).text();
             var expectedValue = typeof (dataSet[i]) === "object" ? dataSet[i].value : dataSet[i];
-            jqUnit.assertEquals("Displayed values are in sync with the current model", expectedValue, displayedValue);
+            jqUnit.assertEquals("Displayed values are in sync with the current model", expectedValue, Number(displayedValue));
         });
     };
 
