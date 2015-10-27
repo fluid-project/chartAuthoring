@@ -14,7 +14,7 @@ Copyright 2007-2009 University of California, Berkeley
 Copyright 2010-2011 Lucendo Development Ltd.
 Copyright 2010 OCAD University
 Copyright 2011 Charly Molter
-Copyright 2014-2015 Raising the Floor (International)
+Copyright 2014-2015 Raising the Floor - International
 
 Licensed under the Educational Community License (ECL), Version 2.0 or the New
 BSD license. You may not use this file except in compliance with one these
@@ -26,13 +26,13 @@ https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
 
 /* global console */
 
-var fluid_2_0_0_beta_1 = fluid_2_0_0_beta_1 || {};
-var fluid = fluid || fluid_2_0_0_beta_1;
+var fluid_2_0_0 = fluid_2_0_0 || {};
+var fluid = fluid || fluid_2_0_0;
 
 (function ($, fluid) {
     "use strict";
 
-    fluid.version = "Infusion 2.0.0-dev";
+    fluid.version = "Infusion 2.0.0";
 
     // Export this for use in environments like node.js, where it is useful for
     // configuring stack trace behaviour
@@ -96,7 +96,7 @@ var fluid = fluid || fluid_2_0_0_beta_1;
         return fluid.transform(activityStack, renderer);
     };
 
-    // Definitions for ThreadLocals, the static and dynamic environment - lifted here from
+    // Definitions for ThreadLocals - lifted here from
     // FluidIoC.js so that we can issue calls to fluid.describeActivity for debugging purposes
     // in the core framework
 
@@ -664,8 +664,7 @@ var fluid = fluid || fluid_2_0_0_beta_1;
      * @param obj {Object} the Object to be searched through
      * @param value {Object} the value to be found. This will be compared against the object's
      * member using === equality.
-     * @return {String} The first key whose value matches the one supplied, or <code>null</code> if no
-     * such key is found.
+     * @return {String} The first key whose value matches the one supplied
      */
     fluid.keyForValue = function (obj, value) {
         return fluid.find(obj, function (thisValue, key) {
@@ -1075,10 +1074,7 @@ var fluid = fluid || fluid_2_0_0_beta_1;
     fluid.dumpEl = fluid.identity;
     fluid.renderTimestamp = fluid.identity;
 
-
-    /*** The Fluid Event system. ***/
-
-    fluid.registerNamespace("fluid.event");
+    /*** The Fluid instance id ***/
 
     // unsupported, NON-API function
     fluid.generateUniquePrefix = function () {
@@ -1097,6 +1093,10 @@ var fluid = fluid || fluid_2_0_0_beta_1;
     fluid.allocateGuid = function () {
         return fluid_prefix + (fluid_guid++);
     };
+
+    /*** The Fluid Event system. ***/
+
+    fluid.registerNamespace("fluid.event");
 
     // Fluid priority system for encoding relative positions of, e.g. listeners, transforms, options, in lists
 
@@ -1263,17 +1263,18 @@ var fluid = fluid || fluid_2_0_0_beta_1;
     // unsupported, non-API function
     fluid.event.invokeListener = function (listener, args) {
         if (typeof(listener) === "string") {
-            listener = fluid.event.resolveListener({globalName: listener}); // just resolves globals
+            listener = fluid.event.resolveListener(listener); // just resolves globals
         }
         return listener.apply(null, args);
     };
 
     // unsupported, NON-API function
     fluid.event.resolveListener = function (listener) {
-        if (listener.globalName) {
-            var listenerFunc = fluid.getGlobalValue(listener.globalName);
+        var listenerName = listener.globalName || (typeof(listener) === "string" ? listener : null);
+        if (listenerName) {
+            var listenerFunc = fluid.getGlobalValue(listenerName);
             if (!listenerFunc) {
-                fluid.fail("Unable to look up name " + listener.globalName + " as a global function");
+                fluid.fail("Unable to look up name " + listenerName + " as a global function");
             } else {
                 listener = listenerFunc;
             }
@@ -1761,9 +1762,9 @@ var fluid = fluid || fluid_2_0_0_beta_1;
     };
 
     /**
-     * Retrieves and stores a component's default settings centrally.
-     * @param {String} componentName the name of the component
-     * @param {Object} (optional) an container of key/value pairs to set
+     * Retrieves and stores a grade's configuration centrally.
+     * @param {String} gradeName the name of the grade whose options are to be read or written
+     * @param {Object} (optional) an object containing the options to be set
      */
 
     fluid.defaults = function (componentName, options) {
@@ -2661,7 +2662,7 @@ var fluid = fluid || fluid_2_0_0_beta_1;
      * Simple string template system.
      * Takes a template string containing tokens in the form of "%value".
      * Returns a new string with the tokens replaced by the specified values.
-     * Keys and values can be of any data type that can be coerced into a string. Arrays will work here as well.
+     * Keys and values can be of any data type that can be coerced into a string.
      *
      * @param {String}    template    a string (can be HTML) that contains tokens embedded into it
      * @param {object}    values      a collection of token keys and values
@@ -2677,4 +2678,4 @@ var fluid = fluid || fluid_2_0_0_beta_1;
         return template;
     };
 
-})(jQuery, fluid_2_0_0_beta_1);
+})(jQuery, fluid_2_0_0);
