@@ -28,17 +28,4 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             });
         });
     };
-
-    // expects expected to be a number
-    // coerces value to a number before comparison
-    floe.tests.utils.assertEqualsAsNumbers = function (message, value, expected) {
-        jqUnit.assertEquals(message, expected, Number(value));
-    };
-
-    // expects expected to be a string
-    // coerces value to a string before comparison
-    floe.tests.utils.assertEqualsAsStrings = function (message, value, expected) {
-        jqUnit.assertEquals(message, expected, String(value));
-    };
-
 })(jQuery, fluid);
