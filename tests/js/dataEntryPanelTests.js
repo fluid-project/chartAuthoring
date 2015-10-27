@@ -151,7 +151,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     floe.tests.chartAuthoring.dataEntryPanelTester.verifyTotalOutput = function (that, expected) {
         jqUnit.assertEquals("The total label should be set", expected.label, that.locate("totalLabel").text());
-        jqUnit.assertEquals("The total value should be set", expected.value, that.locate("totalValue").text());
+        floe.tests.utils.assertEqualsAsStrings("The total value should be set", expected.value, that.locate("totalValue").text());
         jqUnit.assertEquals("The total percentage should be set", expected.percentage, that.locate("totalPercentage").text());
 
         for (var i = 0; i < that.options.numDataEntryFields; i++) {
