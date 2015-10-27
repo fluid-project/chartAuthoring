@@ -96,7 +96,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     });
 
     floe.tests.chartAuthoring.dataEntryTester.verifyInput = function (elmName, elm, expected) {
-        jqUnit.assertEquals("The " + elmName + " value has been set", expected, elm.val());
+        floe.tests.utils.assertEqualsAsStrings("The " + elmName + " value has been set", String(expected), String(elm.val()));
     };
 
     floe.tests.chartAuthoring.dataEntryTester.verifyPercentage = function (elm, expected) {
