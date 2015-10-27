@@ -12,6 +12,8 @@ The following directories were stripped out of the build since they contain code
 
 * README.md
 * ReleaseNotes.md
+* src/lib/infusion/src/components/overviewPanel/js
+* src/lib/infusion/src/components/overviewPanel/overviewPanelDependencies.json
 * src/lib/infusion/src/components/slidingPanel/
 * src/lib/infusion/src/components/tableOfContents/js/
 * src/lib/infusion/src/components/tableOfContents/tableOfContentsDependencies.json
