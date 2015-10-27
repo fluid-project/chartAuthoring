@@ -29,11 +29,16 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         });
     };
 
-    // casts value and expected to Strings before comparison
-    // Replicates older jqUnit.assertEquals non-strict comparison behaviour when
-    // potentially comparing the values of integers/floats/strings
+    // expects expected to be a number
+    // coerces value to a number before comparison
+    floe.tests.utils.assertEqualsAsNumbers = function (message, value, expected) {
+        jqUnit.assertEquals(message, expected, Number(value));
+    };
+
+    // expects expected to be a string
+    // coerces value to a string before comparison
     floe.tests.utils.assertEqualsAsStrings = function (message, value, expected) {
-        jqUnit.assertEquals(message, String(expected), String(value));
+        jqUnit.assertEquals(message, expected, String(value));
     };
 
 })(jQuery, fluid);
