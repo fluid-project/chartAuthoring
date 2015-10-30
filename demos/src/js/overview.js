@@ -46,13 +46,6 @@ var demo = demo || {};
                 },
                 cookieStore: {
                     type: "fluid.prefs.cookieStore"
-                    // configurable by end user via distributeOptions
-                    // options: {
-                    //     cookie: {
-                    //         name: "chartAuthoring-demo-showPanel"
-                    //     }
-                    // }
-
                 }
             },
             distributeOptions: [{
