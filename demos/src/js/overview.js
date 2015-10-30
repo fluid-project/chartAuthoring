@@ -25,7 +25,7 @@ var demo = demo || {};
                     container: "{overview}.container",
                     options: {
                         modelListeners: {
-                            "": {
+                            "showPanel": {
                                 listener: "{cookieStore}.set",
                                 args: ["{change}.value"]
                             }
@@ -49,7 +49,7 @@ var demo = demo || {};
                     // configurable by end user via distributeOptions
                     // options: {
                     //     cookie: {
-                    //         name: "chartAuthoring-demo"
+                    //         name: "chartAuthoring-demo-showPanel"
                     //     }
                     // }
 
@@ -81,7 +81,7 @@ var demo = demo || {};
     $(document).ready(function () {
         demo.chartAuthoring.overview("#floec-overviewPanel", {
             overviewPanelTemplate: "src/html/overviewPanelTemplate-chartAuthoring.html",
-            cookieName: "chartAuthoring-demo",
+            cookieName: "chartAuthoring-demo-showPanel",
             strings: {
                 componentName: "Chart Authoring Tool",
                 infusionCodeLinkText: "get Chart Authoring",
