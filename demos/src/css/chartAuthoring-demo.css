@@ -1,3 +1,7 @@
+.flc-overviewPanel-apiLink {
+    display:none !important;
+}
+
 .floec-ca-pieChart-pie {
     float: left;
     width: 30em;
