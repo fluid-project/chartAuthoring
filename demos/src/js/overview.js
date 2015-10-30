@@ -45,7 +45,13 @@ var demo = demo || {};
                     }
                 },
                 cookieStore: {
-                    type: "demo.chartAuthoring.cookieStore"
+                    type: "fluid.prefs.cookieStore",
+                    options: {
+                        cookie: {
+                            name: "chartAuthoring-demo"
+                        }
+                    }
+
                 }
             },
             distributeOptions: [{
