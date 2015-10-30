@@ -45,12 +45,13 @@ var demo = demo || {};
                     }
                 },
                 cookieStore: {
-                    type: "fluid.prefs.cookieStore",
-                    options: {
-                        cookie: {
-                            name: "chartAuthoring-demo"
-                        }
-                    }
+                    type: "fluid.prefs.cookieStore"
+                    // configurable by end user via distributeOptions
+                    // options: {
+                    //     cookie: {
+                    //         name: "chartAuthoring-demo"
+                    //     }
+                    // }
 
                 }
             },
@@ -70,12 +71,17 @@ var demo = demo || {};
                 source: "{that}.options.links",
                 removeSource: true,
                 target: "{that > overviewPanel}.options.links"
+            }, {
+                source: "{that}.options.cookieName",
+                removeSource: true,
+                target: "{that > cookieStore}.options.cookie.name"
             }]
         });
 
     $(document).ready(function () {
         demo.chartAuthoring.overview("#floec-overviewPanel", {
             overviewPanelTemplate: "src/html/overviewPanelTemplate-chartAuthoring.html",
+            cookieName: "chartAuthoring-demo",
             strings: {
                 componentName: "Chart Authoring Tool",
                 infusionCodeLinkText: "get Chart Authoring",
