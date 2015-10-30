@@ -20,17 +20,7 @@ var demo = demo || {};
         gradeNames: ["fluid.prefs.cookieStore", "autoInit"],
         cookie: {
             name: "chartAuthoring-demo"
-        },
-        invokers: {
-            resetCookie: {
-                funcName: "demo.chartAuthoring.cookieStore.resetCookie",
-                args: "{that}"
-            }
         }
     });
-
-    demo.chartAuthoring.cookieStore.resetCookie = function (that) {
-        that.set({"showPanel": true});
-    };
 
 })(jQuery, fluid);
