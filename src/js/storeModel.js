@@ -46,7 +46,12 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 funcName: "{storeModel}.retrieve",
                 priority: "first"
             }
-        }
+        },
+        distributeOptions: [{
+            source: "{that}.options.cookie.name",
+            removeSource: true,
+            target: "{that > cookieStore}.options.cookie.name"
+        }]
     });
 
     /**
@@ -54,24 +59,26 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
      */
 
      floe.chartAuthoring.storeModel.store = function (model, cookieStore) {
-         // console.log("floe.chartAuthoring.storeModel.store");
          cookieStore.set(model);
      };
+
+     /**
+     * Try and retrieve a model from the cookieStore; if present, replace
+     * any existing model with the model from the cookie
+     */
 
      floe.chartAuthoring.storeModel.retrieve = function (that, cookieStore) {
          var modelFromCookie = cookieStore.get();
          if(modelFromCookie !== undefined) {
-            //  console.log("got model from cookie");
-            //  console.log(modelFromCookie);
              var changeRequest = {
                  path: "",
                  value: modelFromCookie
              };
-             // Clear the existing model first
+             // Clear the existing model
              that.applier.change("","","DELETE");
+             // Set the model from the model persisted in the cookie
              that.applier.fireChangeRequest(changeRequest);
          }
-         // console.log("floe.chartAuthoring.storeModel.retrieve");
      };
 
 })(jQuery, fluid);

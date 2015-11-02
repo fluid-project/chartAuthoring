@@ -22,30 +22,15 @@ var demo = demo || {};
             components: {
                 overviewPanel: {
                     type: "fluid.overviewPanel",
-                    container: "{overview}.container",
-                    options: {
-                        modelListeners: {
-                            "showPanel": {
-                                listener: "{cookieStore}.set",
-                                args: ["{change}.value"]
-                            }
-                        },
-                        model: {
-                            showPanel: {
-                                expander: {
-                                    funcName: "fluid.get",
-                                    args: [{
-                                        expander: {
-                                            funcName: "{cookieStore}.get"
-                                        }
-                                    }, "showPanel"]
-                                }
-                            }
-                        }
-                    }
+                    container: "{overview}.container"
                 },
-                cookieStore: {
-                    type: "fluid.prefs.cookieStore"
+                storeModel: {
+                    type: "floe.chartAuthoring.storeModel",
+                    // Implicit model relay, persists the model state of the
+                    // overviewPanel via a storeModel subcomponent
+                    options: {
+                        model: "{overviewPanel}.model"
+                    }
                 }
             },
             distributeOptions: [{
@@ -67,7 +52,7 @@ var demo = demo || {};
             }, {
                 source: "{that}.options.cookieName",
                 removeSource: true,
-                target: "{that > cookieStore}.options.cookie.name"
+                target: "{that > storeModel}.options.cookie.name"
             }]
         });
 

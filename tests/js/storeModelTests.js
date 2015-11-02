@@ -13,7 +13,7 @@
 
         var that = floe.tests.chartAuthoring.storeModel({
             cookie: {
-                name: "test-cookie"
+                name: "chartAuthoring-test-storeModel"
             },
             model: {
                 "showPanel": true
@@ -41,7 +41,7 @@
 
         var that = floe.tests.chartAuthoring.storeModel({
             cookie: {
-                name: "test-cookie"
+                name: "chartAuthoring-test-storeModel"
             }
         });
 
@@ -49,14 +49,13 @@
             path: "",
             value: {"fruit": "raspberries"}
         };
-        
+
         that.applier.change("","","DELETE");
         that.applier.fireChangeRequest(changeRequest);
-        console.log(that);
 
         that = floe.tests.chartAuthoring.storeModel({
             cookie: {
-                name: "test-cookie"
+                name: "chartAuthoring-test-storeModel"
             }
         });
 
