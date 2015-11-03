@@ -28,10 +28,10 @@ var demo = demo || {};
                             showPanel: "{storeModel}.model.showPanel"
                         },
                         modelListeners: {
-                            "{that}.model": {
+                            "": {
                                 funcName: "{storeModel}.set",
                                 args: "{change}.value",
-                                excludeSource: "init"                                
+                                excludeSource: "init"
                             }
                         }
                     }
@@ -40,11 +40,9 @@ var demo = demo || {};
                     type: "fluid.modelComponent",
                     options: {
                         gradeNames: ["fluid.prefs.cookieStore"],
-                        listeners: {
-                            "onCreate.setModelFromCookie": {
-                                funcName: "demo.chartAuthoring.overview.setModelFromCookie",
-                                args: "{that}",
-                                priority: "first"
+                        model: {
+                            expander: {
+                                funcName: "{that}.get"
                             }
                         }
                     }
@@ -72,20 +70,6 @@ var demo = demo || {};
                 target: "{that > storeModel}.options.cookie.name"
             }]
         });
-
-    demo.chartAuthoring.overview.setModelFromCookie = function (that) {
-        var modelFromCookie = that.get();
-        if(modelFromCookie !== undefined) {
-            var changeRequest = {
-                path: "",
-                value: modelFromCookie
-            };
-            // Clear any existing model
-            that.applier.change("","","DELETE");
-            // Set the model from the model persisted in the cookie
-            that.applier.fireChangeRequest(changeRequest);
-        }
-    };
 
     $(document).ready(function () {
         demo.chartAuthoring.overview("#floec-overviewPanel", {
