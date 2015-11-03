@@ -22,14 +22,31 @@ var demo = demo || {};
             components: {
                 overviewPanel: {
                     type: "fluid.overviewPanel",
-                    container: "{overview}.container"
+                    container: "{overview}.container",
+                    options: {
+                        model: {
+                            showPanel: "{storeModel}.model.showPanel"
+                        },
+                        modelListeners: {
+                            "{that}.model": {
+                                funcName: "{storeModel}.set",
+                                args: "{change}.value",
+                                excludeSource: "init"                                
+                            }
+                        }
+                    }
                 },
                 storeModel: {
-                    type: "floe.chartAuthoring.storeModel",
-                    // Implicit model relay, persists the model state of the
-                    // overviewPanel via a storeModel subcomponent
+                    type: "fluid.modelComponent",
                     options: {
-                        model: "{overviewPanel}.model"
+                        gradeNames: ["fluid.prefs.cookieStore"],
+                        listeners: {
+                            "onCreate.setModelFromCookie": {
+                                funcName: "demo.chartAuthoring.overview.setModelFromCookie",
+                                args: "{that}",
+                                priority: "first"
+                            }
+                        }
                     }
                 }
             },
@@ -55,6 +72,20 @@ var demo = demo || {};
                 target: "{that > storeModel}.options.cookie.name"
             }]
         });
+
+    demo.chartAuthoring.overview.setModelFromCookie = function (that) {
+        var modelFromCookie = that.get();
+        if(modelFromCookie !== undefined) {
+            var changeRequest = {
+                path: "",
+                value: modelFromCookie
+            };
+            // Clear any existing model
+            that.applier.change("","","DELETE");
+            // Set the model from the model persisted in the cookie
+            that.applier.fireChangeRequest(changeRequest);
+        }
+    };
 
     $(document).ready(function () {
         demo.chartAuthoring.overview("#floec-overviewPanel", {
