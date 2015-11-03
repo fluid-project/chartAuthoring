@@ -2,16 +2,18 @@ The version of Infusion included in this folder was created using a custom build
 
 https://github.com/fluid-project/infusion
 
-commit#: 16861cf384179cb647327d58affad216e409814b
+commit#: c9d974c3b2a667f963afd0ba90d55fc4e187bc08
 
 ```
-grunt custom --source=true --include="preferences"
+grunt custom --source=true --include="preferences,overviewPanel"
 ```
 
 The following directories were stripped out of the build since they contain code that is included in the infusion-custom.js file or is not required:
 
 * README.md
 * ReleaseNotes.md
+* src/lib/infusion/src/components/overviewPanel/js
+* src/lib/infusion/src/components/overviewPanel/overviewPanelDependencies.json
 * src/lib/infusion/src/components/slidingPanel/
 * src/lib/infusion/src/components/tableOfContents/js/
 * src/lib/infusion/src/components/tableOfContents/tableOfContentsDependencies.json

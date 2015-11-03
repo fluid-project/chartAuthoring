@@ -32,7 +32,6 @@
 }
 .fl-prefsEditor-fullPreview label {
   display: block;
-  float: left;
   width: 16em;
 }
 .fl-prefsEditor-fullPreview .fl-prefsEditor-layout li,

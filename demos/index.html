@@ -4,6 +4,9 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="../src/lib/infusion/src/lib/normalize/css/normalize.css" />
+        <link rel="stylesheet" type="text/css" href="../src/lib/infusion/src/framework/core/css/fluid.css" />
+        <link rel="stylesheet" type="text/css" href="../src/lib/infusion/src/components/overviewPanel/css/OverviewPanel.css" />
+
         <script type="text/javascript" src="../src/lib/infusion/infusion-custom.js"></script>
         <script type="text/javascript" src="../src/lib/d3/d3.js"></script>
         <script type="text/javascript" src="../src/js/valueBinding.js"></script>
@@ -19,15 +22,22 @@
         <script type="text/javascript" src="../src/js/pieChart.js"></script>
         <script type="text/javascript" src="../src/js/d3Utils.js"></script>
 
+        <script type="text/javascript" src="src/js/overview.js"></script>
+
         <link rel="stylesheet" type="text/css" href="src/css/chartAuthoring-demo.css" />
+
 
         <title>Chart Authoring Tool</title>
     </head>
 
     <body>
+
+        <div id="floec-overviewPanel" class="fl-overviewPanel-container"></div>
+
         <div id="floec-chartAuthoring"></div>
 
         <script type="text/javascript">
+
             floe.chartAuthoring("#floec-chartAuthoring", {
                 templateLoader: {
                     terms: {
@@ -36,5 +46,6 @@
                 }
             });
         </script>
+
     </body>
 </html>

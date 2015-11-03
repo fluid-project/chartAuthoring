@@ -27,7 +27,7 @@ var jqUnit = jqUnit || {};
         jqUnit[method] = QUnit[method];
         window[method] = undefined; // work around IE8 bug http://stackoverflow.com/questions/1073414/deleting-a-window-property-in-ie
     }
-      
+
     jqUnit.failureHandler = function (args/*, activity*/) {
         if (QUnit.config.current) {
             QUnit.ok(false, "Assertion failure (see console.log for expanded message): ".concat(args));
@@ -35,7 +35,7 @@ var jqUnit = jqUnit || {};
     };
 
     fluid.failureEvent.addListener(jqUnit.failureHandler, "jqUnit", "before:fail");
-    
+
     // Helpful utility for creating multiple test target components compactly
     fluid.makeComponents = function (components) {
         fluid.each(components, function (value, key) {
@@ -132,11 +132,11 @@ var jqUnit = jqUnit || {};
         },
 
         assertEquals: function (msg, expected, actual) {
-            QUnit.equal(actual, expected, processMessage(msg));
+            QUnit.strictEqual(actual, expected, processMessage(msg));
         },
 
-        assertNotEquals: function (msg, value1, value2) {
-            pok(value1 !== value2, msg);
+        assertNotEquals: function (msg, unexpected, actual) {
+            QUnit.notStrictEqual(actual, unexpected, msg);
         },
 
         assertTrue: function (msg, value) {
@@ -239,19 +239,19 @@ var jqUnit = jqUnit || {};
         jqUnit.assertDeepEq(message, expected2, actual2);
     };
 
-    /** Assert that the actual value object is a subset (considered in terms of shallow key coincidence) of the
-     * expected value object (this method is the one that will be most often used in practice) **/
+    /** Assert that the actual value object is a superset (considered in terms of shallow key coincidence) of the
+     * expected value object (this method is the one that will be most often used in practice). "Left hand" (expected) is a subset of actual. **/
 
     jqUnit.assertLeftHand = function (message, expected, actual) {
         jqUnit.assertDeepEq(message, expected, fluid.filterKeys(actual, fluid.keys(expected)));
     };
 
-    /** Assert that the actual value object is a superset of the expected value object **/
+    /** Assert that the actual value object is a subset of the expected value object **/
 
     jqUnit.assertRightHand = function (message, expected, actual) {
         jqUnit.assertDeepEq(message, fluid.filterKeys(expected, fluid.keys(actual)), actual);
     };
-    
+
     /** Assert that the supplied callback will produce a framework diagnostic, containing the supplied text
      * somewhere in its error message - that is, the framework will invoke fluid.fail with a message containing
      * <code>errorText</code>.
@@ -260,7 +260,7 @@ var jqUnit = jqUnit || {};
      * @param errorTexts {String} or {Array of String} Either a single string or array of strings which the <code>message</code> field
      * of the thrown exception will be tested against - each string must appear as a substring in the text
      */
-     
+
     jqUnit.expectFrameworkDiagnostic = function (message, toInvoke, errorTexts) {
         errorTexts = fluid.makeArray(errorTexts);
         var gotFailure;

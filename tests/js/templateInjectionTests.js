@@ -28,7 +28,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     jqUnit.test("Template Injection", function () {
         var that = floe.tests.chartAuthoring.templateInjection(".floec-ca-templateInjection");
 
-        jqUnit.exists("The injected markup should exist", that.locate("injected"));
+        jqUnit.assertNodeExists("The injected markup should exist", that.locate("injected"));
     });
 
 })(jQuery, fluid);

@@ -233,7 +233,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
             jqUnit.assertEquals("Displayed colors are in sync with the current model's colors", displayedColor, floe.tests.chartAuthoring.hexToRGB(expectedColor));
             jqUnit.assertEquals("Displayed labels are in sync with the current model's labels", expectedLabel, displayedLabel);
-            jqUnit.assertEquals("Displayed values are in sync with the current model's values", expectedValue, displayedValue);
+            // Coerce displayedValue to number for comparison with model value
+            jqUnit.assertEquals("Displayed values are in sync with the current model's values", expectedValue, Number(displayedValue));
         });
     };
 
@@ -266,7 +267,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var d3ValueCells = that.jQueryToD3($(that.locate("valueCell")));
 
         d3ValueCells.each(function (d) {
-            jqUnit.assertEquals("The data values are applied correctly in the legend", d.value, ($(this).html()));
+            // Coerce displayed value to number for comparison with DOM-bound d3 value
+            jqUnit.assertEquals("The data values are applied correctly in the legend", d.value, Number(($(this).html())));
         });
 
         jqUnit.assertEquals("The legend's title is applied as a caption", that.options.strings.legendTitle, that.locate("caption").text());
