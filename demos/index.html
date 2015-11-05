@@ -38,13 +38,29 @@
 
         <script type="text/javascript">
 
-            floe.chartAuthoring("#floec-chartAuthoring", {
+            var chartAuthoring = floe.chartAuthoring("#floec-chartAuthoring", {
                 templateLoader: {
                     terms: {
                         templatePrefix: "../src/html"
                     }
+                },
+                listeners: {
+                    "onToolReady.addExampleInput": "demo.chartAuthoring.addExampleInput"
                 }
             });
+
+            demo.chartAuthoring.addExampleInput = function() {
+                var dataEntryPanel = chartAuthoring.chartAuthoringInterface.dataEntryPanel;
+                var dataEntries = dataEntryPanel.locate("dataEntries");
+                var labelInputs = dataEntries.find("input.floec-ca-dataEntry-label");
+                var valueInputs = dataEntries.find("input.floec-ca-dataEntry-value");
+                labelInputs.first().val("Label One");
+                labelInputs.first().trigger("change");
+                valueInputs.first().val("100");
+                valueInputs.first().trigger("change");
+            }
+
+
         </script>
 
     </body>
