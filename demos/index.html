@@ -50,8 +50,7 @@
             });
 
             demo.chartAuthoring.addExampleInput = function() {
-                var dataEntryPanel = chartAuthoring.chartAuthoringInterface.dataEntryPanel;
-                var dataEntries = dataEntryPanel.locate("dataEntries");
+                var dataEntries = chartAuthoring.chartAuthoringInterface.dataEntryPanel.locate("dataEntries");
                 var labelInputs = dataEntries.find("input.floec-ca-dataEntry-label");
                 var valueInputs = dataEntries.find("input.floec-ca-dataEntry-value");
                 labelInputs.first().val("Label One");
