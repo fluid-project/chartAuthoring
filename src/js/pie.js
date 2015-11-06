@@ -60,7 +60,14 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             colors: null,
             outerRadius: null,
             innerRadius: null,
-            animationDuration: 750
+            animationDuration: 750,
+            // A fluid.stringTemplate used to render the values displayed
+            // within the pie chart slices
+            // available variables for the template are:
+            // - value: the raw value of the data
+            // - percentage: the percentage of the data value out of the total value
+            // - total: the total value of all data in the dataset
+            sliceTextDisplayTemplate: "%value"
         },
         strings: {
             pieTitle: "Pie Chart",
@@ -143,7 +150,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.chartAuthoring.pieChart.pie.updateSlices = function (that) {
         // Update and redraw arcs of existing slices
         var arc = that.arc,
-            animationDuration = that.options.pieOptions.animationDuration;
+            animationDuration = that.options.pieOptions.animationDuration,
+            sliceTextDisplayTemplate = that.options.pieOptions.sliceTextDisplayTemplate;
 
         // Standard D3 pie arc tweening transition, as per http://bl.ocks.org/mbostock/1346410
         that.paths.transition().duration(animationDuration).attrTween("d", function (d) {
@@ -156,7 +164,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         // Update and reposition text labels for existing slices
         that.texts.text(function (d) {
-            return d.value;
+            return floe.chartAuthoring.pieChart.getDataDisplayValueFromTemplate(that, sliceTextDisplayTemplate, d);
         });
 
         that.texts.transition().duration(animationDuration).attr("transform", that.textTransform);
@@ -268,4 +276,14 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.chartAuthoring.pieChart.getViewBoxConfiguration = function (x, y, width, height) {
         return x + "," + y + "," + width + "," + height;
     };
+
+
+    // Returns a formatted string for a numeric data value based on a supplied template
+
+    floe.chartAuthoring.pieChart.getDataDisplayValueFromTemplate = function(that, template, d) {
+        var percentage = floe.chartAuthoring.percentage.calculate(d.value, that.model.total.value).toFixed(2);
+        var output = fluid.stringTemplate(template, {value: d.value, percentage: percentage, total: that.model.total.value});
+        return output;
+    };
+
 })(jQuery, fluid);

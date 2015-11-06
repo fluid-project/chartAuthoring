@@ -75,9 +75,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             // outerRadius: number,
             // innerRadius: number,
             // animationDuration: number,
-            // sort: boolean   // Whether or not to sort the data by values when creating the legend
-            // pieTitle: the accessible title to be applied to the pie chart
-            // pieDescription: the accessible description to be applied to the pie chart
+            // sort: boolean   // Whether or not to sort the data by values when creating the legend,
+            // pieTitle: the accessible title to be applied to the pie chart,
+            // pieDescription: the accessible description to be applied to the pie chart,
+            // sliceTextDisplayTemplate: fluid.stringTemplate to format the pie chart slice text
         },
         selectors: {
             pie: ".floec-ca-pieChart-pie",
