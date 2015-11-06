@@ -6,12 +6,13 @@
     width: 55em;
     margin: 2em auto 2em auto;
     border: 1px solid black;
-    padding: 2em;
+    padding: 1em 0 1em 0;
 }
 
 .floec-ca-pieChart-pie {
     float: left;
     width: 30em;
+    margin-bottom: 1em;
 }
 .floec-ca-pieChart-legend {
     float: left;
@@ -35,10 +36,16 @@
 }
 
 .floec-dataEntryPanel {
+    border-top: 1px dashed black;
+    padding-top: 1em;
     clear: both;
-    width:50em;
+    width:55em;
 }
 
 .floec-dataEntryPanel li {
     list-style:none;
+}
+
+.floec-dataEntryPanel fieldset {
+    border: 0;
 }
