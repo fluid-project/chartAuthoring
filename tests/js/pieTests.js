@@ -101,8 +101,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     floe.tests.chartAuthoring.numberArray = [5, 10, 20, 45, 6, 25];
 
+    floe.tests.chartAuthoring.numberArrayTotal = 111;
+
     jqUnit.test("Test the pie chart component created based off an array of numbers", function () {
-        jqUnit.expect(28);
+        jqUnit.expect(29);
 
         var that = floe.tests.chartAuthoring.pieChart.pie(".floec-ca-pieChart-numberArray", {
             model: {
@@ -111,6 +113,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         });
 
         floe.tests.chartAuthoring.runCommonTests(that, floe.tests.chartAuthoring.testPrimitiveData);
+
+        jqUnit.assertEquals("The total value is calculated as expected", floe.tests.chartAuthoring.numberArrayTotal, that.model.total.value);
+
     });
 
     floe.tests.chartAuthoring.objectArray = [{
@@ -126,6 +131,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         id: "id3",
         value: 45
     }];
+
+    floe.tests.chartAuthoring.objectArrayTotal = 80;
 
     floe.tests.chartAuthoring.objectArrayAdd = [{
         id: "id0",
@@ -147,6 +154,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         value: 25
     }];
 
+    floe.tests.chartAuthoring.objectArrayAddTotal = 111;
+
     floe.tests.chartAuthoring.objectArrayRemove = [{
         id: "id0",
         value: 5
@@ -157,6 +166,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         id: "id2",
         value: 45
     }];
+
+    floe.tests.chartAuthoring.objectArrayRemoveTotal = 60;
 
     floe.tests.chartAuthoring.objectArrayChangeInPlace = [{
         id: "id0",
@@ -169,8 +180,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         value: 35
     }];
 
+    floe.tests.chartAuthoring.objectArrayChangeInPlaceTotal = 75;
+
     jqUnit.test("Test the pie chart component created based off an array of objects", function () {
-        jqUnit.expect(114);
+        jqUnit.expect(118);
 
         var that = floe.tests.chartAuthoring.pieChart.pie(".floec-ca-pieChart-objectArray", {
             model: {
@@ -179,14 +192,20 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         });
 
         floe.tests.chartAuthoring.runCommonTests(that, floe.tests.chartAuthoring.testObjectData);
+        jqUnit.assertEquals("The total value is calculated as expected", floe.tests.chartAuthoring.objectArrayTotal, that.model.total.value);
 
-        // Pie is re-drawn when the data set changes
+        // Pie is re-drawn when the data set changes in various ways
         that.applier.change("dataSet", floe.tests.chartAuthoring.objectArrayAdd);
         floe.tests.chartAuthoring.validatePie(that, floe.tests.chartAuthoring.testObjectData);
+        jqUnit.assertEquals("The total value is recalculated as expected", floe.tests.chartAuthoring.objectArrayAddTotal, that.model.total.value);
+
         that.applier.change("dataSet", floe.tests.chartAuthoring.objectArrayRemove);
         floe.tests.chartAuthoring.validatePie(that, floe.tests.chartAuthoring.testObjectData);
+        jqUnit.assertEquals("The total value is recalculated as expected", floe.tests.chartAuthoring.objectArrayRemoveTotal, that.model.total.value);
+
         that.applier.change("dataSet", floe.tests.chartAuthoring.objectArrayChangeInPlace);
         floe.tests.chartAuthoring.validatePie(that, floe.tests.chartAuthoring.testObjectData);
+        jqUnit.assertEquals("The total value is calculated as expected", floe.tests.chartAuthoring.objectArrayChangeInPlaceTotal, that.model.total.value);
     });
 
 })(jQuery, fluid);

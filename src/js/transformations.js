@@ -63,7 +63,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     };
 
     floe.chartAuthoring.transforms.reduce.valueExtractor = function (obj) {
-        return obj.value;
+        // Returns obj.value if it exists, or obj if it doesn't    
+        return obj.value ? obj.value : obj;
     };
 
 })(jQuery, fluid);

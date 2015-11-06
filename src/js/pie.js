@@ -27,8 +27,31 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             // 1. an array of primitive values, such as numbers;
             // 2. an array of objects. The "value" element of each object needs to containe the value for drawing each pie slice.
             // Example: [{id: string, value: number} ... ]
-            dataSet: []
+            dataSet: [],
+            total: {
+                // value: number,
+                // percentage: number
+            }
         },
+        modelRelay: [{
+            source: "dataSet",
+            target: "total.value",
+            singleTransform: {
+                type: "floe.chartAuthoring.transforms.reduce",
+                value: "{that}.model.dataSet",
+                initialValue: null,
+                extractor: "floe.chartAuthoring.transforms.reduce.valueExtractor",
+                func: "floe.chartAuthoring.transforms.reduce.add"
+            }
+        }, {
+            source: "total.value",
+            target: "total.percentage",
+            singleTransform: {
+                type: "floe.chartAuthoring.transforms.percentage",
+                value: "{that}.model.total.value",
+                total: "{that}.model.total.value"
+            }
+        }],
         pieOptions: {
             width: 300,
             height: 300,
@@ -195,7 +218,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 "viewBox": floe.chartAuthoring.pieChart.getViewBoxConfiguration(0,0, width, height),
                 // Set aria role to image - this causes the pie to appear as a
                 // static image to AT rather than as a number of separate
-                // images                
+                // images
                 "role": "img"
             });
 
