@@ -56,6 +56,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         color:  "#0000ff"
     }];
 
+    floe.tests.chartAuthoring.objectArrayTotal = 147;
+
     floe.tests.chartAuthoring.objectArrayAdd = [{
         id: "id0",
         value: 15,
@@ -84,6 +86,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         color: "#aabbcc"
     }];
 
+    floe.tests.chartAuthoring.objectArrayAddTotal = 173;
+
     floe.tests.chartAuthoring.objectArrayRemove = [{
         id: "id0",
         value: 15,
@@ -101,6 +105,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         color: "#00ff00"
     }];
 
+    floe.tests.chartAuthoring.objectArrayRemoveTotal = 102;
+
     floe.tests.chartAuthoring.objectArrayChangeInPlace = [{
         id: "id0",
         value: 36,
@@ -117,6 +123,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         label: "Three",
         color: "#00ff00"
     }];
+
+    floe.tests.chartAuthoring.objectArrayChangeInPlaceTotal = 129;
 
     floe.tests.chartAuthoring.objectArraySorted = [{
         id: "id1",
@@ -245,7 +253,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         jqUnit.assertTrue("The mouseover listener for legend rows has been triggered", that.mouseOverListenerCalled);
     };
 
-    floe.tests.chartAuthoring.validateLegend = function (that, expectedDataSet) {
+    floe.tests.chartAuthoring.validateLegend = function (that, expectedDataSet, expectedTotalValue) {
         var table = that.locate("table");
 
         // Test the legend creation
@@ -273,6 +281,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         jqUnit.assertEquals("The legend's title is applied as a caption", that.options.strings.legendTitle, that.locate("caption").text());
 
+        jqUnit.assertEquals("The total value is calculated as expected", expectedTotalValue, that.model.total.value);
+
         floe.tests.chartAuthoring.testLegendSyncWithModelDataSet(that, expectedDataSet);
 
     };
@@ -281,7 +291,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         // Legend is created from dataset
 
-        floe.tests.chartAuthoring.validateLegend(that, objectArray);
+        floe.tests.chartAuthoring.validateLegend(that, objectArray, floe.tests.chartAuthoring.objectArrayTotal);
 
         floe.tests.chartAuthoring.testMouseOverListener(that);
 
@@ -290,22 +300,22 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         // Item added to dataset
 
         that.applier.change("dataSet", floe.tests.chartAuthoring.objectArrayAdd);
-        floe.tests.chartAuthoring.validateLegend(that, objectArrayAdd);
+        floe.tests.chartAuthoring.validateLegend(that, objectArrayAdd, floe.tests.chartAuthoring.objectArrayAddTotal);
 
         // Item removed from dataset
 
         that.applier.change("dataSet", floe.tests.chartAuthoring.objectArrayRemove);
-        floe.tests.chartAuthoring.validateLegend(that, objectArrayRemove);
+        floe.tests.chartAuthoring.validateLegend(that, objectArrayRemove, floe.tests.chartAuthoring.objectArrayRemoveTotal);
 
         // Items changed in place
 
         that.applier.change("dataSet", floe.tests.chartAuthoring.objectArrayChangeInPlace);
-        floe.tests.chartAuthoring.validateLegend(that, objectArrayChangeInPlace);
+        floe.tests.chartAuthoring.validateLegend(that, objectArrayChangeInPlace, floe.tests.chartAuthoring.objectArrayChangeInPlaceTotal);
 
     };
 
     jqUnit.test("Test the legend component created based off an array of objects, unsorted, user-supplied colours", function () {
-        jqUnit.expect(119);
+        jqUnit.expect(123);
 
         var that = floe.tests.chartAuthoring.pieChart.legend(".floe-ca-legend-objects-unsorted", {
             model: {
@@ -321,7 +331,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     });
 
     jqUnit.test("Test the legend component created based off an array of objects, sorted, default colours", function () {
-        jqUnit.expect(119);
+        jqUnit.expect(123);
 
         var that = floe.tests.chartAuthoring.pieChart.legend(".floe-ca-legend-objects-sorted", {
             model: {
