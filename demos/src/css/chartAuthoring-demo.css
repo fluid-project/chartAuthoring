@@ -1,5 +1,10 @@
-#main {
+.main {
     width: 100%;
+}
+
+.floe-chartAuthoring-container {
+    width: 50em;
+    margin: auto;
 }
 
 .floec-ca-pieChart-pie {
