@@ -277,7 +277,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         return x + "," + y + "," + width + "," + height;
     };
 
-
     // Returns a formatted string for a numeric data value based on a supplied template
 
     floe.chartAuthoring.pieChart.getDataDisplayValueFromTemplate = function(that, template, d) {
