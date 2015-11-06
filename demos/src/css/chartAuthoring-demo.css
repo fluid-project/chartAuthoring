@@ -7,6 +7,7 @@
     margin: 2em auto 2em auto;
     border: 1px solid black;
     padding: 1em 0 1em 0;
+    background-color: #FFFFFF;
 }
 
 .floec-ca-pieChart-pie {
@@ -20,19 +21,14 @@
     margin: 2em;
     min-height: 5em;
 }
-.floe-ca-pieChart-legend-table {
-    border: 1px solid black;
-}
+
 .floe-ca-pieChart-legend-table thead th {
-    border: 1px solid black;
-    padding: 2px;
+    color: #FFFFFF;
 }
-.floe-ca-pieChart-legend-table-row {
-    border: 1px solid black;
-}
+
 .floe-ca-pieChart-legend-table-row td {
-    border: 1px solid black;
-    padding: 2px;
+    border: 3px solid white;
+    padding: 0.5em;
 }
 
 .floec-dataEntryPanel {
