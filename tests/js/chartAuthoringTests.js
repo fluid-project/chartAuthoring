@@ -44,12 +44,12 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.tests.chartAuthoring.dataEntries =
     {
         entry1: {
-            value: "100",
+            value: 100,
             label: "Label One",
             percentage: "100%"
         },
         entry2: {
-            value: "50",
+            value: 50,
             label: "Label Two",
             percentage: "100%"
         }
@@ -59,12 +59,12 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     [
         {
             id: "entry1",
-            value: "100",
+            value: 100,
             label: "Label One"
         },
         {
             id: "entry2",
-            value: "50",
+            value: 50,
             label: "Label Two"
         }
     ];
