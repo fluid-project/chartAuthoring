@@ -53,4 +53,14 @@
 
 .floec-ca-dataEntry-label {
     margin-right:1em;
+    width:12em;
+}
+
+.floec-ca-dataEntry-value {
+    margin-right:1em;
+    width:6em;
+}
+
+.floec-ca-dataEntry-percentage {
+    background-color: #C9C9C9;
 }
