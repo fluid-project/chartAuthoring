@@ -4,7 +4,9 @@
 
 .floe-chartAuthoring-container {
     width: 55em;
-    margin: auto;
+    margin: 2em auto 2em auto;
+    border: 1px solid black;
+    padding: 2em;
 }
 
 .floec-ca-pieChart-pie {
