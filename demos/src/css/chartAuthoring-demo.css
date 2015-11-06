@@ -44,8 +44,17 @@
 
 .floec-dataEntryPanel li {
     list-style:none;
+    margin-bottom: 0.5em;
 }
 
 .floec-dataEntryPanel fieldset {
     border: 0;
+}
+
+.floec-dataEntryPanel input {
+    background-color: #F2F2F2;
+}
+
+.floec-ca-dataEntry-label {
+    margin-right:1em;
 }
