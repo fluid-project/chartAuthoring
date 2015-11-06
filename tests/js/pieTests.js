@@ -208,4 +208,45 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         jqUnit.assertEquals("The total value is calculated as expected", floe.tests.chartAuthoring.objectArrayChangeInPlaceTotal, that.model.total.value);
     });
 
+    floe.tests.chartAuthoring.percentageArray = [{
+        id: "tenPercent",
+        value: 20
+    }, {
+        id: "fiftyPercent",
+        value: 100
+    }, {
+        id: "fortyPercent",
+        value: 80
+    }];
+
+    floe.tests.chartAuthoring.expectedTenPercentDisplayValue = "20/200 (10.00%)";
+    floe.tests.chartAuthoring.expectedFiftyPercentDisplayValue = "100/200 (50.00%)";
+    floe.tests.chartAuthoring.expectedFortyPercentDisplayValue = "80/200 (40.00%)";
+
+    jqUnit.test("Test the functions for custom formatting of data values in pie slices", function () {
+        jqUnit.expect(3);
+
+        var that = floe.tests.chartAuthoring.pieChart.pie(".floec-ca-pieChart-specialFormatting", {
+            model: {
+                dataSet: floe.tests.chartAuthoring.percentageArray
+            },
+            pieOptions: {
+                sliceTextDisplayTemplate: "%value/%total (%percentage%)",
+                width: "400",
+                height: "400"
+            }
+        });
+
+        var customDisplayValues = [floe.tests.chartAuthoring.expectedTenPercentDisplayValue, floe.tests.chartAuthoring.expectedFiftyPercentDisplayValue, floe.tests.chartAuthoring.expectedFortyPercentDisplayValue];
+
+        var d3Elem = floe.d3.jQueryToD3(that.locate("text"));
+
+        d3Elem.each(function (d,i) {
+            var displayedValue = d3.select(this).text();
+            jqUnit.assertEquals("Displayed values are in sync with the current model", customDisplayValues[i], displayedValue);
+        });
+
+
+    });
+
 })(jQuery, fluid);
