@@ -27,26 +27,19 @@ var demo = demo || {};
         }
     });
 
-    // Add some example input by simulating data entry
-
-    demo.chartAuthoring.randomValue = function () {
-        return Math.floor(Math.random() * 75) +25;
-    };
-
     demo.chartAuthoring.addExampleInput = function () {
         var dataEntries = chartAuthoring.chartAuthoringInterface.dataEntryPanel.locate("dataEntries");
 
-        dataEntries.find("input.floec-ca-dataEntry-label")
-            .slice(0,3)
-            .each(function(index) {
-                var position = index+1;
-                $(this).val("label " + position).trigger("change");
-            });
+        var labelInputs = dataEntries.find("input.floec-ca-dataEntry-label");
 
-        dataEntries.find("input.floec-ca-dataEntry-value")
-            .slice(0,3)
-            .each(function() {
-                $(this).val(demo.chartAuthoring.randomValue()).trigger("change");
-            });
+        labelInputs.first().val("label 1");
+        labelInputs.slice(1,2).val("label 2");
+        labelInputs.trigger("change");
+
+        var valueInputs = dataEntries.find("input.floec-ca-dataEntry-value");
+
+        valueInputs.first().val(60);
+        valueInputs.slice(1,2).val(40);
+        valueInputs.trigger("change");
     };
 })(jQuery,fluid);
