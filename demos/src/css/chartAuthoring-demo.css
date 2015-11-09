@@ -1,10 +1,19 @@
-#main {
+.main {
     width: 100%;
+}
+
+.floe-chartAuthoring-container {
+    width: 55em;
+    margin: 2em auto 2em auto;
+    border: 1px solid black;
+    padding: 1em 0 1em 0;
+    background-color: #FFFFFF;
 }
 
 .floec-ca-pieChart-pie {
     float: left;
     width: 30em;
+    margin-bottom: 1em;
 }
 .floec-ca-pieChart-legend {
     float: left;
@@ -12,26 +21,36 @@
     margin: 2em;
     min-height: 5em;
 }
-.floe-ca-pieChart-legend-table {
-    border: 1px solid black;
-}
+
 .floe-ca-pieChart-legend-table thead th {
-    border: 1px solid black;
-    padding: 2px;
+    color: #FFFFFF;
 }
-.floe-ca-pieChart-legend-table-row {
-    border: 1px solid black;
-}
+
 .floe-ca-pieChart-legend-table-row td {
-    border: 1px solid black;
-    padding: 2px;
+    border: 3px solid white;
+    padding: 0.5em;
 }
 
 .floec-dataEntryPanel {
+    border-top: 1px dashed black;
+    padding-top: 1em;
     clear: both;
-    width:50em;
+    width:55em;
 }
 
 .floec-dataEntryPanel li {
     list-style:none;
+    margin-bottom: 0.5em;
+}
+
+.floec-dataEntryPanel fieldset {
+    border: 0;
+}
+
+.floec-dataEntryPanel input {
+    background-color: #F2F2F2;
+}
+
+.floec-ca-dataEntry-label {
+    margin-right:1em;
 }

@@ -12,6 +12,11 @@ var demo = demo || {};
                 templatePrefix: "../src/html"
             }
         },
+        dataEntryPanel: {
+            strings: {
+                dataEntryLabel: "Enter your labels and values"
+            }
+        },
         listeners: {
             "onToolReady.addExampleInput": "demo.chartAuthoring.addExampleInput"
         }
