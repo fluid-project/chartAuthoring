@@ -213,6 +213,26 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         color: "#2ca02c"
     }];
 
+    floe.tests.chartAuthoring.objectArrayForCustomDisplay = [{
+        id: "custom1",
+        value: 65,
+        label: "Label One",
+        color: "#ff7f0e"
+    }, {
+        id: "custom2",
+        value: 35,
+        label: "Label Two",
+        color: "#1f77b4"
+    }];
+
+    floe.tests.chartAuthoring.expectedCustomDisplay = [{
+        expectedValue: "65 (out of 100)",
+        expectedLabel: "Label One (65%)"
+    }, {
+        expectedValue: "35 (out of 100)",
+        expectedLabel: "Label Two (35%)"
+    }];
+
     floe.tests.chartAuthoring.mouseOverListener = function (data, i, that) {
         that.mouseOverListenerCalled = true;
     };
@@ -344,6 +364,37 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         });
 
         floe.tests.chartAuthoring.testLegend(that, floe.tests.chartAuthoring.objectArraySorted, floe.tests.chartAuthoring.objectArrayAddSorted, floe.tests.chartAuthoring.objectArrayRemoveSorted, floe.tests.chartAuthoring.objectArrayChangeInPlaceSorted);
+
+    });
+
+    jqUnit.test("Test the legend component with custom value and label display templates", function () {
+        jqUnit.expect(4);
+
+        var that = floe.tests.chartAuthoring.pieChart.legend(".floe-ca-legend-custom-labels", {
+            model: {
+                dataSet: floe.tests.chartAuthoring.objectArrayForCustomDisplay
+            },
+            legendOptions: {
+                sort:false,
+                colors: null,
+                labelTextDisplayTemplate: "%label (%percentage%)",
+                valueTextDisplayTemplate: "%value (out of %total)"
+            }
+        });
+
+        var d3LabelCells = that.jQueryToD3($(that.locate("labelCell")));
+        d3LabelCells.each(function (d,i) {
+            var expectedLabel = floe.tests.chartAuthoring.expectedCustomDisplay[i].expectedLabel;
+            jqUnit.assertEquals("The data labels are applied correctly in the legend", expectedLabel, ($(this).html()));
+        });
+
+        var d3ValueCells = that.jQueryToD3($(that.locate("valueCell")));
+
+        d3ValueCells.each(function (d,i) {
+            var expectedValue = floe.tests.chartAuthoring.expectedCustomDisplay[i].expectedValue;
+            // Coerce displayed value to number for comparison with DOM-bound d3 value
+            jqUnit.assertEquals("The data values are applied correctly in the legend", expectedValue, $(this).html());
+        });
 
     });
 
