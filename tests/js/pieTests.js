@@ -47,9 +47,18 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             pieDescId = that.locate("description").attr("id"),
             pieAriaLabelledByAttr = pie.attr("aria-labelledby");
 
-        // Test the drawing
+        // Test the SVG element created
         jqUnit.assertNotEquals("The SVG element is created with the proper selector", 0, pie.length);
 
+        // Test the background circle
+        if(that.options.pieOptions.displayPieBackground) {
+            var pieBackground = that.locate("background");
+            jqUnit.assertNotEquals("The background circle is created", 0, pieBackground.length);
+            jqUnit.assertEquals("The background circle's radius is half the pie width", that.options.pieOptions.width / 2, Number(pieBackground.attr("r")));
+            jqUnit.assertEquals("The background circle's color is set to the user-supplied color", that.options.pieOptions.pieBackgroundColor, pieBackground.attr("fill"));
+        }
+
+        // Test the pie
         jqUnit.assertEquals("The width is set correctly on the pie chart", that.options.pieOptions.width, pie.attr("width"));
         jqUnit.assertEquals("The height is set correctly on the pie chart", that.options.pieOptions.height, pie.attr("height"));
         jqUnit.assertEquals("The pie slices have been created with the proper selectors", that.model.dataSet.length, that.locate("slice").length);
@@ -104,7 +113,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.tests.chartAuthoring.numberArrayTotal = 111;
 
     jqUnit.test("Test the pie chart component created based off an array of numbers", function () {
-        jqUnit.expect(29);
+        jqUnit.expect(32);
 
         var that = floe.tests.chartAuthoring.pieChart.pie(".floec-ca-pieChart-numberArray", {
             model: {
@@ -183,7 +192,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.tests.chartAuthoring.objectArrayChangeInPlaceTotal = 75;
 
     jqUnit.test("Test the pie chart component created based off an array of objects", function () {
-        jqUnit.expect(118);
+        jqUnit.expect(130);
 
         var that = floe.tests.chartAuthoring.pieChart.pie(".floec-ca-pieChart-objectArray", {
             model: {

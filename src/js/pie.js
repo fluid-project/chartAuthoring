@@ -90,7 +90,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             slice: ".floec-ca-pieChart-slice",
             text: ".floec-ca-pieChart-text",
             title: ".floec-ca-pieChart-title",
-            description: ".floec-ca-pieChart-description"
+            description: ".floec-ca-pieChart-description",
+            background: ".floec-ca-pieChart-background"
         },
         events: {
             onPieCreated: null,  // Fire when the pie is created. Ready to register D3 DOM event listeners,
@@ -215,7 +216,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             pieBackgroundColor = p.pieBackgroundColor,
             pieClass = that.classes.pie,
             titleClass = that.classes.title,
-            descriptionClass = that.classes.description;
+            descriptionClass = that.classes.description,
+            backgroundClass = that.classes.background;
 
         that.arc = d3.svg.arc()
             .innerRadius(innerRadius)
@@ -247,7 +249,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                     "cx": outerRadius,
                     "cy": outerRadius,
                     "r": outerRadius,
-                    "fill": pieBackgroundColor
+                    "fill": pieBackgroundColor,
+                    "class": backgroundClass
                 });
         }
 
