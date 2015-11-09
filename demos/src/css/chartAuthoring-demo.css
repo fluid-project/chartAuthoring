@@ -47,7 +47,7 @@
     margin-bottom: 1em;
 }
 
-    /* Pie slice text (SVG styling attributes) */
+/* Pie slice text (SVG styling attributes) */
 
 .floec-ca-pieChart-text {
     paint-order: stroke;
@@ -58,6 +58,13 @@
     stroke-linejoin: miter;
     font-weight: 800;
     font-family: Verdana, Arial, sans-serif;
+}
+
+/* Pie slice (SVG styling attributes) */
+
+.floec-ca-pieChart-slice {
+    stroke: #FFF;
+    stroke-width: 2px;
 }
 
 /* Legend */
