@@ -47,6 +47,19 @@
     margin-bottom: 1em;
 }
 
+    /* Pie slice text (SVG styling attributes) */
+
+.floec-ca-pieChart-text {
+    paint-order: stroke;
+    stroke: #FFF;
+    fill: #000;
+    stroke-width: 3px;
+    stroke-linecap: butt;
+    stroke-linejoin: miter;
+    font-weight: 800;
+    font-family: Verdana, Arial, sans-serif;
+}
+
 /* Legend */
 
 .floec-ca-pieChart-legend {
