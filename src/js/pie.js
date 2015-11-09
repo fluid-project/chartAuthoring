@@ -70,7 +70,11 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             sliceTextDisplayTemplate: "%value",
             // Number of digits to display after decimal when rendering
             // percentages for pie slices
-            sliceTextPercentageDigits: 0
+            sliceTextPercentageDigits: 0,
+            // boolean to configure drawing a background circle for the pie
+            displayPieBackground: true,
+            // color of the background circle, if drawn
+            pieBackgroundColor: "#F2F2F2"
         },
         strings: {
             pieTitle: "Pie Chart",
@@ -207,6 +211,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             colors = p.colors,
             outerRadius = p.outerRadius || width / 2,
             innerRadius = p.innerRadius || 0,
+            displayPieBackground = p.displayPieBackground,
+            pieBackgroundColor = p.pieBackgroundColor,
             pieClass = that.classes.pie,
             titleClass = that.classes.title,
             descriptionClass = that.classes.description;
@@ -232,6 +238,18 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 // images
                 "role": "img"
             });
+
+        // Draw a background circle for the pie if configured
+        if(displayPieBackground) {
+            that.svg
+                .append("circle")
+                .attr({
+                    "cx": outerRadius,
+                    "cy": outerRadius,
+                    "r": outerRadius,
+                    "fill": pieBackgroundColor
+                });
+        }
 
         that.svg
             .append("title")

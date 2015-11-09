@@ -83,6 +83,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             // labelTextDisplayTemplate: fluid.stringTemplate to format the legend label cell
             // valueTextDisplayTemplate: fluid.stringTemplate to format the legend value cell
             // legendPercentageDigits: number of digits after decimal for percentages in legend display
+            // displayPieBackground: whether to draw a background circle behind the pie
+            // pieBackgroundColor: color of the background circle, if drawn
         },
         selectors: {
             pie: ".floec-ca-pieChart-pie",
