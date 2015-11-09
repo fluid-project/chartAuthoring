@@ -34,7 +34,9 @@ Varied#3: colors: ["#f15e4e", "#acdee4", "#73c163", "#ffc74a", "#41beae"]
         pieChart: {
             pieChartOptions: {
                 sliceTextDisplayTemplate: "%percentage%",
-                colors: ["#00a59a", "#9bc863", "#1a6b61", "#e9ea7b", "#1b443d"]
+                colors: ["#00a59a", "#9bc863", "#1a6b61", "#e9ea7b", "#1b443d"],
+                width: 400,
+                height: 400
             }
         },
         listeners: {
