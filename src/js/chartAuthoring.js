@@ -16,6 +16,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     fluid.defaults("floe.chartAuthoring", {
         gradeNames: ["fluid.viewComponent"],
         selectors: {
+            chartTitle: ".floec-chartTitle",
+            chartDescription: ".floec-chartDescription",
             dataEntryPanel: ".floec-dataEntryPanel",
             pieChart: ".floec-pieChart"
         },
@@ -40,6 +42,27 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                         "onTemplateInjected.escalate": "{chartAuthoring}.events.onChartAuthoringInterfaceReady.fire"
                     },
                     components: {
+                        chartTitle: {
+                            type: "fluid.inlineEdit",
+                            container: "{chartAuthoring}.dom.chartTitle",
+                            createOnEvent: "{chartAuthoring}.events.onChartAuthoringInterfaceReady",
+                            options: {
+                                strings: {
+                                    defaultViewText: "Enter Chart Title"
+                                }
+                            }
+                        },
+                        chartDescription: {
+                            type: "fluid.inlineEdit",
+                            container: "{chartAuthoring}.dom.chartDescription",
+                            createOnEvent: "{chartAuthoring}.events.onChartAuthoringInterfaceReady",
+                            options: {
+                                strings: {
+                                    defaultViewText: "Enter Chart Description"
+                                }
+                            }
+
+                        },
                         dataEntryPanel: {
                             type: "floe.chartAuthoring.dataEntryPanel",
                             createOnEvent: "{chartAuthoring}.events.onPieChartReady",

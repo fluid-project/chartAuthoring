@@ -2,6 +2,8 @@
     width: 100%;
 }
 
+/* Main container */
+
 .floe-chartAuthoring-container {
     width: 55em;
     margin: 2em auto 2em auto;
@@ -10,11 +12,43 @@
     background-color: #FFFFFF;
 }
 
+/* Title and description inline edit containers */
+
+.floec-chartTitle {
+    margin-bottom: 1em;
+    padding-left: 2em;
+}
+
+.floec-chartDescription {
+    font-size: 1em;
+    margin-bottom: 2em;
+    padding-left: 2em;
+}
+
+/* Inline edit component appearance customizations */
+
+.floec-chartTitle .fl-inlineEdit-text {
+    font-size: 2em;
+}
+
+.fl-inlineEdit-tooltip {
+    /* */
+}
+
+.fl-inlineEdit-editModeInstruction {
+    /* */
+}
+
+/* Pie */
+
 .floec-ca-pieChart-pie {
     float: left;
     width: 30em;
     margin-bottom: 1em;
 }
+
+/* Legend */
+
 .floec-ca-pieChart-legend {
     float: left;
     width: 20em;
@@ -30,6 +64,8 @@
     border: 3px solid white;
     padding: 0.5em;
 }
+
+/* Data entry panel */
 
 .floec-dataEntryPanel {
     border-top: 1px dashed black;
