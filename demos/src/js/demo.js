@@ -17,6 +17,11 @@ var demo = demo || {};
                 dataEntryLabel: "Enter your labels and values"
             }
         },
+        pieChart: {
+            pieChartOptions: {
+                sliceTextDisplayTemplate: "%percentage%"
+            }
+        },
         listeners: {
             "onToolReady.addExampleInput": "demo.chartAuthoring.addExampleInput"
         }

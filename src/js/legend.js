@@ -25,14 +25,52 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             // dataSet accepts:
             // 1. an array of objects. Must contain "id", "value" and "label" variables.
             // Example: [{id: string, value: number, label: string} ... ]
-            dataSet: []
+            dataSet: [],
+            total: {
+                // value: number,
+                // percentage: number
+            }
         },
+        modelRelay: [{
+            source: "dataSet",
+            target: "total.value",
+            singleTransform: {
+                type: "floe.chartAuthoring.transforms.reduce",
+                value: "{that}.model.dataSet",
+                initialValue: null,
+                extractor: "floe.chartAuthoring.transforms.reduce.valueExtractor",
+                func: "floe.chartAuthoring.transforms.reduce.add"
+            }
+        }, {
+            source: "total.value",
+            target: "total.percentage",
+            singleTransform: {
+                type: "floe.chartAuthoring.transforms.percentage",
+                value: "{that}.model.total.value",
+                total: "{that}.model.total.value"
+            }
+        }],
         legendOptions: {
             // An array of colors to fill slices generated for corresponding values of model.dataSet
             // Or, a d3 color scale that's generated based off an array of colors
             colors: null,
             sort: true, // Whether or not to sort the data by values when creating the legend
-            showLegendHeadings: true // Whether or not to display column headings in the legend
+            showLegendHeadings: true, // Whether or not to display column headings in the legend,
+            // A fluid.stringTemplate used to render the text displayed
+            // within the label cell
+            // available variables for the template are:
+            // - value: the raw value of the data
+            // - percentage: the percentage of the data value out of the total value
+            // - total: the total value of all data in the dataset
+            // - label: the attached label
+            labelTextDisplayTemplate: "%label",
+            // A fluid.stringTemplate used to render the text displayed
+            // within the value cell
+            // the same variables available as for labelTextDisplayTemplate
+            valueTextDisplayTemplate: "%value",
+            // Number of digits to display after decimal when rendering
+            // percentages for the legend
+            legendPercentageDigits: 0
         },
         styles: {
             legend: "floe-ca-pieChart-legend",
@@ -118,7 +156,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.chartAuthoring.pieChart.legend.updateRows = function (that) {
         var colorCellSelector = that.options.selectors.colorCell,
             labelCellSelector = that.options.selectors.labelCell,
-            valueCellSelector = that.options.selectors.valueCell;
+            valueCellSelector = that.options.selectors.valueCell,
+            labelTextDisplayTemplate = that.options.legendOptions.labelTextDisplayTemplate,
+            valueTextDisplayTemplate = that.options.legendOptions.valueTextDisplayTemplate;
 
         that.rows.each(function (d) {
             d3.select(this)
@@ -131,11 +171,15 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
             d3.select(this)
                 .select(labelCellSelector)
-                .text(d.label);
+                .text(function(d) {
+                    return floe.chartAuthoring.pieChart.legend.getDisplayValueFromTemplate(that, labelTextDisplayTemplate, d);
+                });
 
             d3.select(this)
                 .select(valueCellSelector)
-                .text(d.value);
+                .text(function(d) {
+                    return floe.chartAuthoring.pieChart.legend.getDisplayValueFromTemplate(that, valueTextDisplayTemplate, d);
+                });
         });
     };
 
@@ -256,6 +300,13 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.chartAuthoring.pieChart.legend.getColorArray = function (colors) {
         var colorScale = (typeof(colors) === "function") ? colors : floe.d3.getColorScale(colors);
         return colorScale.range();
+    };
+
+    floe.chartAuthoring.pieChart.legend.getDisplayValueFromTemplate = function(that, template, d) {
+        var legendPercentageDigits = that.options.legendOptions.legendPercentageDigits;
+        var percentage = floe.chartAuthoring.percentage.calculate(d.value, that.model.total.value).toFixed(legendPercentageDigits);
+        var output = fluid.stringTemplate(template, {label: d.label, value: d.value, percentage: percentage, total: that.model.total.value});
+        return output;
     };
 
 })(jQuery, fluid);
