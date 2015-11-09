@@ -79,6 +79,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             // pieTitle: the accessible title to be applied to the pie chart,
             // pieDescription: the accessible description to be applied to the pie chart,
             // sliceTextDisplayTemplate: fluid.stringTemplate to format the pie chart slice text
+            // sliceTextPercentageDigits: number of digits after decimal for percentages in pie chart slice text
+            // labelTextDisplayTemplate: fluid.stringTemplate to format the legend label cell
+            // valueTextDisplayTemplate: fluid.stringTemplate to format the legend value cell
+            // legendPercentageDigits: number of digits after decimal for percentages in legend display
         },
         selectors: {
             pie: ".floec-ca-pieChart-pie",
