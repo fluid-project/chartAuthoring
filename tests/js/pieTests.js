@@ -232,6 +232,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             },
             pieOptions: {
                 sliceTextDisplayTemplate: "%value/%total (%percentage%)",
+                sliceTextPercentageDigits: 2,
                 width: "400",
                 height: "400"
             }

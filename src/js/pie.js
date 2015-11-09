@@ -67,7 +67,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             // - value: the raw value of the data
             // - percentage: the percentage of the data value out of the total value
             // - total: the total value of all data in the dataset
-            sliceTextDisplayTemplate: "%value"
+            sliceTextDisplayTemplate: "%value",
+            // Number of digits to display after decimal when rendering
+            // percentages for pie slices
+            sliceTextPercentageDigits: 0
         },
         strings: {
             pieTitle: "Pie Chart",
@@ -280,7 +283,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // Returns a formatted string for a numeric data value based on a supplied template
 
     floe.chartAuthoring.pieChart.getDataDisplayValueFromTemplate = function(that, template, d) {
-        var percentage = floe.chartAuthoring.percentage.calculate(d.value, that.model.total.value).toFixed(2);
+        var sliceTextPercentageDigits = that.options.pieOptions.sliceTextPercentageDigits;
+        var percentage = floe.chartAuthoring.percentage.calculate(d.value, that.model.total.value).toFixed(sliceTextPercentageDigits);
         var output = fluid.stringTemplate(template, {value: d.value, percentage: percentage, total: that.model.total.value});
         return output;
     };
