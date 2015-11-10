@@ -14,12 +14,12 @@
 
 /* Title and description inline edit containers */
 
-.floe-chartTitle {
+.floec-chartTitle {
     margin-bottom: 1em;
     padding-left: 2em;
 }
 
-.floe-chartDescription {
+.floec-chartDescription {
     font-size: 1em;
     margin-bottom: 2em;
     padding-left: 2em;
@@ -27,7 +27,7 @@
 
 /* Inline edit component appearance customizations */
 
-.floe-chartTitle .fl-inlineEdit-text {
+.floec-chartTitle .fl-inlineEdit-text {
     font-size: 2em;
 }
 
