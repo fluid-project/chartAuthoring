@@ -120,3 +120,22 @@
 .floec-ca-dataEntry-percentage {
     background-color: #C9C9C9;
 }
+
+.floec-ca-dataEntryPanel-totalLabel {
+    width: 12em;
+    display: inline-block;
+    text-align: right;
+    padding-left:3em;
+    font-weight: bold;
+}
+
+.floec-ca-dataEntryPanel-totalValue {
+    padding-left:0.65em;
+    width: 6em;
+    display: inline-block;
+}
+
+.floec-ca-dataEntryPanel-totalPercentage {
+    margin-left:1.65em;
+    background-color: #C9C9C9;
+}
