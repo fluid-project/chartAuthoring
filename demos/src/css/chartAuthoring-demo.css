@@ -14,12 +14,12 @@
 
 /* Title and description inline edit containers */
 
-.floec-chartTitle {
+.floe-chartTitle {
     margin-bottom: 1em;
     padding-left: 2em;
 }
 
-.floec-chartDescription {
+.floe-chartDescription {
     font-size: 1em;
     margin-bottom: 2em;
     padding-left: 2em;
@@ -27,7 +27,7 @@
 
 /* Inline edit component appearance customizations */
 
-.floec-chartTitle .fl-inlineEdit-text {
+.floe-chartTitle .fl-inlineEdit-text {
     font-size: 2em;
 }
 
@@ -41,7 +41,7 @@
 
 /* Pie */
 
-.floec-ca-pieChart-pie {
+.floe-ca-pieChart-pie {
     float: left;
     width: 30em;
     margin-bottom: 1em;
@@ -49,7 +49,7 @@
 
 /* Pie slice text (SVG styling attributes) */
 
-.floec-ca-pieChart-text {
+.floe-ca-pieChart-text {
     paint-order: stroke;
     stroke: #FFF;
     fill: #000;
@@ -62,14 +62,14 @@
 
 /* Pie slice (SVG styling attributes) */
 
-.floec-ca-pieChart-slice {
+.floe-ca-pieChart-slice {
     stroke: #FFF;
     stroke-width: 2px;
 }
 
 /* Legend */
 
-.floec-ca-pieChart-legend {
+.floe-ca-pieChart-legend {
     float: left;
     width: 20em;
     margin: 2em;
@@ -80,6 +80,10 @@
     color: #FFFFFF;
 }
 
+.floe-ca-pieChart-legend-table-row {
+    height: 2.5em;
+}
+
 .floe-ca-pieChart-legend-table-row td {
     border: 3px solid white;
     padding: 0.5em;
@@ -87,41 +91,41 @@
 
 /* Data entry panel */
 
-.floec-dataEntryPanel {
+.floe-dataEntryPanel {
     border-top: 1px dashed black;
     padding-top: 1em;
     clear: both;
     width:55em;
 }
 
-.floec-dataEntryPanel li {
+.floe-dataEntryPanel li {
     list-style:none;
     margin-bottom: 0.5em;
 }
 
-.floec-dataEntryPanel fieldset {
+.floe-dataEntryPanel fieldset {
     border: 0;
 }
 
-.floec-dataEntryPanel input {
+.floe-dataEntryPanel input {
     background-color: #F2F2F2;
 }
 
-.floec-ca-dataEntry-label {
+.floe-ca-dataEntry-label {
     margin-right:1em;
     width:12em;
 }
 
-.floec-ca-dataEntry-value {
+.floe-ca-dataEntry-value {
     margin-right:1em;
     width:6em;
 }
 
-.floec-ca-dataEntry-percentage {
+.floe-ca-dataEntry-percentage {
     background-color: #C9C9C9;
 }
 
-.floec-ca-dataEntryPanel-totalLabel {
+.floe-ca-dataEntryPanel-totalLabel {
     width: 12em;
     display: inline-block;
     text-align: right;
@@ -129,13 +133,13 @@
     font-weight: bold;
 }
 
-.floec-ca-dataEntryPanel-totalValue {
+.floe-ca-dataEntryPanel-totalValue {
     padding-left:0.65em;
     width: 6em;
     display: inline-block;
 }
 
-.floec-ca-dataEntryPanel-totalPercentage {
+.floe-ca-dataEntryPanel-totalPercentage {
     margin-left:1.65em;
     background-color: #C9C9C9;
 }
