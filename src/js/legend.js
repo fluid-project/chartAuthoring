@@ -244,19 +244,21 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         if(showLegendHeadings) {
             var thead = that.table.selectAll("thead");
 
-            thead.append("th")
+            var theadRow = thead.append("tr");
+
+            theadRow.append("th")
                 .attr({
                     "scope":"col"
                 })
                 .html(that.options.strings.legendColHeading);
 
-            thead.append("th")
+            theadRow.append("th")
                 .attr({
                     "scope":"col"
                 })
                 .html(that.options.strings.labelColHeading);
 
-            thead.append("th")
+            theadRow.append("th")
                 .attr({
                     "scope":"col"
                 })
