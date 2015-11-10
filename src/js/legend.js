@@ -255,11 +255,12 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         that.table.append("tbody");
         if(showLegendHeadings) {
             var thead = that.table.selectAll("thead");
-            thead.attr({
-                    "class": headerRowClass
-                });
 
             var theadRow = thead.append("tr");
+
+            theadRow.attr({
+                    "class": headerRowClass
+                });
 
             theadRow.append("th")
                 .attr({
