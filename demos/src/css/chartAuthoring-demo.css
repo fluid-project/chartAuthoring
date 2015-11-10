@@ -80,6 +80,14 @@
     color: #FFFFFF;
 }
 
+
+/* Set to get "box" effect for legend color key cells */
+.floe-ca-pieChart-legend-color-header {
+    max-width:2.5em;
+    min-width:2.5em;
+    overflow: hidden;
+}
+
 .floe-ca-pieChart-legend-table-row {
     height: 2.5em;
 }
