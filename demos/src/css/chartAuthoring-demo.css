@@ -91,41 +91,41 @@
 
 /* Data entry panel */
 
-.floe-dataEntryPanel {
+.floec-dataEntryPanel {
     border-top: 1px dashed black;
     padding-top: 1em;
     clear: both;
     width:55em;
 }
 
-.floe-dataEntryPanel li {
+.floec-dataEntryPanel li {
     list-style:none;
     margin-bottom: 0.5em;
 }
 
-.floe-dataEntryPanel fieldset {
+.floec-dataEntryPanel fieldset {
     border: 0;
 }
 
-.floe-dataEntryPanel input {
+.floec-dataEntryPanel input {
     background-color: #F2F2F2;
 }
 
-.floe-ca-dataEntry-label {
+.floec-ca-dataEntry-label {
     margin-right:1em;
     width:12em;
 }
 
-.floe-ca-dataEntry-value {
+.floec-ca-dataEntry-value {
     margin-right:1em;
     width:6em;
 }
 
-.floe-ca-dataEntry-percentage {
+.floec-ca-dataEntry-percentage {
     background-color: #C9C9C9;
 }
 
-.floe-ca-dataEntryPanel-totalLabel {
+.floec-ca-dataEntryPanel-totalLabel {
     width: 12em;
     display: inline-block;
     text-align: right;
@@ -133,13 +133,13 @@
     font-weight: bold;
 }
 
-.floe-ca-dataEntryPanel-totalValue {
+.floec-ca-dataEntryPanel-totalValue {
     padding-left:0.65em;
     width: 6em;
     display: inline-block;
 }
 
-.floe-ca-dataEntryPanel-totalPercentage {
+.floec-ca-dataEntryPanel-totalPercentage {
     margin-left:1.65em;
     background-color: #C9C9C9;
 }
