@@ -13,10 +13,15 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     "use strict";
 
-    jqUnit.test("Test the data conversion function", function () {
-        jqUnit.expect(1);
+    jqUnit.test("Test the data conversion functions", function () {
+        jqUnit.expect(2);
+
         var convertedData = floe.chartAuthoring.dataEntriesToPieChartData(floe.tests.chartAuthoring.dataEntries);
         jqUnit.assertDeepEq("Data conversion between data entries and chart works", floe.tests.chartAuthoring.dataSet, convertedData);
+
+        var sonifiedData = floe.chartAuthoring.dataEntriesToSonificationData(floe.tests.chartAuthoring.dataEntries, 150);
+        jqUnit.assertDeepEq("Data conversion between data entries and sonification data works", floe.tests.chartAuthoring.sonificationData, sonifiedData);
+
     });
 
     // IoC tests
@@ -39,7 +44,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             onPieChartRedrawn: null
         }
     });
-
 
     floe.tests.chartAuthoring.dataEntries =
     {
@@ -65,6 +69,20 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         {
             id: "entry2",
             value: 50,
+            label: "Label Two"
+        }
+    ];
+
+    floe.tests.chartAuthoring.sonificationData =
+    [
+        {
+            id: "entry1",
+            value: 67,
+            label: "Label One"
+        },
+        {
+            id: "entry2",
+            value: 33,
             label: "Label Two"
         }
     ];

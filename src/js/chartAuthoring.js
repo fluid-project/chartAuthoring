@@ -79,7 +79,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                                         type: "fluid.transforms.free",
                                         args: ["{that}.model.dataEntries"],
                                         func: "floe.chartAuthoring.dataEntriesToPieChartData"
-                                    }
+                                    },
+                                    backward: "never"
                                 },
                                 listeners: {
                                     "onCreate.escalate": {
@@ -101,6 +102,23 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                                     "onPieChartReady.escalate": "{chartAuthoring}.events.onPieChartReady.fire"
                                 }
                             }
+                        },
+                        // Stub for sonification component when ready
+                        sonifier: {
+                            type: "fluid.modelComponent",
+                            createOnEvent: "{chartAuthoring}.events.onChartAuthoringInterfaceReady",
+                            options: {
+                                modelRelay: {
+                                    source: "{dataEntryPanel}.model.dataEntries",
+                                    target: "{that}.model.dataSet",
+                                    singleTransform: {
+                                        type: "fluid.transforms.free",
+                                        args: ["{dataEntryPanel}.model.dataEntries","{dataEntryPanel}.model.total.value"],
+                                        func: "floe.chartAuthoring.dataEntriesToSonificationData"
+                                    },
+                                    backward: "never"
+                                }
+                            }
                         }
                     }
                 }
@@ -111,6 +129,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             onChartAuthoringInterfaceReady: null,
             onPanelReady: null,
             onPieChartReady: null,
+            onSonifierReady: null,
             onToolReady: {
                 events: {
                     onPanelReady: "onPanelReady",
@@ -159,16 +178,36 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         var pieChartData = [];
         fluid.each(dataEntries, function(item, key) {
-            var d = {
-                id: key,
-                label: item.label,
-                value: item.value
-            };
-            if(d.value !== null) {
+            if(item.value !== null) {
+                var d = {
+                    id: key,
+                    label: item.label,
+                    value: item.value
+                };
                 pieChartData.push(d);
             }
         });
         return pieChartData;
+    };
+
+    // Given an object in the style of floe.chartAuthoring.dataEntryPanel.model.dataEntries,
+    // convert it to an array of objects in the style used by the sonification components,
+    // maintaining object constancy by using the dataEntry object name as the key
+    floe.chartAuthoring.dataEntriesToSonificationData = function(dataEntries, totalValue) {
+        var sonificationData = [];
+        fluid.each(dataEntries, function(item, key) {
+            if(item.value !== null) {
+                var percentage = Number(floe.chartAuthoring.percentage.calculate(item.value, totalValue).toFixed(0));
+                var d = {
+                    id: key,
+                    label: item.label,
+                    value: percentage
+                };
+                sonificationData.push(d);
+            }
+
+        });
+        return sonificationData;
     };
 
     // Adds aria attributes that only make sense within the context of the overall chart authoring tool
