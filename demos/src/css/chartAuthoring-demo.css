@@ -1,5 +1,6 @@
 .main {
     width: 100%;
+    font-family: Verdana, Arial, sans-serif;
 }
 
 /* Main container */
@@ -28,7 +29,7 @@
 /* Inline edit component appearance customizations */
 
 .floec-chartTitle .fl-inlineEdit-text {
-    font-size: 2em;
+    font-size: 1.7em;
 }
 
 .fl-inlineEdit-tooltip {
@@ -57,7 +58,6 @@
     stroke-linecap: butt;
     stroke-linejoin: miter;
     font-weight: 800;
-    font-family: Verdana, Arial, sans-serif;
 }
 
 /* Pie slice (SVG styling attributes) */
@@ -89,6 +89,15 @@
     padding: 0.5em;
 }
 
+.floe-ca-pieChart-legend-label-cell {
+    font-weight: bold;
+    /*color: rgb(225,225,225);*/
+}
+
+.floe-ca-pieChart-legend-value-cell {
+    /*color: rgb(225,225,225);*/
+}
+
 /* Data entry panel */
 
 .floec-dataEntryPanel {
@@ -101,6 +110,10 @@
 .floec-dataEntryPanel li {
     list-style:none;
     margin-bottom: 0.5em;
+}
+
+.floec-ca-dataEntryPanel-dataEntryLabel {
+    padding-left: 2.5em;
 }
 
 .floec-dataEntryPanel fieldset {
@@ -122,7 +135,11 @@
 }
 
 .floec-ca-dataEntry-percentage {
-    background-color: #C9C9C9;
+    background-color: rgb(235,235,235);
+    width: 5em;
+    display: inline-block;
+    padding: 0.2em 0 0.2em 0.2em;
+    text-align: left;
 }
 
 .floec-ca-dataEntryPanel-totalLabel {
@@ -141,5 +158,8 @@
 
 .floec-ca-dataEntryPanel-totalPercentage {
     margin-left:1.65em;
-    background-color: #C9C9C9;
+    width: 5em;
+    display: inline-block;
+    text-align: left;
+    padding: 0.2em 0 0.2em 0.2em;
 }
