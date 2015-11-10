@@ -76,6 +76,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             legend: "floe-ca-pieChart-legend",
             table: "floe-ca-pieChart-legend-table",
             row: "floe-ca-pieChart-legend-table-row",
+            headerRow: "floe-ca-pieChart-legend-table-header-row",
+            colorHeader: "floe-ca-pieChart-legend-color-header",
+            labelHeader: "floe-ca-pieChart-legend-label-header",
+            valueHeader: "floe-ca-pieChart-legend-value-header",
             colorCell: "floe-ca-pieChart-legend-color-cell",
             labelCell: "floe-ca-pieChart-legend-label-cell",
             valueCell: "floe-ca-pieChart-legend-value-cell"
@@ -84,6 +88,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             legend: ".floec-ca-pieChart-legend",
             table: ".floec-ca-pieChart-legend-table",
             row: ".floec-ca-pieChart-legend-table-row",
+            headerRow: ".floec-ca-pieChart-legend-table-header-row",
+            colorHeader: ".floec-ca-pieChart-legend-color-header",
+            labelHeader: ".floec-ca-pieChart-legend-label-header",
+            valueHeader: ".floec-ca-pieChart-legend-value-header",
             caption: ".floec-ca-pieChart-legend-caption",
             colorCell: ".floec-ca-pieChart-legend-color-cell",
             labelCell: ".floec-ca-pieChart-legend-label-cell",
@@ -221,6 +229,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.chartAuthoring.pieChart.legend.create = function (that) {
         var container = that.container,
             tableClass = that.classes.table,
+            headerRowClass = that.classes.headerRow,
+            colorHeaderClass = that.classes.colorHeader,
+            labelHeaderClass = that.classes.labelHeader,
+            valueHeaderClass = that.classes.valueHeader,
             showLegendHeadings = that.options.legendOptions.showLegendHeadings;
 
         that.table = that.jQueryToD3(container)
@@ -243,24 +255,30 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         that.table.append("tbody");
         if(showLegendHeadings) {
             var thead = that.table.selectAll("thead");
+            thead.attr({
+                    "class": headerRowClass
+                });
 
             var theadRow = thead.append("tr");
 
             theadRow.append("th")
                 .attr({
-                    "scope":"col"
+                    "scope":"col",
+                    "class": colorHeaderClass
                 })
                 .html(that.options.strings.legendColHeading);
 
             theadRow.append("th")
                 .attr({
-                    "scope":"col"
+                    "scope":"col",
+                    "class": labelHeaderClass
                 })
                 .html(that.options.strings.labelColHeading);
 
             theadRow.append("th")
                 .attr({
-                    "scope":"col"
+                    "scope":"col",
+                    "class": valueHeaderClass
                 })
                 .html(that.options.strings.valueColHeading);
         }
