@@ -28,6 +28,10 @@
 
 /* Inline edit component appearance customizations */
 
+.fl-inlineEdit-text {
+    background-image:url('../img/inline_edit_edit_button_16x16.png');
+}
+
 .floec-chartTitle .fl-inlineEdit-text {
     font-size: 1.7em;
 }
