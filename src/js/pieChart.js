@@ -76,15 +76,15 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             // innerRadius: number,
             // animationDuration: number,
             // sort: boolean   // Whether or not to sort the data by values when creating the legend,
-            // pieTitle: the accessible title to be applied to the pie chart,
-            // pieDescription: the accessible description to be applied to the pie chart,
-            // sliceTextDisplayTemplate: fluid.stringTemplate to format the pie chart slice text
-            // sliceTextPercentageDigits: number of digits after decimal for percentages in pie chart slice text
-            // labelTextDisplayTemplate: fluid.stringTemplate to format the legend label cell
-            // valueTextDisplayTemplate: fluid.stringTemplate to format the legend value cell
-            // legendPercentageDigits: number of digits after decimal for percentages in legend display
-            // displayPieBackground: whether to draw a background circle behind the pie
-            // pieBackgroundColor: color of the background circle, if drawn
+            // pieTitle: string // the accessible title to be applied to the pie chart,
+            // pieDescription: string // the accessible description to be applied to the pie chart,
+            // sliceTextDisplayTemplate: string // fluid.stringTemplate to format the pie chart slice text
+            // sliceTextPercentageDigits: number // number of digits after decimal for percentages in pie chart slice text
+            // labelTextDisplayTemplate: string // fluid.stringTemplate to format the legend label cell
+            // valueTextDisplayTemplate: string // fluid.stringTemplate to format the legend value cell
+            // legendPercentageDigits: number // number of digits after decimal for percentages in legend display
+            // displayPieBackground: boolean // whether to draw a background circle behind the pie
+            // pieBackgroundColor: string // color of the background circle, if drawn
         },
         selectors: {
             pie: ".floec-ca-pieChart-pie",
