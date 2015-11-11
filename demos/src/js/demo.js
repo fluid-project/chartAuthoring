@@ -39,7 +39,9 @@ Varied#3: colors: ["#f15e4e", "#acdee4", "#73c163", "#ffc74a", "#41beae"]
                 "class": "floe-demo-resetButton"
             })
             .click(function(e) {
-                that.reset();
+                if($(this).is(":focus")) {
+                    that.reset();
+                }
                 e.preventDefault();
             });
     };
