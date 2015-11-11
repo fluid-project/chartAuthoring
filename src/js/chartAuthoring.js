@@ -194,23 +194,21 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         return pieChartData;
     };
 
-    // TODO: this needs to be better and configurable, but works for immediate purposes
+    // TODO: better implementation, but works for immediate purposes
 
-    floe.chartAuthoring.getSonificationUnits = function(value) {
-        var numberTens = Math.floor(value / 10);
-        var numberOnes = value % 10;
-        var tensArray =[];
-        var onesArray = [];
-        for(var i=0; i<numberTens; i++) {
-            tensArray.push(10);
+    floe.chartAuthoring.getSonificationUnits = function(value, unitDivisor) {
+        var numberDivisors = Math.floor(value / unitDivisor);
+        var numberRemainders = value % unitDivisor;
+        var divisorArray =[];
+        var remainderArray = [];
+        for(var i=0; i<numberDivisors; i++) {
+            divisorArray.push(unitDivisor);
         }
-        for(i=0; i<numberOnes; i++) {
-            onesArray.push(1);
+        for(i=0; i<numberRemainders; i++) {
+            remainderArray.push(1);
         }
 
-        var joinedArray = tensArray.concat(onesArray);
-        return joinedArray;
-
+        return divisorArray.concat(remainderArray);
     };
 
     // Given an object in the style of floe.chartAuthoring.dataEntryPanel.model.dataEntries,
@@ -225,7 +223,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                     id: key,
                     label: item.label,
                     value: percentage,
-                    units: floe.chartAuthoring.getSonificationUnits(percentage)
+                    units: floe.chartAuthoring.getSonificationUnits(percentage, 10)
                 };
                 sonificationData.push(d);
             }
