@@ -31,36 +31,6 @@ Varied#3: colors: ["#f15e4e", "#acdee4", "#73c163", "#ffc74a", "#41beae"]
         dataEntry2.locate("value").val(40).trigger("change");
     };
 
-    demo.chartAuthoring.addResetButton = function (that) {
-        var dataEntryForm = that.chartAuthoringInterface.dataEntryPanel.locate("dataEntryForm");
-
-        $("<button>Reset</button>").appendTo(dataEntryForm)
-            .attr({
-                "class": "floe-demo-resetButton"
-            })
-            .click(function(e) {
-                if($(this).is(":focus")) {
-                    that.reset();
-                }
-                e.preventDefault();
-            });
-    };
-
-    demo.chartAuthoring.resetPanel = function (that) {
-        var dataEntries = that.chartAuthoringInterface.dataEntryPanel.locate("dataEntries");
-
-        var labelInputs = dataEntries.find("input.floec-ca-dataEntry-label");
-        labelInputs.each(function () {
-            $(this).val("");
-        });
-
-        var valueInputs = dataEntries.find("input.floec-ca-dataEntry-value");
-        valueInputs.each(function () {
-            $(this).val("");
-        });
-        valueInputs.trigger("change");
-    };
-
     floe.chartAuthoring("#floec-chartAuthoring", {
         templateLoader: {
             terms: {
@@ -82,19 +52,9 @@ Varied#3: colors: ["#f15e4e", "#acdee4", "#73c163", "#ffc74a", "#41beae"]
                 height: 400
             }
         },
-        invokers: {
-            "reset": {
-                funcName: "demo.chartAuthoring.resetPanel",
-                args: ["{that}"]
-            }
-        },
         listeners: {
             "onToolReady.addExampleInput": {
                 funcName: "demo.chartAuthoring.addExampleInput",
-                args: ["{that}"]
-            },
-            "onToolReady.addResetButton": {
-                funcName: "demo.chartAuthoring.addResetButton",
                 args: ["{that}"]
             }
         }
