@@ -48,7 +48,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                             createOnEvent: "{chartAuthoring}.events.onChartAuthoringInterfaceReady",
                             options: {
                                 strings: {
-                                    defaultViewText: "Enter Chart Title"
+                                    defaultViewText: "{floe.chartAuthoring}.options.strings.defaultTitleText"
                                 }
                             }
                         },
@@ -58,7 +58,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                             createOnEvent: "{chartAuthoring}.events.onChartAuthoringInterfaceReady",
                             options: {
                                 strings: {
-                                    defaultViewText: "Enter Chart Description"
+                                    defaultViewText: "{floe.chartAuthoring}.options.strings.defaultDescriptionText"
                                 }
                             }
 
@@ -140,6 +140,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         },
         listeners: {
             "onToolReady.addAriaConnections": "floe.chartAuthoring.addAriaConnections"
+        },
+        strings: {
+            defaultTitleText: "Enter Chart Title",
+            defaultDescriptionText: "Enter Chart Description"
         },
         // The terms and/or resources need to be set to the appropriate locations
         // by the integrator.

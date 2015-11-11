@@ -159,6 +159,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         // Update and redraw arcs of existing slices
         var arc = that.arc,
             animationDuration = that.options.pieOptions.animationDuration,
+            percentageDigits = that.options.pieOptions.sliceTextPercentageDigits,
+            totalValue = that.model.total.value,
             sliceTextDisplayTemplate = that.options.pieOptions.sliceTextDisplayTemplate;
 
         // Standard D3 pie arc tweening transition, as per http://bl.ocks.org/mbostock/1346410
@@ -172,7 +174,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         // Update and reposition text labels for existing slices
         that.texts.text(function (d) {
-            return floe.chartAuthoring.pieChart.getDataDisplayValueFromTemplate(that, sliceTextDisplayTemplate, d);
+            return floe.d3ViewComponent.getTemplatedDisplayValue(totalValue, percentageDigits, sliceTextDisplayTemplate, d);
         });
 
         that.texts.transition().duration(animationDuration).attr("transform", that.textTransform);
@@ -299,15 +301,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     floe.chartAuthoring.pieChart.getViewBoxConfiguration = function (x, y, width, height) {
         return x + "," + y + "," + width + "," + height;
-    };
-
-    // Returns a formatted string for a numeric data value based on a supplied template
-
-    floe.chartAuthoring.pieChart.getDataDisplayValueFromTemplate = function(that, template, d) {
-        var sliceTextPercentageDigits = that.options.pieOptions.sliceTextPercentageDigits;
-        var percentage = floe.chartAuthoring.percentage.calculate(d.value, that.model.total.value).toFixed(sliceTextPercentageDigits);
-        var output = fluid.stringTemplate(template, {value: d.value, percentage: percentage, total: that.model.total.value});
-        return output;
     };
 
 })(jQuery, fluid);
