@@ -35,14 +35,6 @@ body {
     font-size: 1.7em;
 }
 
-.fl-inlineEdit-tooltip {
-    /* */
-}
-
-.fl-inlineEdit-editModeInstruction {
-    /* */
-}
-
 /* Pie */
 
 .floe-ca-pieChart-pie {
@@ -83,7 +75,6 @@ body {
     color: #FFFFFF;
 }
 
-
 /* Set to get "box" effect for legend color key cells */
 .floe-ca-pieChart-legend-color-header {
     max-width:2.5em;
@@ -101,11 +92,6 @@ body {
 
 .floe-ca-pieChart-legend-label-cell {
     font-weight: bold;
-    /*color: rgb(225,225,225);*/
-}
-
-.floe-ca-pieChart-legend-value-cell {
-    /*color: rgb(225,225,225);*/
 }
 
 /* Data entry panel */
