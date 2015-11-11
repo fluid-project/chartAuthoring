@@ -194,6 +194,25 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         return pieChartData;
     };
 
+    // TODO: this needs to be better and configurable, but works for immediate purposes
+
+    floe.chartAuthoring.getSonificationUnits = function(value) {
+        var numberTens = Math.floor(value / 10);
+        var numberOnes = value % 10;
+        var tensArray =[];
+        var onesArray = [];
+        for(var i=0; i<numberTens; i++) {
+            tensArray.push(10);
+        }
+        for(i=0; i<numberOnes; i++) {
+            onesArray.push(1);
+        }
+
+        var joinedArray = tensArray.concat(onesArray);
+        return joinedArray;
+
+    };
+
     // Given an object in the style of floe.chartAuthoring.dataEntryPanel.model.dataEntries,
     // convert it to an array of objects in the style used by the sonification components,
     // maintaining object constancy by using the dataEntry object name as the key
@@ -205,12 +224,14 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 var d = {
                     id: key,
                     label: item.label,
-                    value: percentage
+                    value: percentage,
+                    units: floe.chartAuthoring.getSonificationUnits(percentage)
                 };
                 sonificationData.push(d);
             }
 
         });
+        sonificationData.sort(floe.chartAuthoring.pieChart.legend.sortAscending);
         return sonificationData;
     };
 

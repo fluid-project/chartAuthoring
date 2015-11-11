@@ -77,11 +77,13 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     [
         {
             id: "entry1",
+            units: [10,10,10,10,10,10,1,1,1,1,1,1,1],
             value: 67,
             label: "Label One"
         },
         {
             id: "entry2",
+            units: [10,10,10,1,1,1],
             value: 33,
             label: "Label Two"
         }
