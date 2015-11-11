@@ -21,27 +21,14 @@ Varied#3: colors: ["#f15e4e", "#acdee4", "#73c163", "#ffc74a", "#41beae"]
     fluid.registerNamespace("demo.chartAuthoring");
 
     demo.chartAuthoring.addExampleInput = function (that) {
-        var dataEntries = that.chartAuthoringInterface.dataEntryPanel.locate("dataEntries");
+        var dataEntry = that.chartAuthoringInterface.dataEntryPanel.dataEntry;
+        var dataEntry2 = that.chartAuthoringInterface.dataEntryPanel["dataEntry-1"];
 
-        var labelInputs = dataEntries.find("input.floec-ca-dataEntry-label");
+        dataEntry.locate("label").val("label 1");
+        dataEntry.locate("value").val(60).trigger("change");
 
-        labelInputs.first().val("label 1");
-        labelInputs.slice(1,2).val("label 2");
-        // labelInputs.slice(2,3).val("label 3");
-        // labelInputs.slice(3,4).val("label 4");
-        // labelInputs.slice(4,5).val("label 5");
-        labelInputs.trigger("change");
-
-        var valueInputs = dataEntries.find("input.floec-ca-dataEntry-value");
-
-        valueInputs.first().val(60);
-        valueInputs.slice(1,2).val(40);
-        // valueInputs.slice(2,3).val(25);
-        // valueInputs.slice(3,4).val(35);
-        // valueInputs.slice(4,5).val(30);
-        valueInputs.trigger("change");
-
-        // chartAuthoring.chartAuthoringInterface.dataEntryPanel.reset();
+        dataEntry2.locate("label").val("label 2");
+        dataEntry2.locate("value").val(40).trigger("change");
     };
 
     demo.chartAuthoring.addResetButton = function (that) {
