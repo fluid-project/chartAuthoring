@@ -165,6 +165,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var colorCellSelector = that.options.selectors.colorCell,
             labelCellSelector = that.options.selectors.labelCell,
             valueCellSelector = that.options.selectors.valueCell,
+            percentageDigits = that.options.legendOptions.legendPercentageDigits,
+            totalValue = that.model.total.value,
             labelTextDisplayTemplate = that.options.legendOptions.labelTextDisplayTemplate,
             valueTextDisplayTemplate = that.options.legendOptions.valueTextDisplayTemplate;
 
@@ -180,13 +182,13 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             d3.select(this)
                 .select(labelCellSelector)
                 .text(function(d) {
-                    return floe.chartAuthoring.pieChart.legend.getDisplayValueFromTemplate(that, labelTextDisplayTemplate, d);
+                    return floe.d3ViewComponent.getTemplatedDisplayValue(totalValue, percentageDigits, labelTextDisplayTemplate, d);
                 });
 
             d3.select(this)
                 .select(valueCellSelector)
                 .text(function(d) {
-                    return floe.chartAuthoring.pieChart.legend.getDisplayValueFromTemplate(that, valueTextDisplayTemplate, d);
+                    return floe.d3ViewComponent.getTemplatedDisplayValue(totalValue, percentageDigits, valueTextDisplayTemplate, d);
                 });
         });
     };
@@ -321,13 +323,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.chartAuthoring.pieChart.legend.getColorArray = function (colors) {
         var colorScale = (typeof(colors) === "function") ? colors : floe.d3.getColorScale(colors);
         return colorScale.range();
-    };
-
-    floe.chartAuthoring.pieChart.legend.getDisplayValueFromTemplate = function(that, template, d) {
-        var legendPercentageDigits = that.options.legendOptions.legendPercentageDigits;
-        var percentage = floe.chartAuthoring.percentage.calculate(d.value, that.model.total.value).toFixed(legendPercentageDigits);
-        var output = fluid.stringTemplate(template, {label: d.label, value: d.value, percentage: percentage, total: that.model.total.value});
-        return output;
     };
 
 })(jQuery, fluid);
