@@ -201,14 +201,66 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var numberRemainders = value % unitDivisor;
         var divisorArray =[];
         var remainderArray = [];
-        for(var i=0; i<numberDivisors; i++) {
+        for(var i=0; i <numberDivisors; i++) {
             divisorArray.push(unitDivisor);
         }
-        for(i=0; i<numberRemainders; i++) {
+        for(i=0; i< numberRemainders; i++) {
             remainderArray.push(1);
         }
 
         return divisorArray.concat(remainderArray);
+    };
+
+    floe.chartAuthoring.getSonificationNoteDurations = function(units, unitDivisor, noteDurationConfig) {
+        var durations = fluid.transform(units, function (unit) {
+            if(unit === unitDivisor) {
+                return noteDurationConfig.divisorDuration;
+            } else {
+                return noteDurationConfig.remainderDuration;
+            }
+        });
+        return durations;
+    };
+
+
+    floe.chartAuthoring.getSonificationNoteValues = function(units, unitDivisor, noteValueConfig) {
+        var durations = fluid.transform(units, function (unit) {
+            if(unit === unitDivisor) {
+                return noteValueConfig.divisorValue;
+            } else {
+                return noteValueConfig.remainderValue;
+            }
+        });
+        return durations;
+    };
+
+    floe.chartAuthoring.getSonificationEnvelopeDurations = function(units, unitDivisor, envelopeDurationConfig) {
+        var durations = fluid.transform(units, function (unit) {
+            if(unit === unitDivisor) {
+                return [envelopeDurationConfig.divisorDuration,envelopeDurationConfig.divisorSilence];
+            } else {
+                return [envelopeDurationConfig.remainderDuration,envelopeDurationConfig.remainderSilence];
+            }
+        });
+
+        var durationsJoined = [];
+
+        fluid.each(durations, function(duration) {
+            durationsJoined = durationsJoined.concat(duration);
+        });
+
+        return durationsJoined;
+    };
+
+    floe.chartAuthoring.getSonificationEnvelopeValues = function(envelopeDurations, envelopeDurationConfig, envelopeValuesConfig) {
+        var envelopeValues = fluid.transform(envelopeDurations, function(duration) {
+            if(duration === envelopeDurationConfig.divisorDuration || duration === envelopeDurationConfig.remainderDuration) {
+                return envelopeValuesConfig.openValue;
+            } else {
+                return envelopeValuesConfig.closedValue;
+            }
+        });
+        return envelopeValues;
     };
 
     // Given an object in the style of floe.chartAuthoring.dataEntryPanel.model.dataEntries,
@@ -216,14 +268,49 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // maintaining object constancy by using the dataEntry object name as the key
     floe.chartAuthoring.dataEntriesToSonificationData = function(dataEntries, totalValue) {
         var sonificationData = [];
+        var unitDivisor = 10;
+        var noteDurationConfig = {
+            divisorDuration: 0.375,
+            remainderDuration: 0.16666667
+        };
+
+        var noteValueConfig = {
+            divisorValue: 91,
+            remainderValue: 90
+        };
+
+        var envelopeDurationConfig = {
+            divisorDuration: 0.125,
+            divisorSilence: 0.25,
+            remainderDuration: 0.04166667,
+            remainderSilence: 0.0625
+            // divisorValue: "",
+            // remainderValue: ""
+        };
+
+        var envelopeValuesConfig = {
+            openValue: 1.0,
+            closedValue: 0.0
+        };
+
         fluid.each(dataEntries, function(item, key) {
             if(item.value !== null) {
                 var percentage = Number(floe.chartAuthoring.percentage.calculate(item.value, totalValue).toFixed(0));
+                var units = floe.chartAuthoring.getSonificationUnits(percentage, unitDivisor);
+                var envelopeDurations = floe.chartAuthoring.getSonificationEnvelopeDurations(units, unitDivisor, envelopeDurationConfig);
                 var d = {
                     id: key,
                     label: item.label,
                     value: percentage,
-                    units: floe.chartAuthoring.getSonificationUnits(percentage, 10)
+                    units: units,
+                    notes: {
+                        durations: floe.chartAuthoring.getSonificationNoteDurations(units, unitDivisor, noteDurationConfig),
+                        values: floe.chartAuthoring.getSonificationNoteValues(units, unitDivisor, noteValueConfig)
+                    },
+                    envelope: {
+                        durations: envelopeDurations,
+                        values: floe.chartAuthoring.getSonificationEnvelopeValues(envelopeDurations, envelopeDurationConfig, envelopeValuesConfig)
+                    }
                 };
                 sonificationData.push(d);
             }
@@ -241,7 +328,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var legendId = fluid.allocateSimpleId(that.chartAuthoringInterface.pieChart.legend.locate("table")),
             pieId = fluid.allocateSimpleId(that.chartAuthoringInterface.pieChart.pie.locate("pie")),
             totalId = fluid.allocateSimpleId(that.chartAuthoringInterface.dataEntryPanel.locate("totalValue"));
-
 
         that.chartAuthoringInterface.dataEntryPanel.locate("dataEntryForm").attr("aria-controls", legendId + " " + pieId + " " + totalId);
     };
