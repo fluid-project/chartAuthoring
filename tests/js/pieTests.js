@@ -228,10 +228,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         value: 80
     }];
 
-    floe.tests.chartAuthoring.expectedTenPercentDisplayValue = "20/200 (10.00%)";
-    floe.tests.chartAuthoring.expectedFiftyPercentDisplayValue = "100/200 (50.00%)";
-    floe.tests.chartAuthoring.expectedFortyPercentDisplayValue = "80/200 (40.00%)";
-
     jqUnit.test("Test the functions for custom formatting of data values in pie slices", function () {
         jqUnit.expect(3);
 
@@ -247,13 +243,19 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             }
         });
 
-        var customDisplayValues = [floe.tests.chartAuthoring.expectedTenPercentDisplayValue, floe.tests.chartAuthoring.expectedFiftyPercentDisplayValue, floe.tests.chartAuthoring.expectedFortyPercentDisplayValue];
+
+        floe.tests.chartAuthoring.expectedDisplayValues = [
+            "20/200 (10.00%)",
+            "100/200 (50.00%)",
+            "80/200 (40.00%)"
+        ];
+
 
         var d3Elem = floe.d3.jQueryToD3(that.locate("text"));
 
         d3Elem.each(function (d,i) {
             var displayedValue = d3.select(this).text();
-            jqUnit.assertEquals("Displayed values are in sync with the current model", customDisplayValues[i], displayedValue);
+            jqUnit.assertEquals("Displayed values are in sync with the current model", floe.tests.chartAuthoring.expectedDisplayValues[i], displayedValue);
         });
 
 
