@@ -14,7 +14,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     "use strict";
 
     fluid.defaults("floe.chartAuthoring.dataEntryPanel", {
-        gradeNames: ["floe.chartAuthoring.templateInjection"],
+        gradeNames: ["floe.chartAuthoring.totalRelaying", "floe.chartAuthoring.templateInjection"],
         selectors: {
             dataEntryForm: ".floec-ca-dataEntryPanel-dataEntryForm",
             dataEntryLabel: ".floec-ca-dataEntryPanel-dataEntryLabel",
@@ -65,25 +65,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 // "dataEntryComponent-uuid": {}
             }
         },
-        modelRelay: [{
-            source: "dataSet",
-            target: "total.value",
-            singleTransform: {
-                type: "floe.chartAuthoring.transforms.reduce",
-                value: "{that}.model.dataSet",
-                initialValue: null,
-                extractor: "floe.chartAuthoring.transforms.reduce.valueExtractor",
-                func: "floe.chartAuthoring.transforms.reduce.add"
-            }
-        }, {
-            source: "total.value",
-            target: "total.percentage",
-            singleTransform: {
-                type: "floe.chartAuthoring.transforms.percentage",
-                value: "{that}.model.total.value",
-                total: "{that}.model.total.value"
-            }
-        }],
         numDataEntryFields: 5,
         events: {
             createDataEntryField: null

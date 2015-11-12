@@ -21,37 +21,19 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // 4. update the pie when the data set changes, including adding or removing slices
 
     fluid.defaults("floe.chartAuthoring.pieChart.pie", {
-        gradeNames: ["floe.d3ViewComponent", "autoInit"],
+        gradeNames: ["floe.chartAuthoring.totalRelaying", "floe.d3ViewComponent",  "autoInit"],
         model: {
             // dataSet accepts:
             // 1. an array of primitive values, such as numbers;
             // 2. an array of objects. The "value" element of each object needs to containe the value for drawing each pie slice.
             // Example: [{id: string, value: number} ... ]
-            dataSet: [],
-            total: {
-                // value: number,
-                // percentage: number
-            }
+            dataSet: []
+            // Supplied by relaying in floe.chartAuthoring.totalRelaying grade
+            // total: {
+            //     value: number,
+            //     percentage: number
+            // }
         },
-        modelRelay: [{
-            source: "dataSet",
-            target: "total.value",
-            singleTransform: {
-                type: "floe.chartAuthoring.transforms.reduce",
-                value: "{that}.model.dataSet",
-                initialValue: null,
-                extractor: "floe.chartAuthoring.transforms.reduce.valueExtractor",
-                func: "floe.chartAuthoring.transforms.reduce.add"
-            }
-        }, {
-            source: "total.value",
-            target: "total.percentage",
-            singleTransform: {
-                type: "floe.chartAuthoring.transforms.percentage",
-                value: "{that}.model.total.value",
-                total: "{that}.model.total.value"
-            }
-        }],
         pieOptions: {
             width: 300,
             height: 300,
