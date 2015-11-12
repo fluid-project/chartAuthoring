@@ -73,11 +73,11 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                                     dataEntry: "{templateLoader}.resources.dataEntry"
                                 },
                                 modelRelay: {
-                                    source: "{that}.model.dataEntries",
+                                    source: "{that}.model.dataSet",
                                     target: "{floe.chartAuthoring.pieChart}.model.dataSet",
                                     singleTransform: {
                                         type: "fluid.transforms.free",
-                                        args: ["{that}.model.dataEntries"],
+                                        args: ["{that}.model.dataSet"],
                                         func: "floe.chartAuthoring.dataEntriesToPieChartData"
                                     }
                                 },
@@ -156,13 +156,13 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         }]
     });
 
-    // Given an object in the style of floe.chartAuthoring.dataEntryPanel.model.dataEntries,
+    // Given an object in the style of floe.chartAuthoring.dataEntryPanel.model.dataSet,
     // convert it to an array of objects in the style used by the pieChart components,
     // maintaining object constancy by using the dataEntry object name as the key
-    floe.chartAuthoring.dataEntriesToPieChartData = function(dataEntries) {
+    floe.chartAuthoring.dataEntriesToPieChartData = function(dataSet) {
 
         var pieChartData = [];
-        fluid.each(dataEntries, function(item, key) {
+        fluid.each(dataSet, function(item, key) {
             var d = {
                 id: key,
                 label: item.label,

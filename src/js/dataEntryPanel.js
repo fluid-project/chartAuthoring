@@ -61,16 +61,16 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 // value: number,
                 // percentage: number
             },
-            dataEntries: {
+            dataSet: {
                 // "dataEntryComponent-uuid": {}
             }
         },
         modelRelay: [{
-            source: "dataEntries",
+            source: "dataSet",
             target: "total.value",
             singleTransform: {
                 type: "floe.chartAuthoring.transforms.reduce",
-                value: "{that}.model.dataEntries",
+                value: "{that}.model.dataSet",
                 initialValue: null,
                 extractor: "floe.chartAuthoring.transforms.reduce.valueExtractor",
                 func: "floe.chartAuthoring.transforms.reduce.add"
@@ -105,7 +105,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     floe.chartAuthoring.dataEntryPanel.generateModelRelaysConnectionGrade = function (nickName, id) {
         var gradeName = "floe.chartAuthoring.dataEntryPanel.modelRelayConnections." + fluid.allocateGuid();
-        var modelPathBase = "{dataEntryPanel}.model.dataEntries." + nickName + "-" + id + ".";
+        var modelPathBase = "{dataEntryPanel}.model.dataSet." + nickName + "-" + id + ".";
 
         fluid.defaults(gradeName, {
             model: {

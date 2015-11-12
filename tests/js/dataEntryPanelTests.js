@@ -131,7 +131,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         // Test creation of dataEntry components
         var expectedDataEntryFields = that.options.numDataEntryFields;
         jqUnit.assertEquals("There should be " + expectedDataEntryFields + " data entry components added", expectedDataEntryFields, that.locate("dataEntry").length);
-        jqUnit.assertEquals("There should be " + expectedDataEntryFields + " data entries added to the model", expectedDataEntryFields, fluid.keys(that.model.dataEntries).length);
+        jqUnit.assertEquals("There should be " + expectedDataEntryFields + " data entries added to the model", expectedDataEntryFields, fluid.keys(that.model.dataSet).length);
 
         var resetButton = that.locate("resetButton");
         jqUnit.assertEquals("The reset button is rendered", 1, resetButton.length);
