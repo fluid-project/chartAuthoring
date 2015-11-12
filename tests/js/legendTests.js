@@ -367,6 +367,14 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     });
 
+    floe.tests.chartAuthoring.testCustomDisplay = function(that, message, cellSelector, expectedValuePath) {
+        var d3Cells = that.jQueryToD3($(that.locate(cellSelector)));
+        d3Cells.each(function (d,i) {
+            var expectedLabel = floe.tests.chartAuthoring.expectedCustomDisplay[i][expectedValuePath];
+            jqUnit.assertEquals(message, expectedLabel, ($(this).html()));
+        });
+    };
+
     jqUnit.test("Test the legend component with custom value and label display templates", function () {
         jqUnit.expect(4);
 
@@ -382,19 +390,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             }
         });
 
-        var d3LabelCells = that.jQueryToD3($(that.locate("labelCell")));
-        d3LabelCells.each(function (d,i) {
-            var expectedLabel = floe.tests.chartAuthoring.expectedCustomDisplay[i].expectedLabel;
-            jqUnit.assertEquals("The data labels are applied correctly in the legend", expectedLabel, ($(this).html()));
-        });
+        floe.tests.chartAuthoring.testCustomDisplay(that, "The custom labels are applied correctly in the legend", "labelCell", "expectedLabel");
 
-        var d3ValueCells = that.jQueryToD3($(that.locate("valueCell")));
-
-        d3ValueCells.each(function (d,i) {
-            var expectedValue = floe.tests.chartAuthoring.expectedCustomDisplay[i].expectedValue;
-            // Coerce displayed value to number for comparison with DOM-bound d3 value
-            jqUnit.assertEquals("The data values are applied correctly in the legend", expectedValue, $(this).html());
-        });
+        floe.tests.chartAuthoring.testCustomDisplay(that, "The custom values are applied correctly in the legend", "valueCell", "expectedValue");
 
     });
 
