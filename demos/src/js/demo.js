@@ -24,10 +24,10 @@ Varied#3: colors: ["#f15e4e", "#acdee4", "#73c163", "#ffc74a", "#41beae"]
         var dataEntry = that.chartAuthoringInterface.dataEntryPanel.dataEntry;
         var dataEntry2 = that.chartAuthoringInterface.dataEntryPanel["dataEntry-1"];
 
-        dataEntry.locate("label").val("label 1");
+        dataEntry.locate("label").val("label 1").trigger("change");
         dataEntry.locate("value").val(60).trigger("change");
 
-        dataEntry2.locate("label").val("label 2");
+        dataEntry2.locate("label").val("label 2").trigger("change");
         dataEntry2.locate("value").val(40).trigger("change");
     };
 
