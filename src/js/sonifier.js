@@ -180,6 +180,17 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         that.events.onDataSonified.fire();
     };
 
+    floe.chartAuthoring.sonifier.generateDataIntervals = function (sonifiedData) {
+        var dataIntervals = [],
+            counter = 0,
+            intervalStep = 5;
+        fluid.each(sonifiedData, function() {
+            dataIntervals.push(counter);
+            counter = counter+intervalStep;
+        });
+        return dataIntervals;
+    };
+
     floe.chartAuthoring.sonifier.playSonification = function(that) {
         var sonifiedData = that.model.sonifiedData;
 
@@ -188,7 +199,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
             components: {
                 scheduler: {
-                    type: "flock.scheduler.async"
+                    type: "flock.scheduler.async",
+                    options: {
+                        synthContext: "floe.chartAuthoring.electricPianoBand"
+                    }
                 }
             }
         });
@@ -198,19 +212,25 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         var dataPianoBand = floe.chartAuthoring.dataPianoBand();
 
-        var currentElapsedSeconds = 0;
-        fluid.each(sonifiedData, function(data) {
+        var dataIntervals = floe.chartAuthoring.sonifier.generateDataIntervals(sonifiedData);
+
+        // Schedule a change for each piece of data
+        fluid.each(sonifiedData, function(data, idx) {
 
             var notesDurations = data.notes.durations,
                 notesValues = data.notes.values,
                 envelopeDurations = data.envelope.durations,
                 envelopeValues = data.envelope.values;
-            dataPianoBand.scheduler.once(currentElapsedSeconds, function() {
+
+            var currentInterval = dataIntervals[idx];
+            // console.log("scheduling synth change at " + currentInterval + " seconds");
+            dataPianoBand.scheduler.once(currentInterval, function() {
+                // var elapsed = currentInterval;
+                // console.log("synth change should now occur at " + elapsed + " seconds from start");
                 dataPianoBand.midiNoteSynth.applier.change("inputs.noteSequencer.durations", notesDurations);
                 dataPianoBand.midiNoteSynth.applier.change("inputs.noteSequencer.values", notesValues);
                 dataPianoBand.pianoEnvelopeSynth.applier.change("inputs.envelopeSequencer.durations", envelopeDurations);
                 dataPianoBand.pianoEnvelopeSynth.applier.change("inputs.envelopeSequencer.values", envelopeValues);
-                currentElapsedSeconds = currentElapsedSeconds+8;
             });
         });
     };
