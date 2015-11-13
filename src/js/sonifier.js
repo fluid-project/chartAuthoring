@@ -33,6 +33,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             "sonifyData": {
                 funcName: "floe.chartAuthoring.sonifier.dataEntriesToSonificationData",
                 args: "{that}"
+            },
+            "playSonification": {
+                funcName: "floe.chartAuthoring.sonifier.playSonification",
+                args: "{that}"
             }
         },
         events: {
@@ -169,6 +173,53 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         sonificationData.sort(floe.chartAuthoring.pieChart.legend.sortAscending);
         that.model.sonifiedData = sonificationData;
         that.events.onDataSonified.fire();
+    };
+
+    floe.chartAuthoring.sonifier.playSonification = function(that) {
+        var sonifiedData = that.model.sonifiedData,
+            notesDurations = sonifiedData[0].notes.durations,
+            notesValues = sonifiedData[0].notes.values,
+            envelopeDurations = sonifiedData[0].envelope.durations,
+            envelopeValues = sonifiedData[0].envelope.values;
+
+        fluid.defaults("floe.chartAuthoring.dataPianoBand", {
+            gradeNames: ["floe.chartAuthoring.electricPianoBand"],
+
+            components: {
+                midiNoteSynth: {
+                    options: {
+                        model: {
+                            inputs: {
+                                noteSequencer: {
+                                    durations: notesDurations,
+                                    values:    notesValues
+                                }
+                            }
+                        }
+                    }
+                },
+                pianoEnvelopeSynth: {
+                    options: {
+                        model: {
+                            inputs: {
+                                envelopeSequencer: {
+                                    durations: envelopeDurations,
+                                    values:    envelopeValues
+                                }
+                            }
+                        }
+                    }
+                },
+
+                carrierSynth: {
+
+                }
+            }
+        });
+
+        var enviro = flock.init();
+        enviro.start();
+        floe.chartAuthoring.dataPianoBand();
     };
 
 })(jQuery, fluid);
