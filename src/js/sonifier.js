@@ -123,20 +123,20 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var sonificationData = [];
         var unitDivisor = 10;
         var noteDurationConfig = {
-            divisorDuration: 0.375,
-            remainderDuration: 0.16666667
+            divisorDuration: 3/8,
+            remainderDuration: 1/8
         };
 
         var noteValueConfig = {
             divisorValue: 91,
-            remainderValue: 90
+            remainderValue: 89
         };
 
         var envelopeDurationConfig = {
-            divisorDuration: 0.125,
-            divisorSilence: 0.25,
-            remainderDuration: 0.04166667,
-            remainderSilence: 0.0625
+            divisorDuration: 1/8,
+            divisorSilence: 1/4,
+            remainderDuration: 1/24,
+            remainderSilence: 1/12
         };
 
         var envelopeValuesConfig = {
@@ -210,16 +210,32 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                         }
                     }
                 },
-
-                carrierSynth: {
-
+                scheduler: {
+                    type: "flock.scheduler.async"
                 }
             }
         });
 
         var enviro = flock.init();
         enviro.start();
-        floe.chartAuthoring.dataPianoBand();
+
+        var dataPianoBand = floe.chartAuthoring.dataPianoBand();
+
+        var currentElapsedSeconds = 5;
+        fluid.each(sonifiedData, function(data) {
+
+            var notesDurations = data.notes.durations,
+                notesValues = data.notes.values,
+                envelopeDurations = data.envelope.durations,
+                envelopeValues = data.envelope.values;
+            dataPianoBand.scheduler.once(currentElapsedSeconds, function() {
+                dataPianoBand.midiNoteSynth.applier.change("inputs.noteSequencer.durations", notesDurations);
+                dataPianoBand.midiNoteSynth.applier.change("inputs.noteSequencer.values", notesValues);
+                dataPianoBand.pianoEnvelopeSynth.applier.change("inputs.envelopeSequencer.durations", envelopeDurations);
+                dataPianoBand.pianoEnvelopeSynth.applier.change("inputs.envelopeSequencer.values", envelopeValues);
+                currentElapsedSeconds = currentElapsedSeconds+8;
+            });
+        });
     };
 
 })(jQuery, fluid);
