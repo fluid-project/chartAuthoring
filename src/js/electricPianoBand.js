@@ -57,15 +57,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             }
         },
 
-        model: {
-            inputs: {
-                noteSequencer: {
-                    durations: [3/8, 3/8, 1/8, 1/8],
-                    values:    [91,  91,  89,  89]
-                }
-            }
-        },
-
         addToEnvironment: "head"
     });
 
@@ -123,15 +114,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 ugen: "flock.ugen.sequencer"
             },
             mul: 0.05
-        },
-
-        model: {
-            inputs: {
-                envelopeSequencer: {
-                    durations: [1/8, 1/4, 1/8, 1/4, 1/24, 1/12, 1/24, 1/12],
-                    values:    [1.0, 0.0, 1.0, 0.0, 1.0,  0.0,  1.0,  0.0]
-                }
-            }
         },
 
         addToEnviroment: "head"
