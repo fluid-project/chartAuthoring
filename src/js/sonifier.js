@@ -216,23 +216,18 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         // Schedule a change for each piece of data
         fluid.each(sonifiedData, function(data, idx) {
-
-            var notesDurations = data.notes.durations,
-                notesValues = data.notes.values,
-                envelopeDurations = data.envelope.durations,
-                envelopeValues = data.envelope.values;
-
             var currentInterval = dataIntervals[idx];
             // console.log("scheduling synth change at " + currentInterval + " seconds");
             dataPianoBand.scheduler.once(currentInterval, function() {
                 // var elapsed = currentInterval;
                 // console.log("synth change should now occur at " + elapsed + " seconds from start");
-                dataPianoBand.midiNoteSynth.applier.change("inputs.noteSequencer.durations", notesDurations);
-                dataPianoBand.midiNoteSynth.applier.change("inputs.noteSequencer.values", notesValues);
-                dataPianoBand.pianoEnvelopeSynth.applier.change("inputs.envelopeSequencer.durations", envelopeDurations);
-                dataPianoBand.pianoEnvelopeSynth.applier.change("inputs.envelopeSequencer.values", envelopeValues);
+                dataPianoBand.midiNoteSynth.applier.change("inputs.noteSequencer", data.notes);
+                dataPianoBand.pianoEnvelopeSynth.applier.change("inputs.envelopeSequencer", data.envelope);
             });
         });
+
+        // TODO: Need to pause the synth (or the whole Flocking environment)
+        // after the last segment has played.
     };
 
 })(jQuery, fluid);
