@@ -180,6 +180,27 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         that.events.onDataSonified.fire();
     };
 
+    floe.chartAuthoring.sonifier.getTotalDuration = function (durationsArray) {
+        var totalDuration = 0;
+        fluid.each(durationsArray, function(currentDuration) {
+            totalDuration = totalDuration+currentDuration;
+        });
+        return totalDuration;
+    };
+
+    floe.chartAuthoring.sonifier.generateVoiceIntervals = function (sonifiedData, start, step) {
+        var voiceIntervals = [],
+            counter = start,
+            intervalStep = step;
+
+        fluid.each(sonifiedData, function(data) {
+            var noteDuration = floe.chartAuthoring.sonifier.getTotalDuration(data.notes.durations);
+            voiceIntervals.push(counter);
+            counter = counter+intervalStep+noteDuration;
+        });
+        return voiceIntervals;
+    };
+
     floe.chartAuthoring.sonifier.generateSonificationIntervals = function (sonifiedData, start, step) {
         var dataIntervals = [],
             counter = start,
@@ -187,6 +208,18 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         fluid.each(sonifiedData, function() {
             dataIntervals.push(counter);
             counter = counter+intervalStep;
+        });
+        return dataIntervals;
+    };
+
+    floe.chartAuthoring.sonifier.generateSonificationIntervalsWithVoiceTimings = function (sonifiedData, voiceIntervals, waitTimeForSpeech) {
+        var dataIntervals = [],
+            counter = waitTimeForSpeech,
+            waitForSpeech = waitTimeForSpeech;
+        fluid.each(sonifiedData, function(data, idx) {
+            var nextSpeechInterval = voiceIntervals[idx+1];
+            dataIntervals.push(counter);
+            counter = nextSpeechInterval+waitForSpeech;
         });
         return dataIntervals;
     };
@@ -212,21 +245,28 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         var dataPianoBand = floe.chartAuthoring.dataPianoBand();
 
-        var voiceIntervals = floe.chartAuthoring.sonifier.generateSonificationIntervals(sonifiedData, 0, 5);
+        // Voice intervals will come at every 3 seconds + length of the preceding note
+        var voiceIntervals = floe.chartAuthoring.sonifier.generateVoiceIntervals(sonifiedData, 0, 3);
 
-        var dataIntervals = floe.chartAuthoring.sonifier.generateSonificationIntervals(sonifiedData, 3, 5);
+        // Start data sonification after 3 seconds, then time them for every six seconds after
+        var dataIntervals = floe.chartAuthoring.sonifier.generateSonificationIntervalsWithVoiceTimings(sonifiedData, voiceIntervals, 3);
 
         // Schedule a change for each piece of data
 
         fluid.each(sonifiedData, function(data, idx) {
-            if(SpeechSynthesisUtterance) {
+            var SpeechSynthesisUtterance = window.webkitSpeechSynthesisUtterance ||
+                           window.mozSpeechSynthesisUtterance ||
+                           window.msSpeechSynthesisUtterance ||
+                           window.oSpeechSynthesisUtterance ||
+                           window.SpeechSynthesisUtterance;
+            if(SpeechSynthesisUtterance !== undefined) {
                 var currentVoiceInterval = voiceIntervals[idx];
-                // console.log("scheduling speech at " + currentVoiceInterval + " seconds");
+                // console.log("scheduling " + data.label + " speech label at " + currentVoiceInterval + " seconds");
                 dataPianoBand.scheduler.once(currentVoiceInterval, function() {
                     // var elapsed = currentVoiceInterval;
                     // console.log("synth change should now occur at " + elapsed + " seconds from start");
                     var utterance = new SpeechSynthesisUtterance(data.label);
-                    utterance.lang = "en-US";
+                    utterance.rate = 1.10;
                     window.speechSynthesis.speak(utterance);
                 });
             }
@@ -235,7 +275,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         fluid.each(sonifiedData, function(data, idx) {
 
             var currentDataInterval = dataIntervals[idx];
-            // console.log("scheduling synth change at " + currentInterval + " seconds");
+            // console.log("scheduling " + data.label + "sonification at " + currentDataInterval + " seconds");
             dataPianoBand.scheduler.once(currentDataInterval, function() {
                 // var elapsed = currentDataInterval;
                 // console.log("synth change should now occur at " + elapsed + " seconds from start");
