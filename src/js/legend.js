@@ -273,6 +273,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         that.events.onLegendCreated.fire();
     };
 
+    // TODO: refactor into a utility function, now used by sonifier
     floe.chartAuthoring.pieChart.legend.sortAscending = function (a, b) {
         return b.value - a.value;
     };

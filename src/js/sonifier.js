@@ -26,8 +26,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         },
         modelListeners: {
             dataSet: {
-                funcName: "{that}.sonifyData",
-                excludeSource: "init"
+                funcName: "{that}.sonifyData"
             }
         },
         invokers: {
@@ -150,7 +149,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 var envelopeDurations = floe.chartAuthoring.sonifier.getSonificationEnvelopeDurations(units, unitDivisor, envelopeDurationConfig);
                 var envelopeValues = floe.chartAuthoring.sonifier.getSonificationEnvelopeValues(envelopeDurations, envelopeDurationConfig, envelopeValuesConfig);
                 var d = {
-                    id: key,
+                    id: item.id,
                     label: item.label,
                     value: percentage,
                     units: units,
@@ -167,7 +166,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             }
 
         });
-        sonificationData.sort(floe.chartAuthoring.pieChart.legend.sortAscending);
+        sonificationData.sort(floe.chartAuthoring.pieChart.legend.sortAscending);        
         that.model.sonifiedData = sonificationData;
         that.events.onDataSonified.fire();
     };
