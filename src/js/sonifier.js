@@ -29,6 +29,28 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 funcName: "{that}.sonifyData"
             }
         },
+        // can override these to control synth behaviour
+        // These need better explanations of what they do
+        synthOptions: {
+            noteDurationConfig: {
+                divisorDuration: 3/8,
+                remainderDuration: 1/8
+            },
+            noteValueConfig: {
+                divisorValue: 91,
+                remainderValue: 89
+            },
+            envelopeDurationConfig: {
+                divisorDuration: 1/8,
+                divisorSilence: 1/4,
+                remainderDuration: 1/24,
+                remainderSilence: 1/12
+            },
+            envelopeValuesConfig: {
+                openValue: 1.0,
+                closedValue: 0.0
+            }
+        },
         invokers: {
             "sonifyData": {
                 funcName: "floe.chartAuthoring.sonifier.dataEntriesToSonificationData",
@@ -122,27 +144,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var totalValue = that.model.total.value;
         var sonificationData = [];
         var unitDivisor = 10;
-        var noteDurationConfig = {
-            divisorDuration: 3/8,
-            remainderDuration: 1/8
-        };
-
-        var noteValueConfig = {
-            divisorValue: 91,
-            remainderValue: 89
-        };
-
-        var envelopeDurationConfig = {
-            divisorDuration: 1/8,
-            divisorSilence: 1/4,
-            remainderDuration: 1/24,
-            remainderSilence: 1/12
-        };
-
-        var envelopeValuesConfig = {
-            openValue: 1.0,
-            closedValue: 0.0
-        };
+        var noteDurationConfig = that.options.synthOptions.noteDurationConfig,
+            noteValueConfig = that.options.synthOptions.noteValueConfig,
+            envelopeDurationConfig = that.options.synthOptions.envelopeDurationConfig,
+            envelopeValuesConfig = that.options.synthOptions.envelopeValuesConfig;
 
         fluid.each(dataSet, function(item) {
             if(item.value !== null) {
@@ -176,40 +181,12 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     };
 
     floe.chartAuthoring.sonifier.playSonification = function(that) {
-        var sonifiedData = that.model.sonifiedData,
-            notesDurations = sonifiedData[0].notes.durations,
-            notesValues = sonifiedData[0].notes.values,
-            envelopeDurations = sonifiedData[0].envelope.durations,
-            envelopeValues = sonifiedData[0].envelope.values;
+        var sonifiedData = that.model.sonifiedData;
 
         fluid.defaults("floe.chartAuthoring.dataPianoBand", {
             gradeNames: ["floe.chartAuthoring.electricPianoBand"],
 
             components: {
-                midiNoteSynth: {
-                    options: {
-                        model: {
-                            inputs: {
-                                noteSequencer: {
-                                    durations: notesDurations,
-                                    values:    notesValues
-                                }
-                            }
-                        }
-                    }
-                },
-                pianoEnvelopeSynth: {
-                    options: {
-                        model: {
-                            inputs: {
-                                envelopeSequencer: {
-                                    durations: envelopeDurations,
-                                    values:    envelopeValues
-                                }
-                            }
-                        }
-                    }
-                },
                 scheduler: {
                     type: "flock.scheduler.async"
                 }
@@ -221,7 +198,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         var dataPianoBand = floe.chartAuthoring.dataPianoBand();
 
-        var currentElapsedSeconds = 5;
+        var currentElapsedSeconds = 0;
         fluid.each(sonifiedData, function(data) {
 
             var notesDurations = data.notes.durations,
