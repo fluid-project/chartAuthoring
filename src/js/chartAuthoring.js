@@ -105,7 +105,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                         },
                         // Stub for sonification component when ready
                         sonifier: {
-                            type: "fluid.modelComponent",
+                            type: "floe.chartAuthoring.sonifier",
                             createOnEvent: "{chartAuthoring}.events.onChartAuthoringInterfaceReady",
                             options: {
                                 modelRelay: {
@@ -284,8 +284,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             divisorSilence: 0.25,
             remainderDuration: 0.04166667,
             remainderSilence: 0.0625
-            // divisorValue: "",
-            // remainderValue: ""
         };
 
         var envelopeValuesConfig = {
