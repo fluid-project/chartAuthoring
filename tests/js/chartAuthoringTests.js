@@ -14,14 +14,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     "use strict";
 
     jqUnit.test("Test the data conversion functions", function () {
-        jqUnit.expect(2);
+        jqUnit.expect(1);
 
         var convertedData = floe.chartAuthoring.dataEntriesToPieChartData(floe.tests.chartAuthoring.dataEntries);
         jqUnit.assertDeepEq("Data conversion between data entries and chart works", floe.tests.chartAuthoring.dataSet, convertedData);
-
-        var sonifiedData = floe.chartAuthoring.dataEntriesToSonificationData(floe.tests.chartAuthoring.dataEntries, 150);
-        jqUnit.assertDeepEq("Data conversion between data entries and sonification data works", floe.tests.chartAuthoring.sonificationData, sonifiedData);
-
     });
 
     // IoC tests

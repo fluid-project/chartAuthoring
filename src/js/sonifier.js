@@ -3,9 +3,31 @@
     "use strict";
 
     fluid.defaults("floe.chartAuthoring.sonifier", {
-        gradeNames: ["fluid.modelComponent"],
+        gradeNames: ["floe.chartAuthoring.totalRelaying", "fluid.modelComponent"],
         model: {
-            // dataSet:
+            // dataSet:,
+            // sonifiedData:
+            // Supplied by relaying in floe.chartAuthoring.totalRelaying grade
+            // total: {
+            //     value: number,
+            //     percentage: number
+            // }
+        },
+        modelListeners: {
+            dataSet: {
+                funcName: "{that}.sonifyData",
+                excludeSource: "init"
+            }
+        },
+        invokers: {
+            "sonifyData": {
+                funcName: "floe.chartAuthoring.sonifier.dataEntriesToSonificationData",
+                args: "{that}"
+            }
+        },
+        events: {
+            // Fire at the end of a completed data sonification
+            onDataSonified: null
         }
     });
 
@@ -81,7 +103,9 @@
     // Given an object in the style of floe.chartAuthoring.dataEntryPanel.model.dataEntries,
     // convert it to an array of objects in the style used by the sonification components,
     // maintaining object constancy by using the dataEntry object name as the key
-    floe.chartAuthoring.sonifier.dataEntriesToSonificationData = function(dataSet, totalValue) {
+    floe.chartAuthoring.sonifier.dataEntriesToSonificationData = function(that) {
+        var dataSet = that.model.dataSet;
+        var totalValue = that.model.total.value;
         var sonificationData = [];
         var unitDivisor = 10;
         var noteDurationConfig = {
@@ -133,7 +157,8 @@
 
         });
         sonificationData.sort(floe.chartAuthoring.pieChart.legend.sortAscending);
-        return sonificationData;
+        that.model.sonifiedData = sonificationData;
+        that.events.onDataSonified.fire();
     };
 
 })(jQuery, fluid);

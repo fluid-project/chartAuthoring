@@ -108,16 +108,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                             type: "floe.chartAuthoring.sonifier",
                             createOnEvent: "{chartAuthoring}.events.onChartAuthoringInterfaceReady",
                             options: {
-                                modelRelay: [{
-                                    source: "{dataEntryPanel}.model.dataSet",
-                                    target: "{that}.model.dataSet",
-                                    singleTransform: {
-                                        type: "fluid.transforms.free",
-                                        args: ["{dataEntryPanel}.model.dataSet","{dataEntryPanel}.model.total.value"],
-                                        func: "floe.chartAuthoring.sonifier.dataEntriesToSonificationData"
-                                    },
-                                    backward: "never"
-                                }],
+                                model: {
+                                    "dataSet": "{dataEntryPanel}.model.dataSet"
+                                },
                                 listeners: {
                                     "onCreate.escalate": {
                                         funcName: "{chartAuthoring}.events.onSonifierReady.fire",
