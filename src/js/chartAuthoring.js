@@ -109,11 +109,11 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                             createOnEvent: "{chartAuthoring}.events.onChartAuthoringInterfaceReady",
                             options: {
                                 modelRelay: {
-                                    source: "{dataEntryPanel}.model.dataEntries",
+                                    source: "{dataEntryPanel}.model.dataSet",
                                     target: "{that}.model.dataSet",
                                     singleTransform: {
                                         type: "fluid.transforms.free",
-                                        args: ["{dataEntryPanel}.model.dataEntries","{dataEntryPanel}.model.total.value"],
+                                        args: ["{dataEntryPanel}.model.dataSet","{dataEntryPanel}.model.total.value"],
                                         func: "floe.chartAuthoring.dataEntriesToSonificationData"
                                     },
                                     backward: "never"
@@ -266,7 +266,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // Given an object in the style of floe.chartAuthoring.dataEntryPanel.model.dataEntries,
     // convert it to an array of objects in the style used by the sonification components,
     // maintaining object constancy by using the dataEntry object name as the key
-    floe.chartAuthoring.dataEntriesToSonificationData = function(dataEntries, totalValue) {
+    floe.chartAuthoring.dataEntriesToSonificationData = function(dataSet, totalValue) {
         var sonificationData = [];
         var unitDivisor = 10;
         var noteDurationConfig = {
@@ -293,7 +293,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             closedValue: 0.0
         };
 
-        fluid.each(dataEntries, function(item, key) {
+        fluid.each(dataSet, function(item, key) {
             if(item.value !== null) {
                 var percentage = Number(floe.chartAuthoring.percentage.calculate(item.value, totalValue).toFixed(0));
                 var units = floe.chartAuthoring.getSonificationUnits(percentage, unitDivisor);
