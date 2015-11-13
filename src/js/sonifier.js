@@ -219,10 +219,25 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         // Schedule a change for each piece of data
 
         fluid.each(sonifiedData, function(data, idx) {
-            var currentInterval = dataIntervals[idx];
+            if(SpeechSynthesisUtterance) {
+                var currentVoiceInterval = voiceIntervals[idx];
+                // console.log("scheduling speech at " + currentVoiceInterval + " seconds");
+                dataPianoBand.scheduler.once(currentVoiceInterval, function() {
+                    // var elapsed = currentVoiceInterval;
+                    // console.log("synth change should now occur at " + elapsed + " seconds from start");
+                    var utterance = new SpeechSynthesisUtterance(data.label);
+                    utterance.lang = "en-US";
+                    window.speechSynthesis.speak(utterance);
+                });
+            }
+        });
+
+        fluid.each(sonifiedData, function(data, idx) {
+
+            var currentDataInterval = dataIntervals[idx];
             // console.log("scheduling synth change at " + currentInterval + " seconds");
-            dataPianoBand.scheduler.once(currentInterval, function() {
-                // var elapsed = currentInterval;
+            dataPianoBand.scheduler.once(currentDataInterval, function() {
+                // var elapsed = currentDataInterval;
                 // console.log("synth change should now occur at " + elapsed + " seconds from start");
                 dataPianoBand.midiNoteSynth.applier.change("inputs.noteSequencer", data.notes);
                 dataPianoBand.pianoEnvelopeSynth.applier.change("inputs.envelopeSequencer", data.envelope);

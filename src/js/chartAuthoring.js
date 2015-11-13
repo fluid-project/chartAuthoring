@@ -217,6 +217,12 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             that.chartAuthoringInterface.sonifier.playSonification();
             e.preventDefault();
         });
+
+        pauseButton.click(function(e) {
+            that.chartAuthoringInterface.sonifier.pauseSonification();
+            e.preventDefault();
+        });
+
     };
 
 })(jQuery, fluid);
