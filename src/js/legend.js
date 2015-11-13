@@ -14,7 +14,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     "use strict";
 
     fluid.defaults("floe.chartAuthoring.pieChart.legend", {
-        gradeNames: ["floe.d3ViewComponent", "autoInit"],
+        gradeNames: ["floe.chartAuthoring.totalRelaying", "floe.d3ViewComponent", "autoInit"],
         strings: {
             legendColHeading:"Legend",
             labelColHeading:"Label",
@@ -25,31 +25,13 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             // dataSet accepts:
             // 1. an array of objects. Must contain "id", "value" and "label" variables.
             // Example: [{id: string, value: number, label: string} ... ]
-            dataSet: [],
-            total: {
-                // value: number,
-                // percentage: number
-            }
+            dataSet: []
+            // Supplied by relaying in floe.chartAuthoring.totalRelaying grade
+            // total: {
+            //     value: number,
+            //     percentage: number
+            // }
         },
-        modelRelay: [{
-            source: "dataSet",
-            target: "total.value",
-            singleTransform: {
-                type: "floe.chartAuthoring.transforms.reduce",
-                value: "{that}.model.dataSet",
-                initialValue: null,
-                extractor: "floe.chartAuthoring.transforms.reduce.valueExtractor",
-                func: "floe.chartAuthoring.transforms.reduce.add"
-            }
-        }, {
-            source: "total.value",
-            target: "total.percentage",
-            singleTransform: {
-                type: "floe.chartAuthoring.transforms.percentage",
-                value: "{that}.model.total.value",
-                total: "{that}.model.total.value"
-            }
-        }],
         legendOptions: {
             // An array of colors to fill slices generated for corresponding values of model.dataSet
             // Or, a d3 color scale that's generated based off an array of colors
