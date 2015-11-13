@@ -140,7 +140,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             closedValue: 0.0
         };
 
-        fluid.each(dataSet, function(item, key) {
+        fluid.each(dataSet, function(item) {
             if(item.value !== null) {
                 var percentage = Number(floe.chartAuthoring.percentage.calculate(item.value, totalValue).toFixed(0));
                 var units = floe.chartAuthoring.sonifier.getSonificationUnits(percentage, unitDivisor);
@@ -166,7 +166,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             }
 
         });
-        sonificationData.sort(floe.chartAuthoring.pieChart.legend.sortAscending);        
+        sonificationData.sort(floe.chartAuthoring.pieChart.legend.sortAscending);
         that.model.sonifiedData = sonificationData;
         that.events.onDataSonified.fire();
     };

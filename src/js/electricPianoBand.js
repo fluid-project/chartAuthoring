@@ -53,8 +53,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             rate: "control",
             note: {
                 id: "noteSequencer",
-            	ugen: "flock.ugen.sequencer"
-        	}
+                ugen: "flock.ugen.sequencer"
+            }
         },
 
         model: {
@@ -82,7 +82,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
             mul: {
                 ugen: "flock.ugen.in",
-                 bus: "{pianoEnvelopeSynth}.options.outputBus"
+                bus: "{pianoEnvelopeSynth}.options.outputBus"
             }
         },
 
@@ -90,17 +90,17 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         synthDef: {
             ugen: "flock.ugen.sum",
-        	sources: {
+            sources: {
                 expander: {
                     funcName: "floe.chartAuthoring.carrierSynth.additiveExpander",
-               		args: ["{that}.options.phases", "{that}.options.ugenDef"]
+                    args: ["{that}.options.phases", "{that}.options.ugenDef"]
                 }
             }
         }
     });
 
     floe.chartAuthoring.carrierSynth.additiveExpander = function (phases, ugenDef) {
-        return fluid.transform(phases, function (phaseValue, i) {
+        return fluid.transform(phases, function (phaseValue) {
             var voiceDef = fluid.copy(ugenDef);
             voiceDef.phase = phaseValue;
             return voiceDef;

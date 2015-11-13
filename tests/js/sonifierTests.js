@@ -119,7 +119,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         });
 
         var enviro = flock.init();
-
         enviro.start();
         floe.chartAuthoring.dataPianoBand();
     });
