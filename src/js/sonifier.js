@@ -180,10 +180,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         that.events.onDataSonified.fire();
     };
 
-    floe.chartAuthoring.sonifier.generateDataIntervals = function (sonifiedData) {
+    floe.chartAuthoring.sonifier.generateSonificationIntervals = function (sonifiedData, start, step) {
         var dataIntervals = [],
-            counter = 0,
-            intervalStep = 5;
+            counter = start,
+            intervalStep = step;
         fluid.each(sonifiedData, function() {
             dataIntervals.push(counter);
             counter = counter+intervalStep;
@@ -212,9 +212,12 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         var dataPianoBand = floe.chartAuthoring.dataPianoBand();
 
-        var dataIntervals = floe.chartAuthoring.sonifier.generateDataIntervals(sonifiedData);
+        var voiceIntervals = floe.chartAuthoring.sonifier.generateSonificationIntervals(sonifiedData, 0, 5);
+
+        var dataIntervals = floe.chartAuthoring.sonifier.generateSonificationIntervals(sonifiedData, 3, 5);
 
         // Schedule a change for each piece of data
+
         fluid.each(sonifiedData, function(data, idx) {
             var currentInterval = dataIntervals[idx];
             // console.log("scheduling synth change at " + currentInterval + " seconds");

@@ -56,7 +56,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 ugen: "flock.ugen.sequencer"
             }
         },
-
         addToEnvironment: "head"
     });
 
@@ -115,7 +114,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             },
             mul: 0.05
         },
-
         addToEnviroment: "head"
     });
 

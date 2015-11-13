@@ -19,7 +19,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             chartTitle: ".floec-chartTitle",
             chartDescription: ".floec-chartDescription",
             dataEntryPanel: ".floec-dataEntryPanel",
-            pieChart: ".floec-pieChart"
+            pieChart: ".floec-pieChart",
+            sonifierPlay: ".floec-sonifierPlay",
+            sonifierPause: ".floec-sonifierPause"
         },
         components: {
             templateLoader: {
@@ -139,7 +141,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             }
         },
         listeners: {
-            "onToolReady.addAriaConnections": "floe.chartAuthoring.addAriaConnections"
+            "onToolReady.addAriaConnections": "floe.chartAuthoring.addAriaConnections",
+            "onToolReady.addSonificationListenrs": "floe.chartAuthoring.addSonificationControlListeners"
         },
         strings: {
             defaultTitleText: "Enter Chart Title",
@@ -204,6 +207,16 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             totalId = fluid.allocateSimpleId(that.chartAuthoringInterface.dataEntryPanel.locate("totalValue"));
 
         that.chartAuthoringInterface.dataEntryPanel.locate("dataEntryForm").attr("aria-controls", legendId + " " + pieId + " " + totalId);
+    };
+
+    floe.chartAuthoring.addSonificationControlListeners = function(that) {
+        var playButton = that.locate("sonifierPlay"),
+            pauseButton = that.locate("sonifierPause");
+
+        playButton.click(function(e) {
+            that.chartAuthoringInterface.sonifier.playSonification();
+            e.preventDefault();
+        });
     };
 
 })(jQuery, fluid);
