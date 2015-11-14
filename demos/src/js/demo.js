@@ -40,15 +40,19 @@ Varied#3: colors: ["#f15e4e", "#acdee4", "#73c163", "#ffc74a", "#41beae"]
             }
         },
         initialData: {
-            inputSelectors: ["dataEntry", "dataEntry-1"],
+            inputSelectors: ["dataEntry", "dataEntry-1", "dataEntry-2"],
             data:
                 [{
-                    label: "sample value 1",
-                    value: 60
+                    label: "Value #1",
+                    value: 75
                 },
                 {
-                    label: "sample value 2",
-                    value: 40
+                    label: "Value #2",
+                    value: 17
+                },
+                {
+                    label: "Value #3",
+                    value: 33
                 }]
             }
         });
