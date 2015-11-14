@@ -201,17 +201,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         return voiceIntervals;
     };
 
-    floe.chartAuthoring.sonifier.generateSonificationIntervals = function (sonifiedData, start, step) {
-        var dataIntervals = [],
-            counter = start,
-            intervalStep = step;
-        fluid.each(sonifiedData, function() {
-            dataIntervals.push(counter);
-            counter = counter+intervalStep;
-        });
-        return dataIntervals;
-    };
-
     floe.chartAuthoring.sonifier.generateSonificationIntervalsWithVoiceTimings = function (sonifiedData, voiceIntervals, waitTimeForSpeech) {
         var dataIntervals = [],
             counter = waitTimeForSpeech,
@@ -267,6 +256,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                     // console.log("synth change should now occur at " + elapsed + " seconds from start");
                     var utterance = new SpeechSynthesisUtterance(data.label);
                     utterance.rate = 1.10;
+                    utterance.lang = "en-US";
                     window.speechSynthesis.speak(utterance);
                 });
             }
