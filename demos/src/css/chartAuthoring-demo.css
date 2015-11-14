@@ -50,6 +50,10 @@ body {
     max-width: 32px;
 }
 
+.floe-sonifierPlay img:hover, .floe-sonifierStop img:hover, .floe-sonifierPlay img:focus, .floe-sonifierStop img:focus {
+    background-color:#BBB;
+}
+
 /* Pie */
 
 .floe-ca-pieChart-pie {
