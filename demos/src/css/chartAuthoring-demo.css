@@ -35,9 +35,25 @@ body {
     font-size: 1.7em;
 }
 
+/* Sonifier controls */
+
+.floe-sonifierControls {
+    margin-left: 2em;
+    float:left;
+}
+
+.floe-sonifierPlay, .floe-sonifierStop {
+    display: inline-block;
+}
+
+.floe-sonifierPlay img, .floe-sonifierStop img {
+    max-width: 32px;
+}
+
 /* Pie */
 
 .floe-ca-pieChart-pie {
+    clear: both;
     float: left;
     width: 30em;
     margin-bottom: 1em;

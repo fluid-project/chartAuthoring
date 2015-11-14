@@ -21,7 +21,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             dataEntryPanel: ".floec-dataEntryPanel",
             pieChart: ".floec-pieChart",
             sonifierPlay: ".floec-sonifierPlay",
-            sonifierPause: ".floec-sonifierPause"
+            sonifierStop: ".floec-sonifierStop"
         },
         components: {
             templateLoader: {
@@ -211,14 +211,14 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     floe.chartAuthoring.addSonificationControlListeners = function(that) {
         var playButton = that.locate("sonifierPlay"),
-            pauseButton = that.locate("sonifierPause");
+            stopButton = that.locate("sonifierStop");
 
         playButton.click(function(e) {
             that.chartAuthoringInterface.sonifier.playSonification();
             e.preventDefault();
         });
 
-        pauseButton.click(function(e) {
+        stopButton.click(function(e) {
             that.chartAuthoringInterface.sonifier.pauseSonification();
             e.preventDefault();
         });
