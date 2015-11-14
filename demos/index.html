@@ -35,6 +35,7 @@
         <script type="text/javascript" src="../src/js/chartAuthoring.js"></script>
 
         <script type="text/javascript" src="src/js/overview.js"></script>
+        <script type="text/javascript" src="src/js/demo.js"></script>
 
         <link rel="stylesheet" type="text/css" href="src/css/chartAuthoring-demo.css" />
 
@@ -51,7 +52,29 @@
                 <div id="floec-chartAuthoring"></div>
 
                 <script type="text/javascript" src="src/js/demo.js"></script>
-
+                <script type="text/javascript">
+                    floe.chartAuthoring.demo("#floec-chartAuthoring", {
+                        templateLoader: {
+                            terms: {
+                                templatePrefix: "../src/html"
+                            }
+                        },
+                        dataEntryPanel: {
+                            strings: {
+                                dataEntryLabel: "Enter your labels and values"
+                            }
+                        },
+                        pieChart: {
+                            pieChartOptions: {
+                                sliceTextDisplayTemplate: "%percentage%",
+                                labelTextDisplayTemplate: "%label",
+                                valueTextDisplayTemplate: "%percentage% (%value/%total)",
+                                colors: ["#00a59a", "#9bc863", "#1a6b61", "#e9ea7b", "#1b443d"],
+                                width: 400,
+                                height: 400
+                            }
+                        }
+                    });</script>
             </div>
 
     </body>

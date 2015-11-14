@@ -18,46 +18,42 @@ Varied#3: colors: ["#f15e4e", "#acdee4", "#73c163", "#ffc74a", "#41beae"]
 
     "use strict";
 
-    fluid.registerNamespace("demo.chartAuthoring");
+    fluid.registerNamespace("floe.chartAuthoring.demo");
 
-    demo.chartAuthoring.addExampleInput = function (that) {
-        var dataEntry = that.chartAuthoringInterface.dataEntryPanel.dataEntry;
-        var dataEntry2 = that.chartAuthoringInterface.dataEntryPanel["dataEntry-1"];
-
-        dataEntry.locate("label").val("label 1").trigger("change");
-        dataEntry.locate("value").val(60).trigger("change");
-
-        dataEntry2.locate("label").val("label 2").trigger("change");
-        dataEntry2.locate("value").val(40).trigger("change");
+    floe.chartAuthoring.demo.addExampleData = function (that) {
+        var initialData = that.options.initialData;
+        fluid.each(initialData.inputSelectors, function(currentSelector, idx) {
+            var dataEntry = that.chartAuthoringInterface.dataEntryPanel[currentSelector];
+            var sampleData = initialData.data[idx];
+            dataEntry.locate("label").val(sampleData.label).trigger("change");
+            dataEntry.locate("value").val(sampleData.value).trigger("change");
+        });
     };
 
-    floe.chartAuthoring("#floec-chartAuthoring", {
-        templateLoader: {
-            terms: {
-                templatePrefix: "../src/html"
-            }
-        },
-        dataEntryPanel: {
-            strings: {
-                dataEntryLabel: "Enter your labels and values"
-            }
-        },
-        pieChart: {
-            pieChartOptions: {
-                sliceTextDisplayTemplate: "%percentage%",
-                labelTextDisplayTemplate: "%label",
-                valueTextDisplayTemplate: "%percentage% (%value/%total)",
-                colors: ["#00a59a", "#9bc863", "#1a6b61", "#e9ea7b", "#1b443d"],
-                width: 400,
-                height: 400
-            }
-        },
+
+    fluid.defaults("floe.chartAuthoring.demo", {
+        gradeNames: ["floe.chartAuthoring"],
         listeners: {
             "onToolReady.addExampleInput": {
-                funcName: "demo.chartAuthoring.addExampleInput",
+                funcName: "floe.chartAuthoring.demo.addExampleData",
                 args: ["{that}"]
             }
-        }
-    });
-
+        },
+        initialData: {
+            inputSelectors: ["dataEntry", "dataEntry-1", "dataEntry-2"],
+            data:
+                [{
+                    label: "Value #1",
+                    value: 75
+                },
+                {
+                    label: "Value #2",
+                    value: 17
+                },
+                {
+                    label: "Value #3",
+                    value: 33
+                }]
+            }
+        });
 })(jQuery,fluid);
