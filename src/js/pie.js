@@ -21,13 +21,18 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // 4. update the pie when the data set changes, including adding or removing slices
 
     fluid.defaults("floe.chartAuthoring.pieChart.pie", {
-        gradeNames: ["floe.d3ViewComponent", "autoInit"],
+        gradeNames: ["floe.chartAuthoring.totalRelaying", "floe.d3ViewComponent",  "autoInit"],
         model: {
             // dataSet accepts:
             // 1. an array of primitive values, such as numbers;
             // 2. an array of objects. The "value" element of each object needs to containe the value for drawing each pie slice.
             // Example: [{id: string, value: number} ... ]
             dataSet: []
+            // Supplied by relaying in floe.chartAuthoring.totalRelaying grade
+            // total: {
+            //     value: number,
+            //     percentage: number
+            // }
         },
         pieOptions: {
             width: 300,
@@ -37,7 +42,21 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             colors: null,
             outerRadius: null,
             innerRadius: null,
-            animationDuration: 750
+            animationDuration: 750,
+            // A fluid.stringTemplate used to render the values displayed
+            // within the pie chart slices
+            // available variables for the template are:
+            // - value: the raw value of the data
+            // - percentage: the percentage of the data value out of the total value
+            // - total: the total value of all data in the dataset
+            sliceTextDisplayTemplate: "%value",
+            // Number of digits to display after decimal when rendering
+            // percentages for pie slices
+            sliceTextPercentageDigits: 0,
+            // boolean to configure drawing a background circle for the pie
+            displayPieBackground: true,
+            // color of the background circle, if drawn
+            pieBackgroundColor: "#F2F2F2"
         },
         strings: {
             pieTitle: "Pie Chart",
@@ -53,7 +72,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             slice: ".floec-ca-pieChart-slice",
             text: ".floec-ca-pieChart-text",
             title: ".floec-ca-pieChart-title",
-            description: ".floec-ca-pieChart-description"
+            description: ".floec-ca-pieChart-description",
+            background: ".floec-ca-pieChart-background"
         },
         events: {
             onPieCreated: null,  // Fire when the pie is created. Ready to register D3 DOM event listeners,
@@ -120,7 +140,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.chartAuthoring.pieChart.pie.updateSlices = function (that) {
         // Update and redraw arcs of existing slices
         var arc = that.arc,
-            animationDuration = that.options.pieOptions.animationDuration;
+            animationDuration = that.options.pieOptions.animationDuration,
+            percentageDigits = that.options.pieOptions.sliceTextPercentageDigits,
+            totalValue = that.model.total.value,
+            sliceTextDisplayTemplate = that.options.pieOptions.sliceTextDisplayTemplate;
 
         // Standard D3 pie arc tweening transition, as per http://bl.ocks.org/mbostock/1346410
         that.paths.transition().duration(animationDuration).attrTween("d", function (d) {
@@ -133,7 +156,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         // Update and reposition text labels for existing slices
         that.texts.text(function (d) {
-            return d.value;
+            return floe.d3ViewComponent.getTemplatedDisplayValue(totalValue, percentageDigits, sliceTextDisplayTemplate, d);
         });
 
         that.texts.transition().duration(animationDuration).attr("transform", that.textTransform);
@@ -173,9 +196,12 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             colors = p.colors,
             outerRadius = p.outerRadius || width / 2,
             innerRadius = p.innerRadius || 0,
+            displayPieBackground = p.displayPieBackground,
+            pieBackgroundColor = p.pieBackgroundColor,
             pieClass = that.classes.pie,
             titleClass = that.classes.title,
-            descriptionClass = that.classes.description;
+            descriptionClass = that.classes.description,
+            backgroundClass = that.classes.background;
 
         that.arc = d3.svg.arc()
             .innerRadius(innerRadius)
@@ -195,9 +221,22 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 "viewBox": floe.chartAuthoring.pieChart.getViewBoxConfiguration(0,0, width, height),
                 // Set aria role to image - this causes the pie to appear as a
                 // static image to AT rather than as a number of separate
-                // images                
+                // images
                 "role": "img"
             });
+
+        // Draw a background circle for the pie if configured
+        if(displayPieBackground) {
+            that.svg
+                .append("circle")
+                .attr({
+                    "cx": outerRadius,
+                    "cy": outerRadius,
+                    "r": outerRadius,
+                    "fill": pieBackgroundColor,
+                    "class": backgroundClass
+                });
+        }
 
         that.svg
             .append("title")
@@ -245,4 +284,5 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.chartAuthoring.pieChart.getViewBoxConfiguration = function (x, y, width, height) {
         return x + "," + y + "," + width + "," + height;
     };
+
 })(jQuery, fluid);

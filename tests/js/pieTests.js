@@ -47,9 +47,18 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             pieDescId = that.locate("description").attr("id"),
             pieAriaLabelledByAttr = pie.attr("aria-labelledby");
 
-        // Test the drawing
+        // Test the SVG element created
         jqUnit.assertNotEquals("The SVG element is created with the proper selector", 0, pie.length);
 
+        // Test the background circle
+        if(that.options.pieOptions.displayPieBackground) {
+            var pieBackground = that.locate("background");
+            jqUnit.assertNotEquals("The background circle is created", 0, pieBackground.length);
+            jqUnit.assertEquals("The background circle's radius is half the pie width", that.options.pieOptions.width / 2, Number(pieBackground.attr("r")));
+            jqUnit.assertEquals("The background circle's color is set to the user-supplied color", that.options.pieOptions.pieBackgroundColor, pieBackground.attr("fill"));
+        }
+
+        // Test the pie
         jqUnit.assertEquals("The width is set correctly on the pie chart", that.options.pieOptions.width, pie.attr("width"));
         jqUnit.assertEquals("The height is set correctly on the pie chart", that.options.pieOptions.height, pie.attr("height"));
         jqUnit.assertEquals("The pie slices have been created with the proper selectors", that.model.dataSet.length, that.locate("slice").length);
@@ -101,8 +110,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     floe.tests.chartAuthoring.numberArray = [5, 10, 20, 45, 6, 25];
 
+    floe.tests.chartAuthoring.numberArrayTotal = 111;
+
     jqUnit.test("Test the pie chart component created based off an array of numbers", function () {
-        jqUnit.expect(28);
+        jqUnit.expect(32);
 
         var that = floe.tests.chartAuthoring.pieChart.pie(".floec-ca-pieChart-numberArray", {
             model: {
@@ -111,6 +122,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         });
 
         floe.tests.chartAuthoring.runCommonTests(that, floe.tests.chartAuthoring.testPrimitiveData);
+
+        jqUnit.assertEquals("The total value is calculated as expected", floe.tests.chartAuthoring.numberArrayTotal, that.model.total.value);
+
     });
 
     floe.tests.chartAuthoring.objectArray = [{
@@ -126,6 +140,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         id: "id3",
         value: 45
     }];
+
+    floe.tests.chartAuthoring.objectArrayTotal = 80;
 
     floe.tests.chartAuthoring.objectArrayAdd = [{
         id: "id0",
@@ -147,6 +163,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         value: 25
     }];
 
+    floe.tests.chartAuthoring.objectArrayAddTotal = 111;
+
     floe.tests.chartAuthoring.objectArrayRemove = [{
         id: "id0",
         value: 5
@@ -157,6 +175,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         id: "id2",
         value: 45
     }];
+
+    floe.tests.chartAuthoring.objectArrayRemoveTotal = 60;
 
     floe.tests.chartAuthoring.objectArrayChangeInPlace = [{
         id: "id0",
@@ -169,8 +189,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         value: 35
     }];
 
+    floe.tests.chartAuthoring.objectArrayChangeInPlaceTotal = 75;
+
     jqUnit.test("Test the pie chart component created based off an array of objects", function () {
-        jqUnit.expect(114);
+        jqUnit.expect(130);
 
         var that = floe.tests.chartAuthoring.pieChart.pie(".floec-ca-pieChart-objectArray", {
             model: {
@@ -179,14 +201,64 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         });
 
         floe.tests.chartAuthoring.runCommonTests(that, floe.tests.chartAuthoring.testObjectData);
+        jqUnit.assertEquals("The total value is calculated as expected", floe.tests.chartAuthoring.objectArrayTotal, that.model.total.value);
 
-        // Pie is re-drawn when the data set changes
+        // Pie is re-drawn when the data set changes in various ways
         that.applier.change("dataSet", floe.tests.chartAuthoring.objectArrayAdd);
         floe.tests.chartAuthoring.validatePie(that, floe.tests.chartAuthoring.testObjectData);
+        jqUnit.assertEquals("The total value is recalculated as expected", floe.tests.chartAuthoring.objectArrayAddTotal, that.model.total.value);
+
         that.applier.change("dataSet", floe.tests.chartAuthoring.objectArrayRemove);
         floe.tests.chartAuthoring.validatePie(that, floe.tests.chartAuthoring.testObjectData);
+        jqUnit.assertEquals("The total value is recalculated as expected", floe.tests.chartAuthoring.objectArrayRemoveTotal, that.model.total.value);
+
         that.applier.change("dataSet", floe.tests.chartAuthoring.objectArrayChangeInPlace);
         floe.tests.chartAuthoring.validatePie(that, floe.tests.chartAuthoring.testObjectData);
+        jqUnit.assertEquals("The total value is calculated as expected", floe.tests.chartAuthoring.objectArrayChangeInPlaceTotal, that.model.total.value);
+    });
+
+    floe.tests.chartAuthoring.percentageArray = [{
+        id: "tenPercent",
+        value: 20
+    }, {
+        id: "fiftyPercent",
+        value: 100
+    }, {
+        id: "fortyPercent",
+        value: 80
+    }];
+
+    jqUnit.test("Test the functions for custom formatting of data values in pie slices", function () {
+        jqUnit.expect(3);
+
+        var that = floe.tests.chartAuthoring.pieChart.pie(".floec-ca-pieChart-specialFormatting", {
+            model: {
+                dataSet: floe.tests.chartAuthoring.percentageArray
+            },
+            pieOptions: {
+                sliceTextDisplayTemplate: "%value/%total (%percentage%)",
+                sliceTextPercentageDigits: 2,
+                width: "400",
+                height: "400"
+            }
+        });
+
+
+        floe.tests.chartAuthoring.expectedDisplayValues = [
+            "20/200 (10.00%)",
+            "100/200 (50.00%)",
+            "80/200 (40.00%)"
+        ];
+
+
+        var d3Elem = floe.d3.jQueryToD3(that.locate("text"));
+
+        d3Elem.each(function (d,i) {
+            var displayedValue = d3.select(this).text();
+            jqUnit.assertEquals("Displayed values are in sync with the current model", floe.tests.chartAuthoring.expectedDisplayValues[i], displayedValue);
+        });
+
+
     });
 
 })(jQuery, fluid);

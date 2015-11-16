@@ -1,33 +1,176 @@
-.floec-ca-pieChart-pie {
+/* Global settings */
+
+body {
+    font-family: Verdana, Arial, sans-serif;
+}
+
+/* Main container */
+
+.floe-chartAuthoring-container {
+    width: 55em;
+    margin: 2em auto 2em auto;
+    border: 1px solid black;
+    padding: 1em 0 1em 0;
+    background-color: #FFFFFF;
+}
+
+/* Title and description inline edit containers */
+
+.floe-chartTitle {
+    margin-bottom: 1em;
+    padding-left: 2em;
+}
+
+.floe-chartDescription {
+    font-size: 1em;
+    margin-bottom: 2em;
+    padding-left: 2em;
+}
+
+/* Inline edit component appearance customizations */
+
+.floe-inlineEdit-text {
+    display             : inline;
+    padding-right       : 20px;
+    background-image    :url('../img/inline_edit_edit_button_16x16.png');
+    background-repeat   : no-repeat;
+    background-position : right center;
+}
+
+.floe-chartTitle .floe-inlineEdit-text {
+    font-size: 1.7em;
+}
+
+/* Pie */
+
+.floe-ca-pieChart-pie {
     float: left;
     width: 30em;
+    margin-bottom: 1em;
 }
-.floec-ca-pieChart-legend {
+
+/* Pie slice text (SVG styling attributes) */
+
+.floe-ca-pieChart-text {
+    paint-order: stroke;
+    stroke: #FFF;
+    fill: #000;
+    stroke-width: 3px;
+    stroke-linecap: butt;
+    stroke-linejoin: miter;
+    font-weight: 800;
+}
+
+/* Pie slice (SVG styling attributes) */
+
+.floe-ca-pieChart-slice {
+    stroke: #FFF;
+    stroke-width: 2px;
+}
+
+/* Legend */
+
+.floe-ca-pieChart-legend {
     float: left;
     width: 20em;
     margin: 2em;
     min-height: 5em;
 }
-.floe-ca-pieChart-legend-table {
-    border: 1px solid black;
-}
+
 .floe-ca-pieChart-legend-table thead th {
-    border: 1px solid black;
-    padding: 2px;
+    color: #FFFFFF;
 }
+
+/* Set to get "box" effect for legend color key cells */
+.floe-ca-pieChart-legend-color-header {
+    max-width:2.5em;
+    overflow: hidden;
+}
+
 .floe-ca-pieChart-legend-table-row {
-    border: 1px solid black;
+    height: 2.5em;
 }
+
 .floe-ca-pieChart-legend-table-row td {
-    border: 1px solid black;
-    padding: 2px;
+    border: 3px solid white;
+    padding: 0.5em;
 }
 
-.floec-dataEntryPanel {
+.floe-ca-pieChart-legend-label-cell {
+    font-weight: bold;
+}
+
+/* Data entry panel */
+
+.floe-dataEntryPanel {
+    border-top: 1px dashed black;
+    padding-top: 1em;
     clear: both;
-    width:50em;
+    width:55em;
 }
 
-.floec-dataEntryPanel li {
+.floe-dataEntryPanel li {
     list-style:none;
+    margin-bottom: 0.5em;
+}
+
+.floe-ca-dataEntryPanel-dataEntryLabel {
+    padding-left: 2.5em;
+}
+
+.floe-dataEntryPanel fieldset {
+    border: 0;
+}
+
+.floe-dataEntryPanel input {
+    background-color: #F2F2F2;
+}
+
+.floe-dataEntryPanel input:focus {
+    background-color: #FFF;
+    box-shadow: 0px 0px 10px blue;
+}
+
+.floe-ca-dataEntry-label {
+    margin-right:1em;
+    width:12em;
+}
+
+.floe-ca-dataEntry-value {
+    margin-right:1em;
+    width:6em;
+}
+
+.floe-ca-dataEntry-percentage {
+    background-color: rgb(235,235,235);
+    width: 5em;
+    display: inline-block;
+    padding: 0.2em 0 0.2em 0.2em;
+    text-align: left;
+}
+
+.floe-ca-dataEntryPanel-totalLabel {
+    width: 12em;
+    display: inline-block;
+    text-align: right;
+    padding-left:3em;
+    font-weight: bold;
+}
+
+.floe-ca-dataEntryPanel-totalValue {
+    padding-left:0.65em;
+    width: 6em;
+    display: inline-block;
+}
+
+.floe-ca-dataEntryPanel-totalPercentage {
+    margin-left:1.65em;
+    width: 5em;
+    display: inline-block;
+    text-align: left;
+    padding: 0.2em 0 0.2em 0.2em;
+}
+
+.floe-ca-dataEntryPanel-reset {
+    margin-left:3em;
 }

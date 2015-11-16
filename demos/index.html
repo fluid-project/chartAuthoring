@@ -6,6 +6,7 @@
         <link rel="stylesheet" href="../src/lib/infusion/src/lib/normalize/css/normalize.css" />
         <link rel="stylesheet" type="text/css" href="../src/lib/infusion/src/framework/core/css/fluid.css" />
         <link rel="stylesheet" type="text/css" href="../src/lib/infusion/src/components/overviewPanel/css/OverviewPanel.css" />
+        <link rel="stylesheet" type="text/css" href="../src/lib/infusion/src/components/inlineEdit/css/InlineEdit.css" />
 
         <script type="text/javascript" src="../src/lib/infusion/infusion-custom.js"></script>
         <script type="text/javascript" src="../src/lib/d3/d3.js"></script>
@@ -17,12 +18,14 @@
         <script type="text/javascript" src="../src/js/dataEntryPanel.js"></script>
         <script type="text/javascript" src="../src/js/chartAuthoring.js"></script>
         <script type="text/javascript" src="../src/js/d3ViewComponent.js"></script>
+        <script type="text/javascript" src="../src/js/totalRelaying.js"></script>
         <script type="text/javascript" src="../src/js/legend.js"></script>
         <script type="text/javascript" src="../src/js/pie.js"></script>
         <script type="text/javascript" src="../src/js/pieChart.js"></script>
         <script type="text/javascript" src="../src/js/d3Utils.js"></script>
 
-        <script type="text/javascript" src="src/js/overview.js"></script>
+        <script type="text/javascript" src="src/js/chartAuthoring-demo-overview.js"></script>
+        <script type="text/javascript" src="src/js/chartAuthoring-demo.js"></script>
 
         <link rel="stylesheet" type="text/css" href="src/css/chartAuthoring-demo.css" />
 
@@ -32,20 +35,37 @@
 
     <body>
 
-        <div id="floec-overviewPanel" class="fl-overviewPanel-container"></div>
+            <div class="floe-chartAuthoring-container">
 
-        <div id="floec-chartAuthoring"></div>
+                <div id="floec-overviewPanel" class="fl-overviewPanel-container"></div>
 
-        <script type="text/javascript">
+                <div id="floec-chartAuthoring"></div>
 
-            floe.chartAuthoring("#floec-chartAuthoring", {
-                templateLoader: {
-                    terms: {
-                        templatePrefix: "../src/html"
-                    }
-                }
-            });
-        </script>
+                <script type="text/javascript">
+                    floe.chartAuthoring.demo("#floec-chartAuthoring", {
+                        templateLoader: {
+                            terms: {
+                                templatePrefix: "../src/html"
+                            }
+                        },
+                        dataEntryPanel: {
+                            strings: {
+                                dataEntryLabel: "Enter your labels and values"
+                            }
+                        },
+                        pieChart: {
+                            pieChartOptions: {
+                                sliceTextDisplayTemplate: "%percentage%",
+                                labelTextDisplayTemplate: "%label",
+                                valueTextDisplayTemplate: "%percentage% (%value/%total)",
+                                colors: ["#00a59a", "#9bc863", "#1a6b61", "#e9ea7b", "#1b443d"],
+                                width: 400,
+                                height: 400
+                            }
+                        }
+                    });
+                    </script>
+            </div>
 
     </body>
 </html>

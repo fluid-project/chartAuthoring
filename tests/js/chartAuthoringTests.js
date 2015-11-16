@@ -44,12 +44,12 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.tests.chartAuthoring.dataEntries =
     {
         entry1: {
-            value: "100",
+            value: 100,
             label: "Label One",
             percentage: "100%"
         },
         entry2: {
-            value: "50",
+            value: 50,
             label: "Label Two",
             percentage: "100%"
         }
@@ -59,12 +59,12 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     [
         {
             id: "entry1",
-            value: "100",
+            value: 100,
             label: "Label One"
         },
         {
             id: "entry2",
-            value: "50",
+            value: 50,
             label: "Label Two"
         }
     ];
@@ -89,7 +89,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             name: "Test the chart authoring component",
             tests: [{
                 name: "Chart Authoring Init",
-                expect: 15,
+                expect: 18,
                 sequence: [{
                     listener: "floe.tests.chartAuthoringTester.verifyInit",
                     args: ["{chartAuthoring}"],
@@ -104,7 +104,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                     event: "{floe.tests.chartAuthoring}.events.onToolReady"
                 }, {
                     func: "{floe.tests.chartAuthoring}.chartAuthoringInterface.dataEntryPanel.applier.change",
-                    args: ["dataEntries", floe.tests.chartAuthoring.dataEntries]
+                    args: ["dataSet", floe.tests.chartAuthoring.dataEntries]
                 }, {
                     listener: "floe.tests.chartAuthoringTester.verifyRelay",
                     args: ["{floe.tests.chartAuthoring}"],
@@ -135,6 +135,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         jqUnit.assertDeepEq("Template has been passed into the pieChart sub-component", pieChartResources.template.resourceText, templateLoaderResources.pieChart.resourceText);
 
         jqUnit.assertNotUndefined("The chartAuthoringInterface has been rendered", that.chartAuthoringInterface.container.html());
+        jqUnit.assertNotUndefined("The chartTitle has been rendered", that.chartAuthoringInterface.chartTitle.container.html());
+        jqUnit.assertNotUndefined("The chartDescription has been rendered", that.chartAuthoringInterface.chartDescription.container.html());
         jqUnit.assertNotUndefined("The dataEntryPanel has been rendered", that.chartAuthoringInterface.dataEntryPanel.container.html());
         jqUnit.assertNotUndefined("The pieChart has been rendered", that.chartAuthoringInterface.pieChart.container.html());
 
@@ -145,8 +147,12 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var legendTableId = that.chartAuthoringInterface.pieChart.legend.locate("table").attr("id"),
         pieChartPieId = that.chartAuthoringInterface.pieChart.pie.locate("pie").attr("id"),
         dataEntryFormTotalId = that.chartAuthoringInterface.dataEntryPanel.locate("totalValue").attr("id"),
-        dataEntryFormAriaControlsAttr = that.chartAuthoringInterface.dataEntryPanel.locate("dataEntryForm").attr("aria-controls");
+        dataEntryFormAriaControlsAttr = that.chartAuthoringInterface.dataEntryPanel.locate("dataEntryForm").attr("aria-controls"),
+        dataEntryFormlId = that.chartAuthoringInterface.dataEntryPanel.locate("dataEntryForm").attr("id"),
+        resetAriaControlsAttr = that.chartAuthoringInterface.locate("reset").attr("aria-controls");
+
         jqUnit.assertDeepEq("The data entry form has an aria-controls attribute properly referencing the pie, legend and total", dataEntryFormAriaControlsAttr, legendTableId + " " + pieChartPieId + " " + dataEntryFormTotalId);
+        jqUnit.assertDeepEq("The reset has an aria-controls attribute properly referencing the form, pie, legend and total", resetAriaControlsAttr, dataEntryFormlId + " " + legendTableId + " " + pieChartPieId + " " + dataEntryFormTotalId);
     };
 
     floe.tests.chartAuthoringTester.verifyRelay = function (that) {

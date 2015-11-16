@@ -14,7 +14,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     "use strict";
 
     fluid.defaults("floe.chartAuthoring.pieChart.legend", {
-        gradeNames: ["floe.d3ViewComponent", "autoInit"],
+        gradeNames: ["floe.chartAuthoring.totalRelaying", "floe.d3ViewComponent", "autoInit"],
         strings: {
             legendColHeading:"Legend",
             labelColHeading:"Label",
@@ -26,18 +26,42 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             // 1. an array of objects. Must contain "id", "value" and "label" variables.
             // Example: [{id: string, value: number, label: string} ... ]
             dataSet: []
+            // Supplied by relaying in floe.chartAuthoring.totalRelaying grade
+            // total: {
+            //     value: number,
+            //     percentage: number
+            // }
         },
         legendOptions: {
             // An array of colors to fill slices generated for corresponding values of model.dataSet
             // Or, a d3 color scale that's generated based off an array of colors
             colors: null,
             sort: true, // Whether or not to sort the data by values when creating the legend
-            showLegendHeadings: true // Whether or not to display column headings in the legend
+            showLegendHeadings: true, // Whether or not to display column headings in the legend,
+            // A fluid.stringTemplate used to render the text displayed
+            // within the label cell
+            // available variables for the template are:
+            // - value: the raw value of the data
+            // - percentage: the percentage of the data value out of the total value
+            // - total: the total value of all data in the dataset
+            // - label: the attached label
+            labelTextDisplayTemplate: "%label",
+            // A fluid.stringTemplate used to render the text displayed
+            // within the value cell
+            // the same variables available as for labelTextDisplayTemplate
+            valueTextDisplayTemplate: "%value",
+            // Number of digits to display after decimal when rendering
+            // percentages for the legend
+            legendPercentageDigits: 0
         },
         styles: {
             legend: "floe-ca-pieChart-legend",
             table: "floe-ca-pieChart-legend-table",
             row: "floe-ca-pieChart-legend-table-row",
+            headerRow: "floe-ca-pieChart-legend-table-header-row",
+            colorHeader: "floe-ca-pieChart-legend-color-header",
+            labelHeader: "floe-ca-pieChart-legend-label-header",
+            valueHeader: "floe-ca-pieChart-legend-value-header",
             colorCell: "floe-ca-pieChart-legend-color-cell",
             labelCell: "floe-ca-pieChart-legend-label-cell",
             valueCell: "floe-ca-pieChart-legend-value-cell"
@@ -46,6 +70,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             legend: ".floec-ca-pieChart-legend",
             table: ".floec-ca-pieChart-legend-table",
             row: ".floec-ca-pieChart-legend-table-row",
+            headerRow: ".floec-ca-pieChart-legend-table-header-row",
+            colorHeader: ".floec-ca-pieChart-legend-color-header",
+            labelHeader: ".floec-ca-pieChart-legend-label-header",
+            valueHeader: ".floec-ca-pieChart-legend-value-header",
             caption: ".floec-ca-pieChart-legend-caption",
             colorCell: ".floec-ca-pieChart-legend-color-cell",
             labelCell: ".floec-ca-pieChart-legend-label-cell",
@@ -118,7 +146,11 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.chartAuthoring.pieChart.legend.updateRows = function (that) {
         var colorCellSelector = that.options.selectors.colorCell,
             labelCellSelector = that.options.selectors.labelCell,
-            valueCellSelector = that.options.selectors.valueCell;
+            valueCellSelector = that.options.selectors.valueCell,
+            percentageDigits = that.options.legendOptions.legendPercentageDigits,
+            totalValue = that.model.total.value,
+            labelTextDisplayTemplate = that.options.legendOptions.labelTextDisplayTemplate,
+            valueTextDisplayTemplate = that.options.legendOptions.valueTextDisplayTemplate;
 
         that.rows.each(function (d) {
             d3.select(this)
@@ -131,11 +163,15 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
             d3.select(this)
                 .select(labelCellSelector)
-                .text(d.label);
+                .text(function(d) {
+                    return floe.d3ViewComponent.getTemplatedDisplayValue(totalValue, percentageDigits, labelTextDisplayTemplate, d);
+                });
 
             d3.select(this)
                 .select(valueCellSelector)
-                .text(d.value);
+                .text(function(d) {
+                    return floe.d3ViewComponent.getTemplatedDisplayValue(totalValue, percentageDigits, valueTextDisplayTemplate, d);
+                });
         });
     };
 
@@ -177,6 +213,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.chartAuthoring.pieChart.legend.create = function (that) {
         var container = that.container,
             tableClass = that.classes.table,
+            headerRowClass = that.classes.headerRow,
+            colorHeaderClass = that.classes.colorHeader,
+            labelHeaderClass = that.classes.labelHeader,
+            valueHeaderClass = that.classes.valueHeader,
             showLegendHeadings = that.options.legendOptions.showLegendHeadings;
 
         that.table = that.jQueryToD3(container)
@@ -200,21 +240,30 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         if(showLegendHeadings) {
             var thead = that.table.selectAll("thead");
 
-            thead.append("th")
+            var theadRow = thead.append("tr");
+
+            theadRow.attr({
+                    "class": headerRowClass
+                });
+
+            theadRow.append("th")
                 .attr({
-                    "scope":"col"
+                    "scope":"col",
+                    "class": colorHeaderClass
                 })
                 .html(that.options.strings.legendColHeading);
 
-            thead.append("th")
+            theadRow.append("th")
                 .attr({
-                    "scope":"col"
+                    "scope":"col",
+                    "class": labelHeaderClass
                 })
                 .html(that.options.strings.labelColHeading);
 
-            thead.append("th")
+            theadRow.append("th")
                 .attr({
-                    "scope":"col"
+                    "scope":"col",
+                    "class": valueHeaderClass
                 })
                 .html(that.options.strings.valueColHeading);
         }

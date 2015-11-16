@@ -17,7 +17,7 @@ var demo = demo || {};
 
     fluid.registerNamespace("demo.chartAuthoring");
 
-    fluid.defaults("demo.chartAuthoring.overview", {
+    fluid.defaults("floe.chartAuthoring.demo.overview", {
             gradeNames: ["fluid.viewComponent", "autoInit"],
             components: {
                 overviewPanel: {
@@ -72,7 +72,7 @@ var demo = demo || {};
         });
 
     $(document).ready(function () {
-        demo.chartAuthoring.overview("#floec-overviewPanel", {
+        floe.chartAuthoring.demo.overview("#floec-overviewPanel", {
             overviewPanelTemplate: "src/html/overviewPanelTemplate-chartAuthoring.html",
             cookieName: "chartAuthoring-demo-showPanel",
             strings: {
@@ -90,7 +90,7 @@ var demo = demo || {};
                 demoCodeLink: "https://github.com/fluid-project/chartAuthoring/tree/master/demos",
                 infusionCodeLink: "https://github.com/fluid-project/chartAuthoring",
                 feedbackLink: "mailto:infusion-users@fluidproject.org?subject=Chart Authoring Tool feedback",
-                designLink: "https://wiki.fluidproject.org/display/fluid/Sonification+Sketches"
+                designLink: "https://wiki.fluidproject.org/display/fluid/Pie+Chart+Sound+Sketches"
             }
         });
     });
