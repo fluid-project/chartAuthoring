@@ -152,7 +152,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         resetAriaControlsAttr = that.chartAuthoringInterface.locate("reset").attr("aria-controls");
 
         jqUnit.assertDeepEq("The data entry form has an aria-controls attribute properly referencing the pie, legend and total", dataEntryFormAriaControlsAttr, legendTableId + " " + pieChartPieId + " " + dataEntryFormTotalId);
-        jqUnit.assertDeepEq("The reset has an aria-controls attribute properly referencing the form", resetAriaControlsAttr, dataEntryFormlId);
+        jqUnit.assertDeepEq("The reset has an aria-controls attribute properly referencing the form, pie, legend and total", resetAriaControlsAttr, dataEntryFormlId + " " + legendTableId + " " + pieChartPieId + " " + dataEntryFormTotalId);
     };
 
     floe.tests.chartAuthoringTester.verifyRelay = function (that) {

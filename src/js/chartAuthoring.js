@@ -218,7 +218,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             dataEntryFormId = fluid.allocateSimpleId(that.chartAuthoringInterface.dataEntryPanel.locate("dataEntryForm"));
 
         that.chartAuthoringInterface.dataEntryPanel.locate("dataEntryForm").attr("aria-controls", legendId + " " + pieId + " " + totalId);
-        that.chartAuthoringInterface.locate("reset").attr("aria-controls", dataEntryFormId);
+        that.chartAuthoringInterface.locate("reset").attr("aria-controls", dataEntryFormId + " " + legendId + " " + pieId + " " + totalId);
     };
 
     // Updates the chart authoring tool's data entry panel to the provided dataset
