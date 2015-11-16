@@ -19,6 +19,15 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             total: {
                 // value: number,
                 // percentage: number
+            },
+            dataSet: {
+                // in the style of the dataSet in dataEntryPanel or pie/legend
+                // dataEntryPanel's model.dataSet values looks like:
+                // {uuid: {value: ""}, uuid:{value: ""}...}
+                // pie/legend look like:
+                // [{value: ""},{value: ""}...]
+                // basically, any collection of objects where the objects have
+                // a "value" parameter should work
             }
         },
         modelRelay: [{

@@ -90,7 +90,7 @@ var demo = demo || {};
                 demoCodeLink: "https://github.com/fluid-project/chartAuthoring/tree/master/demos",
                 infusionCodeLink: "https://github.com/fluid-project/chartAuthoring",
                 feedbackLink: "mailto:infusion-users@fluidproject.org?subject=Chart Authoring Tool feedback",
-                designLink: "https://wiki.fluidproject.org/display/fluid/Sonification+Sketches"
+                designLink: "https://wiki.fluidproject.org/display/fluid/Pie+Chart+Sound+Sketches"
             }
         });
     });

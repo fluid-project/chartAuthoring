@@ -20,40 +20,26 @@ Varied#3: colors: ["#f15e4e", "#acdee4", "#73c163", "#ffc74a", "#41beae"]
 
     fluid.registerNamespace("floe.chartAuthoring.demo");
 
-    floe.chartAuthoring.demo.addExampleData = function (that) {
-        var initialData = that.options.initialData;
-        fluid.each(initialData.inputSelectors, function(currentSelector, idx) {
-            var dataEntry = that.chartAuthoringInterface.dataEntryPanel[currentSelector];
-            var sampleData = initialData.data[idx];
-            dataEntry.locate("label").val(sampleData.label).trigger("change");
-            dataEntry.locate("value").val(sampleData.value).trigger("change");
-        });
-    };
-
-
     fluid.defaults("floe.chartAuthoring.demo", {
         gradeNames: ["floe.chartAuthoring"],
         listeners: {
             "onToolReady.addExampleInput": {
-                funcName: "floe.chartAuthoring.demo.addExampleData",
-                args: ["{that}"]
+                funcName: "{that}.updateDataEntryPanel",
+                args: ["{that}.options.initialData"]
             }
         },
-        initialData: {
-            inputSelectors: ["dataEntry", "dataEntry-1", "dataEntry-2"],
-            data:
-                [{
-                    label: "Value #1",
-                    value: 75
-                },
-                {
-                    label: "Value #2",
-                    value: 17
-                },
-                {
-                    label: "Value #3",
-                    value: 33
-                }]
-            }
+        initialData:
+            [{
+                label: "Value #1",
+                value: 75
+            },
+            {
+                label: "Value #2",
+                value: 17
+            },
+            {
+                label: "Value #3",
+                value: 33
+            }]
         });
 })(jQuery,fluid);

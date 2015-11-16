@@ -22,20 +22,13 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             dataEntry: ".floec-ca-dataEntryPanel-dataEntry",
             totalValue: ".floec-ca-dataEntryPanel-totalValue",
             totalPercentage: ".floec-ca-dataEntryPanel-totalPercentage",
-            totalLabel: ".floec-ca-dataEntryPanel-totalLabel",
-            resetButton: ".floec-ca-dataEntryPanel-resetButton"
+            totalLabel: ".floec-ca-dataEntryPanel-totalLabel"
         },
         strings: {
             dataEntryLabel: "Enter your values",
             emptyTotalValue: "Value",
             totalPercentage: "%percentage%",
             totalLabel: "Total"
-        },
-        invokers: {
-            "resetForm": {
-                funcName: "floe.chartAuthoring.dataEntryPanel.resetPanel",
-                args: ["{that}"]
-            }
         },
         dynamicComponents: {
             dataEntry: {
@@ -134,15 +127,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             var deCont = floe.chartAuthoring.dataEntryPanel.append(that.locate("dataEntries"), dataEntryContainerTemplate);
             that.events.createDataEntryField.fire(deCont);
         }
-
-        var resetButton = that.locate("resetButton");
-
-        resetButton.click(function(e) {
-            if($(this).is(":focus")) {
-                that.resetForm();
-            }
-            e.preventDefault();
-        });
+    
     };
 
     floe.chartAuthoring.dataEntryPanel.renderTotals = function (that) {
@@ -159,22 +144,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         that.locate("totalValue").text(totalToRender);
         floe.chartAuthoring.percentage.render(that.locate("totalPercentage"), percentage, that.options.strings.totalPercentage);
-    };
-
-    floe.chartAuthoring.dataEntryPanel.resetPanel = function (that) {
-        var dataEntries = that.locate("dataEntries");
-
-        var labelInputs = dataEntries.find("input.floec-ca-dataEntry-label");
-        labelInputs.each(function () {
-            $(this).val("");
-        });
-        labelInputs.trigger("change");
-
-        var valueInputs = dataEntries.find("input.floec-ca-dataEntry-value");
-        valueInputs.each(function () {
-            $(this).val("");
-        });
-        valueInputs.trigger("change");
     };
 
 })(jQuery, fluid);
