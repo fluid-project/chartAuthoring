@@ -20,47 +20,26 @@ Varied#3: colors: ["#f15e4e", "#acdee4", "#73c163", "#ffc74a", "#41beae"]
 
     fluid.registerNamespace("floe.chartAuthoring.demo");
 
-    floe.chartAuthoring.demo.addExampleData = function (that) {
-        var initialData = that.options.initialData;
-        var dataEntries = that.chartAuthoringInterface.dataEntryPanel.locate("dataEntry");
-        var dataEntryLabelSelector = that.chartAuthoringInterface.dataEntryPanel.dataEntry.options.selectors.label;
-        var dataEntryValueSelector = that.chartAuthoringInterface.dataEntryPanel.dataEntry.options.selectors.value;
-
-        var initialDataLength = initialData.data.length;
-        var dataEntriesToUpdate = dataEntries.slice(0, initialDataLength);
-
-        dataEntriesToUpdate.each(function(idx) {
-            var currentEntry = $(this);
-            var sampleData = initialData.data[idx];
-            currentEntry.find(dataEntryLabelSelector).val(sampleData.label).trigger("change");
-            currentEntry.find(dataEntryValueSelector).val(sampleData.value).trigger("change");
-        });
-
-    };
-
-
     fluid.defaults("floe.chartAuthoring.demo", {
         gradeNames: ["floe.chartAuthoring"],
         listeners: {
             "onToolReady.addExampleInput": {
-                funcName: "floe.chartAuthoring.demo.addExampleData",
-                args: ["{that}"]
+                funcName: "{that}.updateDataEntryPanel",
+                args: ["{that}.options.initialData"]
             }
         },
-        initialData: {
-            data:
-                [{
-                    label: "Value #1",
-                    value: 75
-                },
-                {
-                    label: "Value #2",
-                    value: 17
-                },
-                {
-                    label: "Value #3",
-                    value: 33
-                }]
-            }
+        initialData:
+            [{
+                label: "Value #1",
+                value: 75
+            },
+            {
+                label: "Value #2",
+                value: 17
+            },
+            {
+                label: "Value #3",
+                value: 33
+            }]
         });
 })(jQuery,fluid);

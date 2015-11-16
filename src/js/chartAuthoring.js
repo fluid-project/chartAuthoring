@@ -35,11 +35,22 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 createOnEvent: "onTemplatesLoaded",
                 container: "{that}.dom.container",
                 options: {
+                    selectors: {
+                        reset: ".floec-ca-dataEntryPanel-reset"
+                    },
+                    styles: {
+                        reset: "floe-ca-dataEntryPanel-reset"
+                    },
                     resources: {
                         template: "{templateLoader}.resources.chartAuthoringInterface"
                     },
                     listeners: {
-                        "onTemplateInjected.escalate": "{chartAuthoring}.events.onChartAuthoringInterfaceReady.fire"
+                        "onTemplateInjected.escalate": "{chartAuthoring}.events.onChartAuthoringInterfaceReady.fire",
+                        "onCreate.bindResetClick": {
+                            "this": "{that}.dom.reset",
+                            "method": "click",
+                            "args": ["{chartAuthoring}.resetDataEntryPanel"]
+                        }
                     },
                     components: {
                         chartTitle: {
@@ -95,8 +106,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                                 },
                                 listeners: {
                                     "onCreate.escalate": {
-                                        funcName: "{chartAuthoring}.events.onPanelReady.fire",
-                                        priority: "last"
+                                        funcName: "{chartAuthoring}.events.onPanelReady.fire"
                                     }
                                 }
                             }
@@ -133,6 +143,16 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         },
         listeners: {
             "onToolReady.addAriaConnections": "floe.chartAuthoring.addAriaConnections"
+        },
+        invokers:{
+            "updateDataEntryPanel": {
+                funcName: "floe.chartAuthoring.updateDataEntryPanel",
+                args: ["{that}", "{arguments}.0"]
+            },
+            "resetDataEntryPanel": {
+                funcName: "floe.chartAuthoring.updateDataEntryPanel",
+                args: ["{that}", []]
+                }
         },
         strings: {
             defaultTitleText: "Enter Chart Title",
@@ -190,14 +210,43 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // Adds aria attributes that only make sense within the context of the overall chart authoring tool
     // Specifically, adds:
     // - an aria-controls attribute for the dataEntryPanel's form referencing the unique IDs of the pie and legend
+    // - an aria-controls attribute for the reset button referencing the dataEntryPanel form
     floe.chartAuthoring.addAriaConnections = function(that) {
-
         var legendId = fluid.allocateSimpleId(that.chartAuthoringInterface.pieChart.legend.locate("table")),
             pieId = fluid.allocateSimpleId(that.chartAuthoringInterface.pieChart.pie.locate("pie")),
-            totalId = fluid.allocateSimpleId(that.chartAuthoringInterface.dataEntryPanel.locate("totalValue"));
-
+            totalId = fluid.allocateSimpleId(that.chartAuthoringInterface.dataEntryPanel.locate("totalValue")),
+            dataEntryFormId = fluid.allocateSimpleId(that.chartAuthoringInterface.dataEntryPanel.locate("dataEntryForm"));
 
         that.chartAuthoringInterface.dataEntryPanel.locate("dataEntryForm").attr("aria-controls", legendId + " " + pieId + " " + totalId);
+        that.chartAuthoringInterface.locate("reset").attr("aria-controls", dataEntryFormId);
+    };
+
+    // Updates the chart authoring tool's data entry panel to the provided dataset
+    // Passing an empty dataset will clear and reset the form
+    // Triggers change events to trigger model updating and propagation to other
+    // interface elements
+    floe.chartAuthoring.updateDataEntryPanel = function (that, dataSet) {
+        // Clear any existing data entries
+        var dataEntries = that.chartAuthoringInterface.dataEntryPanel.locate("dataEntry");
+
+        var dataEntryLabelSelector = that.chartAuthoringInterface.dataEntryPanel.dataEntry.options.selectors.label;
+        var dataEntryValueSelector = that.chartAuthoringInterface.dataEntryPanel.dataEntry.options.selectors.value;
+
+        dataEntries.each(function() {
+            $(this).find(dataEntryLabelSelector).val("").trigger("change");
+            $(this).find(dataEntryValueSelector).val("").trigger("change");
+        });
+
+        // Update the data entries to the dataset in the argument
+        var dataSetLength = dataSet.length;
+        var dataEntriesToUpdate = dataEntries.slice(0, dataSetLength);
+
+        dataEntriesToUpdate.each(function(idx) {
+            var currentEntry = $(this);
+            var currentData = dataSet[idx];
+            currentEntry.find(dataEntryLabelSelector).val(currentData.label).trigger("change");
+            currentEntry.find(dataEntryValueSelector).val(currentData.value).trigger("change");
+        });
     };
 
 })(jQuery, fluid);
