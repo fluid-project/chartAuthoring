@@ -152,7 +152,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             "resetDataEntryPanel": {
                 funcName: "floe.chartAuthoring.updateDataEntryPanel",
                 args: ["{that}", []]
-                }
+            }
         },
         strings: {
             defaultTitleText: "Enter Chart Title",
