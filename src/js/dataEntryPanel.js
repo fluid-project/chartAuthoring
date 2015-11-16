@@ -127,15 +127,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             var deCont = floe.chartAuthoring.dataEntryPanel.append(that.locate("dataEntries"), dataEntryContainerTemplate);
             that.events.createDataEntryField.fire(deCont);
         }
-
-        var reset = that.locate("reset");
-
-        reset.click(function(e) {
-            if($(this).is(":focus")) {
-                that.resetForm();
-            }
-            e.preventDefault();
-        });
+    
     };
 
     floe.chartAuthoring.dataEntryPanel.renderTotals = function (that) {
