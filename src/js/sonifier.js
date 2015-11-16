@@ -160,7 +160,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 var d = {
                     id: item.id,
                     label: item.label,
-                    value: percentage,
+                    value: item.value,
+                    percentage: percentage,
                     units: units,
                     notes: {
                         durations: noteDurations,

@@ -46,7 +46,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 durations: [3/8, 3/8, 3/8, 3/8, 3/8, 3/8, 1/8, 1/8, 1/8, 1/8, 1/8, 1/8, 1/8],
                 values: [91, 91, 91, 91, 91, 91, 89, 89, 89, 89, 89, 89, 89]
             },
-            value: 67,
+            percentage:67,
+            value: 100,
             label: "Label One"
         },
         {
@@ -60,7 +61,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 durations: [3/8, 3/8, 3/8, 1/8, 1/8, 1/8],
                 values: [91, 91, 91, 89, 89, 89]
             },
-            value: 33,
+            percentage:33,
+            value: 50,
             label: "Label Two"
         }
     ];
