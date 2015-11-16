@@ -52,6 +52,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                                 },
                                 selectors: {
                                     text: ".floec-inlineEdit-text"
+                                },
+                                styles: {
+                                    text: "floe-inlineEdit-text"
                                 }
                             }
                         },
@@ -65,6 +68,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                                 },
                                 selectors: {
                                     text: ".floec-inlineEdit-text"
+                                },
+                                styles: {
+                                    text: "floe-inlineEdit-text"
                                 }
                             }
 
