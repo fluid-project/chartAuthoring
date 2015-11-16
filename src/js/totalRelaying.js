@@ -19,6 +19,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             total: {
                 // value: number,
                 // percentage: number
+            },
+            dataSet: {
+                // in the style of the dataSet in dataEntryPanel or pie/legend
             }
         },
         modelRelay: [{
