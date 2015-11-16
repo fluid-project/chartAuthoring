@@ -22,12 +22,20 @@ Varied#3: colors: ["#f15e4e", "#acdee4", "#73c163", "#ffc74a", "#41beae"]
 
     floe.chartAuthoring.demo.addExampleData = function (that) {
         var initialData = that.options.initialData;
-        fluid.each(initialData.inputSelectors, function(currentSelector, idx) {
-            var dataEntry = that.chartAuthoringInterface.dataEntryPanel[currentSelector];
+        var dataEntries = that.chartAuthoringInterface.dataEntryPanel.locate("dataEntry");
+        var dataEntryLabelSelector = that.chartAuthoringInterface.dataEntryPanel.dataEntry.options.selectors.label;
+        var dataEntryValueSelector = that.chartAuthoringInterface.dataEntryPanel.dataEntry.options.selectors.value;
+
+        var initialDataLength = initialData.data.length;
+        var dataEntriesToUpdate = dataEntries.slice(0, initialDataLength);
+
+        dataEntriesToUpdate.each(function(idx) {
+            var currentEntry = $(this);
             var sampleData = initialData.data[idx];
-            dataEntry.locate("label").val(sampleData.label).trigger("change");
-            dataEntry.locate("value").val(sampleData.value).trigger("change");
+            currentEntry.find(dataEntryLabelSelector).val(sampleData.label).trigger("change");
+            currentEntry.find(dataEntryValueSelector).val(sampleData.value).trigger("change");
         });
+
     };
 
 
@@ -40,7 +48,6 @@ Varied#3: colors: ["#f15e4e", "#acdee4", "#73c163", "#ffc74a", "#41beae"]
             }
         },
         initialData: {
-            inputSelectors: ["dataEntry", "dataEntry-1", "dataEntry-2"],
             data:
                 [{
                     label: "Value #1",
