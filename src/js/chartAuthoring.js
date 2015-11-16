@@ -51,6 +51,12 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                             options: {
                                 strings: {
                                     defaultViewText: "{floe.chartAuthoring}.options.strings.defaultTitleText"
+                                },
+                                selectors: {
+                                    text: ".floec-inlineEdit-text"
+                                },
+                                styles: {
+                                    text: "floe-inlineEdit-text"
                                 }
                             }
                         },
@@ -61,6 +67,12 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                             options: {
                                 strings: {
                                     defaultViewText: "{floe.chartAuthoring}.options.strings.defaultDescriptionText"
+                                },
+                                selectors: {
+                                    text: ".floec-inlineEdit-text"
+                                },
+                                styles: {
+                                    text: "floe-inlineEdit-text"
                                 }
                             }
 

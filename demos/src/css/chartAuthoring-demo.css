@@ -1,3 +1,5 @@
+/* Global settings */
+
 body {
     font-family: Verdana, Arial, sans-serif;
 }
@@ -27,11 +29,15 @@ body {
 
 /* Inline edit component appearance customizations */
 
-.fl-inlineEdit-text {
-    background-image:url('../img/inline_edit_edit_button_16x16.png');
+.floe-inlineEdit-text {
+    display             : inline;
+    padding-right       : 20px;
+    background-image    :url('../img/inline_edit_edit_button_16x16.png');
+    background-repeat   : no-repeat;
+    background-position : right center;
 }
 
-.floe-chartTitle .fl-inlineEdit-text {
+.floe-chartTitle .floe-inlineEdit-text {
     font-size: 1.7em;
 }
 
@@ -184,8 +190,6 @@ body {
     text-align: left;
     padding: 0.2em 0 0.2em 0.2em;
 }
-
-/* Demo-only components */
 
 .floe-ca-dataEntryPanel-resetButton {
     margin-left:3em;

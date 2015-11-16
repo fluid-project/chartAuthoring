@@ -17,7 +17,7 @@ var demo = demo || {};
 
     fluid.registerNamespace("demo.chartAuthoring");
 
-    fluid.defaults("demo.chartAuthoring.overview", {
+    fluid.defaults("floe.chartAuthoring.demo.overview", {
             gradeNames: ["fluid.viewComponent", "autoInit"],
             components: {
                 overviewPanel: {
@@ -72,7 +72,7 @@ var demo = demo || {};
         });
 
     $(document).ready(function () {
-        demo.chartAuthoring.overview("#floec-overviewPanel", {
+        floe.chartAuthoring.demo.overview("#floec-overviewPanel", {
             overviewPanelTemplate: "src/html/overviewPanelTemplate-chartAuthoring.html",
             cookieName: "chartAuthoring-demo-showPanel",
             strings: {
