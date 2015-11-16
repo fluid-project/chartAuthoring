@@ -23,7 +23,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             totalValue: ".floec-ca-dataEntryPanel-totalValue",
             totalPercentage: ".floec-ca-dataEntryPanel-totalPercentage",
             totalLabel: ".floec-ca-dataEntryPanel-totalLabel",
-            resetButton: ".floec-ca-dataEntryPanel-resetButton"
+            reset: ".floec-ca-dataEntryPanel-reset"
         },
         strings: {
             dataEntryLabel: "Enter your values",
@@ -135,9 +135,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             that.events.createDataEntryField.fire(deCont);
         }
 
-        var resetButton = that.locate("resetButton");
+        var reset = that.locate("reset");
 
-        resetButton.click(function(e) {
+        reset.click(function(e) {
             if($(this).is(":focus")) {
                 that.resetForm();
             }
