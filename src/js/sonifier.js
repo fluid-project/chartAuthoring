@@ -256,12 +256,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         // Schedule a change for each piece of data
 
         fluid.each(sonifiedData, function(data, idx) {
-            var SpeechSynthesisUtterance = window.webkitSpeechSynthesisUtterance ||
-                           window.mozSpeechSynthesisUtterance ||
-                           window.msSpeechSynthesisUtterance ||
-                           window.oSpeechSynthesisUtterance ||
-                           window.SpeechSynthesisUtterance;
-            if(SpeechSynthesisUtterance !== undefined) {
+            if(fluid.textToSpeech.isSupported()) {
                 var currentVoiceInterval = voiceIntervals[idx];
                 // console.log("scheduling " + data.label + " speech label at " + currentVoiceInterval + " seconds");
                 dataPianoBand.scheduler.once(currentVoiceInterval, function() {
