@@ -232,20 +232,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var dataEntryLabelSelector = that.chartAuthoringInterface.dataEntryPanel.dataEntry.options.selectors.label;
         var dataEntryValueSelector = that.chartAuthoringInterface.dataEntryPanel.dataEntry.options.selectors.value;
 
-        dataEntries.each(function() {
-            $(this).find(dataEntryLabelSelector).val("").trigger("change");
-            $(this).find(dataEntryValueSelector).val("").trigger("change");
-        });
-
-        // Update the data entries to the dataset in the argument
-        var dataSetLength = dataSet.length;
-        var dataEntriesToUpdate = dataEntries.slice(0, dataSetLength);
-
-        dataEntriesToUpdate.each(function(idx) {
-            var currentEntry = $(this);
-            var currentData = dataSet[idx];
-            currentEntry.find(dataEntryLabelSelector).val(currentData.label).trigger("change");
-            currentEntry.find(dataEntryValueSelector).val(currentData.value).trigger("change");
+        dataEntries.each(function(idx) {
+            var currentData = dataSet[idx] !== undefined ? dataSet[idx] : {label: "", value: ""};
+            $(this).find(dataEntryLabelSelector).val(currentData.label).trigger("change");
+            $(this).find(dataEntryValueSelector).val(currentData.value).trigger("change");
         });
     };
 
