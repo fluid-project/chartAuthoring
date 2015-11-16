@@ -15,6 +15,18 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     fluid.defaults("floe.chartAuthoring.sonifier", {
         gradeNames: ["floe.chartAuthoring.totalRelaying", "fluid.modelComponent"],
+        components: {
+            textToSpeech: {
+                type: "fluid.textToSpeech",
+                options:{
+                    model: {
+                        utteranceOpts: {
+                            "lang": "en-US"
+                        }
+                    }
+                }
+            }
+        },
         model: {
             // dataSet:,
             // sonifiedData:
@@ -255,16 +267,12 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 dataPianoBand.scheduler.once(currentVoiceInterval, function() {
                     // var elapsed = currentVoiceInterval;
                     // console.log("synth change should now occur at " + elapsed + " seconds from start");
-                    var utterance = new SpeechSynthesisUtterance(data.label);
-                    utterance.rate = 1.10;
-                    utterance.lang = "en-US";
-                    window.speechSynthesis.speak(utterance);
+                    that.textToSpeech.queueSpeech(data.label);
                 });
             }
         });
 
         fluid.each(sonifiedData, function(data, idx) {
-
             var currentDataInterval = dataIntervals[idx];
             // console.log("scheduling " + data.label + "sonification at " + currentDataInterval + " seconds");
             dataPianoBand.scheduler.once(currentDataInterval, function() {
