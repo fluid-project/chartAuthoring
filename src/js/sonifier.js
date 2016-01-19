@@ -207,6 +207,11 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // Passed a sonified dataset, this function acts recursively to loop through
     // the dataset, play a voice label + sonified data, then schedule the next
     // play event based on the timing
+    // The "delay" variable should be the time to elapse (in seconds) before
+    // beginning the sonification of the particular datapoint. This is required
+    // for scheduling with the Flocking-based synth generator, which plays
+    // asynchronously without callbacks, while voice events have callbacks to
+    // indicate their speech has completed
 
     floe.chartAuthoring.sonifier.playDataset = function(synth, dataset, delay) {
         // console.log("floe.chartAuthoring.sonifier.playDataset");
