@@ -9,24 +9,15 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.txt
 */
 
+// Initialize the flocking environment
+var flockingEnvironment = flock.init();
+
 (function ($, fluid) {
 
     "use strict";
 
     fluid.defaults("floe.chartAuthoring.sonifier", {
         gradeNames: ["floe.chartAuthoring.totalRelaying", "fluid.modelComponent"],
-        components: {
-            textToSpeech: {
-                type: "fluid.textToSpeech",
-                options:{
-                    model: {
-                        utteranceOpts: {
-                            "lang": "en-US"
-                        }
-                    }
-                }
-            }
-        },
         model: {
             // dataSet:,
             // sonifiedData:
@@ -63,13 +54,20 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 closedValue: 0.0
             }
         },
+        // options that control playback behaviour
+        playbackOptions: {
+            // Gap of silence between individual data points when playing
+            gap: 1,
+            // Zoom factor - affects the durationConfig of the synth
+            zoom: 1
+        },
         invokers: {
             "sonifyData": {
                 funcName: "floe.chartAuthoring.sonifier.dataEntriesToSonificationData",
                 args: "{that}"
             },
             "playSonification": {
-                funcName: "floe.chartAuthoring.sonifier.playSonification",
+                funcName: "floe.chartAuthoring.sonifier.startSonification",
                 args: "{that}"
             }
         },
@@ -204,15 +202,34 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         return totalDuration;
     };
 
-    // Passed a sonified dataset, this function acts recursively to loop through
-    // the dataset, play a voice label + sonified data, then schedule the next
-    // play event based on the timing
+    // Recursion function called from floe.chartAuthoring.sonifier.playDataset
+
+    floe.chartAuthoring.sonifier.playNextDatapoint = function(synth, data, remainingDataset) {
+        // console.log("Voice label for " + data.label + " finshed");
+        var noteDuration = floe.chartAuthoring.sonifier.getTotalDuration(data.notes.durations);
+        if(remainingDataset.length > 0) {
+            floe.chartAuthoring.sonifier.playDataset(synth, remainingDataset, noteDuration);
+        } else {
+            // TODO: Need to pause the synth (or the whole Flocking environment)
+            // after the last segment has played.
+            synth.scheduler.once(noteDuration, function() {
+                flockingEnvironment.stop();
+            });
+        }
+
+        synth.midiNoteSynth.applier.change("inputs.noteSequencer", data.notes);
+        synth.pianoEnvelopeSynth.applier.change("inputs.envelopeSequencer", data.envelope);
+    };
+
+    // Passed a sonified dataset, this function + playDataLoop acts recursively
+    // to loop through the dataset, play a voice label + sonified data, then
+    // schedule the next play event based on the timing
+
     // The "delay" variable should be the time to elapse (in seconds) before
     // beginning the sonification of the particular datapoint. This is required
     // for scheduling with the Flocking-based synth generator, which plays
     // asynchronously without callbacks, while voice events have callbacks to
     // indicate their speech has completed
-
     floe.chartAuthoring.sonifier.playDataset = function(synth, dataset, delay) {
         // console.log("floe.chartAuthoring.sonifier.playDataset");
 
@@ -221,30 +238,25 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         // make a copy
         var clonedDataset = fluid.copy(dataset);
         var data = clonedDataset.shift();
-        var voiceLabel = new SpeechSynthesisUtterance(data.label);
-        var noteDuration = floe.chartAuthoring.sonifier.getTotalDuration(data.notes.durations);
-        voiceLabel.onend = function() {
-            // console.log("Voice label for " + data.label + " finshed");
-            if(clonedDataset.length > 0) {
-                floe.chartAuthoring.sonifier.playDataset(synth, clonedDataset, noteDuration);
-            } else {
-                // TODO: Need to pause the synth (or the whole Flocking environment)
-                // after the last segment has played.
-                synth.scheduler.once(noteDuration, function() {
-                    // console.log("TODO: stop environment");
-                });
-            }
 
-            synth.midiNoteSynth.applier.change("inputs.noteSequencer", data.notes);
-            synth.pianoEnvelopeSynth.applier.change("inputs.envelopeSequencer", data.envelope);
-        };
+        var textToSpeech = fluid.textToSpeech({
+            utteranceOpts: {
+                lang: "en-US"
+            },
+            listeners: {
+                "{that}.events.onStop": {
+                    funcName: "floe.chartAuthoring.sonifier.playNextDatapoint",
+                    args: [synth,data,clonedDataset]
+                }
+            }
+        });
 
         synth.scheduler.once(delay, function() {
-            window.speechSynthesis.speak(voiceLabel);
+            textToSpeech.queueSpeech(data.label);
         });
     };
 
-    floe.chartAuthoring.sonifier.playSonification = function(that) {
+    floe.chartAuthoring.sonifier.startSonification = function(that) {
         // console.log("floe.chartAuthoring.sonifier.playFunctionalSonification");
         var sonifiedData = that.model.sonifiedData;
 
@@ -261,8 +273,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             }
         });
 
-        var enviro = flock.init();
-        enviro.start();
+        flockingEnvironment.start();
 
         var dataPianoBand = floe.chartAuthoring.dataPianoBand();
 
