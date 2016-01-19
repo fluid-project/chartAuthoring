@@ -207,24 +207,33 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // Passed a sonified dataset, this function acts recursively to loop through
     // the dataset, play a voice label + sonified data, then schedule the next
     // play event based on the timing
-    // The nature of this function and the use of Array.shift() means that it
-    // is destructive to whatever sonified dataset is passed - therefore, we
-    // must pass a copy
+
     floe.chartAuthoring.sonifier.playDataset = function(synth, dataset, delay) {
         // console.log("floe.chartAuthoring.sonifier.playDataset");
-        var data = dataset.shift();
+
+        // The nature of this function and the use of Array.shift() means that it
+        // is destructive to whatever sonified dataset is passed - therefore, we
+        // make a copy
+        var clonedDataset = fluid.copy(dataset);
+        var data = clonedDataset.shift();
         var voiceLabel = new SpeechSynthesisUtterance(data.label);
         var noteDuration = floe.chartAuthoring.sonifier.getTotalDuration(data.notes.durations);
         voiceLabel.onend = function() {
             // console.log("Voice label for " + data.label + " finshed");
-            if(dataset.length > 0) {
-                floe.chartAuthoring.sonifier.playDataset(synth, dataset, noteDuration);
+            if(clonedDataset.length > 0) {
+                floe.chartAuthoring.sonifier.playDataset(synth, clonedDataset, noteDuration);
+            } else {
+                // TODO: Need to pause the synth (or the whole Flocking environment)
+                // after the last segment has played.
+                synth.scheduler.once(noteDuration, function() {
+                    // console.log("TODO: stop environment");
+                });
             }
-            // TODO: Need to pause the synth (or the whole Flocking environment)
-            // after the last segment has played.
+
             synth.midiNoteSynth.applier.change("inputs.noteSequencer", data.notes);
             synth.pianoEnvelopeSynth.applier.change("inputs.envelopeSequencer", data.envelope);
         };
+
         synth.scheduler.once(delay, function() {
             window.speechSynthesis.speak(voiceLabel);
         });
@@ -252,11 +261,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         var dataPianoBand = floe.chartAuthoring.dataPianoBand();
 
-        // We make a copy because floe.chartAuthoring.sonifier.playDataset is
-        // destructive to the array passed to it due to the use of shift
-        var shiftableDataset = fluid.copy(sonifiedData);
-
-        floe.chartAuthoring.sonifier.playDataset(dataPianoBand, shiftableDataset, 0);
+        floe.chartAuthoring.sonifier.playDataset(dataPianoBand, sonifiedData, 0);
     };
 
 })(jQuery, fluid);
