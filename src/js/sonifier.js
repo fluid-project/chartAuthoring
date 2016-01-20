@@ -225,7 +225,7 @@ var flockingEnvironment = flock.init();
 
         var dataPianoBand = floe.chartAuthoring.dataPianoBand();
 
-        floe.chartAuthoring.sonifier.playDataset(dataPianoBand, sonifiedData, 0, gap);
+        floe.chartAuthoring.sonifier.playDataset(dataPianoBand, sonifiedData, 0, gap, true);
     };
 
     // Passed a sonified dataset, this function + playDataAndQueueNext acts recursively
@@ -244,7 +244,7 @@ var flockingEnvironment = flock.init();
     // when a sonification completes
     // - we can fire an event when a voice label read completes, but can't know
     // in advance how long it will take to read the label
-    floe.chartAuthoring.sonifier.playDataset = function(synth, dataset, delay, gap) {
+    floe.chartAuthoring.sonifier.playDataset = function(synth, dataset, delay, gapDuration, addGap) {
         // console.log("floe.chartAuthoring.sonifier.playDataset");
 
         // The nature of this function and the use of Array.shift() means that it
@@ -260,10 +260,12 @@ var flockingEnvironment = flock.init();
                 lang: "en-US"
             },
             listeners: {
-                // This listener fires after TTS for the voice label is complete
+                // This listener fires after TTS for the voice label is complete,
+                // plays the sonified data itself, and queues the next voice
+                // label / sonification event
                 "{that}.events.onStop": {
                     funcName: "floe.chartAuthoring.sonifier.playDataAndQueueNext",
-                    args: [synth,currentData,clonedDataset, gap]
+                    args: [synth,currentData,clonedDataset, gapDuration]
                 }
             }
         });
@@ -271,7 +273,10 @@ var flockingEnvironment = flock.init();
         // Schedule the next voice label, accounting for both the variable-length
         // delay (the time to play the preceding sonification) and the fixed-length
         // gap
-        synth.scheduler.once(delay + gap, function() {
+
+        // We shouldn't use the gap if this is the first call for a dataset
+        var pause = addGap? delay : delay+gapDuration;
+        synth.scheduler.once(pause, function() {
             textToSpeech.queueSpeech(currentData.label);
         });
     };
@@ -282,7 +287,7 @@ var flockingEnvironment = flock.init();
         // console.log("Voice label for " + data.label + " finshed");
         var noteDuration = floe.chartAuthoring.sonifier.getTotalDuration(data.notes.durations);
         if(remainingDataset.length > 0) {
-            floe.chartAuthoring.sonifier.playDataset(synth, remainingDataset, noteDuration, gap);
+            floe.chartAuthoring.sonifier.playDataset(synth, remainingDataset, noteDuration, gap, false);
         } else {
             // Stop the flocking environment after the last sonification is
             // played
