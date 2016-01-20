@@ -56,7 +56,8 @@ var flockingEnvironment = flock.init();
         },
         // options that control playback behaviour
         playbackOptions: {
-            // Gap of silence between individual data points when playing
+            // Additional gap of silence between individual data points when
+            // playing a sequence
             gap: 1,
             // Zoom factor - affects the durationConfig of the synth
             zoom: 1
@@ -205,6 +206,7 @@ var flockingEnvironment = flock.init();
     floe.chartAuthoring.sonifier.startSonification = function(that) {
         // console.log("floe.chartAuthoring.sonifier.playFunctionalSonification");
         var sonifiedData = that.model.sonifiedData;
+        var gap = that.options.playbackOptions.gap;
 
         fluid.defaults("floe.chartAuthoring.dataPianoBand", {
             gradeNames: ["floe.chartAuthoring.electricPianoBand"],
@@ -223,7 +225,7 @@ var flockingEnvironment = flock.init();
 
         var dataPianoBand = floe.chartAuthoring.dataPianoBand();
 
-        floe.chartAuthoring.sonifier.playDataset(dataPianoBand, sonifiedData, 0);
+        floe.chartAuthoring.sonifier.playDataset(dataPianoBand, sonifiedData, 0, gap);
     };
 
     // Passed a sonified dataset, this function + playDataAndQueueNext acts recursively
@@ -242,12 +244,13 @@ var flockingEnvironment = flock.init();
     // when a sonification completes
     // - we can fire an event when a voice label read completes, but can't know
     // in advance how long it will take to read the label
-    floe.chartAuthoring.sonifier.playDataset = function(synth, dataset, delay) {
+    floe.chartAuthoring.sonifier.playDataset = function(synth, dataset, delay, gap) {
         // console.log("floe.chartAuthoring.sonifier.playDataset");
 
         // The nature of this function and the use of Array.shift() means that it
         // is destructive to whatever sonified dataset is passed - therefore, we
-        // make a copy before taking any action
+        // make a copy before taking any action so we don't affect the one held
+        // on the component
         var clonedDataset = fluid.copy(dataset);
 
         var currentData = clonedDataset.shift();
@@ -260,24 +263,26 @@ var flockingEnvironment = flock.init();
                 // This listener fires after TTS for the voice label is complete
                 "{that}.events.onStop": {
                     funcName: "floe.chartAuthoring.sonifier.playDataAndQueueNext",
-                    args: [synth,currentData,clonedDataset]
+                    args: [synth,currentData,clonedDataset, gap]
                 }
             }
         });
 
-        // We schedule the voice label
-        synth.scheduler.once(delay, function() {
+        // Schedule the next voice label, accounting for both the variable-length
+        // delay (the time to play the preceding sonification) and the fixed-length
+        // gap
+        synth.scheduler.once(delay + gap, function() {
             textToSpeech.queueSpeech(currentData.label);
         });
     };
 
     // Recursion function called from floe.chartAuthoring.sonifier.playDataset
 
-    floe.chartAuthoring.sonifier.playDataAndQueueNext = function(synth, data, remainingDataset) {
+    floe.chartAuthoring.sonifier.playDataAndQueueNext = function(synth, data, remainingDataset, gap) {
         // console.log("Voice label for " + data.label + " finshed");
         var noteDuration = floe.chartAuthoring.sonifier.getTotalDuration(data.notes.durations);
         if(remainingDataset.length > 0) {
-            floe.chartAuthoring.sonifier.playDataset(synth, remainingDataset, noteDuration);
+            floe.chartAuthoring.sonifier.playDataset(synth, remainingDataset, noteDuration, gap);
         } else {
             // Stop the flocking environment after the last sonification is
             // played
