@@ -202,60 +202,6 @@ var flockingEnvironment = flock.init();
         return totalDuration;
     };
 
-    // Recursion function called from floe.chartAuthoring.sonifier.playDataset
-
-    floe.chartAuthoring.sonifier.playNextDatapoint = function(synth, data, remainingDataset) {
-        // console.log("Voice label for " + data.label + " finshed");
-        var noteDuration = floe.chartAuthoring.sonifier.getTotalDuration(data.notes.durations);
-        if(remainingDataset.length > 0) {
-            floe.chartAuthoring.sonifier.playDataset(synth, remainingDataset, noteDuration);
-        } else {
-            // TODO: Need to pause the synth (or the whole Flocking environment)
-            // after the last segment has played.
-            synth.scheduler.once(noteDuration, function() {
-                flockingEnvironment.stop();
-            });
-        }
-
-        synth.midiNoteSynth.applier.change("inputs.noteSequencer", data.notes);
-        synth.pianoEnvelopeSynth.applier.change("inputs.envelopeSequencer", data.envelope);
-    };
-
-    // Passed a sonified dataset, this function + playDataLoop acts recursively
-    // to loop through the dataset, play a voice label + sonified data, then
-    // schedule the next play event based on the timing
-
-    // The "delay" variable should be the time to elapse (in seconds) before
-    // beginning the sonification of the particular datapoint. This is required
-    // for scheduling with the Flocking-based synth generator, which plays
-    // asynchronously without callbacks, while voice events have callbacks to
-    // indicate their speech has completed
-    floe.chartAuthoring.sonifier.playDataset = function(synth, dataset, delay) {
-        // console.log("floe.chartAuthoring.sonifier.playDataset");
-
-        // The nature of this function and the use of Array.shift() means that it
-        // is destructive to whatever sonified dataset is passed - therefore, we
-        // make a copy
-        var clonedDataset = fluid.copy(dataset);
-        var data = clonedDataset.shift();
-
-        var textToSpeech = fluid.textToSpeech({
-            utteranceOpts: {
-                lang: "en-US"
-            },
-            listeners: {
-                "{that}.events.onStop": {
-                    funcName: "floe.chartAuthoring.sonifier.playNextDatapoint",
-                    args: [synth,data,clonedDataset]
-                }
-            }
-        });
-
-        synth.scheduler.once(delay, function() {
-            textToSpeech.queueSpeech(data.label);
-        });
-    };
-
     floe.chartAuthoring.sonifier.startSonification = function(that) {
         // console.log("floe.chartAuthoring.sonifier.playFunctionalSonification");
         var sonifiedData = that.model.sonifiedData;
@@ -278,6 +224,70 @@ var flockingEnvironment = flock.init();
         var dataPianoBand = floe.chartAuthoring.dataPianoBand();
 
         floe.chartAuthoring.sonifier.playDataset(dataPianoBand, sonifiedData, 0);
+    };
+
+    // Passed a sonified dataset, this function + playDataAndQueueNext acts recursively
+    // to loop through the dataset, play a voice label + sonified data, then
+    // schedule the next play event based on the timing
+
+    // The "delay" variable manages the time to elapse (in seconds) before
+    // beginning the voice label + sonification of the particular datapoint.
+    // This is required for scheduling with the Flocking-based synth generator,
+    // which plays asynchronously without callbacks, while voice events have
+    // callbacks to indicate their speech has completed
+    //
+    // The basic challenge of scheduling that this approach handles is:
+    // - we can calculate in advance how long the sonification of a data point
+    // takes by summing note duration, but we can't receive event notification
+    // when a sonification completes
+    // - we can fire an event when a voice label read completes, but can't know
+    // in advance how long it will take to read the label
+    floe.chartAuthoring.sonifier.playDataset = function(synth, dataset, delay) {
+        // console.log("floe.chartAuthoring.sonifier.playDataset");
+
+        // The nature of this function and the use of Array.shift() means that it
+        // is destructive to whatever sonified dataset is passed - therefore, we
+        // make a copy before taking any action
+        var clonedDataset = fluid.copy(dataset);
+
+        var currentData = clonedDataset.shift();
+
+        var textToSpeech = fluid.textToSpeech({
+            utteranceOpts: {
+                lang: "en-US"
+            },
+            listeners: {
+                // This listener fires after TTS for the voice label is complete
+                "{that}.events.onStop": {
+                    funcName: "floe.chartAuthoring.sonifier.playDataAndQueueNext",
+                    args: [synth,currentData,clonedDataset]
+                }
+            }
+        });
+
+        // We schedule the voice label
+        synth.scheduler.once(delay, function() {
+            textToSpeech.queueSpeech(currentData.label);
+        });
+    };
+
+    // Recursion function called from floe.chartAuthoring.sonifier.playDataset
+
+    floe.chartAuthoring.sonifier.playDataAndQueueNext = function(synth, data, remainingDataset) {
+        // console.log("Voice label for " + data.label + " finshed");
+        var noteDuration = floe.chartAuthoring.sonifier.getTotalDuration(data.notes.durations);
+        if(remainingDataset.length > 0) {
+            floe.chartAuthoring.sonifier.playDataset(synth, remainingDataset, noteDuration);
+        } else {
+            // Stop the flocking environment after the last sonification is
+            // played
+            synth.scheduler.once(noteDuration, function() {
+                flockingEnvironment.stop();
+            });
+        }
+
+        synth.midiNoteSynth.applier.change("inputs.noteSequencer", data.notes);
+        synth.pianoEnvelopeSynth.applier.change("inputs.envelopeSequencer", data.envelope);
     };
 
 })(jQuery, fluid);
