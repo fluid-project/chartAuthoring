@@ -271,8 +271,10 @@ var flockingEnvironment = flock.init();
         var currentData = clonedDataset.shift();
 
         var textToSpeech = fluid.textToSpeech({
-            utteranceOpts: {
-                lang: "en-US"
+            model: {
+                utteranceOpts: {
+                    lang: "en-US"
+                }
             },
             listeners: {
                 // This listener fires after TTS for the voice label is complete,
