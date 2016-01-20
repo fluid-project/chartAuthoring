@@ -79,7 +79,60 @@ var flockingEnvironment = flock.init();
         }
     });
 
-    // TODO: better implementation, but works for immediate purposes
+    // Given an object in the style of floe.chartAuthoring.dataEntryPanel.model.dataEntries,
+    // convert it to an array of objects in the style used by the sonification components,
+    // maintaining object constancy by using the dataEntry object name as the key
+    floe.chartAuthoring.sonifier.dataEntriesToSonificationData = function(that) {
+        var unitDivisor = 10;
+        var sonificationData = floe.chartAuthoring.sonifier.divisorBasedSonificationStrategy(that, unitDivisor);
+        sonificationData.sort(floe.chartAuthoring.pieChart.legend.sortAscending);
+        that.model.sonifiedData = sonificationData;
+        that.events.onDataSonified.fire();
+    };
+
+    floe.chartAuthoring.sonifier.divisorBasedSonificationStrategy = function(that, unitDivisor) {
+        var dataSet = that.model.dataSet;
+        var totalValue = that.model.total.value;
+        var sonificationData = [];
+        var synthOptions = that.options.synthOptions;
+        var playbackOptions = that.options.playbackOptions;
+
+        var noteDurationConfig = floe.chartAuthoring.sonifier.applyZoomToDurationConfig(synthOptions.noteDurationConfig,playbackOptions.zoom),
+            noteValueConfig = synthOptions.noteValueConfig,
+            envelopeDurationConfig = floe.chartAuthoring.sonifier.applyZoomToDurationConfig(synthOptions.envelopeDurationConfig,playbackOptions.zoom),
+            envelopeValuesConfig = synthOptions.envelopeValuesConfig;
+
+        fluid.each(dataSet, function(item) {
+            if(item.value !== null) {
+                var percentage = Number(floe.chartAuthoring.percentage.calculate(item.value, totalValue).toFixed(0));
+                var units = floe.chartAuthoring.sonifier.getSonificationUnits(percentage, unitDivisor);
+                var noteDurations = floe.chartAuthoring.sonifier.getSonificationNoteDurations(units, unitDivisor, noteDurationConfig);
+                var noteValues = floe.chartAuthoring.sonifier.getSonificationNoteValues(units, unitDivisor, noteValueConfig);
+                var envelopeDurations = floe.chartAuthoring.sonifier.getSonificationEnvelopeDurations(units, unitDivisor, envelopeDurationConfig);
+                var envelopeValues = floe.chartAuthoring.sonifier.getSonificationEnvelopeValues(envelopeDurations, envelopeDurationConfig, envelopeValuesConfig);
+                var d = {
+                    id: item.id,
+                    label: item.label,
+                    value: item.value,
+                    percentage: percentage,
+                    units: units,
+                    notes: {
+                        durations: noteDurations,
+                        values: noteValues
+                    },
+                    envelope: {
+                        durations: envelopeDurations,
+                        values: envelopeValues
+                    }
+                };
+                sonificationData.push(d);
+            }
+
+        });
+
+        return sonificationData;
+    };
+
 
     floe.chartAuthoring.sonifier.getSonificationUnits = function(value, unitDivisor) {
         var numberDivisors = Math.floor(value / unitDivisor);
@@ -156,72 +209,6 @@ var flockingEnvironment = flock.init();
         });
 
         return zoomedNoteDurationConfig;
-
-    };
-
-    // Given an object in the style of floe.chartAuthoring.dataEntryPanel.model.dataEntries,
-    // convert it to an array of objects in the style used by the sonification components,
-    // maintaining object constancy by using the dataEntry object name as the key
-    floe.chartAuthoring.sonifier.dataEntriesToSonificationData = function(that) {
-        var unitDivisor = 10;
-        var sonificationData = floe.chartAuthoring.sonifier.divisorBasedSonificationStrategy(that, unitDivisor);
-        sonificationData.sort(floe.chartAuthoring.pieChart.legend.sortAscending);
-        that.model.sonifiedData = sonificationData;
-        that.events.onDataSonified.fire();
-    };
-
-    floe.chartAuthoring.sonifier.divisorBasedSonificationStrategy = function(that, unitDivisor) {
-        var dataSet = that.model.dataSet;
-        var totalValue = that.model.total.value;
-        var sonificationData = [];
-        var synthOptions = that.options.synthOptions;
-        var playbackOptions = that.options.playbackOptions;
-
-        var noteDurationConfig = floe.chartAuthoring.sonifier.applyZoomToDurationConfig(synthOptions.noteDurationConfig,playbackOptions.zoom),
-            noteValueConfig = synthOptions.noteValueConfig,
-            envelopeDurationConfig = floe.chartAuthoring.sonifier.applyZoomToDurationConfig(synthOptions.envelopeDurationConfig,playbackOptions.zoom),
-            envelopeValuesConfig = synthOptions.envelopeValuesConfig;
-
-        fluid.each(dataSet, function(item) {
-            if(item.value !== null) {
-                var percentage = Number(floe.chartAuthoring.percentage.calculate(item.value, totalValue).toFixed(0));
-                var units = floe.chartAuthoring.sonifier.getSonificationUnits(percentage, unitDivisor);
-                var noteDurations = floe.chartAuthoring.sonifier.getSonificationNoteDurations(units, unitDivisor, noteDurationConfig);
-                var noteValues = floe.chartAuthoring.sonifier.getSonificationNoteValues(units, unitDivisor, noteValueConfig);
-                var envelopeDurations = floe.chartAuthoring.sonifier.getSonificationEnvelopeDurations(units, unitDivisor, envelopeDurationConfig);
-                var envelopeValues = floe.chartAuthoring.sonifier.getSonificationEnvelopeValues(envelopeDurations, envelopeDurationConfig, envelopeValuesConfig);
-                var d = {
-                    id: item.id,
-                    label: item.label,
-                    value: item.value,
-                    percentage: percentage,
-                    units: units,
-                    notes: {
-                        durations: noteDurations,
-                        values: noteValues
-                    },
-                    envelope: {
-                        durations: envelopeDurations,
-                        values: envelopeValues
-                    }
-                };
-                sonificationData.push(d);
-            }
-
-        });
-
-        return sonificationData;
-    };
-
-
-    // Given an array containing durations, accumulate them and return the
-    // total duration
-    floe.chartAuthoring.sonifier.getTotalDuration = function (durationsArray) {
-        var totalDuration = 0;
-        fluid.each(durationsArray, function(currentDuration) {
-            totalDuration = totalDuration+currentDuration;
-        });
-        return totalDuration;
     };
 
     floe.chartAuthoring.sonifier.startSonification = function(that) {
@@ -321,6 +308,16 @@ var flockingEnvironment = flock.init();
 
         synth.midiNoteSynth.applier.change("inputs.noteSequencer", data.notes);
         synth.pianoEnvelopeSynth.applier.change("inputs.envelopeSequencer", data.envelope);
+    };
+
+    // Given an array containing durations, accumulate them and return the
+    // total duration
+    floe.chartAuthoring.sonifier.getTotalDuration = function (durationsArray) {
+        var totalDuration = 0;
+        fluid.each(durationsArray, function(currentDuration) {
+            totalDuration = totalDuration+currentDuration;
+        });
+        return totalDuration;
     };
 
 })(jQuery, fluid);
