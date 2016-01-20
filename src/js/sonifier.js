@@ -163,10 +163,17 @@ var flockingEnvironment = flock.init();
     // convert it to an array of objects in the style used by the sonification components,
     // maintaining object constancy by using the dataEntry object name as the key
     floe.chartAuthoring.sonifier.dataEntriesToSonificationData = function(that) {
+        var unitDivisor = 10;
+        var sonificationData = floe.chartAuthoring.sonifier.divisorBasedSonificationStrategy(that, unitDivisor);
+        sonificationData.sort(floe.chartAuthoring.pieChart.legend.sortAscending);
+        that.model.sonifiedData = sonificationData;
+        that.events.onDataSonified.fire();
+    };
+
+    floe.chartAuthoring.sonifier.divisorBasedSonificationStrategy = function(that, unitDivisor) {
         var dataSet = that.model.dataSet;
         var totalValue = that.model.total.value;
         var sonificationData = [];
-        var unitDivisor = 10;
         var synthOptions = that.options.synthOptions;
         var playbackOptions = that.options.playbackOptions;
 
@@ -202,9 +209,8 @@ var flockingEnvironment = flock.init();
             }
 
         });
-        sonificationData.sort(floe.chartAuthoring.pieChart.legend.sortAscending);
-        that.model.sonifiedData = sonificationData;
-        that.events.onDataSonified.fire();
+
+        return sonificationData;
     };
 
 
