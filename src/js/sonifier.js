@@ -59,7 +59,8 @@ var flockingEnvironment = flock.init();
             // Additional gap of silence between individual data points when
             // playing a sequence
             gap: 1,
-            // Zoom factor - affects the durationConfig of the synth
+            // Zoom factor - affects the durationConfigs of the synth when
+            // played. Higher numbers = slower playback
             zoom: 1
         },
         invokers: {
@@ -147,6 +148,17 @@ var flockingEnvironment = flock.init();
         return envelopeValues;
     };
 
+    // Get the synthOptions with a zoom factor applied to the durations
+    floe.chartAuthoring.sonifier.applyZoomToDurationConfig = function(durationConfig, zoom) {
+
+        var zoomedNoteDurationConfig = fluid.transform(durationConfig, function (duration) {
+            return duration * zoom;
+        });
+
+        return zoomedNoteDurationConfig;
+
+    };
+
     // Given an object in the style of floe.chartAuthoring.dataEntryPanel.model.dataEntries,
     // convert it to an array of objects in the style used by the sonification components,
     // maintaining object constancy by using the dataEntry object name as the key
@@ -155,10 +167,13 @@ var flockingEnvironment = flock.init();
         var totalValue = that.model.total.value;
         var sonificationData = [];
         var unitDivisor = 10;
-        var noteDurationConfig = that.options.synthOptions.noteDurationConfig,
-            noteValueConfig = that.options.synthOptions.noteValueConfig,
-            envelopeDurationConfig = that.options.synthOptions.envelopeDurationConfig,
-            envelopeValuesConfig = that.options.synthOptions.envelopeValuesConfig;
+        var synthOptions = that.options.synthOptions;
+        var playbackOptions = that.options.playbackOptions;
+
+        var noteDurationConfig = floe.chartAuthoring.sonifier.applyZoomToDurationConfig(synthOptions.noteDurationConfig,playbackOptions.zoom),
+            noteValueConfig = synthOptions.noteValueConfig,
+            envelopeDurationConfig = floe.chartAuthoring.sonifier.applyZoomToDurationConfig(synthOptions.envelopeDurationConfig,playbackOptions.zoom),
+            envelopeValuesConfig = synthOptions.envelopeValuesConfig;
 
         fluid.each(dataSet, function(item) {
             if(item.value !== null) {
