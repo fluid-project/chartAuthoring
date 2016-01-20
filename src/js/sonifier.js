@@ -211,6 +211,12 @@ var flockingEnvironment = flock.init();
         return zoomedNoteDurationConfig;
     };
 
+    // Kicks off a sonification play. Specifically it:
+    // - creates the needed Flocking synth
+    // - starts the Flocking environment
+    // - calls the initial playDataset function that's used recursively to
+    // execute a sonification
+
     floe.chartAuthoring.sonifier.startSonification = function(that) {
         // console.log("floe.chartAuthoring.sonifier.playFunctionalSonification");
         var sonifiedData = that.model.sonifiedData;
