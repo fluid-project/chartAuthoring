@@ -78,7 +78,7 @@ var flockingEnvironment = flock.init();
         playbackOptions: {
             // Additional gap of silence between individual data points when
             // playing a sequence
-            gap: 1,
+            gapDuration: 1,
             // Zoom factor - affects the durationConfigs of the synth when
             // played. Higher numbers = slower playback
             zoom: 1
@@ -250,8 +250,6 @@ var flockingEnvironment = flock.init();
         // Copy the sonification definition into the queue
         that.applier.change("sonificationQueue",sonifiedData);
 
-        var gap = that.options.playbackOptions.gap;
-
         flockingEnvironment.start();
 
         fluid.defaults("floe.chartAuthoring.dataPianoBand", {
@@ -272,7 +270,7 @@ var flockingEnvironment = flock.init();
         // Add the synth to the model
         that.applier.change("synth", dataPianoBand);
 
-        floe.chartAuthoring.sonifier.playDataset(0, gap, true, that);
+        floe.chartAuthoring.sonifier.playDataset(0, true, that);
     };
 
     // Passed a sonified dataset, this function + playDataAndQueueNext acts recursively
@@ -291,7 +289,9 @@ var flockingEnvironment = flock.init();
     // when a sonification completes
     // - we can fire an event when a voice label read completes, but can't know
     // in advance how long it will take to read the label
-    floe.chartAuthoring.sonifier.playDataset = function(delay, gapDuration, noGap, that) {
+    floe.chartAuthoring.sonifier.playDataset = function(delay, noGap, that) {
+
+        var gapDuration = that.options.playbackOptions.gapDuration;
 
         // console.log("floe.chartAuthoring.sonifier.playDataset");
 
@@ -338,7 +338,7 @@ var flockingEnvironment = flock.init();
         // console.log("Voice label for " + data.label + " finshed");
         var noteDuration = floe.chartAuthoring.sonifier.getTotalDuration(data.notes.durations);
         if(remainingDataset.length > 0) {
-            floe.chartAuthoring.sonifier.playDataset(noteDuration, gap, false, that);
+            floe.chartAuthoring.sonifier.playDataset(noteDuration, false, that);
         } else {
             // Stop the flocking environment after the last sonification is
             // played
