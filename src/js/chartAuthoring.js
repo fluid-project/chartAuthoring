@@ -164,7 +164,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         },
         listeners: {
             "onToolReady.addAriaConnections": "floe.chartAuthoring.addAriaConnections",
-            "onToolReady.addSonificationListenrs": "floe.chartAuthoring.addSonificationControlListeners"
+            "onToolReady.addSonificationListeners": "floe.chartAuthoring.addSonificationControlListeners"
         },
         invokers:{
             "updateDataEntryPanel": {
