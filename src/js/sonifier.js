@@ -47,6 +47,7 @@ var flockingEnvironment = flock.init();
             //     value: number,
             //     percentage: number
             // }
+            isPlaying: false
         },
         modelListeners: {
             dataSet: {
@@ -249,33 +250,36 @@ var flockingEnvironment = flock.init();
     // execute a sonification
 
     floe.chartAuthoring.sonifier.startSonification = function(that) {
-        // console.log("floe.chartAuthoring.sonifier.startSonification");
-        var sonifiedData = that.model.sonifiedData;
+        if(!that.model.isPlaying) {
+            // console.log("floe.chartAuthoring.sonifier.startSonification");
+            var sonifiedData = that.model.sonifiedData;
 
-        // Copy the sonification definition into the queue
-        that.applier.change("sonificationQueue",sonifiedData);
+            // Copy the sonification definition into the queue
+            that.applier.change("sonificationQueue",sonifiedData);
 
-        flockingEnvironment.start();
+            flockingEnvironment.start();
 
-        fluid.defaults("floe.chartAuthoring.dataPianoBand", {
-            gradeNames: ["floe.chartAuthoring.electricPianoBand"],
+            fluid.defaults("floe.chartAuthoring.dataPianoBand", {
+                gradeNames: ["floe.chartAuthoring.electricPianoBand"],
 
-            components: {
-                scheduler: {
-                    type: "flock.scheduler.async",
-                    options: {
-                        synthContext: "floe.chartAuthoring.electricPianoBand"
+                components: {
+                    scheduler: {
+                        type: "flock.scheduler.async",
+                        options: {
+                            synthContext: "floe.chartAuthoring.electricPianoBand"
+                        }
                     }
                 }
-            }
-        });
+            });
 
-        var dataPianoBand = floe.chartAuthoring.dataPianoBand();
+            var dataPianoBand = floe.chartAuthoring.dataPianoBand();
 
-        // Add the synth to the model
-        that.applier.change("synth", dataPianoBand);
+            // Add the synth to the model
+            that.applier.change("synth", dataPianoBand);
 
-        that.beginSonificationQueue();
+            that.applier.change("isPlaying", true);
+            that.beginSonificationQueue();
+        }
     };
 
     // Passed a sonified dataset, this function + playDataAndQueueNext acts recursively
@@ -358,26 +362,28 @@ var flockingEnvironment = flock.init();
 
     floe.chartAuthoring.sonifier.stopSonification = function(that) {
         // console.log("floe.chartAuthoring.sonifier.stopSonification");
-
-        try {
-            // Flush the sonification queue
-            that.applier.change("sonificationQueue",[]);
-            // Flush any outstanding flocking schedulers
-            that.model.synth.scheduler.clearAll();
-            // Pause the synth
-            that.model.synth.pause();
-            // Stop any queued voices
-            that.textToSpeech.cancel();
-        } catch(e) {
-            // console.log("Error");
-            // console.log(e);
-        } finally {
-            // Always stop the flocking environment
-            flockingEnvironment.stop();
-            // Reset the bus manager
-            flockingEnvironment.busManager.reset();
-            // Always fire the stop event
-            that.events.onStopSonification.fire();
+        if(that.model.isPlaying) {
+            try {
+                // Flush the sonification queue
+                that.applier.change("sonificationQueue",[]);
+                // Flush any outstanding flocking schedulers
+                that.model.synth.scheduler.clearAll();
+                // Pause the synth
+                that.model.synth.pause();
+                // Stop any queued voices
+                that.textToSpeech.cancel();
+            } catch(e) {
+                // console.log("Error");
+                // console.log(e);
+            } finally {
+                // Always stop the flocking environment
+                flockingEnvironment.stop();
+                // Reset the bus manager
+                flockingEnvironment.busManager.reset();
+                // Always fire the stop event
+                that.events.onStopSonification.fire();
+                that.applier.change("isPlaying", false);
+            }
         }
 
     };
