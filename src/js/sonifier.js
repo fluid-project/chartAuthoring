@@ -26,14 +26,15 @@ var flockingEnvironment = flock.init();
                         utteranceOpts: {
                             "lang": "en-US"
                         }
+                    },
+                    listeners: {
+                        "{that}.events.onStop": {
+                            funcName: "floe.chartAuthoring.sonifier.playDataAndQueueNext",
+                            args: "{floe.chartAuthoring.sonifier}"
+                        }
                     }
-                }//,
-                //  listeners: {
-                //      "{that}.events.onStop": {
-                //          funcName: "floe.chartAuthoring.sonifier.playDataAndQueueNext",
-                //          args: [synth,currentData,clonedDataset, gapDuration]
-                //      }
-                //  }
+                }
+
             }
         },
         model: {
@@ -299,26 +300,9 @@ var flockingEnvironment = flock.init();
 
         var synth = that.model.synth;
 
-        var currentData = sonificationQueue.shift();
+        var currentData = sonificationQueue[0];
 
-        var textToSpeech = fluid.textToSpeech({
-            model: {
-                utteranceOpts: {
-                    lang: "en-US"
-                }
-            },
-            listeners: {
-                // This listener fires after TTS for the voice label is complete,
-                // plays the sonified data itself, and queues the next voice
-                // label / sonification event
-                "{that}.events.onStop": {
-                    funcName: "floe.chartAuthoring.sonifier.playDataAndQueueNext",
-                    args: [currentData, gapDuration, that]
-                }
-            }
-        });
-
-        // var textToSpeech = that.textToSpeech;
+        var textToSpeech = that.textToSpeech;
         // console.log(textToSpeech);
 
         // Schedule the next voice label, accounting for both the variable-length
@@ -334,10 +318,10 @@ var flockingEnvironment = flock.init();
 
     // Recursion function called from floe.chartAuthoring.sonifier.playDataset
 
-    floe.chartAuthoring.sonifier.playDataAndQueueNext = function(data, gap, that) {
-
+    floe.chartAuthoring.sonifier.playDataAndQueueNext = function(that) {
         var synth = that.model.synth;
         var sonificationQueue = that.model.sonificationQueue;
+        var data = sonificationQueue.shift();
 
         // console.log("Voice label for " + data.label + " finshed");
         var noteDuration = floe.chartAuthoring.sonifier.getTotalDuration(data.notes.durations);
