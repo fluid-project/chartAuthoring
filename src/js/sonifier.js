@@ -42,6 +42,7 @@ var flockingEnvironment = flock.init();
             // sonifiedData:
             // sonificationQueue:
             // synth:
+            // currentlyPlayingData:
             // Supplied by relaying in floe.chartAuthoring.totalRelaying grade
             // total: {
             //     value: number,
@@ -320,6 +321,7 @@ var flockingEnvironment = flock.init();
         var pause = noGap? delay : delay+gapDuration;
         if(fluid.textToSpeech.isSupported()) {
             synth.scheduler.once(pause, function() {
+                that.applier.change("currentlyPlayingData", currentData);
                 textToSpeech.queueSpeech(currentData.label);
             });
         }
@@ -386,6 +388,7 @@ var flockingEnvironment = flock.init();
                 // Always fire the stop event
                 that.events.onStopSonification.fire();
                 that.applier.change("isPlaying", false);
+                that.applier.change("currentlyPlayingData", null);
             }
         }
 
