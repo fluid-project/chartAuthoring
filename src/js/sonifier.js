@@ -313,7 +313,7 @@ var flockingEnvironment = flock.init();
                 // label / sonification event
                 "{that}.events.onStop": {
                     funcName: "floe.chartAuthoring.sonifier.playDataAndQueueNext",
-                    args: [currentData,sonificationQueue, gapDuration, that]
+                    args: [currentData, gapDuration, that]
                 }
             }
         });
@@ -334,13 +334,14 @@ var flockingEnvironment = flock.init();
 
     // Recursion function called from floe.chartAuthoring.sonifier.playDataset
 
-    floe.chartAuthoring.sonifier.playDataAndQueueNext = function(data, remainingDataset, gap, that) {
+    floe.chartAuthoring.sonifier.playDataAndQueueNext = function(data, gap, that) {
 
         var synth = that.model.synth;
-        
+        var sonificationQueue = that.model.sonificationQueue;
+
         // console.log("Voice label for " + data.label + " finshed");
         var noteDuration = floe.chartAuthoring.sonifier.getTotalDuration(data.notes.durations);
-        if(remainingDataset.length > 0) {
+        if(sonificationQueue.length > 0) {
             floe.chartAuthoring.sonifier.playDataset(noteDuration, false, that);
         } else {
             // Stop the flocking environment after the last sonification is
