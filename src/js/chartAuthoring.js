@@ -271,7 +271,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         });
 
         stopButton.click(function(e) {
-            that.chartAuthoringInterface.sonifier.pauseSonification();
+            that.chartAuthoringInterface.sonifier.stopSonification();
             e.preventDefault();
         });
 
