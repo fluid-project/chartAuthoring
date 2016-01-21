@@ -96,6 +96,10 @@ var flockingEnvironment = flock.init();
             "stopSonification": {
                 funcName: "floe.chartAuthoring.sonifier.stopSonification",
                 args: "{that}"
+            },
+            "beginSonificationQueue": {
+                funcName: "floe.chartAuthoring.sonifier.processSonificationQueue",
+                args: [0, true, "{that}"]
             }
         },
         events: {
@@ -271,7 +275,7 @@ var flockingEnvironment = flock.init();
         // Add the synth to the model
         that.applier.change("synth", dataPianoBand);
 
-        floe.chartAuthoring.sonifier.processSonificationQueue(0, true, that);
+        that.beginSonificationQueue();
     };
 
     // Passed a sonified dataset, this function + playDataAndQueueNext acts recursively
