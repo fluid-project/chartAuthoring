@@ -317,9 +317,11 @@ var flockingEnvironment = flock.init();
 
         // We shouldn't use the gap if this is the first call for a dataset
         var pause = noGap? delay : delay+gapDuration;
-        synth.scheduler.once(pause, function() {
-            textToSpeech.queueSpeech(currentData.label);
-        });
+        if(fluid.textToSpeech.isSupported()) {
+            synth.scheduler.once(pause, function() {
+                textToSpeech.queueSpeech(currentData.label);
+            });
+        }
     };
 
     // Recursion function called from floe.chartAuthoring.sonifier.processSonificationQueue
