@@ -271,7 +271,7 @@ var flockingEnvironment = flock.init();
         // Add the synth to the model
         that.applier.change("synth", dataPianoBand);
 
-        floe.chartAuthoring.sonifier.playDataset(0, true, that);
+        floe.chartAuthoring.sonifier.processSonificationQueue(0, true, that);
     };
 
     // Passed a sonified dataset, this function + playDataAndQueueNext acts recursively
@@ -290,11 +290,9 @@ var flockingEnvironment = flock.init();
     // when a sonification completes
     // - we can fire an event when a voice label read completes, but can't know
     // in advance how long it will take to read the label
-    floe.chartAuthoring.sonifier.playDataset = function(delay, noGap, that) {
+    floe.chartAuthoring.sonifier.processSonificationQueue = function(delay, noGap, that) {
 
         var gapDuration = that.options.playbackOptions.gapDuration;
-
-        // console.log("floe.chartAuthoring.sonifier.playDataset");
 
         var sonificationQueue = that.model.sonificationQueue;
 
@@ -316,17 +314,20 @@ var flockingEnvironment = flock.init();
         });
     };
 
-    // Recursion function called from floe.chartAuthoring.sonifier.playDataset
+    // Recursion function called from floe.chartAuthoring.sonifier.processSonificationQueue
 
     floe.chartAuthoring.sonifier.playDataAndQueueNext = function(that) {
+
         var synth = that.model.synth;
         var sonificationQueue = that.model.sonificationQueue;
         var data = sonificationQueue.shift();
 
-        // console.log("Voice label for " + data.label + " finshed");
-        var noteDuration = floe.chartAuthoring.sonifier.getTotalDuration(data.notes.durations);
+        // This prevents an error being thrown if a stop has been called but
+        // this function is queued or in the midst of execution
+        var noteDuration = (data !== undefined) ? floe.chartAuthoring.sonifier.getTotalDuration(data.notes.durations) : 0;
+
         if(sonificationQueue.length > 0) {
-            floe.chartAuthoring.sonifier.playDataset(noteDuration, false, that);
+            floe.chartAuthoring.sonifier.processSonificationQueue(noteDuration, false, that);
         } else {
             // Stop the flocking environment after the last sonification is
             // played
@@ -350,11 +351,16 @@ var flockingEnvironment = flock.init();
     };
 
     floe.chartAuthoring.sonifier.stopSonification = function(that) {
+        // Flush the sonification queue
+        that.applier.change("sonificationQueue",[]);
+        // Flush any outstanding flocking schedulers
+        that.model.synth.scheduler.clearAll();
+        // Stop any queued voices
+        that.textToSpeech.cancel();
+        // Stop the flocking environment
+        flockingEnvironment.stop();
         // Fire the stop event
         that.events.onStopSonification.fire();
-        // Stop any queued voices
-        // Stop the synth
-        flockingEnvironment.stop();
     };
 
 })(jQuery, fluid);
