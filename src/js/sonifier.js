@@ -249,7 +249,7 @@ var flockingEnvironment = flock.init();
     // execute a sonification
 
     floe.chartAuthoring.sonifier.startSonification = function(that) {
-        // console.log("floe.chartAuthoring.sonifier.playFunctionalSonification");
+        // console.log("floe.chartAuthoring.sonifier.startSonification");
         var sonifiedData = that.model.sonifiedData;
 
         // Copy the sonification definition into the queue
@@ -295,7 +295,7 @@ var flockingEnvironment = flock.init();
     // - we can fire an event when a voice label read completes, but can't know
     // in advance how long it will take to read the label
     floe.chartAuthoring.sonifier.processSonificationQueue = function(delay, noGap, that) {
-
+        // console.log("floe.chartAuthoring.sonifier.processSonificationQueue");
         var gapDuration = that.options.playbackOptions.gapDuration;
 
         var sonificationQueue = that.model.sonificationQueue;
@@ -321,6 +321,7 @@ var flockingEnvironment = flock.init();
     // Recursion function called from floe.chartAuthoring.sonifier.processSonificationQueue
 
     floe.chartAuthoring.sonifier.playDataAndQueueNext = function(that) {
+        // console.log("floe.chartAuthoring.sonifier.playDataAndQueueNext");
 
         var synth = that.model.synth;
         var sonificationQueue = that.model.sonificationQueue;
@@ -336,12 +337,13 @@ var flockingEnvironment = flock.init();
             // Stop the flocking environment after the last sonification is
             // played
             synth.scheduler.once(noteDuration, function() {
-                flockingEnvironment.stop();
+                that.stopSonification();
             });
         }
-
-        synth.midiNoteSynth.applier.change("inputs.noteSequencer", data.notes);
-        synth.pianoEnvelopeSynth.applier.change("inputs.envelopeSequencer", data.envelope);
+        if(data !== undefined) {
+            synth.midiNoteSynth.applier.change("inputs.noteSequencer", data.notes);
+            synth.pianoEnvelopeSynth.applier.change("inputs.envelopeSequencer", data.envelope);
+        }
     };
 
     // Given an array containing durations, accumulate them and return the
@@ -355,16 +357,29 @@ var flockingEnvironment = flock.init();
     };
 
     floe.chartAuthoring.sonifier.stopSonification = function(that) {
-        // Flush the sonification queue
-        that.applier.change("sonificationQueue",[]);
-        // Flush any outstanding flocking schedulers
-        that.model.synth.scheduler.clearAll();
-        // Stop any queued voices
-        that.textToSpeech.cancel();
-        // Stop the flocking environment
-        flockingEnvironment.stop();
-        // Fire the stop event
-        that.events.onStopSonification.fire();
+        // console.log("floe.chartAuthoring.sonifier.stopSonification");
+
+        try {
+            // Flush the sonification queue
+            that.applier.change("sonificationQueue",[]);
+            // Flush any outstanding flocking schedulers
+            that.model.synth.scheduler.clearAll();
+            // Pause the synth
+            that.model.synth.pause();
+            // Stop any queued voices
+            that.textToSpeech.cancel();
+        } catch(e) {
+            // console.log("Error");
+            // console.log(e);
+        } finally {
+            // Always stop the flocking environment
+            flockingEnvironment.stop();
+            // Reset the bus manager
+            flockingEnvironment.busManager.reset();
+            // Always fire the stop event
+            that.events.onStopSonification.fire();
+        }
+
     };
 
 })(jQuery, fluid);
