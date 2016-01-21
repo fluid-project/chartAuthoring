@@ -247,7 +247,7 @@ var flockingEnvironment = flock.init();
         // console.log("floe.chartAuthoring.sonifier.playFunctionalSonification");
         var sonifiedData = that.model.sonifiedData;
 
-        // Copy the sonification data into the queue
+        // Copy the sonification definition into the queue
         that.applier.change("sonificationQueue",sonifiedData);
 
         var gap = that.options.playbackOptions.gap;
@@ -272,7 +272,7 @@ var flockingEnvironment = flock.init();
         // Add the synth to the model
         that.applier.change("synth", dataPianoBand);
 
-        floe.chartAuthoring.sonifier.playDataset(that.model.sonificationQueue, 0, gap, true, that);
+        floe.chartAuthoring.sonifier.playDataset(0, gap, true, that);
     };
 
     // Passed a sonified dataset, this function + playDataAndQueueNext acts recursively
@@ -291,19 +291,15 @@ var flockingEnvironment = flock.init();
     // when a sonification completes
     // - we can fire an event when a voice label read completes, but can't know
     // in advance how long it will take to read the label
-    floe.chartAuthoring.sonifier.playDataset = function(dataset, delay, gapDuration, noGap, that) {
+    floe.chartAuthoring.sonifier.playDataset = function(delay, gapDuration, noGap, that) {
 
         // console.log("floe.chartAuthoring.sonifier.playDataset");
 
-        // The nature of this function and the use of Array.shift() means that it
-        // is destructive to whatever sonified dataset is passed - therefore, we
-        // make a copy before taking any action so we don't affect the one held
-        // on the component
-        var clonedDataset = dataset;
+        var sonificationQueue = that.model.sonificationQueue;
 
         var synth = that.model.synth;
 
-        var currentData = clonedDataset.shift();
+        var currentData = sonificationQueue.shift();
 
         var textToSpeech = fluid.textToSpeech({
             model: {
@@ -317,7 +313,7 @@ var flockingEnvironment = flock.init();
                 // label / sonification event
                 "{that}.events.onStop": {
                     funcName: "floe.chartAuthoring.sonifier.playDataAndQueueNext",
-                    args: [synth,currentData,clonedDataset, gapDuration, that]
+                    args: [synth,currentData,sonificationQueue, gapDuration, that]
                 }
             }
         });
@@ -342,7 +338,7 @@ var flockingEnvironment = flock.init();
         // console.log("Voice label for " + data.label + " finshed");
         var noteDuration = floe.chartAuthoring.sonifier.getTotalDuration(data.notes.durations);
         if(remainingDataset.length > 0) {
-            floe.chartAuthoring.sonifier.playDataset(remainingDataset, noteDuration, gap, false, that);
+            floe.chartAuthoring.sonifier.playDataset(noteDuration, gap, false, that);
         } else {
             // Stop the flocking environment after the last sonification is
             // played
