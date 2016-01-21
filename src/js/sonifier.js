@@ -124,6 +124,7 @@ var flockingEnvironment = flock.init();
 
     floe.chartAuthoring.sonifier.unitDivisorSonificationStrategy = function(that, unitDivisor) {
         var dataSet = that.model.dataSet;
+
         var totalValue = that.model.total.value;
         var sonificationData = [];
         var synthOptions = that.options.synthOptions;
@@ -134,7 +135,7 @@ var flockingEnvironment = flock.init();
             envelopeDurationConfig = floe.chartAuthoring.sonifier.applyZoomToDurationConfig(synthOptions.envelopeDurationConfig,playbackOptions.zoom),
             envelopeValuesConfig = synthOptions.envelopeValuesConfig;
 
-        fluid.each(dataSet, function(item) {
+        fluid.each(dataSet, function(item,key) {
             if(item.value !== null) {
                 var percentage = Number(floe.chartAuthoring.percentage.calculate(item.value, totalValue).toFixed(0));
                 var units = floe.chartAuthoring.sonifier.getSonificationUnits(percentage, unitDivisor);
@@ -143,7 +144,7 @@ var flockingEnvironment = flock.init();
                 var envelopeDurations = floe.chartAuthoring.sonifier.getSonificationEnvelopeDurations(units, unitDivisor, envelopeDurationConfig);
                 var envelopeValues = floe.chartAuthoring.sonifier.getSonificationEnvelopeValues(envelopeDurations, envelopeDurationConfig, envelopeValuesConfig);
                 var d = {
-                    id: item.id,
+                    id: key,
                     label: item.label,
                     value: item.value,
                     percentage: percentage,
