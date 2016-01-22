@@ -69,38 +69,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         }
     ];
 
-    floe.tests.chartAuthoring.sonificationData =
-    [
-        {
-            id: "entry1",
-            units: [10,10,10,10,10,10,1,1,1,1,1,1,1],
-            envelope: {
-                durations: [0.125, 0.25, 0.125, 0.25, 0.125, 0.25, 0.125, 0.25, 0.125, 0.25, 0.125, 0.25, 0.04166667, 0.0625, 0.04166667, 0.0625, 0.04166667, 0.0625, 0.04166667, 0.0625, 0.04166667, 0.0625, 0.04166667, 0.0625, 0.04166667, 0.0625],
-                values: [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0]
-            },
-            notes: {
-                durations: [0.375, 0.375, 0.375, 0.375, 0.375, 0.375, 0.16666667, 0.16666667, 0.16666667, 0.16666667, 0.16666667, 0.16666667, 0.16666667],
-                values: [91, 91, 91, 91, 91, 91, 90, 90, 90, 90, 90, 90, 90]
-            },
-            value: 67,
-            label: "Label One"
-        },
-        {
-            id: "entry2",
-            units: [10,10,10,1,1,1],
-            envelope: {
-                durations: [0.125, 0.25, 0.125, 0.25, 0.125, 0.25, 0.04166667, 0.0625, 0.04166667, 0.0625, 0.04166667, 0.0625],
-                values: [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0]
-            },
-            notes: {
-                durations: [0.375, 0.375, 0.375, 0.16666667, 0.16666667, 0.16666667],
-                values: [91, 91, 91, 90, 90, 90]
-            },
-            value: 33,
-            label: "Label Two"
-        }
-    ];
-
     fluid.defaults("floe.tests.chartAuthoringTest", {
         gradeNames: ["fluid.test.testEnvironment"],
         components: {
