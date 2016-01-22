@@ -355,8 +355,8 @@ var flockingEnvironment = flock.init();
         }
     };
 
-    // Given an array containing durations, accumulate them and return the
-    // total duration
+    // Given an array containing indiividual durations, accumulate them and
+    // return the total duration
     floe.chartAuthoring.sonifier.getTotalDuration = function (durationsArray) {
         var sum = function(duration, runningTotal) {
             return duration+runningTotal;
