@@ -254,10 +254,6 @@ var flockingEnvironment = flock.init();
     floe.chartAuthoring.sonifier.startSonification = function(that) {
         if(!that.model.isPlaying) {
             // console.log("floe.chartAuthoring.sonifier.startSonification");
-            var sonifiedData = that.model.sonifiedData;
-
-            // Copy the sonification definition into the queue
-            that.applier.change("sonificationQueue",sonifiedData);
 
             flockingEnvironment.start();
 
@@ -279,7 +275,10 @@ var flockingEnvironment = flock.init();
             // Add the synth to the model
             that.applier.change("synth", dataPianoBand);
 
-            that.applier.change("isPlaying", true);
+            var sonifiedData = that.model.sonifiedData;
+            // Copy the sonification definition into the queue
+            that.applier.change("sonificationQueue",sonifiedData);
+
             that.beginSonificationQueue();
         }
     };
@@ -301,6 +300,7 @@ var flockingEnvironment = flock.init();
     // - we can fire an event when a voice label read completes, but can't know
     // in advance how long it will take to read the label
     floe.chartAuthoring.sonifier.processSonificationQueue = function(delay, noGap, that) {
+        that.applier.change("isPlaying", true);
         // console.log("floe.chartAuthoring.sonifier.processSonificationQueue");
         var gapDuration = that.options.playbackOptions.gapDuration;
 
@@ -343,7 +343,7 @@ var flockingEnvironment = flock.init();
         if(sonificationQueue.length > 0) {
             floe.chartAuthoring.sonifier.processSonificationQueue(noteDuration, false, that);
         } else {
-            // Stop the flocking environment after the last sonification is
+            // Schedule to stop the sonification after the last sonification is
             // played
             synth.scheduler.once(noteDuration, function() {
                 that.stopSonification();
@@ -358,11 +358,10 @@ var flockingEnvironment = flock.init();
     // Given an array containing durations, accumulate them and return the
     // total duration
     floe.chartAuthoring.sonifier.getTotalDuration = function (durationsArray) {
-        var totalDuration = 0;
-        fluid.each(durationsArray, function(currentDuration) {
-            totalDuration = totalDuration+currentDuration;
-        });
-        return totalDuration;
+        var sum = function(duration, runningTotal) {
+            return duration+runningTotal;
+        };
+        return fluid.accumulate(durationsArray, sum, 0);
     };
 
     floe.chartAuthoring.sonifier.stopSonification = function(that) {
