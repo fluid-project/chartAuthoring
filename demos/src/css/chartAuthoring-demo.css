@@ -101,6 +101,10 @@ body {
     min-height: 5em;
 }
 
+.floe-ca-pieChart-legend-table {
+    border-collapse:collapse;
+}
+
 .floe-ca-pieChart-legend-table thead th {
     color: #FFFFFF;
 }
@@ -113,10 +117,10 @@ body {
 
 .floe-ca-pieChart-legend-table-row {
     height: 2.5em;
+    border-top: 3px solid white;
 }
 
 .floe-ca-pieChart-legend-table-row td {
-    border: 3px solid white;
     padding: 0.5em;
 }
 
@@ -127,7 +131,7 @@ body {
 /* Style to highlight legend table rows when their datapoint is being played */
 
 .floe-ca-pieChart-legend-table-row.floe-ca-currently-playing {
-    background-color:yellow;
+    border: 3px solid black;
 }
 
 /* Data entry panel */
