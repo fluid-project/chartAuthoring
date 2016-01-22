@@ -229,31 +229,32 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var chartAuthoringInterface = that.chartAuthoringInterface;
         var legendTable, tbody, rows;
 
-        if(currentlyPlayingData === null && chartAuthoringInterface !== undefined) {
+        // The chart authoring interface is ready
+        if(chartAuthoringInterface !== undefined) {
             legendTable = chartAuthoringInterface.pieChart.legend.table;
             tbody = legendTable.selectAll("tbody");
             rows = tbody.selectAll("tr");
-            rows.classed("currently-playing",false);
-        }
 
-        if(currentlyPlayingData !== null) {
-            legendTable = chartAuthoringInterface.pieChart.legend.table;
-            tbody = legendTable.selectAll("tbody");
-            rows = tbody.selectAll("tr");
-            var activeRow = rows.filter(
-                function(d) {
-                    return d.id === currentlyPlayingData.id;
-                }
-            );
+            // Nothing is currently playing; remove any highlighted rows
+            if(currentlyPlayingData === null) {
+                rows.classed("currently-playing",false);
+            }
+            if(currentlyPlayingData !== null) {
+                var activeRow = rows.filter(
+                    function(d) {
+                        return d.id === currentlyPlayingData.id;
+                    }
+                );
 
-            var inactiveRows = rows.filter(
-                function(d) {
-                    return d.id !== currentlyPlayingData.id;
-                }
-            );
+                var inactiveRows = rows.filter(
+                    function(d) {
+                        return d.id !== currentlyPlayingData.id;
+                    }
+                );
 
-            activeRow.classed("currently-playing",true);
-            inactiveRows.classed("currently-playing",false);
+                activeRow.classed("currently-playing",true);
+                inactiveRows.classed("currently-playing",false);
+            }
         }
     };
 
