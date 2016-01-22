@@ -134,7 +134,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                             options: {
                                 model: {
                                     "dataSet": "{dataEntryPanel}.model.dataSet",
-                                    currentlyPlayingData: "{chartAuthoring}.model.currentlyPlayingData"
+                                    // We relay currentlyPlayingData and isPlaying to the overall component so that sonification play events can be used to change the rest of the interface
+                                    currentlyPlayingData: "{chartAuthoring}.model.currentlyPlayingData",
+                                    isPlaying:
+                                    "{chartAuthoring}.model.isPlaying"
 
                                 },
                                 listeners: {
@@ -227,22 +230,36 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.chartAuthoring.highlightPlayingData = function(that) {
         var currentlyPlayingData = that.model.currentlyPlayingData;
         var chartAuthoringInterface = that.chartAuthoringInterface;
-        var legendTable, tbody, rows;
+        var legendTable, tbody, rows, pie, slices;
 
         // The chart authoring interface is ready
         if(chartAuthoringInterface !== undefined) {
             legendTable = chartAuthoringInterface.pieChart.legend.table;
+
+            pie = chartAuthoringInterface.pieChart.pie;
+            slices = pie.paths;
+
             tbody = legendTable.selectAll("tbody");
             rows = tbody.selectAll("tr");
 
-            // Nothing is currently playing; remove any highlighted rows
+            // Nothing is currently playing; remove any highlighting
             if(currentlyPlayingData === null) {
                 rows.classed("currently-playing",false);
+                slices.classed("currently-playing",false);
             }
+
+            // Highlight pie chart slices / legend rows as they play
             if(currentlyPlayingData !== null) {
+
                 var activeRow = rows.filter(
                     function(d) {
                         return d.id === currentlyPlayingData.id;
+                    }
+                );
+
+                var activeSlice = slices.filter(
+                    function(d) {
+                        return d.data.id === currentlyPlayingData.id;
                     }
                 );
 
@@ -252,8 +269,16 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                     }
                 );
 
+                var inactiveSlices = slices.filter(
+                    function(d) {
+                        return d.data.id !== currentlyPlayingData.id;
+                    }
+                );
+
                 activeRow.classed("currently-playing",true);
+                activeSlice.classed("currently-playing",true);
                 inactiveRows.classed("currently-playing",false);
+                inactiveSlices.classed("currently-playing",false);
             }
         }
     };
