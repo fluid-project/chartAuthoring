@@ -20,23 +20,21 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     });
 
     floe.tests.chartAuthoring.dataSet =
-    [
-        {
-            id: "entry1",
+    {
+        entry1: {
             value: 100,
             label: "Label One"
         },
-        {
-            id: "entry2",
+        entry2: {
             value: 50,
             label: "Label Two"
         }
-    ];
+    };
 
     floe.tests.chartAuthoring.sonificationData =
     [
         {
-            id: 0,
+            id: "entry1",
             units: [10,10,10,10,10,10,1,1,1,1,1,1,1],
             envelope: {
                 durations: [1/8, 1/4, 1/8, 1/4, 1/8, 1/4, 1/8, 1/4, 1/8, 1/4, 1/8, 1/4, 1/24, 1/12, 1/24, 1/12, 1/24, 1/12, 1/24, 1/12, 1/24, 1/12, 1/24, 1/12, 1/24, 1/12],
@@ -51,7 +49,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             label: "Label One"
         },
         {
-            id: 1,
+            id: "entry2",
             units: [10,10,10,1,1,1],
             envelope: {
                 durations: [1/8, 1/4, 1/8, 1/4, 1/8, 1/4, 1/24, 1/12, 1/24, 1/12, 1/24, 1/12],
