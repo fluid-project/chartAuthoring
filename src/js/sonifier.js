@@ -53,6 +53,9 @@ var flockingEnvironment = flock.init();
         modelListeners: {
             dataSet: {
                 funcName: "{that}.sonifyData"
+            },
+            sonificationQueue: {
+                funcName: "{that}.beginSonificationQueue"
             }
         },
         // can override these to control synth behaviour
@@ -278,8 +281,6 @@ var flockingEnvironment = flock.init();
             var sonifiedData = that.model.sonifiedData;
             // Copy the sonification definition into the queue
             that.applier.change("sonificationQueue",sonifiedData);
-
-            that.beginSonificationQueue();
         }
     };
 
