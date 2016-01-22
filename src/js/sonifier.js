@@ -108,10 +108,13 @@ var flockingEnvironment = flock.init();
             }
         },
         events: {
-            // Fire at the end of a completed data sonification
-            onDataSonified: null,
-            // Fires when stopSonification is invokved
-            onStopSonification: null
+            // Fire at the end converting a data set to a sonification data
+            // set
+            onDataEntriesConvertedToSonificationData: null,
+            // Fires when a sonification play begins
+            onSonificationStarted: null,
+            // Fires when stopSonification function is called
+            onSonificationStopped: null
         }
     });
 
@@ -123,7 +126,7 @@ var flockingEnvironment = flock.init();
         var sonificationData = floe.chartAuthoring.sonifier.unitDivisorSonificationStrategy(that, unitDivisor);
         sonificationData.sort(floe.chartAuthoring.pieChart.legend.sortAscending);
         that.applier.change("sonifiedData",sonificationData);
-        that.events.onDataSonified.fire();
+        that.events.onDataEntriesConvertedToSonificationData.fire();
     };
 
     floe.chartAuthoring.sonifier.unitDivisorSonificationStrategy = function(that, unitDivisor) {
@@ -281,6 +284,9 @@ var flockingEnvironment = flock.init();
             var sonifiedData = that.model.sonifiedData;
             // Copy the sonification definition into the queue
             that.applier.change("sonificationQueue",sonifiedData);
+
+            // Fire the start event
+            that.events.onSonificationStarted.fire();
         }
     };
 
@@ -386,7 +392,7 @@ var flockingEnvironment = flock.init();
                 // Reset the bus manager
                 flockingEnvironment.busManager.reset();
                 // Always fire the stop event
-                that.events.onStopSonification.fire();
+                that.events.onSonificationStopped.fire();
                 that.applier.change("isPlaying", false);
                 that.applier.change("currentlyPlayingData", null);
             }
