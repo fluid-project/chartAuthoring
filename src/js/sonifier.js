@@ -17,7 +17,7 @@ var flockingEnvironment = flock.init();
     "use strict";
 
     fluid.defaults("floe.chartAuthoring.sonifier", {
-        gradeNames: ["floe.chartAuthoring.totalRelaying", "fluid.modelComponent"],
+        gradeNames: ["floe.chartAuthoring.totalRelaying"],
         components: {
             textToSpeech: {
                 type: "fluid.textToSpeech",
@@ -129,6 +129,9 @@ var flockingEnvironment = flock.init();
         that.events.onDataEntriesConvertedToSonificationData.fire();
     };
 
+    // Creates a sonified data set based on unit divisors
+    // Longer tones represent the unit divisor, while a short tones is played
+    // for each remaining "1" of the remainder
     floe.chartAuthoring.sonifier.unitDivisorSonificationStrategy = function(that, unitDivisor) {
         var dataSet = that.model.dataSet;
 
@@ -260,6 +263,9 @@ var flockingEnvironment = flock.init();
     floe.chartAuthoring.sonifier.startSonification = function(that) {
         if(!that.model.isPlaying) {
             // console.log("floe.chartAuthoring.sonifier.startSonification");
+            // Fire the start event
+
+            that.events.onSonificationStarted.fire();
 
             flockingEnvironment.start();
 
@@ -284,9 +290,6 @@ var flockingEnvironment = flock.init();
             var sonifiedData = that.model.sonifiedData;
             // Copy the sonification definition into the queue
             that.applier.change("sonificationQueue",sonifiedData);
-
-            // Fire the start event
-            that.events.onSonificationStarted.fire();
         }
     };
 
@@ -391,10 +394,11 @@ var flockingEnvironment = flock.init();
                 flockingEnvironment.stop();
                 // Reset the bus manager
                 flockingEnvironment.busManager.reset();
-                // Always fire the stop event
-                that.events.onSonificationStopped.fire();
+                // Update the model information about play state
                 that.applier.change("isPlaying", false);
                 that.applier.change("currentlyPlayingData", null);
+                // Always fire the stop event
+                that.events.onSonificationStopped.fire();
             }
         }
 
