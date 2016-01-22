@@ -88,8 +88,8 @@ body {
     stroke-width: 2px;
 }
 
-.floe-ca-pieChart-slice.currently-playing {
-    stroke: #000;        
+.floe-ca-pieChart-slice.floe-ca-currently-playing {
+    stroke: #000;
 }
 
 /* Legend */
@@ -126,7 +126,7 @@ body {
 
 /* Style to highlight legend table rows when their datapoint is being played */
 
-.floe-ca-pieChart-legend-table-row.currently-playing {
+.floe-ca-pieChart-legend-table-row.floe-ca-currently-playing {
     background-color:yellow;
 }
 

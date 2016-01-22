@@ -195,7 +195,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         },
         strings: {
             defaultTitleText: "Enter Chart Title",
-            defaultDescriptionText: "Enter Chart Description"
+            defaultDescriptionText: "Enter Chart Description",
+            dataPlayingHighlightClass: "floe-ca-currently-playing"
         },
         // The terms and/or resources need to be set to the appropriate locations
         // by the integrator.
@@ -227,13 +228,16 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         }]
     });
 
+
+    // Adds and removes highlight
     floe.chartAuthoring.highlightPlayingData = function(that) {
         var currentlyPlayingData = that.model.currentlyPlayingData;
         var chartAuthoringInterface = that.chartAuthoringInterface;
-        var legendTable, tbody, rows, pie, slices;
 
         // The chart authoring interface is ready
         if(chartAuthoringInterface !== undefined) {
+            var legendTable, tbody, rows, pie, slices;
+            var dataPlayingHighlightClass = that.options.strings.dataPlayingHighlightClass;
             legendTable = chartAuthoringInterface.pieChart.legend.table;
 
             pie = chartAuthoringInterface.pieChart.pie;
@@ -244,8 +248,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
             // Nothing is currently playing; remove any highlighting
             if(currentlyPlayingData === null) {
-                rows.classed("currently-playing",false);
-                slices.classed("currently-playing",false);
+                rows.classed(dataPlayingHighlightClass,false);
+                slices.classed(dataPlayingHighlightClass,false);
             }
 
             // Highlight pie chart slices / legend rows as they play
@@ -275,10 +279,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                     }
                 );
 
-                activeRow.classed("currently-playing",true);
-                activeSlice.classed("currently-playing",true);
-                inactiveRows.classed("currently-playing",false);
-                inactiveSlices.classed("currently-playing",false);
+                activeRow.classed(dataPlayingHighlightClass,true);
+                activeSlice.classed(dataPlayingHighlightClass,true);
+                inactiveRows.classed(dataPlayingHighlightClass,false);
+                inactiveSlices.classed(dataPlayingHighlightClass,false);
             }
         }
     };
