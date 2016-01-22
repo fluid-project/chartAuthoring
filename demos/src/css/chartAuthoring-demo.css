@@ -120,6 +120,12 @@ body {
     font-weight: bold;
 }
 
+/* Style to highlight legend table rows when their datapoint is being played */
+
+.currently-playing {
+    background-color:yellow;
+}
+
 /* Data entry panel */
 
 .floe-dataEntryPanel {

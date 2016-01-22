@@ -127,13 +127,15 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                                 }
                             }
                         },
-                        // Stub for sonification component when ready
+
                         sonifier: {
                             type: "floe.chartAuthoring.sonifier",
-                            createOnEvent: "{chartAuthoring}.events.onChartAuthoringInterfaceReady",
+                            createOnEvent: "{chartAuthoring}.events.onPieChartReady",
                             options: {
                                 model: {
-                                    "dataSet": "{dataEntryPanel}.model.dataSet"
+                                    "dataSet": "{dataEntryPanel}.model.dataSet",
+                                    currentlyPlayingData: "{chartAuthoring}.model.currentlyPlayingData"
+
                                 },
                                 listeners: {
                                     "onCreate.escalate": {
@@ -174,6 +176,18 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             "resetDataEntryPanel": {
                 funcName: "floe.chartAuthoring.updateDataEntryPanel",
                 args: ["{that}", []]
+            },
+            "highlightPlayingData": {
+                funcName: "floe.chartAuthoring.highlightPlayingData",
+                args: ["{that}"]
+            }
+        },
+        model: {
+            currentlyPlayingData: null
+        },
+        modelListeners: {
+            currentlyPlayingData: {
+                funcName: "{that}.highlightPlayingData"
             }
         },
         strings: {
@@ -209,6 +223,39 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             target: "{that dataEntryPanel}.options"
         }]
     });
+
+    floe.chartAuthoring.highlightPlayingData = function(that) {
+        var currentlyPlayingData = that.model.currentlyPlayingData;
+        var chartAuthoringInterface = that.chartAuthoringInterface;
+        var legendTable, tbody, rows;
+
+        if(currentlyPlayingData === null && chartAuthoringInterface !== undefined) {
+            legendTable = chartAuthoringInterface.pieChart.legend.table;
+            tbody = legendTable.selectAll("tbody");
+            rows = tbody.selectAll("tr");
+            rows.classed("currently-playing",false);
+        }
+
+        if(currentlyPlayingData !== null) {
+            legendTable = chartAuthoringInterface.pieChart.legend.table;
+            tbody = legendTable.selectAll("tbody");
+            rows = tbody.selectAll("tr");
+            var activeRow = rows.filter(
+                function(d) {
+                    return d.id === currentlyPlayingData.id;
+                }
+            );
+
+            var inactiveRows = rows.filter(
+                function(d) {
+                    return d.id !== currentlyPlayingData.id;
+                }
+            );
+
+            activeRow.classed("currently-playing",true);
+            inactiveRows.classed("currently-playing",false);
+        }
+    };
 
     // Given an object in the style of floe.chartAuthoring.dataEntryPanel.model.dataSet,
     // convert it to an array of objects in the style used by the pieChart components,
