@@ -126,7 +126,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             name: "Test the chart authoring component",
             tests: [{
                 name: "Chart Authoring Init",
-                expect: 26,
+                expect: 32,
                 sequence: [{
                     listener: "floe.tests.chartAuthoringTester.verifyInit",
                     args: ["{chartAuthoring}"],
@@ -143,7 +143,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                     func: "{floe.tests.chartAuthoring}.updateDataEntryPanel",
                     args: [floe.tests.chartAuthoring.updateDataSet]
                 }, {
-                    listener: "floe.tests.chartAuthoringTester.verifyRelay",
+                    listener: "floe.tests.chartAuthoringTester.verifyUpdate",
                     args: ["{floe.tests.chartAuthoring}"],
                     event: "{floe.tests.chartAuthoring}.events.onUpdateDataEntryPanel"
                 }]
@@ -192,7 +192,33 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         jqUnit.assertDeepEq("The reset has an aria-controls attribute properly referencing the form, pie, legend and total", resetAriaControlsAttr, dataEntryFormlId + " " + legendTableId + " " + pieChartPieId + " " + dataEntryFormTotalId);
     };
 
-    // Compares the relayed datasets (from the dataEntryPanel, to the pieChart)
+
+    floe.tests.chartAuthoringTester.verifyUpdate = function(that) {
+        floe.tests.chartAuthoringTester.verifyRelay(that);
+        floe.tests.chartAuthoringTester.verifyUpdateDataEntryPanel(that);
+    };
+
+    // Verify that the updateDataEntryPanel function updates the UI
+    floe.tests.chartAuthoringTester.verifyUpdateDataEntryPanel = function(that) {
+        // floe.tests.chartAuthoring.updateDataSet
+        var dataEntries = that.chartAuthoringInterface.dataEntryPanel.locate("dataEntry");
+
+        var dataEntryLabelSelector = that.chartAuthoringInterface.dataEntryPanel.dataEntry.options.selectors.label;
+        var dataEntryValueSelector = that.chartAuthoringInterface.dataEntryPanel.dataEntry.options.selectors.value;
+
+        dataEntries.each(function(idx) {
+            var expectedData = floe.tests.chartAuthoring.updateDataSet[idx];
+
+            if(expectedData !== undefined) {
+                jqUnit.assertEquals("Testing updated dataEntryPanel UI - displayed label at position " + idx + " matches updated data set label", $(this).find(dataEntryLabelSelector).val(), String(expectedData.label));
+                jqUnit.assertEquals("Testing updated dataEntryPanel UI - displayed value at position " + idx + " matches updated data set label", $(this).find(dataEntryValueSelector).val(), String(expectedData.value));
+            }
+            // $(this).find(dataEntryValueSelector).val();
+        });
+
+    };
+
+    // Compares relaying/relayed datasets (from the dataEntryPanel, to the pieChart)
     // and asserts that the values from the dataEntryPanel are properly relayed
     // to their equivalents in the pieChart
     floe.tests.chartAuthoringTester.verifyRelay = function(that) {
