@@ -22,7 +22,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             height: "200",
             colors: ["#000000", "#ff0000", "#00ff00", "#0000ff", "#aabbcc", "#ccbbaa"]
         },
-        strings: {
+        model: {
             pieTitle: "A pie chart used in the unit tests.",
             pieDescription: "Description of the pie chart used in the unit tests."
         },
@@ -63,8 +63,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         jqUnit.assertEquals("The height is set correctly on the pie chart", that.options.pieOptions.height, pie.attr("height"));
         jqUnit.assertEquals("The pie slices have been created with the proper selectors", that.model.dataSet.length, that.locate("slice").length);
         jqUnit.assertEquals("The texts for pie slices have been created with the proper selectors", that.model.dataSet.length, that.locate("text").length);
-        jqUnit.assertEquals("The pie's title has been created", that.options.strings.pieTitle, that.locate("title").text());
-        jqUnit.assertEquals("The pie's description has been created", that.options.strings.pieDescription, that.locate("description").text());
+        jqUnit.assertEquals("The pie's title has been created", that.model.pieTitle, that.locate("title").text());
+        jqUnit.assertEquals("The pie's description has been created", that.model.pieDescription, that.locate("description").text());
         jqUnit.assertDeepEq("The pie's title and description are connected through the aria-labelledby attribute of the pie SVG", pieAriaLabelledByAttr, pieTitleId + " " + pieDescId);
 
         // Test that displayed values are in sync with the current model

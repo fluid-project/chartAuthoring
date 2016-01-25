@@ -27,7 +27,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             // 1. an array of primitive values, such as numbers;
             // 2. an array of objects. The "value" element of each object needs to containe the value for drawing each pie slice.
             // Example: [{id: string, value: number} ... ]
-            dataSet: []
+            dataSet: [],
+            pieTitle: "Pie Chart",
+            pieDescription: "A pie chart."
             // Supplied by relaying in floe.chartAuthoring.totalRelaying grade
             // total: {
             //     value: number,
@@ -57,10 +59,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             displayPieBackground: true,
             // color of the background circle, if drawn
             pieBackgroundColor: "#F2F2F2"
-        },
-        strings: {
-            pieTitle: "Pie Chart",
-            pieDescription: "A pie chart."
         },
         styles: {
             pie: "floe-ca-pieChart-pie",
@@ -243,7 +241,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             .attr({
                 "class": titleClass
             })
-            .text(that.options.strings.pieTitle);
+            .text(that.model.pieTitle);
 
         // Allocate ID for the title element
         var pieTitleId = fluid.allocateSimpleId(that.locate("title"));
@@ -253,7 +251,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             .attr({
                 "class": descriptionClass
             })
-            .text(that.options.strings.pieDescription);
+            .text(that.model.pieDescription);
 
         // Allocate ID for the desc element
         var pieDescId = fluid.allocateSimpleId(that.locate("description"));
