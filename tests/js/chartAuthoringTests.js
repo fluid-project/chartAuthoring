@@ -192,14 +192,13 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         jqUnit.assertDeepEq("The reset has an aria-controls attribute properly referencing the form, pie, legend and total", resetAriaControlsAttr, dataEntryFormlId + " " + legendTableId + " " + pieChartPieId + " " + dataEntryFormTotalId);
     };
 
-
-    floe.tests.chartAuthoringTester.verifyUpdate = function(that) {
+    floe.tests.chartAuthoringTester.verifyUpdate = function (that) {
         floe.tests.chartAuthoringTester.verifyRelay(that);
         floe.tests.chartAuthoringTester.verifyUpdateDataEntryPanel(that);
     };
 
     // Verify that the updateDataEntryPanel function updates the UI
-    floe.tests.chartAuthoringTester.verifyUpdateDataEntryPanel = function(that) {
+    floe.tests.chartAuthoringTester.verifyUpdateDataEntryPanel = function (that) {
         // floe.tests.chartAuthoring.updateDataSet
         var dataEntries = that.chartAuthoringInterface.dataEntryPanel.locate("dataEntry");
 
@@ -213,15 +212,13 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 jqUnit.assertEquals("Testing updated dataEntryPanel UI - displayed label at position " + idx + " matches updated data set label", $(this).find(dataEntryLabelSelector).val(), String(expectedData.label));
                 jqUnit.assertEquals("Testing updated dataEntryPanel UI - displayed value at position " + idx + " matches updated data set label", $(this).find(dataEntryValueSelector).val(), String(expectedData.value));
             }
-            // $(this).find(dataEntryValueSelector).val();
         });
-
     };
 
     // Compares relaying/relayed datasets (from the dataEntryPanel, to the pieChart)
     // and asserts that the values from the dataEntryPanel are properly relayed
     // to their equivalents in the pieChart
-    floe.tests.chartAuthoringTester.verifyRelay = function(that) {
+    floe.tests.chartAuthoringTester.verifyRelay = function (that) {
         var dataEntryPanelDataSet = that.chartAuthoringInterface.dataEntryPanel.model.dataSet;
         var pieDataSet = that.chartAuthoringInterface.pieChart.model.dataSet;
 
