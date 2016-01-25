@@ -17,7 +17,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         jqUnit.expect(1);
 
         var convertedData = floe.chartAuthoring.dataEntriesToPieChartData(floe.tests.chartAuthoring.dataEntries);
-        jqUnit.assertDeepEq("Data conversion between data entries and chart works", floe.tests.chartAuthoring.dataSet, convertedData);
+        jqUnit.assertDeepEq("Data conversion between data entries and chart works", floe.tests.chartAuthoring.expectedRelayedDataSet, convertedData);
     });
 
     // IoC tests
@@ -27,17 +27,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             terms: {
                 templatePrefix: "../../src/html"
             }
-        },
-        pieChart: {
-            listeners: {
-                "onPieChartRedrawn.escalate": {
-                    listener: "{chartAuthoring}.events.onPieChartRedrawn.fire",
-                    priority: "last"
-                }
-            }
-        },
-        events: {
-            onPieChartRedrawn: null
         }
     });
 
@@ -55,7 +44,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         }
     };
 
-    floe.tests.chartAuthoring.dataSet =
+    floe.tests.chartAuthoring.expectedRelayedDataSet =
     [
         {
             id: "entry1",
@@ -66,6 +55,22 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             id: "entry2",
             value: 50,
             label: "Label Two"
+        }
+    ];
+
+    floe.tests.chartAuthoring.updateDataSet =
+    [
+        {
+            value: 65,
+            label: "Updated Label One"
+        },
+        {
+            value: 75,
+            label: "Updated Label Two"
+        },
+        {
+            value: 85,
+            label: "Updated Label Three"
         }
     ];
 
@@ -121,7 +126,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             name: "Test the chart authoring component",
             tests: [{
                 name: "Chart Authoring Init",
-                expect: 18,
+                expect: 26,
                 sequence: [{
                     listener: "floe.tests.chartAuthoringTester.verifyInit",
                     args: ["{chartAuthoring}"],
@@ -135,12 +140,12 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                     args: ["{floe.tests.chartAuthoring}"],
                     event: "{floe.tests.chartAuthoring}.events.onToolReady"
                 }, {
-                    func: "{floe.tests.chartAuthoring}.chartAuthoringInterface.dataEntryPanel.applier.change",
-                    args: ["dataSet", floe.tests.chartAuthoring.dataEntries]
+                    func: "{floe.tests.chartAuthoring}.updateDataEntryPanel",
+                    args: [floe.tests.chartAuthoring.updateDataSet]
                 }, {
                     listener: "floe.tests.chartAuthoringTester.verifyRelay",
                     args: ["{floe.tests.chartAuthoring}"],
-                    event: "{floe.tests.chartAuthoring}.events.onPieChartRedrawn"
+                    event: "{floe.tests.chartAuthoring}.events.onUpdateDataEntryPanel"
                 }]
             }]
         }]
@@ -187,8 +192,27 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         jqUnit.assertDeepEq("The reset has an aria-controls attribute properly referencing the form, pie, legend and total", resetAriaControlsAttr, dataEntryFormlId + " " + legendTableId + " " + pieChartPieId + " " + dataEntryFormTotalId);
     };
 
-    floe.tests.chartAuthoringTester.verifyRelay = function (that) {
-        jqUnit.assertDeepEq("Model is relayed between dataEntryPanel and pieChart", floe.tests.chartAuthoring.dataSet, that.chartAuthoringInterface.pieChart.model.dataSet);
+    // Compares the relayed datasets (from the dataEntryPanel, to the pieChart)
+    // and asserts that the values from the dataEntryPanel are properly relayed
+    // to their equivalents in the pieChart
+    floe.tests.chartAuthoringTester.verifyRelay = function(that) {
+        var dataEntryPanelDataSet = that.chartAuthoringInterface.dataEntryPanel.model.dataSet;
+        var pieDataSet = that.chartAuthoringInterface.pieChart.model.dataSet;
+
+        // For looping pieDataSet in parallel
+        var indexCounter = 0;
+
+        fluid.each(dataEntryPanelDataSet, function(dataEntryPanelData,key) {
+
+            // Don't compare if the dataEntryPanelData has the default blank
+            // values (these don't get relayed)
+            if(dataEntryPanelData.value !== null && dataEntryPanelData !== "") {
+                jqUnit.assertEquals("Comparing relayed dataset - data value of pieChart data in position " + indexCounter + " matches", dataEntryPanelData.value, pieDataSet[indexCounter].value);
+                jqUnit.assertEquals("Comparing relayed dataset - label value of pieChart data in position " + indexCounter + " matches", dataEntryPanelData.label, pieDataSet[indexCounter].label);
+                jqUnit.assertEquals("Comparing relayed dataset - id value of pieChart data in position " + indexCounter + " matches expected key", key, pieDataSet[indexCounter].id);
+            }
+            indexCounter++;
+        });
     };
 
     $(document).ready(function () {
