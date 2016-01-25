@@ -68,6 +68,12 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                                 },
                                 styles: {
                                     text: "floe-inlineEdit-text"
+                                },
+                                listeners: {
+                                    "afterFinishEdit": {
+                                        func: "floe.chartAuthoring.updateTitleFromEdit",
+                                        args: ["{pieChart}", "{arguments}.0"]
+                                    }
                                 }
                             }
                         },
@@ -84,6 +90,12 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                                 },
                                 styles: {
                                     text: "floe-inlineEdit-text"
+                                },
+                                listeners: {
+                                    "afterFinishEdit": {
+                                        func: "floe.chartAuthoring.updateDescriptionFromEdit",
+                                        args: ["{pieChart}", "{arguments}.0"]
+                                    }
                                 }
                             }
 
@@ -124,6 +136,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                                 },
                                 listeners: {
                                     "onPieChartReady.escalate": "{chartAuthoring}.events.onPieChartReady.fire"
+                                },
+                                model: {
+                                    pieTitle: "{chartTitle}.model.value",
+                                    pieDescription: "{chartDescription}.model.value"
                                 }
                             }
                         },
@@ -229,6 +245,13 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         }]
     });
 
+    floe.chartAuthoring.updateTitleFromEdit = function(pieChart, newTitle) {
+        pieChart.applier.change("pieTitle", newTitle);
+    };
+
+    floe.chartAuthoring.updateDescriptionFromEdit = function(pieChart, newDescription) {
+        pieChart.applier.change("pieDescription", newDescription);
+    };
 
     // Adds and removes highlight
     floe.chartAuthoring.highlightPlayingData = function(that) {
