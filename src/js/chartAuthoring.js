@@ -72,7 +72,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                                 listeners: {
                                     "afterFinishEdit.modelChange": {
                                         func: "{pieChart}.applier.change",
-                                        args: ["pieDescription", "{arguments}.0"]
+                                        args: ["pieTitle", "{arguments}.0"]
                                     }
                                 }
                             }
