@@ -262,7 +262,6 @@ var flockingEnvironment = flock.init();
 
     floe.chartAuthoring.sonifier.startSonification = function(that) {
         if(!that.model.isPlaying) {
-            // console.log("floe.chartAuthoring.sonifier.startSonification");
             // Fire the start event
 
             that.events.onSonificationStarted.fire();
@@ -311,7 +310,6 @@ var flockingEnvironment = flock.init();
     // in advance how long it will take to read the label
     floe.chartAuthoring.sonifier.processSonificationQueue = function(delay, noGap, that) {
         that.applier.change("isPlaying", true);
-        // console.log("floe.chartAuthoring.sonifier.processSonificationQueue");
         var gapDuration = that.options.playbackOptions.gapDuration;
 
         var sonificationQueue = that.model.sonificationQueue;
@@ -321,7 +319,6 @@ var flockingEnvironment = flock.init();
         var currentData = sonificationQueue[0];
 
         var textToSpeech = that.textToSpeech;
-        // console.log(textToSpeech);
 
         // Schedule the next voice label, accounting for both the variable-length
         // delay (the time to play the preceding sonification) and the fixed-length
@@ -340,7 +337,6 @@ var flockingEnvironment = flock.init();
     // Recursion function called from floe.chartAuthoring.sonifier.processSonificationQueue
 
     floe.chartAuthoring.sonifier.playDataAndQueueNext = function(that) {
-        // console.log("floe.chartAuthoring.sonifier.playDataAndQueueNext");
 
         var synth = that.model.synth;
         var sonificationQueue = that.model.sonificationQueue;
@@ -375,7 +371,7 @@ var flockingEnvironment = flock.init();
     };
 
     floe.chartAuthoring.sonifier.stopSonification = function(that) {
-        // console.log("floe.chartAuthoring.sonifier.stopSonification");
+
         if(that.model.isPlaying) {
             try {
                 // Flush the sonification queue
@@ -387,8 +383,7 @@ var flockingEnvironment = flock.init();
                 // Stop any queued voices
                 that.textToSpeech.cancel();
             } catch(e) {
-                // console.log("Error");
-                // console.log(e);
+
             } finally {
                 // Always stop the flocking environment
                 flockingEnvironment.stop();
