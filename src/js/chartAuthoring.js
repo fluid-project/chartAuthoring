@@ -188,9 +188,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             currentlyPlayingData: null
         },
         modelListeners: {
-            currentlyPlayingData: {
-                funcName: "{that}.highlightPlayingData"
-            }
+            currentlyPlayingData: "{that}.highlightPlayingData"
         },
         strings: {
             defaultTitleText: "Enter Chart Title",
