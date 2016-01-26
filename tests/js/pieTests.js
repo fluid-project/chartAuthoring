@@ -22,7 +22,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             height: "200",
             colors: ["#000000", "#ff0000", "#00ff00", "#0000ff", "#aabbcc", "#ccbbaa"]
         },
-        strings: {
+        model: {
             pieTitle: "A pie chart used in the unit tests.",
             pieDescription: "Description of the pie chart used in the unit tests."
         },
@@ -36,6 +36,23 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             mouseOverListenerCalled: false
         }
     });
+
+    // Test that when model.pieDescription is changed, the corresponding DOM
+    // element is also updated
+    floe.tests.chartAuthoring.testDescriptionBinding = function (that) {
+        var newDescription = "An updated pie chart description.";
+        that.applier.change("pieDescription", newDescription);
+        jqUnit.assertEquals("Pie's SVG desc element is updated when its model is changed", that.model.pieDescription, that.locate("description").text());
+    };
+
+
+    // Test that when model.pieTitle is changed, the corresponding DOM
+    // element is also updated
+    floe.tests.chartAuthoring.testTitleBinding = function (that) {
+        var newTitle = "An updated pie chart title.";
+        that.applier.change("pieTitle", newTitle);
+        jqUnit.assertEquals("Pie's SVG desc element is updated when its model is changed", that.model.pieTitle, that.locate("title").text());
+    };
 
     floe.tests.chartAuthoring.mouseOverListener = function (data, i, that) {
         that.mouseOverListenerCalled = true;
@@ -63,8 +80,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         jqUnit.assertEquals("The height is set correctly on the pie chart", that.options.pieOptions.height, pie.attr("height"));
         jqUnit.assertEquals("The pie slices have been created with the proper selectors", that.model.dataSet.length, that.locate("slice").length);
         jqUnit.assertEquals("The texts for pie slices have been created with the proper selectors", that.model.dataSet.length, that.locate("text").length);
-        jqUnit.assertEquals("The pie's title has been created", that.options.strings.pieTitle, that.locate("title").text());
-        jqUnit.assertEquals("The pie's description has been created", that.options.strings.pieDescription, that.locate("description").text());
+        jqUnit.assertEquals("The pie's title has been created", that.model.pieTitle, that.locate("title").text());
+        jqUnit.assertEquals("The pie's description has been created", that.model.pieDescription, that.locate("description").text());
         jqUnit.assertDeepEq("The pie's title and description are connected through the aria-labelledby attribute of the pie SVG", pieAriaLabelledByAttr, pieTitleId + " " + pieDescId);
 
         // Test that displayed values are in sync with the current model
@@ -80,6 +97,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     floe.tests.chartAuthoring.runCommonTests = function (that, testSliceDataFunc) {
         floe.tests.chartAuthoring.validatePie(that, testSliceDataFunc);
+
+        floe.tests.chartAuthoring.testTitleBinding(that);
+
+        floe.tests.chartAuthoring.testDescriptionBinding(that);
 
         // The D3 DOM event listener is registered
         jqUnit.assertFalse("The mouseover listener for pie slices have not been triggered", that.mouseOverListenerCalled);
@@ -113,7 +134,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.tests.chartAuthoring.numberArrayTotal = 111;
 
     jqUnit.test("Test the pie chart component created based off an array of numbers", function () {
-        jqUnit.expect(32);
+        jqUnit.expect(34);
 
         var that = floe.tests.chartAuthoring.pieChart.pie(".floec-ca-pieChart-numberArray", {
             model: {
@@ -192,7 +213,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.tests.chartAuthoring.objectArrayChangeInPlaceTotal = 75;
 
     jqUnit.test("Test the pie chart component created based off an array of objects", function () {
-        jqUnit.expect(130);
+        jqUnit.expect(132);
 
         var that = floe.tests.chartAuthoring.pieChart.pie(".floec-ca-pieChart-objectArray", {
             model: {

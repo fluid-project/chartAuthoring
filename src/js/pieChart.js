@@ -31,12 +31,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 container: "{that}.dom.pie",
                 options: {
                     pieOptions: "{pieChart}.drawingOptions",
-                    strings: {
-                        pieTitle: "{pieChart}.options.pieChartOptions.pieTitle",
-                        pieDescription: "{pieChart}.options.pieChartOptions.pieDescription"
-                    },
                     model: {
-                        dataSet: "{pieChart}.model.dataSet"
+                        dataSet: "{pieChart}.model.dataSet",
+                        pieTitle: "{pieChart}.model.pieTitle",
+                        pieDescription: "{pieChart}.model.pieDescription"
                     },
                     events: {
                         onPieCreated: "{pieChart}.events.onPieCreated",
@@ -66,7 +64,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         model: {
             // dataSet accepts an array of objects in a format of
             // [{id: string, value: number, label: string}, ... ]
-            dataSet: []
+            dataSet: [],
+            pieTitle: "Pie Chart",
+            pieDescription: "A pie chart."
         },
         pieChartOptions: {
             // width: number,
@@ -76,8 +76,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             // innerRadius: number,
             // animationDuration: number,
             // sort: boolean   // Whether or not to sort the data by values when creating the legend,
-            // pieTitle: string // the accessible title to be applied to the pie chart,
-            // pieDescription: string // the accessible description to be applied to the pie chart,
             // sliceTextDisplayTemplate: string // fluid.stringTemplate to format the pie chart slice text
             // sliceTextPercentageDigits: number // number of digits after decimal for percentages in pie chart slice text
             // labelTextDisplayTemplate: string // fluid.stringTemplate to format the legend label cell
