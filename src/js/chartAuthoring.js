@@ -58,7 +58,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                         chartTitle: {
                             type: "fluid.inlineEdit",
                             container: "{chartAuthoring}.dom.chartTitle",
-                            createOnEvent: "{chartAuthoring}.events.onChartAuthoringInterfaceReady",
+                            createOnEvent: "{chartAuthoring}.events.onPieChartReady",
                             options: {
                                 strings: {
                                     defaultViewText: "{floe.chartAuthoring}.options.strings.defaultTitleText"
@@ -70,9 +70,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                                     text: "floe-inlineEdit-text"
                                 },
                                 listeners: {
-                                    "afterFinishEdit": {
-                                        func: "floe.chartAuthoring.updateTitleFromEdit",
-                                        args: ["{pieChart}", "{arguments}.0"]
+                                    "afterFinishEdit.modelChange": {
+                                        func: "{pieChart}.applier.change",
+                                        args: ["pieDescription", "{arguments}.0"]
                                     }
                                 }
                             }
@@ -80,7 +80,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                         chartDescription: {
                             type: "fluid.inlineEdit",
                             container: "{chartAuthoring}.dom.chartDescription",
-                            createOnEvent: "{chartAuthoring}.events.onChartAuthoringInterfaceReady",
+                            createOnEvent: "{chartAuthoring}.events.onPieChartReady",
                             options: {
                                 strings: {
                                     defaultViewText: "{floe.chartAuthoring}.options.strings.defaultDescriptionText"
@@ -92,9 +92,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                                     text: "floe-inlineEdit-text"
                                 },
                                 listeners: {
-                                    "afterFinishEdit": {
-                                        func: "floe.chartAuthoring.updateDescriptionFromEdit",
-                                        args: ["{pieChart}", "{arguments}.0"]
+                                    "afterFinishEdit.modelChange": {
+                                        func: "{pieChart}.applier.change",
+                                        args: ["pieDescription", "{arguments}.0"]
                                     }
                                 }
                             }
@@ -240,14 +240,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             target: "{that dataEntryPanel}.options"
         }]
     });
-
-    floe.chartAuthoring.updateTitleFromEdit = function(pieChart, newTitle) {
-        pieChart.applier.change("pieTitle", newTitle);
-    };
-
-    floe.chartAuthoring.updateDescriptionFromEdit = function(pieChart, newDescription) {
-        pieChart.applier.change("pieDescription", newDescription);
-    };
 
     // Adds and removes highlight
     floe.chartAuthoring.highlightPlayingData = function(that) {
