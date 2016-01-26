@@ -99,12 +99,13 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     });
 
     jqUnit.test("Test the sonification play behaviour", function () {
-        jqUnit.expect(2);
+        jqUnit.expect(4);
 
         var that = floe.tests.chartAuthoring.speedySonifier({
             model: {
                 dataSet: floe.tests.chartAuthoring.dataSet
             },
+            // We kick off the next test when this one finishes
             listeners: {
                 "onSonificationStopped": {
                     funcName: "floe.tests.chartAuthoring.validateStopped",
@@ -115,7 +116,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         that.playSonification();
 
+        jqUnit.assertTrue("sonificationQueue has items in it", that.model.sonificationQueue.length === 2);
         jqUnit.assertEquals("isPlaying boolean was true after play was started", true, that.model.isPlaying);
+        jqUnit.assertFalse("currentlyPlayingData is not null", null, that.model.currentlyPlayingData);
         jqUnit.assertNotUndefined("Synth was created", that.model.synth);
 
     });
@@ -123,10 +126,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.tests.chartAuthoring.validateStopped = function(that) {
         jqUnit.test("Test that the stop behaves as expected", function () {
             jqUnit.expect(3);
-
             jqUnit.assertEquals("isPlaying boolean was false after play finished", false, that.model.isPlaying);
             jqUnit.assertEquals("currentlyPlayingData is null", null, that.model.currentlyPlayingData);
-            jqUnit.assertDeepEq("sonificationQueue is empty after play finished", [], that.model.sonificationQueue);
+            jqUnit.assertTrue("sonificationQueue is empty after play finished", that.model.sonificationQueue.length === 0);
         });
     };
 
