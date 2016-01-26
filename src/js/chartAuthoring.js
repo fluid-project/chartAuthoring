@@ -116,8 +116,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                                         type: "fluid.transforms.free",
                                         args: ["{that}.model.dataSet"],
                                         func: "floe.chartAuthoring.dataEntriesToPieChartData"
-                                    },
-                                    backward: "never"
+                                    }
                                 },
                                 listeners: {
                                     "onCreate.escalate": {
