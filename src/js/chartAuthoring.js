@@ -136,10 +136,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                                 },
                                 listeners: {
                                     "onPieChartReady.escalate": "{chartAuthoring}.events.onPieChartReady.fire"
-                                },
-                                model: {
-                                    pieTitle: "{chartTitle}.model.value",
-                                    pieDescription: "{chartDescription}.model.value"
                                 }
                             }
                         },
