@@ -135,8 +135,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                                     "dataSet": "{dataEntryPanel}.model.dataSet",
                                     // We relay currentlyPlayingData and isPlaying to the overall component so that sonification play events can be used to change the rest of the interface
                                     currentlyPlayingData: "{chartAuthoring}.model.currentlyPlayingData",
-                                    isPlaying:
-                                    "{chartAuthoring}.model.isPlaying"
+                                    isPlaying: "{chartAuthoring}.model.isPlaying"
 
                                 },
                                 listeners: {
