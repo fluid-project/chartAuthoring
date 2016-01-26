@@ -63,12 +63,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                                 strings: {
                                     defaultViewText: "{floe.chartAuthoring}.options.strings.defaultTitleText"
                                 },
-                                selectors: {
-                                    text: ".floec-inlineEdit-text"
-                                },
-                                styles: {
-                                    text: "floe-inlineEdit-text"
-                                },
                                 listeners: {
                                     "afterFinishEdit.modelChange": {
                                         func: "{pieChart}.applier.change",
@@ -84,12 +78,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                             options: {
                                 strings: {
                                     defaultViewText: "{floe.chartAuthoring}.options.strings.defaultDescriptionText"
-                                },
-                                selectors: {
-                                    text: ".floec-inlineEdit-text"
-                                },
-                                styles: {
-                                    text: "floe-inlineEdit-text"
                                 },
                                 listeners: {
                                     "afterFinishEdit.modelChange": {
@@ -223,6 +211,14 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 pieChart: "%templatePrefix/pieChartTemplate.html"
             }
         },
+        inlineEditCommonOptions: {
+            selectors: {
+                text: ".floec-inlineEdit-text"
+            },
+            styles: {
+                text: "floe-inlineEdit-text"
+            }
+        },
         distributeOptions: [{
             source: "{that}.options.templateLoader",
             removeSource: true,
@@ -237,6 +233,11 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             source: "{that}.options.dataEntryPanel",
             removeSource: true,
             target: "{that dataEntryPanel}.options"
+        },
+        {
+            source: "{that}.options.inlineEditCommonOptions",
+            removeSource: true,
+            target: "{that fluid.inlineEdit}.options"
         }]
     });
 
