@@ -192,7 +192,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         },
         strings: {
             defaultTitleText: "Enter Chart Title",
-            defaultDescriptionText: "Enter Chart Description",
+            defaultDescriptionText: "Enter Chart Description"
+        },
+        styles: {
             dataPlayingHighlightClass: "floe-ca-currently-playing"
         },
         // The terms and/or resources need to be set to the appropriate locations
@@ -246,7 +248,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         // The chart authoring interface is ready
         if(chartAuthoringInterface !== undefined) {
             var legendTable, tbody, rows, pie, slices;
-            var dataPlayingHighlightClass = that.options.strings.dataPlayingHighlightClass;
+            var dataPlayingHighlightClass = that.options.styles.dataPlayingHighlightClass;
             legendTable = chartAuthoringInterface.pieChart.legend.table;
 
             pie = chartAuthoringInterface.pieChart.pie;
