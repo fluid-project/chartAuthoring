@@ -56,7 +56,7 @@ body {
     max-width: 32px;
 }
 
-.floe-sonifierPlay img:hover, .floe-sonifierStop img:hover, .floe-sonifierPlay img:focus, .floe-sonifierStop img:focus {
+.floe-sonifierPlay:hover img, .floe-sonifierStop:hover img, .floe-sonifierPlay:focus img, .floe-sonifierStop:focus img {
     background-color:#BBB;
 }
 
