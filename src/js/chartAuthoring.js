@@ -136,7 +136,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                                     // We relay currentlyPlayingData and isPlaying to the overall component so that sonification play events can be used to change the rest of the interface
                                     currentlyPlayingData: "{chartAuthoring}.model.currentlyPlayingData",
                                     isPlaying: "{chartAuthoring}.model.isPlaying"
-
                                 },
                                 listeners: {
                                     "onCreate.escalate": {
@@ -185,10 +184,22 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             }
         },
         model: {
-            currentlyPlayingData: null
+            currentlyPlayingData: null,
+            activeRow: null,
+            activeSlice: null
         },
         modelListeners: {
-            currentlyPlayingData: "{that}.highlightPlayingData"
+            currentlyPlayingData: "{that}.highlightPlayingData",
+            activeRow: {
+                funcName: "floe.chartAuthoring.handleHighlightChange",
+                args: ["{that}", "{that}.chartAuthoringInterface.pieChart.legend.rows"],
+                excludeSource: "init"
+            },
+            activeSlice: {
+                funcName: "floe.chartAuthoring.handleHighlightChange",
+                args: ["{that}", "{that}.chartAuthoringInterface.pieChart.pie.paths"],
+                excludeSource: "init"
+            }
         },
         strings: {
             defaultTitleText: "Enter Chart Title",
@@ -240,6 +251,31 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         }]
     });
 
+    floe.chartAuthoring.handleHighlightChange = function(that, d3Selector) {
+
+        var chartAuthoringInterface = that.chartAuthoringInterface;
+        if(chartAuthoringInterface !== undefined) {
+            var dataPlayingHighlightClass = that.options.styles.dataPlayingHighlightClass;
+
+            var selection = d3Selector;
+
+            var activeDataId = that.model.currentlyPlayingData.id;
+
+            var activeElement = floe.d3.filterById(selection, activeDataId);
+            var inactiveElements = floe.d3.filterByNotId(selection, activeDataId);
+            activeElement.classed(dataPlayingHighlightClass,true);
+            inactiveElements.classed(dataPlayingHighlightClass,false);
+        }
+    };
+
+    floe.chartAuthoring.removeInactiveHighlights = function(that) {
+        var dataPlayingHighlightClass = that.options.styles.dataPlayingHighlightClass;
+        var rows = that.chartAuthoringInterface.pieChart.legend.table.selectAll("tr");
+        var slices = that.chartAuthoringInterface.pieChart.pie.paths;
+        rows.classed(dataPlayingHighlightClass,false);
+        slices.classed(dataPlayingHighlightClass,false);
+    };
+
     // Adds and removes highlights as data plays
     // uses floe.d3.filterById and floe.d3.filterByNotId
     floe.chartAuthoring.highlightPlayingData = function(that) {
@@ -248,39 +284,16 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         // The chart authoring interface is ready
         if(chartAuthoringInterface !== undefined) {
-            var legendTable, tbody, rows, pie, slices;
-            var dataPlayingHighlightClass = that.options.styles.dataPlayingHighlightClass;
-            legendTable = chartAuthoringInterface.pieChart.legend.table;
-
-            pie = chartAuthoringInterface.pieChart.pie;
-            slices = pie.paths;
-
-            tbody = legendTable.selectAll("tbody");
-            rows = tbody.selectAll("tr");
-
             // Nothing is currently playing; remove any highlighting
             if(currentlyPlayingData === null) {
-                rows.classed(dataPlayingHighlightClass,false);
-                slices.classed(dataPlayingHighlightClass,false);
+                floe.chartAuthoring.removeInactiveHighlights(that);
             }
 
-            // Highlight pie chart slices / legend rows as they play
             if(currentlyPlayingData !== null) {
 
-                var currentlyPlayingDataId = currentlyPlayingData.id;
+                that.applier.change("activeRow", currentlyPlayingData.id);
+                that.applier.change("activeSlice", currentlyPlayingData.id);
 
-                var activeRow = floe.d3.filterById(rows, currentlyPlayingDataId);
-
-                var activeSlice = floe.d3.filterById(slices, currentlyPlayingDataId);
-
-                var inactiveRows = floe.d3.filterByNotId(rows, currentlyPlayingDataId);
-
-                var inactiveSlices = floe.d3.filterByNotId(slices, currentlyPlayingDataId);
-
-                activeRow.classed(dataPlayingHighlightClass,true);
-                activeSlice.classed(dataPlayingHighlightClass,true);
-                inactiveRows.classed(dataPlayingHighlightClass,false);
-                inactiveSlices.classed(dataPlayingHighlightClass,false);
             }
         }
     };
