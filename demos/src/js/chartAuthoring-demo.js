@@ -24,7 +24,7 @@ Varied#3: colors: ["#f15e4e", "#acdee4", "#73c163", "#ffc74a", "#41beae"]
         gradeNames: ["floe.chartAuthoring"],
         listeners: {
             "onToolReady.addExampleInput": {
-                funcName: "{that}.updateDataEntryPanel",
+                funcName: "{that}.updateDataEntryPanelFromDataSet",
                 args: ["{that}.options.initialData"]
             }
         },

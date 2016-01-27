@@ -108,12 +108,12 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                     args: ["{floe.tests.chartAuthoring}"],
                     event: "{floe.tests.chartAuthoring}.events.onToolReady"
                 }, {
-                    func: "{floe.tests.chartAuthoring}.updateDataEntryPanel",
+                    func: "{floe.tests.chartAuthoring}.updateDataEntryPanelFromDataSet",
                     args: [floe.tests.chartAuthoring.updateDataSet]
                 }, {
                     listener: "floe.tests.chartAuthoringTester.verifyUpdate",
                     args: ["{floe.tests.chartAuthoring}"],
-                    event: "{floe.tests.chartAuthoring}.events.onUpdateDataEntryPanel"
+                    event: "{floe.tests.chartAuthoring}.events.onDataAppliedToDataEntryPanel"
                 }]
             }]
         }]

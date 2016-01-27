@@ -164,19 +164,19 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 },
                 args: ["{that}"]
             },
-            onUpdateDataEntryPanel: null
+            onDataAppliedToDataEntryPanel: null
         },
         listeners: {
             "onToolReady.addAriaConnections": "floe.chartAuthoring.addAriaConnections",
             "onToolReady.addSonificationListeners": "floe.chartAuthoring.addSonificationControlsHandlers"
         },
         invokers:{
-            "updateDataEntryPanel": {
-                funcName: "floe.chartAuthoring.updateDataEntryPanel",
+            "updateDataEntryPanelFromDataSet": {
+                funcName: "floe.chartAuthoring.updateDataEntryPanelFromDataSet",
                 args: ["{that}", "{arguments}.0"]
             },
             "resetDataEntryPanel": {
-                funcName: "floe.chartAuthoring.updateDataEntryPanel",
+                funcName: "floe.chartAuthoring.updateDataEntryPanelFromDataSet",
                 args: ["{that}", []]
             },
             "highlightPlayingData": {
@@ -322,7 +322,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // Passing an empty dataset will clear and reset the form
     // Triggers change events to trigger model updating and propagation to other
     // interface elements
-    floe.chartAuthoring.updateDataEntryPanel = function (that, dataSet) {
+    floe.chartAuthoring.updateDataEntryPanelFromDataSet = function (that, dataSet) {
         // Clear any existing data entries
         var dataEntries = that.chartAuthoringInterface.dataEntryPanel.locate("dataEntry");
 
@@ -335,7 +335,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             $(this).find(dataEntryValueSelector).val(currentData.value).trigger("change");
         });
 
-        that.events.onUpdateDataEntryPanel.fire();
+        that.events.onDataAppliedToDataEntryPanel.fire();
     };
 
     floe.chartAuthoring.addSonificationControlsHandlers = function(that) {
