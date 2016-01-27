@@ -240,7 +240,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         }]
     });
 
-    // Adds and removes highlight
+    // Adds and removes highlights as data plays
+    // uses floe.d3.filterById and floe.d3.filterByNotId
     floe.chartAuthoring.highlightPlayingData = function(that) {
         var currentlyPlayingData = that.model.currentlyPlayingData;
         var chartAuthoringInterface = that.chartAuthoringInterface;
