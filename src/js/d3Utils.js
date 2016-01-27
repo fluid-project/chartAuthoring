@@ -23,6 +23,42 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         return d3.selectAll(elem.toArray());
     };
 
+    /* Given the object "d", returns value of:
+     * - "id" if it exists on the top-level object,
+     * - "data.id" if it exists on a "data" object
+     * - "undefined" if neither of these exist
+     */
+    floe.d3.idExtractor = function (d) {
+        try {
+            var id = d.id !== undefined ? d.id : d.data.id;
+            return id !== undefined ? id : undefined;
+        } catch (e) {
+            return undefined;
+        }
+    };
+
+    // Given a selection of D3 elements and an ID, returns only the elements
+    // matching that ID
+    floe.d3.filterById = function(d3Selection, currentlyPlayingDataId) {
+        return d3Selection.filter(
+            function(d) {
+                var id = floe.d3.idExtractor(d);
+                return id === currentlyPlayingDataId;
+            }
+        );
+    };
+
+    // Given a selection of D3 elements and an ID, returns only the elements
+    // that don't match that ID
+    floe.d3.filterByNotId = function(d3Selection, currentlyPlayingDataId) {
+        return d3Selection.filter(
+            function(d) {
+                var id = floe.d3.idExtractor(d);
+                return id !== currentlyPlayingDataId;
+            }
+        );
+    };
+
     floe.d3.addD3Listeners = function (jQueryElem, eventName, listener, that) {
         var d3Elem = floe.d3.jQueryToD3(jQueryElem);
         d3Elem.on(eventName, function (data, i) {
