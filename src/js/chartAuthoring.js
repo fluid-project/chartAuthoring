@@ -168,7 +168,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         },
         listeners: {
             "onToolReady.addAriaConnections": "floe.chartAuthoring.addAriaConnections",
-            "onToolReady.addSonificationListeners": "floe.chartAuthoring.addSonificationControlListeners"
+            "onToolReady.addSonificationListeners": "floe.chartAuthoring.addSonificationControlsHandlers"
         },
         invokers:{
             "updateDataEntryPanel": {
@@ -338,7 +338,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         that.events.onUpdateDataEntryPanel.fire();
     };
 
-    floe.chartAuthoring.addSonificationControlListeners = function(that) {
+    floe.chartAuthoring.addSonificationControlsHandlers = function(that) {
         var playButton = that.locate("sonifierPlay"),
             stopButton = that.locate("sonifierStop");
 
