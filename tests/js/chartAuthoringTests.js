@@ -94,7 +94,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             name: "Test the chart authoring component",
             tests: [{
                 name: "Chart Authoring Init",
-                expect: 32,
+                expect: 36,
                 sequence: [{
                     listener: "floe.tests.chartAuthoringTester.verifyInit",
                     args: ["{chartAuthoring}"],
@@ -174,12 +174,16 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var dataEntryValueSelector = that.chartAuthoringInterface.dataEntryPanel.dataEntry.options.selectors.value;
 
         dataEntries.each(function(idx) {
-            var expectedData = floe.tests.chartAuthoring.updateDataSet[idx];
 
-            if(expectedData !== undefined) {
-                jqUnit.assertEquals("Testing updated dataEntryPanel UI - displayed label at position " + idx + " matches updated data set label", $(this).find(dataEntryLabelSelector).val(), String(expectedData.label));
-                jqUnit.assertEquals("Testing updated dataEntryPanel UI - displayed value at position " + idx + " matches updated data set label", $(this).find(dataEntryValueSelector).val(), String(expectedData.value));
-            }
+            // Confirm that each entry in updateDataSet has a matching dataEntry
+            // in the panel UI, or that the "matching" dataEntry is blank when
+            // the dataset is shorter than the number of possible data entries
+
+            var expectedData = idx < floe.tests.chartAuthoring.updateDataSet.length ? floe.tests.chartAuthoring.updateDataSet[idx] : expectedData = {label: "", value: ""};
+
+            jqUnit.assertEquals("Testing updated dataEntryPanel UI - displayed label at position " + idx + " matches updated data set label", $(this).find(dataEntryLabelSelector).val(), String(expectedData.label));
+            jqUnit.assertEquals("Testing updated dataEntryPanel UI - displayed value at position " + idx + " matches updated data set label", $(this).find(dataEntryValueSelector).val(), String(expectedData.value));
+
         });
     };
 
