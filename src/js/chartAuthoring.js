@@ -178,8 +178,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 funcName: "floe.chartAuthoring.updateDataEntryPanelFromDataSet",
                 args: ["{that}", []]
             },
-            "highlightPlayingData": {
-                funcName: "floe.chartAuthoring.highlightPlayingData",
+            "updateActiveElements": {
+                funcName: "floe.chartAuthoring.updateActiveElements",
                 args: ["{that}"]
             }
         },
@@ -189,7 +189,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             activeSlice: null
         },
         modelListeners: {
-            currentlyPlayingData: "{that}.highlightPlayingData",
+            currentlyPlayingData: {
+                funcName: "{that}.updateActiveElements",
+                excludeSource: "init"
+            },
             activeRow: {
                 funcName: "floe.chartAuthoring.handleHighlightChange",
                 args: ["{that}", "{that}.chartAuthoringInterface.pieChart.legend.rows"],
@@ -259,7 +262,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
             var selection = d3Selector;
 
-            var activeDataId = that.model.currentlyPlayingData.id;
+            var activeDataId = that.model.currentlyPlayingData !== null ? that.model.currentlyPlayingData.id : null;
 
             var activeElement = floe.d3.filterById(selection, activeDataId);
             var inactiveElements = floe.d3.filterByNotId(selection, activeDataId);
@@ -268,34 +271,11 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         }
     };
 
-    floe.chartAuthoring.removeInactiveHighlights = function(that) {
-        var dataPlayingHighlightClass = that.options.styles.dataPlayingHighlightClass;
-        var rows = that.chartAuthoringInterface.pieChart.legend.table.selectAll("tr");
-        var slices = that.chartAuthoringInterface.pieChart.pie.paths;
-        rows.classed(dataPlayingHighlightClass,false);
-        slices.classed(dataPlayingHighlightClass,false);
-    };
-
-    // Adds and removes highlights as data plays
-    // uses floe.d3.filterById and floe.d3.filterByNotId
-    floe.chartAuthoring.highlightPlayingData = function(that) {
+    floe.chartAuthoring.updateActiveElements = function(that) {
         var currentlyPlayingData = that.model.currentlyPlayingData;
-        var chartAuthoringInterface = that.chartAuthoringInterface;
-
-        // The chart authoring interface is ready
-        if(chartAuthoringInterface !== undefined) {
-            // Nothing is currently playing; remove any highlighting
-            if(currentlyPlayingData === null) {
-                floe.chartAuthoring.removeInactiveHighlights(that);
-            }
-
-            if(currentlyPlayingData !== null) {
-
-                that.applier.change("activeRow", currentlyPlayingData.id);
-                that.applier.change("activeSlice", currentlyPlayingData.id);
-
-            }
-        }
+        var currentlyPlayingDataId = currentlyPlayingData !== null ? currentlyPlayingData.id : null;
+        that.applier.change("activeRow", currentlyPlayingDataId);
+        that.applier.change("activeSlice", currentlyPlayingDataId);
     };
 
     // Given an object in the style of floe.chartAuthoring.dataEntryPanel.model.dataSet,
