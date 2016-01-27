@@ -124,7 +124,7 @@ var flockingEnvironment = flock.init();
     floe.chartAuthoring.sonifier.dataEntriesToSonificationData = function(that) {
         var unitDivisor = 10;
         var sonificationData = floe.chartAuthoring.sonifier.unitDivisorSonificationStrategy(that, unitDivisor);
-        sonificationData.sort(floe.chartAuthoring.pieChart.legend.sortAscending);
+        sonificationData.sort(floe.chartAuthoring.utils.sortAscending);
         that.applier.change("sonifiedData",sonificationData);
         that.events.onDataEntriesConvertedToSonificationData.fire();
     };

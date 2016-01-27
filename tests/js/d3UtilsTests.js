@@ -95,4 +95,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     });
 
+    jqUnit.test("Test ascending sort function", function () {
+        var unsorted = [{value: 5}, {value: 8}, {value: 6}, {value: 1}];
+        var expectedSorted = [{value: 8},  {value: 6}, {value: 5}, {value: 1}];
+        jqUnit.assertDeepEq("Ascending sort function behaving as expected", expectedSorted, unsorted.sort(floe.chartAuthoring.utils.sortAscending));
+    });
+
 })(jQuery, fluid);

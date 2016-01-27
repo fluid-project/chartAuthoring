@@ -101,7 +101,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 args: ["{that}"]
             },
             sort: {
-                funcName: "floe.chartAuthoring.pieChart.legend.sortAscending",
+                funcName: "floe.chartAuthoring.utils.sortAscending",
                 args: ["{arguments}.0", "{arguments}.1"]
             },
             getColorCellStyle: {
@@ -271,11 +271,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         that.draw();
 
         that.events.onLegendCreated.fire();
-    };
-
-    // TODO: refactor into a utility function, now used by sonifier
-    floe.chartAuthoring.pieChart.legend.sortAscending = function (a, b) {
-        return b.value - a.value;
     };
 
     floe.chartAuthoring.pieChart.legend.getColorCellStyle = function (data) {
