@@ -266,29 +266,15 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             // Highlight pie chart slices / legend rows as they play
             if(currentlyPlayingData !== null) {
 
-                var activeRow = rows.filter(
-                    function(d) {
-                        return d.id === currentlyPlayingData.id;
-                    }
-                );
+                var currentlyPlayingDataId = currentlyPlayingData.id;
 
-                var activeSlice = slices.filter(
-                    function(d) {
-                        return d.data.id === currentlyPlayingData.id;
-                    }
-                );
+                var activeRow = floe.d3.filterById(rows, currentlyPlayingDataId);
 
-                var inactiveRows = rows.filter(
-                    function(d) {
-                        return d.id !== currentlyPlayingData.id;
-                    }
-                );
+                var activeSlice = floe.d3.filterById(slices, currentlyPlayingDataId);
 
-                var inactiveSlices = slices.filter(
-                    function(d) {
-                        return d.data.id !== currentlyPlayingData.id;
-                    }
-                );
+                var inactiveRows = floe.d3.filterByNotId(rows, currentlyPlayingDataId);
+
+                var inactiveSlices = floe.d3.filterByNotId(slices, currentlyPlayingDataId);
 
                 activeRow.classed(dataPlayingHighlightClass,true);
                 activeSlice.classed(dataPlayingHighlightClass,true);
