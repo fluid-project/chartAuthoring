@@ -74,8 +74,8 @@ var flockingEnvironment = flock.init();
         // can override these to control sonification behaviour
         // These need better explanations of what they do
         sonificationOptions: {
-            sonificationStrategies: {
-                unitDivisorSonificationStrategy: {
+            strategies: {
+                unitDivisor: {
                     config: {
                         notes: {
                             durations: {
@@ -86,19 +86,21 @@ var flockingEnvironment = flock.init();
                                 divisorReturnValue: 91,
                                 remainderReturnValue: 89
                             }
+                        },
+                        envelope: {
+                            durations: {
+                                divisorDuration: 1/8,
+                                divisorSilence: 1/4,
+                                remainderDuration: 1/24,
+                                remainderSilence: 1/12
+                            },
+                            values: {
+                                openValue: 1.0,
+                                closedValue: 0.0
+                            }
                         }
                     }
                 }
-            },
-            envelopeDurationConfig: {
-                divisorDuration: 1/8,
-                divisorSilence: 1/4,
-                remainderDuration: 1/24,
-                remainderSilence: 1/12
-            },
-            envelopeValuesConfig: {
-                openValue: 1.0,
-                closedValue: 0.0
             }
         },
         // options that control playback behaviour
@@ -159,10 +161,10 @@ var flockingEnvironment = flock.init();
         var sonificationOptions = that.options.sonificationOptions;
         var playbackOptions = that.options.playbackOptions;
 
-        var noteDurationConfig = floe.chartAuthoring.sonifier.applyZoomToDurationConfig(sonificationOptions.sonificationStrategies.unitDivisorSonificationStrategy.config.notes.durations,playbackOptions.zoom),
-            noteValueConfig = sonificationOptions.sonificationStrategies.unitDivisorSonificationStrategy.config.notes.values,
-            envelopeDurationConfig = floe.chartAuthoring.sonifier.applyZoomToDurationConfig(sonificationOptions.envelopeDurationConfig,playbackOptions.zoom),
-            envelopeValuesConfig = sonificationOptions.envelopeValuesConfig;
+        var noteDurationConfig = floe.chartAuthoring.sonifier.applyZoomToDurationConfig(sonificationOptions.strategies.unitDivisor.config.notes.durations,playbackOptions.zoom),
+            noteValueConfig = sonificationOptions.strategies.unitDivisor.config.notes.values,
+            envelopeDurationConfig = floe.chartAuthoring.sonifier.applyZoomToDurationConfig(sonificationOptions.strategies.unitDivisor.config.envelope.durations,playbackOptions.zoom),
+            envelopeValuesConfig = sonificationOptions.strategies.unitDivisor.config.envelope.values;
 
         fluid.each(dataSet, function(item,key) {
             if(item.value !== null) {
