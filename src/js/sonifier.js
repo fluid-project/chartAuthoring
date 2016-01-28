@@ -300,10 +300,12 @@ var flockingEnvironment = flock.init();
     // - we can fire an event when a voice label read completes, but can't know
     // in advance how long it will take to read the label
     floe.chartAuthoring.sonifier.processSonificationQueue = function(delay, noGap, that) {
+        var sonificationQueue = that.model.sonificationQueue;
+        if(sonificationQueue.length === 0) {
+            return;
+        }
         that.applier.change("isPlaying", true);
         var gapDuration = that.options.playbackOptions.gapDuration;
-
-        var sonificationQueue = that.model.sonificationQueue;
 
         var synth = that.synth;
 
@@ -363,31 +365,37 @@ var flockingEnvironment = flock.init();
 
     floe.chartAuthoring.sonifier.stopSonification = function(that) {
 
-        if(that.model.isPlaying) {
-            try {
-                // Flush the sonification queue
-                that.applier.change("sonificationQueue",[]);
-                // Flush any outstanding flocking schedulers
-                that.synth.scheduler.clearAll();
-                // Pause the synth
-                that.synth.pause();
-                // Stop any queued voices
-                that.textToSpeech.cancel();
-            } catch(e) {
-
-            } finally {
-                // Always stop the flocking environment
-                flockingEnvironment.stop();
-                // Reset the bus manager
-                flockingEnvironment.busManager.reset();
-                // Update the model information about play state
-                that.applier.change("isPlaying", false);
-                that.applier.change("currentlyPlayingData", null);
-                // Always fire the stop event
-                that.events.onSonificationStopped.fire();
-            }
+        if(!that.model.isPlaying) {
+            return;
         }
 
+        // Empty the sonification queue
+        that.applier.change("sonificationQueue",[]);
+
+        // Clear any outstanding schedulers on the synth
+        that.synth.scheduler.clearAll();
+
+        var emptySequence = {
+            durations: [],
+            values: []
+        };
+
+        // Clear the sequencing models on the synth
+        that.synth.midiNoteSynth.applier.change("inputs.noteSequencer", emptySequence);
+        that.synth.pianoEnvelopeSynth.applier.change("inputs.envelopeSequencer", emptySequence);
+
+        // Stop any queued voices
+        that.textToSpeech.cancel();
+
+        // Stop the flocking environment
+        flockingEnvironment.stop();
+
+        // Update the model information about play state
+        that.applier.change("isPlaying", false);
+        that.applier.change("currentlyPlayingData", null);
+
+        // Fire the stop event
+        that.events.onSonificationStopped.fire();
     };
 
 })(jQuery, fluid);
