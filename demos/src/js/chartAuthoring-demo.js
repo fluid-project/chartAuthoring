@@ -30,16 +30,24 @@ Varied#3: colors: ["#f15e4e", "#acdee4", "#73c163", "#ffc74a", "#41beae"]
         },
         initialData:
             [{
-                label: "Value #1",
-                value: 75
+                label: "Android",
+                value: 48
             },
             {
-                label: "Value #2",
-                value: 17
+                label: "Apple",
+                value: 28
             },
             {
-                label: "Value #3",
-                value: 33
+                label: "Blackberry",
+                value: 18
+            },
+            {
+                label: "Microsoft",
+                value: 4
+            },
+            {
+                label: "Other",
+                value: 2
             }]
         });
 })(jQuery,fluid);
