@@ -108,9 +108,6 @@ var flockingEnvironment = flock.init();
             }
         },
         events: {
-            // Fire at the end converting a data set to a sonification data
-            // set
-            onDataEntriesConvertedToSonificationData: null,
             // Fires when a sonification play begins
             onSonificationStarted: null,
             // Fires when stopSonification function is called
@@ -126,7 +123,6 @@ var flockingEnvironment = flock.init();
         var sonificationData = floe.chartAuthoring.sonifier.unitDivisorSonificationStrategy(that, unitDivisor);
         sonificationData.sort(floe.chartAuthoring.utils.sortAscending);
         that.applier.change("sonifiedData",sonificationData);
-        that.events.onDataEntriesConvertedToSonificationData.fire();
     };
 
     // Creates a sonified data set based on unit divisors
