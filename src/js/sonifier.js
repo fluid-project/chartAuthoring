@@ -54,7 +54,6 @@ var flockingEnvironment = flock.init();
             // dataSet:,
             // sonifiedData:
             // sonificationQueue:
-            // synth:
             // currentlyPlayingData:
             // Supplied by relaying in floe.chartAuthoring.totalRelaying grade
             // total: {
@@ -270,17 +269,18 @@ var flockingEnvironment = flock.init();
     // execute a sonification
 
     floe.chartAuthoring.sonifier.startSonification = function(that) {
-        if(!that.model.isPlaying) {
-            // Fire the start event
-
-            that.events.onSonificationStarted.fire();
-
-            flockingEnvironment.start();
-
-            var sonifiedData = that.model.sonifiedData;
-            // Copy the sonification definition into the queue
-            that.applier.change("sonificationQueue",sonifiedData);
+        if(that.model.isPlaying) {
+            return;
         }
+
+        // Fire the start event
+        that.events.onSonificationStarted.fire();
+
+        // Start the flocking environment
+        flockingEnvironment.start();
+
+        // Copy the sonification definition into the queue
+        that.applier.change("sonificationQueue",that.model.sonifiedData);
     };
 
     // Passed a sonified dataset, this function + playDataAndQueueNext acts recursively
