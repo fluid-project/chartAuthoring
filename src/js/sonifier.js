@@ -37,6 +37,7 @@ var flockingEnvironment = flock.init();
 
             },
             synth: {
+                createOnEvent: "onSonificationStarted",
                 type: "floe.chartAuthoring.electricPianoBand",
                 options: {
                     components: {
