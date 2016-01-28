@@ -261,20 +261,16 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     });
 
     floe.chartAuthoring.highlightChange = function(that, d3Selector) {
+        var dataPlayingHighlightClass = that.options.styles.dataPlayingHighlightClass;
 
-        var chartAuthoringInterface = that.chartAuthoringInterface;
-        if(chartAuthoringInterface !== undefined) {
-            var dataPlayingHighlightClass = that.options.styles.dataPlayingHighlightClass;
+        var selection = d3Selector;
 
-            var selection = d3Selector;
+        var activeDataId = that.model.currentlyPlayingData !== null ? that.model.currentlyPlayingData.id : null;
 
-            var activeDataId = that.model.currentlyPlayingData !== null ? that.model.currentlyPlayingData.id : null;
-
-            var activeElement = floe.d3.filterById(selection, activeDataId);
-            var inactiveElements = floe.d3.filterByNotId(selection, activeDataId);
-            activeElement.classed(dataPlayingHighlightClass,true);
-            inactiveElements.classed(dataPlayingHighlightClass,false);
-        }
+        var activeElement = floe.d3.filterById(selection, activeDataId);
+        var inactiveElements = floe.d3.filterByNotId(selection, activeDataId);
+        activeElement.classed(dataPlayingHighlightClass,true);
+        inactiveElements.classed(dataPlayingHighlightClass,false);
     };
 
     floe.chartAuthoring.updateActiveElements = function(that) {
