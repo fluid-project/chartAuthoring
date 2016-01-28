@@ -119,7 +119,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         jqUnit.assertTrue("sonificationQueue has items in it", that.model.sonificationQueue.length === 2);
         jqUnit.assertEquals("isPlaying boolean was true after play was started", true, that.model.isPlaying);
         jqUnit.assertFalse("currentlyPlayingData is not null", null, that.model.currentlyPlayingData);
-        jqUnit.assertNotUndefined("Synth was created", that.model.synth);
+        jqUnit.assertNotUndefined("Synth was created", that.synth);
 
     });
 

@@ -35,6 +35,19 @@ var flockingEnvironment = flock.init();
                     }
                 }
 
+            },
+            synth: {
+                type: "floe.chartAuthoring.electricPianoBand",
+                options: {
+                    components: {
+                        scheduler: {
+                            type: "flock.scheduler.async",
+                            options: {
+                                synthContext: "floe.chartAuthoring.electricPianoBand"
+                            }
+                        }
+                    }
+                }
             }
         },
         model: {
@@ -58,9 +71,9 @@ var flockingEnvironment = flock.init();
                 funcName: "{that}.beginSonificationQueue"
             }
         },
-        // can override these to control synth behaviour
+        // can override these to control sonification behaviour
         // These need better explanations of what they do
-        synthOptions: {
+        sonificationOptions: {
             noteDurationConfig: {
                 divisorDuration: 3/8,
                 remainderDuration: 1/8
@@ -133,13 +146,13 @@ var flockingEnvironment = flock.init();
 
         var totalValue = that.model.total.value;
         var sonificationData = [];
-        var synthOptions = that.options.synthOptions;
+        var sonificationOptions = that.options.sonificationOptions;
         var playbackOptions = that.options.playbackOptions;
 
-        var noteDurationConfig = floe.chartAuthoring.sonifier.applyZoomToDurationConfig(synthOptions.noteDurationConfig,playbackOptions.zoom),
-            noteValueConfig = synthOptions.noteValueConfig,
-            envelopeDurationConfig = floe.chartAuthoring.sonifier.applyZoomToDurationConfig(synthOptions.envelopeDurationConfig,playbackOptions.zoom),
-            envelopeValuesConfig = synthOptions.envelopeValuesConfig;
+        var noteDurationConfig = floe.chartAuthoring.sonifier.applyZoomToDurationConfig(sonificationOptions.noteDurationConfig,playbackOptions.zoom),
+            noteValueConfig = sonificationOptions.noteValueConfig,
+            envelopeDurationConfig = floe.chartAuthoring.sonifier.applyZoomToDurationConfig(sonificationOptions.envelopeDurationConfig,playbackOptions.zoom),
+            envelopeValuesConfig = sonificationOptions.envelopeValuesConfig;
 
         fluid.each(dataSet, function(item,key) {
             if(item.value !== null) {
@@ -240,7 +253,7 @@ var flockingEnvironment = flock.init();
         return envelopeValues;
     };
 
-    // Get the synthOptions with a zoom factor applied to the durations
+    // Get the sonificationOptions with a zoom factor applied to the durations
     floe.chartAuthoring.sonifier.applyZoomToDurationConfig = function(durationConfig, zoom) {
 
         var zoomedNoteDurationConfig = fluid.transform(durationConfig, function (duration) {
@@ -263,24 +276,6 @@ var flockingEnvironment = flock.init();
             that.events.onSonificationStarted.fire();
 
             flockingEnvironment.start();
-
-            fluid.defaults("floe.chartAuthoring.dataPianoBand", {
-                gradeNames: ["floe.chartAuthoring.electricPianoBand"],
-
-                components: {
-                    scheduler: {
-                        type: "flock.scheduler.async",
-                        options: {
-                            synthContext: "floe.chartAuthoring.electricPianoBand"
-                        }
-                    }
-                }
-            });
-
-            var dataPianoBand = floe.chartAuthoring.dataPianoBand();
-
-            // Add the synth to the model
-            that.applier.change("synth", dataPianoBand);
 
             var sonifiedData = that.model.sonifiedData;
             // Copy the sonification definition into the queue
@@ -310,7 +305,7 @@ var flockingEnvironment = flock.init();
 
         var sonificationQueue = that.model.sonificationQueue;
 
-        var synth = that.model.synth;
+        var synth = that.synth;
 
         var currentData = sonificationQueue[0];
 
@@ -334,7 +329,7 @@ var flockingEnvironment = flock.init();
 
     floe.chartAuthoring.sonifier.playDataAndQueueNext = function(that) {
 
-        var synth = that.model.synth;
+        var synth = that.synth;
         var sonificationQueue = that.model.sonificationQueue;
         var data = sonificationQueue.shift();
 
@@ -373,9 +368,9 @@ var flockingEnvironment = flock.init();
                 // Flush the sonification queue
                 that.applier.change("sonificationQueue",[]);
                 // Flush any outstanding flocking schedulers
-                that.model.synth.scheduler.clearAll();
+                that.synth.scheduler.clearAll();
                 // Pause the synth
-                that.model.synth.pause();
+                that.synth.pause();
                 // Stop any queued voices
                 that.textToSpeech.cancel();
             } catch(e) {
