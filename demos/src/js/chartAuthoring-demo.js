@@ -28,6 +28,11 @@ Varied#3: colors: ["#f15e4e", "#acdee4", "#73c163", "#ffc74a", "#41beae"]
                 args: ["{that}.options.initialData"]
             }
         },
+        templateLoader: {
+            terms: {
+                templatePrefix: "../src/html"
+            }
+        },
         initialData:
             [{
                 label: "Android",
