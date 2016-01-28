@@ -28,7 +28,7 @@ var flockingEnvironment = flock.init();
                         }
                     },
                     listeners: {
-                        "{that}.events.onStop": {
+                        "onStop.playDataAndQueueNext": {
                             funcName: "floe.chartAuthoring.sonifier.playDataAndQueueNext",
                             args: "{floe.chartAuthoring.sonifier}"
                         }
