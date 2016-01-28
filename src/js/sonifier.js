@@ -227,11 +227,7 @@ var flockingEnvironment = flock.init();
     // Used to generate note values and note durations
     floe.chartAuthoring.sonifier.getNoteConfigByDivisors = function(units, unitDivisor, config) {
         var collection = fluid.transform(units, function(unit) {
-            if(unit === unitDivisor) {
-                return config.divisorReturnValue;
-            } else {
-                return config.remainderReturnValue;
-            }
+            return config [unit === unitDivisor ? "divisorReturnValue" : "remainderReturnValue"];
         });
         return collection;
     };
@@ -265,11 +261,8 @@ var flockingEnvironment = flock.init();
 
     floe.chartAuthoring.sonifier.getSonificationEnvelopeValues = function(envelopeDurations, envelopeDurationConfig, envelopeValuesConfig) {
         var envelopeValues = fluid.transform(envelopeDurations, function(duration) {
-            if(duration === envelopeDurationConfig.divisorDuration || duration === envelopeDurationConfig.remainderDuration) {
-                return envelopeValuesConfig.openValue;
-            } else {
-                return envelopeValuesConfig.closedValue;
-            }
+            var isDurationMatched = duration === envelopeDurationConfig.divisorDuration || duration === envelopeDurationConfig.remainderDuration;
+            return envelopeValuesConfig[isDurationMatched ? "openValue" : "closedValue"];
         });
         return envelopeValues;
     };
