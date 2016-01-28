@@ -37,7 +37,7 @@ var flockingEnvironment = flock.init();
 
             },
             synth: {
-                createOnEvent: "onSonificationStarted",
+                createOnEvent: "onSynthNeeded",
                 type: "floe.chartAuthoring.electricPianoBand",
                 options: {
                     components: {
@@ -121,6 +121,8 @@ var flockingEnvironment = flock.init();
             }
         },
         events: {
+            // Fires to trigger creation of the synth the first time it's needed
+            onSynthNeeded: null,
             // Fires when a sonification play begins
             onSonificationStarted: null,
             // Fires when stopSonification function is called
@@ -272,6 +274,11 @@ var flockingEnvironment = flock.init();
     floe.chartAuthoring.sonifier.startSonification = function(that) {
         if(that.model.isPlaying) {
             return;
+        }
+
+        // Create the synth if needed
+        if(that.synth === undefined) {
+            that.events.onSynthNeeded.fire();
         }
 
         // Fire the start event
