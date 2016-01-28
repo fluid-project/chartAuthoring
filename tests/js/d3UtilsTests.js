@@ -83,7 +83,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             expected: "id2"
         },
         {
-            msg: "Handle undefined scenario",
+            msg: "Handle no id scenario",
             input: {title: "oh gosh, I am not actually a D3 'd' object"},
             expected: undefined
         }];

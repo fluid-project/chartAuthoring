@@ -29,12 +29,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
      * - "undefined" if neither of these exist
      */
     floe.d3.idExtractor = function (d) {
-        try {
-            var id = d.id !== undefined ? d.id : d.data.id;
-            return id !== undefined ? id : undefined;
-        } catch (e) {
-            return undefined;
-        }
+        return d.id !== undefined ? d.id : d.data !== undefined ? d.data.id !== undefined? d.data.id : undefined : undefined;
     };
 
     // Given a selection of D3 elements and an ID, returns only the elements
