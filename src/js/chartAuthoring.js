@@ -193,19 +193,19 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         },
         model: {
             currentlyPlayingData: null,
-            activeRow: null,
-            activeSlice: null
+            activeRowId: null,
+            activeSliceId: null
         },
         modelListeners: {
             currentlyPlayingData: {
                 funcName: "{that}.updateActiveElements",
                 excludeSource: "init"
             },
-            activeRow: {
+            activeRowId: {
                 funcName: "{that}.highlightActiveLegendRow",
                 excludeSource: "init"
             },
-            activeSlice: {
+            activeSliceId: {
                 funcName: "{that}.highlightActivePieSlice",
                 excludeSource: "init"
             }
@@ -259,7 +259,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             target: "{that fluid.inlineEdit}.options"
         }]
     });
-    
+
     floe.chartAuthoring.highlightChange = function(that, d3Selector) {
 
         var chartAuthoringInterface = that.chartAuthoringInterface;
@@ -280,8 +280,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.chartAuthoring.updateActiveElements = function(that) {
         var currentlyPlayingData = that.model.currentlyPlayingData;
         var currentlyPlayingDataId = currentlyPlayingData !== null ? currentlyPlayingData.id : null;
-        that.applier.change("activeRow", currentlyPlayingDataId);
-        that.applier.change("activeSlice", currentlyPlayingDataId);
+        that.applier.change("activeRowId", currentlyPlayingDataId);
+        that.applier.change("activeSliceId", currentlyPlayingDataId);
     };
 
     // Given an object in the style of floe.chartAuthoring.dataEntryPanel.model.dataSet,
