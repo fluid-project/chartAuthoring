@@ -181,6 +181,14 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             "updateActiveElements": {
                 funcName: "floe.chartAuthoring.updateActiveElements",
                 args: ["{that}"]
+            },
+            "highlightActiveLegendRow": {
+                funcName: "floe.chartAuthoring.highlightChange",
+                args: ["{that}", "{that}.chartAuthoringInterface.pieChart.legend.rows"]
+            },
+            "highlightActivePieSlice": {
+                funcName: "floe.chartAuthoring.highlightChange",
+                args: ["{that}", "{that}.chartAuthoringInterface.pieChart.pie.paths"]
             }
         },
         model: {
@@ -194,13 +202,11 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 excludeSource: "init"
             },
             activeRow: {
-                funcName: "floe.chartAuthoring.handleHighlightChange",
-                args: ["{that}", "{that}.chartAuthoringInterface.pieChart.legend.rows"],
+                funcName: "{that}.highlightActiveLegendRow",
                 excludeSource: "init"
             },
             activeSlice: {
-                funcName: "floe.chartAuthoring.handleHighlightChange",
-                args: ["{that}", "{that}.chartAuthoringInterface.pieChart.pie.paths"],
+                funcName: "{that}.highlightActivePieSlice",
                 excludeSource: "init"
             }
         },
@@ -253,8 +259,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             target: "{that fluid.inlineEdit}.options"
         }]
     });
-
-    floe.chartAuthoring.handleHighlightChange = function(that, d3Selector) {
+    
+    floe.chartAuthoring.highlightChange = function(that, d3Selector) {
 
         var chartAuthoringInterface = that.chartAuthoringInterface;
         if(chartAuthoringInterface !== undefined) {
