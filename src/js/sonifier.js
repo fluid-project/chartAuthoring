@@ -77,6 +77,7 @@ var flockingEnvironment = flock.init();
             strategies: {
                 unitDivisor: {
                     config: {
+                        unitDivisorValue: 10,
                         notes: {
                             durations: {
                                 divisorReturnValue: 3/8,
@@ -128,6 +129,10 @@ var flockingEnvironment = flock.init();
             "beginSonificationQueue": {
                 funcName: "floe.chartAuthoring.sonifier.processSonificationQueue",
                 args: [0, true, "{that}"]
+            },
+            "unitDivisorSonificationStrategy": {
+                funcName: "floe.chartAuthoring.sonifier.unitDivisorStrategy",
+                args: ["{that}", "{that}.options.sonificationOptions.strategies.unitDivisor.config.unitDivisorValue"]
             }
         },
         events: {
@@ -144,16 +149,14 @@ var flockingEnvironment = flock.init();
     // convert it to an array of objects in the style used by the sonification components,
     // maintaining object constancy by using the dataEntry object name as the key
     floe.chartAuthoring.sonifier.dataEntriesToSonificationData = function(that) {
-        var unitDivisor = 10;
-        var sonificationData = floe.chartAuthoring.sonifier.unitDivisorSonificationStrategy(that, unitDivisor);
-        sonificationData.sort(floe.chartAuthoring.utils.sortAscending);
+        var sonificationData = that.unitDivisorSonificationStrategy();
         that.applier.change("sonifiedData",sonificationData);
     };
 
     // Creates a sonified data set based on unit divisors
     // Longer tones represent the unit divisor, while a short tones is played
     // for each remaining "1" of the remainder
-    floe.chartAuthoring.sonifier.unitDivisorSonificationStrategy = function(that, unitDivisor) {
+    floe.chartAuthoring.sonifier.unitDivisorStrategy = function(that, unitDivisor) {
         var dataSet = that.model.dataSet;
 
         var totalValue = that.model.total.value;
@@ -193,7 +196,7 @@ var flockingEnvironment = flock.init();
             }
 
         });
-
+        sonificationData.sort(floe.chartAuthoring.utils.sortAscending);
         return sonificationData;
     };
 
