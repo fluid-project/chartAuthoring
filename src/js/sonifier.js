@@ -134,6 +134,7 @@ var flockingEnvironment = flock.init();
                 funcName: "floe.chartAuthoring.sonifier.unitDivisorStrategy",
                 args: ["{that}", "{that}.options.sonificationOptions.strategies.unitDivisor.config.unitDivisorValue"]
             },
+            // Calls the default sonification strategy
             "defaultSonificationStrategy": "{that}.unitDivisorSonificationStrategy"
         },
         events: {
@@ -173,9 +174,9 @@ var flockingEnvironment = flock.init();
         fluid.each(dataSet, function(item,key) {
             if(item.value !== null) {
                 var percentage = Number(floe.chartAuthoring.percentage.calculate(item.value, totalValue).toFixed(0));
-                var units = floe.chartAuthoring.sonifier.getSonificationUnits(percentage, unitDivisor);
-                var noteDurations = floe.chartAuthoring.sonifier.getSonificationNoteDurations(units, unitDivisor, noteDurationConfig);
-                var noteValues = floe.chartAuthoring.sonifier.getSonificationNoteValues(units, unitDivisor, noteValueConfig);
+                var units = floe.chartAuthoring.sonifier.getDivisorStrategyUnits(percentage, unitDivisor);
+                var noteDurations = floe.chartAuthoring.sonifier.getSonificationNoteDurationsByDivisors(units, unitDivisor, noteDurationConfig);
+                var noteValues = floe.chartAuthoring.sonifier.getSonificationNoteValuesByDivisors(units, unitDivisor, noteValueConfig);
                 var envelopeDurations = floe.chartAuthoring.sonifier.getSonificationEnvelopeDurations(units, unitDivisor, envelopeDurationConfig);
                 var envelopeValues = floe.chartAuthoring.sonifier.getSonificationEnvelopeValues(envelopeDurations, envelopeDurationConfig, envelopeValuesConfig);
                 var d = {
@@ -202,7 +203,8 @@ var flockingEnvironment = flock.init();
     };
 
 
-    floe.chartAuthoring.sonifier.getSonificationUnits = function(value, unitDivisor) {
+    //
+    floe.chartAuthoring.sonifier.getDivisorStrategyUnits = function(value, unitDivisor) {
         var numberDivisors = Math.floor(value / unitDivisor);
         var numberRemainders = value % unitDivisor;
         var divisorArray =[];
@@ -217,9 +219,13 @@ var flockingEnvironment = flock.init();
         return divisorArray.concat(remainderArray);
     };
 
-    // TODO: document this function
+    // Given an array of units consisting of divisor and remainder values
+    // such as the one produced by floe.chartAuthoring.sonifier.getDivisorStrategyUnits
+    // and a note config, returns an array with those divisor and remainder
+    // values translated into the equivalent units required for sonification
+    //
+    // Used to generate note values and note durations
     floe.chartAuthoring.sonifier.getNoteConfigByDivisors = function(units, unitDivisor, config) {
-
         var collection = fluid.transform(units, function(unit) {
             if(unit === unitDivisor) {
                 return config.divisorReturnValue;
@@ -230,12 +236,12 @@ var flockingEnvironment = flock.init();
         return collection;
     };
 
-    floe.chartAuthoring.sonifier.getSonificationNoteDurations = function(units, unitDivisor, noteDurationConfig) {
+    floe.chartAuthoring.sonifier.getSonificationNoteDurationsByDivisors = function(units, unitDivisor, noteDurationConfig) {
         return floe.chartAuthoring.sonifier.getNoteConfigByDivisors(units, unitDivisor, noteDurationConfig);
     };
 
 
-    floe.chartAuthoring.sonifier.getSonificationNoteValues = function(units, unitDivisor, noteValueConfig) {
+    floe.chartAuthoring.sonifier.getSonificationNoteValuesByDivisors = function(units, unitDivisor, noteValueConfig) {
         return floe.chartAuthoring.sonifier.getNoteConfigByDivisors(units, unitDivisor, noteValueConfig);
     };
 
