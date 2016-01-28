@@ -133,7 +133,8 @@ var flockingEnvironment = flock.init();
             "unitDivisorSonificationStrategy": {
                 funcName: "floe.chartAuthoring.sonifier.unitDivisorStrategy",
                 args: ["{that}", "{that}.options.sonificationOptions.strategies.unitDivisor.config.unitDivisorValue"]
-            }
+            },
+            "defaultSonificationStrategy": "{that}.unitDivisorSonificationStrategy"
         },
         events: {
             // Fires to trigger creation of the synth the first time it's needed
@@ -149,7 +150,7 @@ var flockingEnvironment = flock.init();
     // convert it to an array of objects in the style used by the sonification components,
     // maintaining object constancy by using the dataEntry object name as the key
     floe.chartAuthoring.sonifier.dataEntriesToSonificationData = function(that) {
-        var sonificationData = that.unitDivisorSonificationStrategy();
+        var sonificationData = that.defaultSonificationStrategy();
         that.applier.change("sonifiedData",sonificationData);
     };
 
