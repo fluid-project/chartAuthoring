@@ -256,9 +256,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
 
         floe.tests.chartAuthoring.expectedDisplayValues = [
-            "20/200 (10.00%)",
-            "100/200 (50.00%)",
-            "80/200 (40.00%)"
+            "20 / 200 (10.00%)",
+            "100 / 200 (50.00%)",
+            "80 / 200 (40.00%)"
         ];
 
 

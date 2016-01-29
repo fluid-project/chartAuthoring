@@ -81,8 +81,8 @@ var flockingEnvironment = flock.init();
                         notes: {
                             durations: {
                                 play: {
-                                    divisorReturnValue: 3/8,
-                                    remainderReturnValue: 1/8
+                                    divisorReturnValue: 3 / 8,
+                                    remainderReturnValue: 1 / 8
                                 }
                             },
                             values: {
@@ -93,12 +93,12 @@ var flockingEnvironment = flock.init();
                         envelope: {
                             durations: {
                                 play: {
-                                    divisorReturnValue: 1/8,
-                                    remainderReturnValue: 1/24
+                                    divisorReturnValue: 1 / 8,
+                                    remainderReturnValue: 1 / 24
                                 },
                                 silence: {
-                                    divisorReturnValue: 1/4,
-                                    remainderReturnValue: 1/12
+                                    divisorReturnValue: 1 / 4,
+                                    remainderReturnValue: 1 / 12
                                 }
                             },
                             values: {
