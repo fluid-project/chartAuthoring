@@ -52,30 +52,24 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // Should always be 100 (100%)
     floe.tests.chartAuthoring.totalRelaying.expectedPercentageValue = 100;
 
-    jqUnit.test("Test total relaying for pie/legend-style dataset", function () {
+    floe.tests.chartAuthoring.totalRelaying.testRelay = function(expectedTotal, dataset) {
         jqUnit.expect(2);
-
         var that = floe.tests.chartAuthoring.totalRelaying({
             model: {
-                dataSet: floe.tests.chartAuthoring.totalRelaying.arrayDataSet
+                dataSet: dataset
             }
         });
 
-        jqUnit.assertEquals("Relayed total is expected value", floe.tests.chartAuthoring.totalRelaying.expectedArrayDataSetTotal, that.model.total.value);
+        jqUnit.assertEquals("Relayed total is expected value", expectedTotal.value);
         jqUnit.assertEquals("Relayed percentage is expected value", floe.tests.chartAuthoring.totalRelaying.expectedPercentageValue, that.model.total.percentage);
+    };
+
+    jqUnit.test("Test total relaying for pie/legend-style dataset", function () {
+        floe.tests.chartAuthoring.totalRelaying.testRelay(floe.tests.chartAuthoring.totalRelaying.expectedArrayDataSetTotal, floe.tests.chartAuthoring.totalRelaying.arrayDataSet);
     });
 
     jqUnit.test("Test total relaying for data entry panel-style dataset", function () {
-        jqUnit.expect(2);
-
-        var that = floe.tests.chartAuthoring.totalRelaying({
-            model: {
-                dataSet: floe.tests.chartAuthoring.totalRelaying.objectDataset
-            }
-        });
-
-        jqUnit.assertEquals("Relayed total is expected value", floe.tests.chartAuthoring.totalRelaying.expectedObjectDataSetTotal, that.model.total.value);
-        jqUnit.assertEquals("Relayed percentage is expected value", floe.tests.chartAuthoring.totalRelaying.expectedPercentageValue, that.model.total.percentage);
+        floe.tests.chartAuthoring.totalRelaying.testRelay(floe.tests.chartAuthoring.totalRelaying.expectedObjectDataSetTotal, floe.tests.chartAuthoring.totalRelaying.objectDataset);
     });
 
 })(jQuery, fluid);
