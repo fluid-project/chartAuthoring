@@ -37,7 +37,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         }
     });
 
-    floe.tests.chartAuthoring.testValueBinding = function(that, modelPath, DOMPath, newValue) {
+    floe.tests.chartAuthoring.testValueBinding = function (that, modelPath, DOMPath, newValue) {
         that.applier.change(modelPath, newValue);
         jqUnit.assertEquals("DOM element value `" + DOMPath + "` is updated when its corresponding model value at `" + modelPath + " `is changed");
     };
@@ -99,7 +99,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         jqUnit.assertTrue("The mouseover listener for pie slices have been registered", that.mouseOverListenerCalled);
     };
 
-    floe.tests.chartAuthoring.testPieTextSyncWithModelDataSet = function(that) {
+    floe.tests.chartAuthoring.testPieTextSyncWithModelDataSet = function (that) {
         var dataSet = that.model.dataSet;
         var d3Elem = floe.d3.jQueryToD3(that.locate("text"));
         d3Elem.each(function (d,i) {

@@ -176,7 +176,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     });
 
-    floe.tests.chartAuthoring.validateStopped = function(that) {
+    floe.tests.chartAuthoring.validateStopped = function (that) {
         jqUnit.test("Test that the stop behaves as expected", function () {
             jqUnit.expect(3);
             jqUnit.assertEquals("isPlaying boolean was false after play finished", false, that.model.isPlaying);

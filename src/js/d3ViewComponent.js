@@ -114,7 +114,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     };
 
     // Returns a formatted string for a numeric data value based on a supplied template
-    floe.d3ViewComponent.getTemplatedDisplayValue = function(totalValue, percentageDigits, template, d) {
+    floe.d3ViewComponent.getTemplatedDisplayValue = function (totalValue, percentageDigits, template, d) {
         var percentage = floe.chartAuthoring.percentage.calculate(d.value, totalValue);
         var percentageForTemplate = percentage !== null ? percentage.toFixed(percentageDigits) : percentage;
         var output = fluid.stringTemplate(template, {label: d.label, value: d.value, percentage: percentageForTemplate, total: totalValue});

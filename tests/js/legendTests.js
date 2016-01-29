@@ -248,7 +248,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         return "rgb(" + r + ", " + g + ", " + b + ")";
     };
 
-    floe.tests.chartAuthoring.testLegendSyncWithModelDataSet = function(that, expectedDataSet) {
+    floe.tests.chartAuthoring.testLegendSyncWithModelDataSet = function (that, expectedDataSet) {
         var dataSet = expectedDataSet;
         var rows = floe.d3.jQueryToD3(that.locate("row"));
         rows.each(function (d,i) {
@@ -367,7 +367,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     });
 
-    floe.tests.chartAuthoring.testCustomDisplay = function(that, message, cellSelector, expectedValuePath) {
+    floe.tests.chartAuthoring.testCustomDisplay = function (that, message, cellSelector, expectedValuePath) {
         var d3Cells = that.jQueryToD3($(that.locate(cellSelector)));
         d3Cells.each(function (d,i) {
             var expectedLabel = floe.tests.chartAuthoring.expectedCustomDisplay[i][expectedValuePath];

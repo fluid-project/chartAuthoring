@@ -156,7 +156,7 @@ var flockingEnvironment = flock.init();
     // Given an object in the style of floe.chartAuthoring.dataEntryPanel.model.dataEntries,
     // convert it to an array of objects in the style used by the sonification components,
     // maintaining object constancy by using the dataEntry object name as the key
-    floe.chartAuthoring.sonifier.dataEntriesToSonificationData = function(that) {
+    floe.chartAuthoring.sonifier.dataEntriesToSonificationData = function (that) {
         var sonificationData = that.defaultSonificationStrategy();
         that.applier.change("sonifiedData",sonificationData);
     };
@@ -164,7 +164,7 @@ var flockingEnvironment = flock.init();
     // Creates a sonified data set based on unit divisors
     // Longer tones represent the unit divisor, while a short tones is played
     // for each remaining "1" of the remainder
-    floe.chartAuthoring.sonifier.unitDivisorStrategy = function(that, unitDivisor) {
+    floe.chartAuthoring.sonifier.unitDivisorStrategy = function (that, unitDivisor) {
         var dataSet = that.model.dataSet;
 
         var totalValue = that.model.total.value;
@@ -214,7 +214,7 @@ var flockingEnvironment = flock.init();
     // - the remainder divided by 1
     // The value "32" with unitDivisor "10" converts into the following array:
     // [10, 10, 10, 1, 1]
-    floe.chartAuthoring.sonifier.getDivisorStrategyUnits = function(value, unitDivisor) {
+    floe.chartAuthoring.sonifier.getDivisorStrategyUnits = function (value, unitDivisor) {
         var numberDivisors = Math.floor(value / unitDivisor);
         var numberRemainders = value % unitDivisor;
         var divisorArray =[];
@@ -235,22 +235,22 @@ var flockingEnvironment = flock.init();
     // values translated into the equivalent units required for sonification
     //
     // Used to generate value and duration configs
-    floe.chartAuthoring.sonifier.getConfigByDivisor = function(units, unitDivisor, config) {
+    floe.chartAuthoring.sonifier.getConfigByDivisor = function (units, unitDivisor, config) {
         var collection = fluid.transform(units, function(unit) {
             return config [unit === unitDivisor ? "divisorReturnValue" : "remainderReturnValue"];
         });
         return collection;
     };
 
-    floe.chartAuthoring.sonifier.getSonificationNoteDurationsByDivisor = function(units, unitDivisor, noteDurationConfig) {
+    floe.chartAuthoring.sonifier.getSonificationNoteDurationsByDivisor = function (units, unitDivisor, noteDurationConfig) {
         return floe.chartAuthoring.sonifier.getConfigByDivisor(units, unitDivisor, noteDurationConfig);
     };
 
-    floe.chartAuthoring.sonifier.getSonificationNoteValuesByDivisor = function(units, unitDivisor, noteValueConfig) {
+    floe.chartAuthoring.sonifier.getSonificationNoteValuesByDivisor = function (units, unitDivisor, noteValueConfig) {
         return floe.chartAuthoring.sonifier.getConfigByDivisor(units, unitDivisor, noteValueConfig);
     };
 
-    floe.chartAuthoring.sonifier.getSonificationEnvelopeDurationsByDivisor = function(units, unitDivisor, envelopeDurationConfig) {
+    floe.chartAuthoring.sonifier.getSonificationEnvelopeDurationsByDivisor = function (units, unitDivisor, envelopeDurationConfig) {
         var playDurations = floe.chartAuthoring.sonifier.getConfigByDivisor(units, unitDivisor, envelopeDurationConfig.play);
 
         var silenceDurations = floe.chartAuthoring.sonifier.getConfigByDivisor(units, unitDivisor, envelopeDurationConfig.silence);
@@ -258,9 +258,9 @@ var flockingEnvironment = flock.init();
         return floe.chartAuthoring.sonifier.interleaveTransform(playDurations, silenceDurations);
     };
 
-    floe.chartAuthoring.sonifier.getSonificationEnvelopeValuesByDivisor = function(envelopeDurations, envelopeDurationConfig, envelopeValuesConfig) {
+    floe.chartAuthoring.sonifier.getSonificationEnvelopeValuesByDivisor = function (envelopeDurations, envelopeDurationConfig, envelopeValuesConfig) {
 
-        var isDurationMatchesPlayValue = function(duration) {
+        var isDurationMatchesPlayValue = function (duration) {
             return duration === envelopeDurationConfig.play.divisorReturnValue || duration === envelopeDurationConfig.play.remainderReturnValue;
         };
 
@@ -270,7 +270,7 @@ var flockingEnvironment = flock.init();
     // Given an array of values, a truthFunction and values to return when the
     // truth function is true or false, return another array of values based on
     // testing each value in the original array
-    floe.chartAuthoring.sonifier.truthValueTransform = function(valueArray, truthFunction, trueValue, falseValue) {
+    floe.chartAuthoring.sonifier.truthValueTransform = function (valueArray, truthFunction, trueValue, falseValue) {
         var transformedArray = fluid.transform(valueArray, function(value) {
             var testedValue = truthFunction(value) ? trueValue : falseValue;
             return testedValue;
@@ -282,14 +282,14 @@ var flockingEnvironment = flock.init();
     // Given two arrays, interleaves the shorter array into the larger one,
     // starting with the first item of array1
     // TODO: needs a test; needs to check on array length and behave appropriately
-    floe.chartAuthoring.sonifier.interleaveTransform = function(array1, array2) {
+    floe.chartAuthoring.sonifier.interleaveTransform = function (array1, array2) {
         // var shorterLength = array1.length >= array2.length ? array1.length : array2.length;
 
         var interleaved = fluid.transform(array1, function(item, index) {
             return [item, array2[index]];
         });
 
-        var concat = function(curentArray, totalArray) {
+        var concat = function (curentArray, totalArray) {
             return totalArray.concat(curentArray);
         };
 
@@ -301,7 +301,7 @@ var flockingEnvironment = flock.init();
     // returns it with all numeric values transformed by the multiplier value
     // Non-numeric values are left intact
 
-    floe.chartAuthoring.sonifier.multiplierTransform = function(object, multiplier) {
+    floe.chartAuthoring.sonifier.multiplierTransform = function (object, multiplier) {
         if(fluid.isPlainObject(object)) {
             var transformed = fluid.transform(object, function(v) {
                     return floe.chartAuthoring.sonifier.multiplierTransform(v, multiplier);
@@ -313,7 +313,7 @@ var flockingEnvironment = flock.init();
     };
 
     // Get the sonificationOptions with a zoom factor applied to the durations
-    floe.chartAuthoring.sonifier.applyZoomToDurationConfig = function(durationConfig, zoom) {
+    floe.chartAuthoring.sonifier.applyZoomToDurationConfig = function (durationConfig, zoom) {
         var zoomedNoteDurationConfig = fluid.transform(durationConfig, function (duration) {
             return floe.chartAuthoring.sonifier.multiplierTransform(duration, zoom);
         });
@@ -326,7 +326,7 @@ var flockingEnvironment = flock.init();
     // - calls the initial playDataset function that's used recursively to
     // execute a sonification
 
-    floe.chartAuthoring.sonifier.startSonification = function(that) {
+    floe.chartAuthoring.sonifier.startSonification = function (that) {
         if(that.model.isPlaying) {
             return;
         }
@@ -362,7 +362,7 @@ var flockingEnvironment = flock.init();
     // when a sonification completes
     // - we can fire an event when a voice label read completes, but can't know
     // in advance how long it will take to read the label
-    floe.chartAuthoring.sonifier.processSonificationQueue = function(delay, noGap, that) {
+    floe.chartAuthoring.sonifier.processSonificationQueue = function (delay, noGap, that) {
         var sonificationQueue = that.model.sonificationQueue;
         if(sonificationQueue.length === 0) {
             return;
@@ -392,7 +392,7 @@ var flockingEnvironment = flock.init();
 
     // Recursion function called from floe.chartAuthoring.sonifier.processSonificationQueue
 
-    floe.chartAuthoring.sonifier.playDataAndQueueNext = function(that) {
+    floe.chartAuthoring.sonifier.playDataAndQueueNext = function (that) {
 
         var synth = that.synth;
         var sonificationQueue = that.model.sonificationQueue;
@@ -420,13 +420,13 @@ var flockingEnvironment = flock.init();
     // Given an array containing indiividual durations, accumulate them and
     // return the total duration
     floe.chartAuthoring.sonifier.getTotalDuration = function (durationsArray) {
-        var sum = function(duration, runningTotal) {
+        var sum = function (duration, runningTotal) {
             return duration+runningTotal;
         };
         return fluid.accumulate(durationsArray, sum, 0);
     };
 
-    floe.chartAuthoring.sonifier.stopSonification = function(that) {
+    floe.chartAuthoring.sonifier.stopSonification = function (that) {
 
         if(!that.model.isPlaying) {
             return;

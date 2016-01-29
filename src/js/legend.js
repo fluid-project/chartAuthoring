@@ -113,7 +113,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     // Add new rows for new data, apply appropriate classes for selectors and styling
 
-    floe.chartAuthoring.pieChart.legend.addRows = function(that) {
+    floe.chartAuthoring.pieChart.legend.addRows = function (that) {
         var rowClass = that.classes.row,
             colorCellClass = that.classes.colorCell,
             labelCellClass = that.classes.labelCell,

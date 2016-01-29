@@ -260,7 +260,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         }]
     });
 
-    floe.chartAuthoring.highlightChange = function(that, d3Selector) {
+    floe.chartAuthoring.highlightChange = function (that, d3Selector) {
         var dataPlayingHighlightClass = that.options.styles.dataPlayingHighlightClass;
 
         var selection = d3Selector;
@@ -273,7 +273,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         inactiveElements.classed(dataPlayingHighlightClass,false);
     };
 
-    floe.chartAuthoring.updateActiveElements = function(that) {
+    floe.chartAuthoring.updateActiveElements = function (that) {
         var currentlyPlayingData = that.model.currentlyPlayingData;
         var currentlyPlayingDataId = currentlyPlayingData !== null ? currentlyPlayingData.id : null;
         that.applier.change("activeRowId", currentlyPlayingDataId);
@@ -283,7 +283,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // Given an object in the style of floe.chartAuthoring.dataEntryPanel.model.dataSet,
     // convert it to an array of objects in the style used by the pieChart components,
     // maintaining object constancy by using the dataEntry object name as the key
-    floe.chartAuthoring.dataEntriesToPieChartData = function(dataSet) {
+    floe.chartAuthoring.dataEntriesToPieChartData = function (dataSet) {
 
         var pieChartData = [];
         fluid.each(dataSet, function(item, key) {
@@ -303,7 +303,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // Specifically, adds:
     // - an aria-controls attribute for the dataEntryPanel's form referencing the unique IDs of the pie and legend
     // - an aria-controls attribute for the reset button referencing the dataEntryPanel form
-    floe.chartAuthoring.addAriaConnections = function(that) {
+    floe.chartAuthoring.addAriaConnections = function (that) {
         var legendId = fluid.allocateSimpleId(that.chartAuthoringInterface.pieChart.legend.locate("table")),
             pieId = fluid.allocateSimpleId(that.chartAuthoringInterface.pieChart.pie.locate("pie")),
             totalId = fluid.allocateSimpleId(that.chartAuthoringInterface.dataEntryPanel.locate("totalValue")),
@@ -333,7 +333,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         that.events.onDataAppliedToDataEntryPanel.fire();
     };
 
-    floe.chartAuthoring.addSonificationControlsHandlers = function(that) {
+    floe.chartAuthoring.addSonificationControlsHandlers = function (that) {
         var playButton = that.locate("sonifierPlay"),
             stopButton = that.locate("sonifierStop");
 

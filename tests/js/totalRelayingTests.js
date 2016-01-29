@@ -52,7 +52,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // Should always be 100 (100%)
     floe.tests.chartAuthoring.totalRelaying.expectedPercentageValue = 100;
 
-    floe.tests.chartAuthoring.totalRelaying.testRelay = function(expectedTotal, dataset) {
+    floe.tests.chartAuthoring.totalRelaying.testRelay = function (expectedTotal, dataset) {
         jqUnit.expect(2);
         var that = floe.tests.chartAuthoring.totalRelaying({
             model: {
