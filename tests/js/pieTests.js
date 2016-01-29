@@ -102,7 +102,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.tests.chartAuthoring.testPieTextSyncWithModelDataSet = function (that) {
         var dataSet = that.model.dataSet;
         var d3Elem = floe.d3.jQueryToD3(that.locate("text"));
-        d3Elem.each(function (d,i) {
+        d3Elem.each(function (d, i) {
             var displayedValue = d3.select(this).text();
             var expectedValue = typeof (dataSet[i]) === "object" ? dataSet[i].value : dataSet[i];
             jqUnit.assertEquals("Displayed values are in sync with the current model", expectedValue, Number(displayedValue));
@@ -264,7 +264,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         var d3Elem = floe.d3.jQueryToD3(that.locate("text"));
 
-        d3Elem.each(function (d,i) {
+        d3Elem.each(function (d, i) {
             var displayedValue = d3.select(this).text();
             jqUnit.assertEquals("Displayed values are in sync with the current model", floe.tests.chartAuthoring.expectedDisplayValues[i], displayedValue);
         });

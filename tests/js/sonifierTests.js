@@ -23,7 +23,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         gradeNames: ["floe.tests.chartAuthoring.sonifier"],
         components: {
             textToSpeech: {
-                options:{
+                options: {
                     model: {
                         utteranceOpts: {
                             "lang": "en-GB",
@@ -65,7 +65,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 durations: [3 / 8, 3 / 8, 3 / 8, 3 / 8, 3 / 8, 3 / 8, 1 / 8, 1 / 8, 1 / 8, 1 / 8, 1 / 8, 1 / 8, 1 / 8],
                 values: [91, 91, 91, 91, 91, 91, 89, 89, 89, 89, 89, 89, 89]
             },
-            percentage:67,
+            percentage: 67,
             value: 100,
             label: "One"
         },
@@ -80,7 +80,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 durations: [3 / 8, 3 / 8, 3 / 8, 1 / 8, 1 / 8, 1 / 8],
                 values: [91, 91, 91, 89, 89, 89]
             },
-            percentage:33,
+            percentage: 33,
             value: 50,
             label: "Two"
         }
@@ -99,7 +99,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 durations: [6 / 8, 6 / 8, 6 / 8, 6 / 8, 6 / 8, 6 / 8, 2 / 8, 2 / 8, 2 / 8, 2 / 8, 2 / 8, 2 / 8, 2 / 8],
                 values: [91, 91, 91, 91, 91, 91, 89, 89, 89, 89, 89, 89, 89]
             },
-            percentage:67,
+            percentage: 67,
             value: 100,
             label: "One"
         },
@@ -114,7 +114,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 durations: [6 / 8, 6 / 8, 6 / 8, 2 / 8, 2 / 8, 2 / 8],
                 values: [91, 91, 91, 89, 89, 89]
             },
-            percentage:33,
+            percentage: 33,
             value: 50,
             label: "Two"
         }
@@ -140,7 +140,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 dataSet: floe.tests.chartAuthoring.dataSet
             },
             playbackOptions: {
-                zoom:2
+                zoom: 2
             }
         });
 
@@ -166,7 +166,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         that.playSonification();
 
         jqUnit.assertTrue("sonificationQueue has expected number of items in it", that.model.sonificationQueue.length === 2);
-        fluid.each(that.model.sonificationQueue, function(queueItem, idx) {
+        fluid.each(that.model.sonificationQueue, function (queueItem, idx) {
             var sonifiedDataItem = that.model.sonifiedData[idx];
             jqUnit.assertDeepEq("sonificationQueue item at position " + idx +  " matches parallel sonifiedData item", queueItem, sonifiedDataItem);
         });
