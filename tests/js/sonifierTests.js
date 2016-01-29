@@ -56,7 +56,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     [
         {
             id: "entry1",
-            units: [10,10,10,10,10,10,1,1,1,1,1,1,1],
+            units: [10, 10, 10, 10, 10, 10, 1, 1, 1, 1, 1, 1, 1],
             envelope: {
                 durations: [1 / 8, 1 / 4, 1 / 8, 1 / 4, 1 / 8, 1 / 4, 1 / 8, 1 / 4, 1 / 8, 1 / 4, 1 / 8, 1 / 4, 1 / 24, 1 / 12, 1 / 24, 1 / 12, 1 / 24, 1 / 12, 1 / 24, 1 / 12, 1 / 24, 1 / 12, 1 / 24, 1 / 12, 1 / 24, 1 / 12],
                 values: [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0]
@@ -71,7 +71,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         },
         {
             id: "entry2",
-            units: [10,10,10,1,1,1],
+            units: [10, 10, 10, 1, 1, 1],
             envelope: {
                 durations: [1 / 8, 1 / 4, 1 / 8, 1 / 4, 1 / 8, 1 / 4, 1 / 24, 1 / 12, 1 / 24, 1 / 12, 1 / 24, 1 / 12],
                 values: [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0]
@@ -90,7 +90,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     [
         {
             id: "entry1",
-            units: [10,10,10,10,10,10,1,1,1,1,1,1,1],
+            units: [10, 10, 10, 10, 10, 10, 1, 1, 1, 1, 1, 1, 1],
             envelope: {
                 durations: [2 / 8, 2 / 4, 2 / 8, 2 / 4, 2 / 8, 2 / 4, 2 / 8, 2 / 4, 2 / 8, 2 / 4, 2 / 8, 2 / 4, 2 / 24, 2 / 12, 2 / 24, 2 / 12, 2 / 24, 2 / 12, 2 / 24, 2 / 12, 2 / 24, 2 / 12, 2 / 24, 2 / 12, 2 / 24, 2 / 12],
                 values: [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0]
@@ -105,7 +105,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         },
         {
             id: "entry2",
-            units: [10,10,10,1,1,1],
+            units: [10, 10, 10, 1, 1, 1],
             envelope: {
                 durations: [2 / 8, 2 / 4, 2 / 8, 2 / 4, 2 / 8, 2 / 4, 2 / 24, 2 / 12, 2 / 24, 2 / 12, 2 / 24, 2 / 12],
                 values: [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0]

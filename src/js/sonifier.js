@@ -213,7 +213,7 @@ var flockingEnvironment = flock.init();
     // - the number of divisors
     // - the remainder divided by 1
     // The value "32" with unitDivisor "10" converts into the following array:
-    // [10,10,10,1,1]
+    // [10, 10, 10, 1, 1]
     floe.chartAuthoring.sonifier.getDivisorStrategyUnits = function(value, unitDivisor) {
         var numberDivisors = Math.floor(value / unitDivisor);
         var numberRemainders = value % unitDivisor;
