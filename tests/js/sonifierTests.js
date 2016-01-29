@@ -86,6 +86,40 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         }
     ];
 
+    floe.tests.chartAuthoring.sonificationDataWith2xZoom =
+    [
+        {
+            id: "entry1",
+            units: [10,10,10,10,10,10,1,1,1,1,1,1,1],
+            envelope: {
+                durations: [2/8, 2/4, 2/8, 2/4, 2/8, 2/4, 2/8, 2/4, 2/8, 2/4, 2/8, 2/4, 2/24, 2/12, 2/24, 2/12, 2/24, 2/12, 2/24, 2/12, 2/24, 2/12, 2/24, 2/12, 2/24, 2/12],
+                values: [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0]
+            },
+            notes: {
+                durations: [6/8, 6/8, 6/8, 6/8, 6/8, 6/8, 2/8, 2/8, 2/8, 2/8, 2/8, 2/8, 2/8],
+                values: [91, 91, 91, 91, 91, 91, 89, 89, 89, 89, 89, 89, 89]
+            },
+            percentage:67,
+            value: 100,
+            label: "One"
+        },
+        {
+            id: "entry2",
+            units: [10,10,10,1,1,1],
+            envelope: {
+                durations: [2/8, 2/4, 2/8, 2/4, 2/8, 2/4, 2/24, 2/12, 2/24, 2/12, 2/24, 2/12],
+                values: [1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0]
+            },
+            notes: {
+                durations: [6/8, 6/8, 6/8, 2/8, 2/8, 2/8],
+                values: [91, 91, 91, 89, 89, 89]
+            },
+            percentage:33,
+            value: 50,
+            label: "Two"
+        }
+    ];
+
     jqUnit.test("Test the sonification data conversion", function () {
         jqUnit.expect(1);
 
@@ -96,6 +130,21 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         });
 
         jqUnit.assertDeepEq("Sonifier's dataset is converted into the expected sonification", floe.tests.chartAuthoring.sonificationData, that.model.sonifiedData);
+    });
+
+    jqUnit.test("Test the sonification data conversion with zoom", function () {
+        jqUnit.expect(1);
+
+        var that = floe.tests.chartAuthoring.sonifier({
+            model: {
+                dataSet: floe.tests.chartAuthoring.dataSet
+            },
+            playbackOptions: {
+                zoom:2
+            }
+        });
+
+        jqUnit.assertDeepEq("Sonifier's dataset is converted into the expected sonification", floe.tests.chartAuthoring.sonificationDataWith2xZoom, that.model.sonifiedData);
     });
 
     jqUnit.test("Test the sonification play behaviour", function () {
