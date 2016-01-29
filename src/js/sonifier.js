@@ -209,7 +209,11 @@ var flockingEnvironment = flock.init();
     };
 
 
-    //
+    // Given a value and a divisor, return an array consisting of
+    // - the number of divisors
+    // - the remainder divided by 1
+    // The value "32" with unitDivisor "10" converts into the following array:
+    // [10,10,10,1,1]
     floe.chartAuthoring.sonifier.getDivisorStrategyUnits = function(value, unitDivisor) {
         var numberDivisors = Math.floor(value / unitDivisor);
         var numberRemainders = value % unitDivisor;
@@ -230,8 +234,8 @@ var flockingEnvironment = flock.init();
     // and a note config, returns an array with those divisor and remainder
     // values translated into the equivalent units required for sonification
     //
-    // Used to generate note values and note durations
-    floe.chartAuthoring.sonifier.getNoteConfigByDivisor = function(units, unitDivisor, config) {
+    // Used to generate value and duration configs
+    floe.chartAuthoring.sonifier.getConfigByDivisor = function(units, unitDivisor, config) {
         var collection = fluid.transform(units, function(unit) {
             return config [unit === unitDivisor ? "divisorReturnValue" : "remainderReturnValue"];
         });
@@ -239,30 +243,19 @@ var flockingEnvironment = flock.init();
     };
 
     floe.chartAuthoring.sonifier.getSonificationNoteDurationsByDivisor = function(units, unitDivisor, noteDurationConfig) {
-        return floe.chartAuthoring.sonifier.getNoteConfigByDivisor(units, unitDivisor, noteDurationConfig);
+        return floe.chartAuthoring.sonifier.getConfigByDivisor(units, unitDivisor, noteDurationConfig);
     };
 
 
     floe.chartAuthoring.sonifier.getSonificationNoteValuesByDivisor = function(units, unitDivisor, noteValueConfig) {
-        return floe.chartAuthoring.sonifier.getNoteConfigByDivisor(units, unitDivisor, noteValueConfig);
+        return floe.chartAuthoring.sonifier.getConfigByDivisor(units, unitDivisor, noteValueConfig);
     };
 
     floe.chartAuthoring.sonifier.getSonificationEnvelopeDurationsByDivisor = function(units, unitDivisor, envelopeDurationConfig) {
-        var durations = fluid.transform(units, function (unit) {
-            if(unit === unitDivisor) {
-                return [envelopeDurationConfig.play.divisorReturnValue,envelopeDurationConfig.silence.divisorReturnValue];
-            } else {
-                return [envelopeDurationConfig.play.remainderReturnValue,envelopeDurationConfig.silence.remainderReturnValue];
-            }
-        });
+        var playDurations = floe.chartAuthoring.sonifier.getConfigByDivisor(units, unitDivisor, envelopeDurationConfig.play);
+        var silenceDurations = floe.chartAuthoring.sonifier.getConfigByDivisor(units, unitDivisor, envelopeDurationConfig.silence);
 
-        var durationsJoined = [];
-
-        fluid.each(durations, function(duration) {
-            durationsJoined = durationsJoined.concat(duration);
-        });
-
-        return durationsJoined;
+        return floe.chartAuthoring.sonifier.interleaveTransform(playDurations, silenceDurations);
     };
 
     floe.chartAuthoring.sonifier.getSonificationEnvelopeValuesByDivisor = function(envelopeDurations, envelopeDurationConfig, envelopeValuesConfig) {
@@ -271,6 +264,24 @@ var flockingEnvironment = flock.init();
             return envelopeValuesConfig[isDurationMatched ? "openValue" : "closedValue"];
         });
         return envelopeValues;
+    };
+
+    // Given two arrays, interleaves the shorter array into the larger one,
+    // starting with the first item of array1
+    // TODO: needs a test; needs to check on array length and behave appropriately
+    floe.chartAuthoring.sonifier.interleaveTransform = function(array1, array2) {
+        // var shorterLength = array1.length >= array2.length ? array1.length : array2.length;
+
+        var interleaved = fluid.transform(array1, function(item, index) {
+            return [item, array2[index]];
+        });
+
+        var concat = function(curentArray, totalArray) {
+            return totalArray.concat(curentArray);
+        };
+
+        return fluid.accumulate(interleaved, concat, []);
+
     };
 
     // Given an object, recursively traverses it for any numeric values and
