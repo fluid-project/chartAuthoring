@@ -219,10 +219,10 @@ var flockingEnvironment = flock.init();
         var numberRemainders = value % unitDivisor;
         var divisorArray =[];
         var remainderArray = [];
-        for(var i=0; i <numberDivisors; i++) {
+        for(var i = 0; i < numberDivisors; i++) {
             divisorArray.push(unitDivisor);
         }
-        for(i=0; i< numberRemainders; i++) {
+        for(i = 0; i < numberRemainders; i++) {
             remainderArray.push(1);
         }
 
