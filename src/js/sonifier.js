@@ -175,10 +175,10 @@ var flockingEnvironment = flock.init();
             if(item.value !== null) {
                 var percentage = Number(floe.chartAuthoring.percentage.calculate(item.value, totalValue).toFixed(0));
                 var units = floe.chartAuthoring.sonifier.getDivisorStrategyUnits(percentage, unitDivisor);
-                var noteDurations = floe.chartAuthoring.sonifier.getSonificationNoteDurationsByDivisors(units, unitDivisor, noteDurationConfig);
-                var noteValues = floe.chartAuthoring.sonifier.getSonificationNoteValuesByDivisors(units, unitDivisor, noteValueConfig);
-                var envelopeDurations = floe.chartAuthoring.sonifier.getSonificationEnvelopeDurations(units, unitDivisor, envelopeDurationConfig);
-                var envelopeValues = floe.chartAuthoring.sonifier.getSonificationEnvelopeValues(envelopeDurations, envelopeDurationConfig, envelopeValuesConfig);
+                var noteDurations = floe.chartAuthoring.sonifier.getSonificationNoteDurationsByDivisor(units, unitDivisor, noteDurationConfig);
+                var noteValues = floe.chartAuthoring.sonifier.getSonificationNoteValuesByDivisor(units, unitDivisor, noteValueConfig);
+                var envelopeDurations = floe.chartAuthoring.sonifier.getSonificationEnvelopeDurationsByDivisor(units, unitDivisor, envelopeDurationConfig);
+                var envelopeValues = floe.chartAuthoring.sonifier.getSonificationEnvelopeValuesByDivisor(envelopeDurations, envelopeDurationConfig, envelopeValuesConfig);
                 var d = {
                     id: key,
                     label: item.label,
@@ -225,23 +225,23 @@ var flockingEnvironment = flock.init();
     // values translated into the equivalent units required for sonification
     //
     // Used to generate note values and note durations
-    floe.chartAuthoring.sonifier.getNoteConfigByDivisors = function(units, unitDivisor, config) {
+    floe.chartAuthoring.sonifier.getNoteConfigByDivisor = function(units, unitDivisor, config) {
         var collection = fluid.transform(units, function(unit) {
             return config [unit === unitDivisor ? "divisorReturnValue" : "remainderReturnValue"];
         });
         return collection;
     };
 
-    floe.chartAuthoring.sonifier.getSonificationNoteDurationsByDivisors = function(units, unitDivisor, noteDurationConfig) {
-        return floe.chartAuthoring.sonifier.getNoteConfigByDivisors(units, unitDivisor, noteDurationConfig);
+    floe.chartAuthoring.sonifier.getSonificationNoteDurationsByDivisor = function(units, unitDivisor, noteDurationConfig) {
+        return floe.chartAuthoring.sonifier.getNoteConfigByDivisor(units, unitDivisor, noteDurationConfig);
     };
 
 
-    floe.chartAuthoring.sonifier.getSonificationNoteValuesByDivisors = function(units, unitDivisor, noteValueConfig) {
-        return floe.chartAuthoring.sonifier.getNoteConfigByDivisors(units, unitDivisor, noteValueConfig);
+    floe.chartAuthoring.sonifier.getSonificationNoteValuesByDivisor = function(units, unitDivisor, noteValueConfig) {
+        return floe.chartAuthoring.sonifier.getNoteConfigByDivisor(units, unitDivisor, noteValueConfig);
     };
 
-    floe.chartAuthoring.sonifier.getSonificationEnvelopeDurations = function(units, unitDivisor, envelopeDurationConfig) {
+    floe.chartAuthoring.sonifier.getSonificationEnvelopeDurationsByDivisor = function(units, unitDivisor, envelopeDurationConfig) {
         var durations = fluid.transform(units, function (unit) {
             if(unit === unitDivisor) {
                 return [envelopeDurationConfig.divisorDuration,envelopeDurationConfig.divisorSilence];
@@ -259,7 +259,7 @@ var flockingEnvironment = flock.init();
         return durationsJoined;
     };
 
-    floe.chartAuthoring.sonifier.getSonificationEnvelopeValues = function(envelopeDurations, envelopeDurationConfig, envelopeValuesConfig) {
+    floe.chartAuthoring.sonifier.getSonificationEnvelopeValuesByDivisor = function(envelopeDurations, envelopeDurationConfig, envelopeValuesConfig) {
         var envelopeValues = fluid.transform(envelopeDurations, function(duration) {
             var isDurationMatched = duration === envelopeDurationConfig.divisorDuration || duration === envelopeDurationConfig.remainderDuration;
             return envelopeValuesConfig[isDurationMatched ? "openValue" : "closedValue"];
