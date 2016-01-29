@@ -231,7 +231,7 @@ var flockingEnvironment = flock.init();
 
     // Given an array of units consisting of divisor and remainder values
     // such as the one produced by floe.chartAuthoring.sonifier.getDivisorStrategyUnits
-    // and a note config, returns an array with those divisor and remainder
+    // and a config, returns an array with those divisor and remainder
     // values translated into the equivalent units required for sonification
     //
     // Used to generate value and duration configs
@@ -246,25 +246,38 @@ var flockingEnvironment = flock.init();
         return floe.chartAuthoring.sonifier.getConfigByDivisor(units, unitDivisor, noteDurationConfig);
     };
 
-
     floe.chartAuthoring.sonifier.getSonificationNoteValuesByDivisor = function(units, unitDivisor, noteValueConfig) {
         return floe.chartAuthoring.sonifier.getConfigByDivisor(units, unitDivisor, noteValueConfig);
     };
 
     floe.chartAuthoring.sonifier.getSonificationEnvelopeDurationsByDivisor = function(units, unitDivisor, envelopeDurationConfig) {
         var playDurations = floe.chartAuthoring.sonifier.getConfigByDivisor(units, unitDivisor, envelopeDurationConfig.play);
+
         var silenceDurations = floe.chartAuthoring.sonifier.getConfigByDivisor(units, unitDivisor, envelopeDurationConfig.silence);
 
         return floe.chartAuthoring.sonifier.interleaveTransform(playDurations, silenceDurations);
     };
 
     floe.chartAuthoring.sonifier.getSonificationEnvelopeValuesByDivisor = function(envelopeDurations, envelopeDurationConfig, envelopeValuesConfig) {
-        var envelopeValues = fluid.transform(envelopeDurations, function(duration) {
-            var isDurationMatched = duration === envelopeDurationConfig.play.divisorReturnValue || duration === envelopeDurationConfig.play.remainderReturnValue;
-            return envelopeValuesConfig[isDurationMatched ? "openValue" : "closedValue"];
-        });
-        return envelopeValues;
+
+        var isDurationMatchesPlayValue = function(duration) {
+            return duration === envelopeDurationConfig.play.divisorReturnValue || duration === envelopeDurationConfig.play.remainderReturnValue;
+        };
+
+        return  floe.chartAuthoring.sonifier.truthValueTransform(envelopeDurations, isDurationMatchesPlayValue, envelopeValuesConfig.openValue, envelopeValuesConfig.closedValue);
     };
+
+    // Given an array of values, a truthFunction and values to return when the
+    // truth function is true or false, return another array of values based on
+    // testing each value in the original array
+    floe.chartAuthoring.sonifier.truthValueTransform = function(valueArray, truthFunction, trueValue, falseValue) {
+        var transformedArray = fluid.transform(valueArray, function(value) {
+            var testedValue = truthFunction(value) ? trueValue : falseValue;
+            return testedValue;
+        });
+        return transformedArray;
+    };
+
 
     // Given two arrays, interleaves the shorter array into the larger one,
     // starting with the first item of array1
