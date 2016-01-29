@@ -80,8 +80,10 @@ var flockingEnvironment = flock.init();
                         unitDivisorValue: 10,
                         notes: {
                             durations: {
-                                divisorReturnValue: 3/8,
-                                remainderReturnValue: 1/8
+                                play: {
+                                    divisorReturnValue: 3/8,
+                                    remainderReturnValue: 1/8
+                                }
                             },
                             values: {
                                 divisorReturnValue: 91,
@@ -90,10 +92,14 @@ var flockingEnvironment = flock.init();
                         },
                         envelope: {
                             durations: {
-                                divisorDuration: 1/8,
-                                divisorSilence: 1/4,
-                                remainderDuration: 1/24,
-                                remainderSilence: 1/12
+                                play: {
+                                    divisorReturnValue: 1/8,
+                                    remainderReturnValue: 1/24
+                                },
+                                silence: {
+                                    divisorReturnValue: 1/4,
+                                    remainderReturnValue: 1/12
+                                }
                             },
                             values: {
                                 openValue: 1.0,
@@ -166,7 +172,7 @@ var flockingEnvironment = flock.init();
         var sonificationOptions = that.options.sonificationOptions;
         var playbackOptions = that.options.playbackOptions;
 
-        var noteDurationConfig = floe.chartAuthoring.sonifier.applyZoomToDurationConfig(sonificationOptions.strategies.unitDivisor.config.notes.durations,playbackOptions.zoom),
+        var noteDurationConfig = floe.chartAuthoring.sonifier.applyZoomToDurationConfig(sonificationOptions.strategies.unitDivisor.config.notes.durations.play,playbackOptions.zoom),
             noteValueConfig = sonificationOptions.strategies.unitDivisor.config.notes.values,
             envelopeDurationConfig = floe.chartAuthoring.sonifier.applyZoomToDurationConfig(sonificationOptions.strategies.unitDivisor.config.envelope.durations,playbackOptions.zoom),
             envelopeValuesConfig = sonificationOptions.strategies.unitDivisor.config.envelope.values;
@@ -241,12 +247,18 @@ var flockingEnvironment = flock.init();
         return floe.chartAuthoring.sonifier.getNoteConfigByDivisor(units, unitDivisor, noteValueConfig);
     };
 
+    // TODO: rename this
+    floe.chartAuthoring.sonifier.getSonificationEnvelopeDurationsByDivisorRefactor = function() {
+
+    };
+
     floe.chartAuthoring.sonifier.getSonificationEnvelopeDurationsByDivisor = function(units, unitDivisor, envelopeDurationConfig) {
         var durations = fluid.transform(units, function (unit) {
             if(unit === unitDivisor) {
-                return [envelopeDurationConfig.divisorDuration,envelopeDurationConfig.divisorSilence];
+                // return [envelopeDurationConfig.play.divisorReturnValue,envelopeDurationConfig.silence.divisorReturnValue];
+                return [envelopeDurationConfig.play.divisorReturnValue,envelopeDurationConfig.silence.divisorReturnValue];
             } else {
-                return [envelopeDurationConfig.remainderDuration,envelopeDurationConfig.remainderSilence];
+                return [envelopeDurationConfig.play.remainderReturnValue,envelopeDurationConfig.silence.remainderReturnValue];
             }
         });
 
@@ -261,19 +273,32 @@ var flockingEnvironment = flock.init();
 
     floe.chartAuthoring.sonifier.getSonificationEnvelopeValuesByDivisor = function(envelopeDurations, envelopeDurationConfig, envelopeValuesConfig) {
         var envelopeValues = fluid.transform(envelopeDurations, function(duration) {
-            var isDurationMatched = duration === envelopeDurationConfig.divisorDuration || duration === envelopeDurationConfig.remainderDuration;
+            var isDurationMatched = duration === envelopeDurationConfig.play.divisorReturnValue || duration === envelopeDurationConfig.play.remainderReturnValue;
             return envelopeValuesConfig[isDurationMatched ? "openValue" : "closedValue"];
         });
         return envelopeValues;
     };
 
+    // Given an object, recursively traverses it for any numeric values and
+    // returns it with all numeric values transformed by the multiplier value
+    // Non-numeric values are left intact
+
+    floe.chartAuthoring.sonifier.multiplierTransform = function(object, multiplier) {
+        if(fluid.isPlainObject(object)) {
+            var transformed = fluid.transform(object, function(v) {
+                    return floe.chartAuthoring.sonifier.multiplierTransform(v, multiplier);
+                });
+            return transformed;
+        } else {
+            return !isNaN(object * multiplier) ? object * multiplier : object;
+        }
+    };
+
     // Get the sonificationOptions with a zoom factor applied to the durations
     floe.chartAuthoring.sonifier.applyZoomToDurationConfig = function(durationConfig, zoom) {
-
         var zoomedNoteDurationConfig = fluid.transform(durationConfig, function (duration) {
-            return duration * zoom;
+            return floe.chartAuthoring.sonifier.multiplierTransform(duration, zoom);
         });
-
         return zoomedNoteDurationConfig;
     };
 
