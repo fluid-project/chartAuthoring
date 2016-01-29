@@ -228,7 +228,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             });
 
         // Draw a background circle for the pie if configured
-        if(displayPieBackground) {
+        if (displayPieBackground) {
             that.svg
                 .append("circle")
                 .attr({

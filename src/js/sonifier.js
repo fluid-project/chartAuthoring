@@ -178,7 +178,7 @@ var flockingEnvironment = flock.init();
             envelopeValuesConfig = sonificationOptions.strategies.unitDivisor.config.envelope.values;
 
         fluid.each(dataSet, function(item,key) {
-            if(item.value !== null) {
+            if (item.value !== null) {
                 var percentage = Number(floe.chartAuthoring.percentage.calculate(item.value, totalValue).toFixed(0));
                 var units = floe.chartAuthoring.sonifier.getDivisorStrategyUnits(percentage, unitDivisor);
                 var noteDurations = floe.chartAuthoring.sonifier.getSonificationNoteDurationsByDivisor(units, unitDivisor, noteDurationConfig);
@@ -302,7 +302,7 @@ var flockingEnvironment = flock.init();
     // Non-numeric values are left intact
 
     floe.chartAuthoring.sonifier.multiplierTransform = function (object, multiplier) {
-        if(fluid.isPlainObject(object)) {
+        if (fluid.isPlainObject(object)) {
             var transformed = fluid.transform(object, function(v) {
                     return floe.chartAuthoring.sonifier.multiplierTransform(v, multiplier);
                 });
@@ -327,12 +327,12 @@ var flockingEnvironment = flock.init();
     // execute a sonification
 
     floe.chartAuthoring.sonifier.startSonification = function (that) {
-        if(that.model.isPlaying) {
+        if (that.model.isPlaying) {
             return;
         }
 
         // Create the synth if needed
-        if(that.synth === undefined) {
+        if (that.synth === undefined) {
             that.events.onSynthNeeded.fire();
         }
 
@@ -364,7 +364,7 @@ var flockingEnvironment = flock.init();
     // in advance how long it will take to read the label
     floe.chartAuthoring.sonifier.processSonificationQueue = function (delay, noGap, that) {
         var sonificationQueue = that.model.sonificationQueue;
-        if(sonificationQueue.length === 0) {
+        if (sonificationQueue.length === 0) {
             return;
         }
         that.applier.change("isPlaying", true);
@@ -382,7 +382,7 @@ var flockingEnvironment = flock.init();
 
         // We shouldn't use the gap if this is the first call for a dataset
         var pause = noGap? delay : delay+gapDuration;
-        if(fluid.textToSpeech.isSupported()) {
+        if (fluid.textToSpeech.isSupported()) {
             synth.scheduler.once(pause, function() {
                 that.applier.change("currentlyPlayingData", currentData);
                 textToSpeech.queueSpeech(currentData.label);
@@ -402,7 +402,7 @@ var flockingEnvironment = flock.init();
         // this function is queued or in the midst of execution
         var noteDuration = (data !== undefined) ? floe.chartAuthoring.sonifier.getTotalDuration(data.notes.durations) : 0;
 
-        if(sonificationQueue.length > 0) {
+        if (sonificationQueue.length > 0) {
             floe.chartAuthoring.sonifier.processSonificationQueue(noteDuration, false, that);
         } else {
             // Schedule to stop the sonification after the last sonification is
@@ -411,7 +411,7 @@ var flockingEnvironment = flock.init();
                 that.stopSonification();
             });
         }
-        if(data !== undefined) {
+        if (data !== undefined) {
             synth.midiNoteSynth.applier.change("inputs.noteSequencer", data.notes);
             synth.pianoEnvelopeSynth.applier.change("inputs.envelopeSequencer", data.envelope);
         }
@@ -428,7 +428,7 @@ var flockingEnvironment = flock.init();
 
     floe.chartAuthoring.sonifier.stopSonification = function (that) {
 
-        if(!that.model.isPlaying) {
+        if (!that.model.isPlaying) {
             return;
         }
 

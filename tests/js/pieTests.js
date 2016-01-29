@@ -56,7 +56,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         jqUnit.assertNotEquals("The SVG element is created with the proper selector", 0, pie.length);
 
         // Test the background circle
-        if(that.options.pieOptions.displayPieBackground) {
+        if (that.options.pieOptions.displayPieBackground) {
             var pieBackground = that.locate("background");
             jqUnit.assertNotEquals("The background circle is created", 0, pieBackground.length);
             jqUnit.assertEquals("The background circle's radius is half the pie width", that.options.pieOptions.width / 2, Number(pieBackground.attr("r")));

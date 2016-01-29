@@ -69,7 +69,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         });
     });
 
-    jqUnit.test("Test floe.d3.idExtractor()", function() {
+    jqUnit.test("Test floe.d3.idExtractor()", function () {
         jqUnit.expect(3);
 
         var cases = [{

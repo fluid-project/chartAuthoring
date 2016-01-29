@@ -239,7 +239,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     // convenience function for easing testing of colors (jquery returns only RGB)
     // Based off http://stackoverflow.com/questions/4262417/jquery-hex-to-rgb-calculation-different-between-browsers
-    floe.tests.chartAuthoring.hexToRGB = function (hexStr){
+    floe.tests.chartAuthoring.hexToRGB = function (hexStr) {
         // note: hexStr should be #rrggbb
         var hex = parseInt(hexStr.substring(1), 16);
         var r = (hex & 0xff0000) >> 16;
@@ -342,7 +342,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 dataSet: floe.tests.chartAuthoring.objectArray
             },
             legendOptions: {
-                sort:false
+                sort: false
             }
         });
 
@@ -358,7 +358,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 dataSet: floe.tests.chartAuthoring.objectArray
             },
             legendOptions: {
-                sort:true,
+                sort: true,
                 colors: null
             }
         });
@@ -383,7 +383,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 dataSet: floe.tests.chartAuthoring.objectArrayForCustomDisplay
             },
             legendOptions: {
-                sort:false,
+                sort: false,
                 colors: null,
                 labelTextDisplayTemplate: "%label (%percentage%)",
                 valueTextDisplayTemplate: "%value (out of %total)"

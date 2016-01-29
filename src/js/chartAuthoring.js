@@ -292,7 +292,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 label: item.label,
                 value: item.value
             };
-            if(d.value !== null) {
+            if (d.value !== null) {
                 pieChartData.push(d);
             }
         });
@@ -324,7 +324,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var dataEntryLabelSelector = that.chartAuthoringInterface.dataEntryPanel.dataEntry.options.selectors.label;
         var dataEntryValueSelector = that.chartAuthoringInterface.dataEntryPanel.dataEntry.options.selectors.value;
 
-        dataEntries.each(function(idx) {
+        dataEntries.each(function (idx) {
             var currentData = dataSet[idx] !== undefined ? dataSet[idx] : {label: "", value: ""};
             $(this).find(dataEntryLabelSelector).val(currentData.label).trigger("change");
             $(this).find(dataEntryValueSelector).val(currentData.value).trigger("change");
@@ -337,12 +337,12 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var playButton = that.locate("sonifierPlay"),
             stopButton = that.locate("sonifierStop");
 
-        playButton.click(function(e) {
+        playButton.click(function (e) {
             that.chartAuthoringInterface.sonifier.playSonification();
             e.preventDefault();
         });
 
-        stopButton.click(function(e) {
+        stopButton.click(function (e) {
             that.chartAuthoringInterface.sonifier.stopSonification();
             e.preventDefault();
         });

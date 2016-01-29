@@ -94,7 +94,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             var resultArray = styleValue.split(" ");
             var correspondingSelectorArray = fluid.get(consolidatedClasses, key);
 
-            if(correspondingSelectorArray) {
+            if (correspondingSelectorArray) {
                 resultArray = correspondingSelectorArray.concat(resultArray);
             }
             // Only keep unique values for each consolidated class array
@@ -106,7 +106,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         // 2. For each key/value pair in the consolidatedClasses object, turn the value from an array
         // to a space-delimited string
 
-        var togo = fluid.transform(consolidatedClasses, function (selectorArray){
+        var togo = fluid.transform(consolidatedClasses, function (selectorArray) {
             return selectorArray.join(" ");
         });
 

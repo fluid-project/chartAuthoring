@@ -76,7 +76,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         {
             msg: "An array containing duplicate values is changed to contain only one instance of each value",
             input: ["apples", "bananas", "bananas", "clementines"],
-            expected:["apples", "bananas", "clementines"]
+            expected: ["apples", "bananas", "clementines"]
         }];
 
         fluid.each(cases, function (oneCase) {

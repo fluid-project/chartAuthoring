@@ -163,13 +163,13 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
             d3.select(this)
                 .select(labelCellSelector)
-                .text(function(d) {
+                .text(function (d) {
                     return floe.d3ViewComponent.getTemplatedDisplayValue(totalValue, percentageDigits, labelTextDisplayTemplate, d);
                 });
 
             d3.select(this)
                 .select(valueCellSelector)
-                .text(function(d) {
+                .text(function (d) {
                     return floe.d3ViewComponent.getTemplatedDisplayValue(totalValue, percentageDigits, valueTextDisplayTemplate, d);
                 });
         });
@@ -227,7 +227,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 "aria-relevant": "all"
             });
 
-        if(that.options.strings.legendTitle !== null) {
+        if (that.options.strings.legendTitle !== null) {
             that.table.append("caption")
             .attr({
                 "class": that.classes.caption
@@ -237,7 +237,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         that.table.append("thead");
         that.table.append("tbody");
-        if(showLegendHeadings) {
+        if (showLegendHeadings) {
             var thead = that.table.selectAll("thead");
 
             var theadRow = thead.append("tr");
@@ -284,7 +284,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     floe.chartAuthoring.pieChart.legend.addValueFromArray = function (objectArray, valueArray, newValueName) {
         // Don't do anything if not passed an actual array in the value array
-        if(fluid.isArrayable(valueArray)) {
+        if (fluid.isArrayable(valueArray)) {
             return fluid.transform(objectArray, function (object, idx) {
                 var consolidated = fluid.copy(object);
                 consolidated[newValueName] = valueArray[idx];

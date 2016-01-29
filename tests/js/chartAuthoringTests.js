@@ -173,7 +173,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var dataEntryLabelSelector = that.chartAuthoringInterface.dataEntryPanel.dataEntry.options.selectors.label;
         var dataEntryValueSelector = that.chartAuthoringInterface.dataEntryPanel.dataEntry.options.selectors.value;
 
-        dataEntries.each(function(idx) {
+        dataEntries.each(function (idx) {
 
             // Confirm that each entry in updateDataSet has a matching dataEntry
             // in the panel UI, or that the "matching" dataEntry is blank when
@@ -201,7 +201,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
             // Don't compare if the dataEntryPanelData has the default blank
             // values (these don't get relayed)
-            if(dataEntryPanelData.value !== null && dataEntryPanelData !== "") {
+            if (dataEntryPanelData.value !== null && dataEntryPanelData !== "") {
                 jqUnit.assertEquals("Comparing relayed dataset - data value of pieChart data in position " + indexCounter + " matches", dataEntryPanelData.value, pieDataSet[indexCounter].value);
                 jqUnit.assertEquals("Comparing relayed dataset - label value of pieChart data in position " + indexCounter + " matches", dataEntryPanelData.label, pieDataSet[indexCounter].label);
                 jqUnit.assertEquals("Comparing relayed dataset - id value of pieChart data in position " + indexCounter + " matches expected key", key, pieDataSet[indexCounter].id);
