@@ -37,21 +37,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         }
     });
 
-    // Test that when model.pieDescription is changed, the corresponding DOM
-    // element is also updated
-    floe.tests.chartAuthoring.testDescriptionBinding = function (that) {
-        var newDescription = "An updated pie chart description.";
-        that.applier.change("pieDescription", newDescription);
-        jqUnit.assertEquals("Pie's SVG desc element is updated when its model is changed", that.model.pieDescription, that.locate("description").text());
-    };
-
-
-    // Test that when model.pieTitle is changed, the corresponding DOM
-    // element is also updated
-    floe.tests.chartAuthoring.testTitleBinding = function (that) {
-        var newTitle = "An updated pie chart title.";
-        that.applier.change("pieTitle", newTitle);
-        jqUnit.assertEquals("Pie's SVG desc element is updated when its model is changed", that.model.pieTitle, that.locate("title").text());
+    floe.tests.chartAuthoring.testValueBinding = function(that, modelPath, DOMPath, newValue) {
+        that.applier.change(modelPath, newValue);
+        jqUnit.assertEquals("DOM element value `" + DOMPath + "` is updated when its corresponding model value at `" + modelPath + " `is changed");
     };
 
     floe.tests.chartAuthoring.mouseOverListener = function (data, i, that) {
@@ -98,9 +86,11 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.tests.chartAuthoring.runCommonTests = function (that, testSliceDataFunc) {
         floe.tests.chartAuthoring.validatePie(that, testSliceDataFunc);
 
-        floe.tests.chartAuthoring.testTitleBinding(that);
+        // Test the description value binding
+        floe.tests.chartAuthoring.testValueBinding(that, "pieDescription", "description", "An updated pie chart description.");
 
-        floe.tests.chartAuthoring.testDescriptionBinding(that);
+        // Test the title value binding
+        floe.tests.chartAuthoring.testValueBinding(that, "pieTitle", "title", "An updated pie chart title.");
 
         // The D3 DOM event listener is registered
         jqUnit.assertFalse("The mouseover listener for pie slices have not been triggered", that.mouseOverListenerCalled);
