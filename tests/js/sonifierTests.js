@@ -99,7 +99,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     });
 
     jqUnit.test("Test the sonification play behaviour", function () {
-        jqUnit.expect(4);
+        jqUnit.expect(6);
 
         var that = floe.tests.chartAuthoring.speedySonifier({
             model: {
@@ -116,7 +116,11 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         that.playSonification();
 
-        jqUnit.assertTrue("sonificationQueue has items in it", that.model.sonificationQueue.length === 2);
+        jqUnit.assertTrue("sonificationQueue has expected number of items in it", that.model.sonificationQueue.length === 2);
+        fluid.each(that.model.sonificationQueue, function(queueItem, idx) {
+            var sonifiedDataItem = that.model.sonifiedData[idx];
+            jqUnit.assertDeepEq("sonificationQueue item at position " + idx +  " matches parallel sonifiedData item", queueItem, sonifiedDataItem);
+        });
         jqUnit.assertEquals("isPlaying boolean was true after play was started", true, that.model.isPlaying);
         jqUnit.assertFalse("currentlyPlayingData is not null", null, that.model.currentlyPlayingData);
         jqUnit.assertNotUndefined("Synth was created", that.synth);
