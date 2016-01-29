@@ -247,15 +247,9 @@ var flockingEnvironment = flock.init();
         return floe.chartAuthoring.sonifier.getNoteConfigByDivisor(units, unitDivisor, noteValueConfig);
     };
 
-    // TODO: rename this
-    floe.chartAuthoring.sonifier.getSonificationEnvelopeDurationsByDivisorRefactor = function() {
-
-    };
-
     floe.chartAuthoring.sonifier.getSonificationEnvelopeDurationsByDivisor = function(units, unitDivisor, envelopeDurationConfig) {
         var durations = fluid.transform(units, function (unit) {
             if(unit === unitDivisor) {
-                // return [envelopeDurationConfig.play.divisorReturnValue,envelopeDurationConfig.silence.divisorReturnValue];
                 return [envelopeDurationConfig.play.divisorReturnValue,envelopeDurationConfig.silence.divisorReturnValue];
             } else {
                 return [envelopeDurationConfig.play.remainderReturnValue,envelopeDurationConfig.silence.remainderReturnValue];
