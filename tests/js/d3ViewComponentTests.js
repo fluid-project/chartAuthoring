@@ -70,13 +70,13 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         var cases = [{
             msg: "An array of unique values is unchanged",
-            input: ["a","b","c","d",2],
-            expected: ["a","b","c","d",2]
+            input: ["a", "b", "c", "d", 2],
+            expected: ["a", "b", "c", "d", 2]
         },
         {
             msg: "An array containing duplicate values is changed to contain only one instance of each value",
-            input: ["apples","bananas","bananas","clementines"],
-            expected:["apples","bananas","clementines"]
+            input: ["apples", "bananas", "bananas", "clementines"],
+            expected:["apples", "bananas", "clementines"]
         }];
 
         fluid.each(cases, function (oneCase) {
