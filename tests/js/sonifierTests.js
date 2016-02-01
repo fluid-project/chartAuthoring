@@ -120,6 +120,14 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         }
     ];
 
+    floe.tests.chartAuthoring.shorterArray = [1, 2];
+
+    floe.tests.chartAuthoring.longerArray = [3, 5, 7, 9];
+
+    floe.tests.chartAuthoring.expectedInterleavedArrayShorterFirst = [1, 3, 2, 5, 7, 9];
+
+    floe.tests.chartAuthoring.expectedInterleavedArrayLongerFirst = [3, 1, 5, 2, 7, 9];
+
     floe.tests.chartAuthoring.unmultipliedObject = {
         wholeNumber: 1,
         decimal: 1.5,
@@ -147,14 +155,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         },
         innerArray: [4, 5, 16 / 16, "Still not a numb3r"]
     };
-
-    floe.tests.chartAuthoring.shorterArray = [1, 2];
-
-    floe.tests.chartAuthoring.longerArray = [3, 5, 7, 9];
-
-    floe.tests.chartAuthoring.expectedInterleavedArrayShorterFirst = [1, 3, 2, 5, 7, 9];
-
-    floe.tests.chartAuthoring.expectedInterleavedArrayLongerFirst = [3, 1, 5, 2, 7, 9];
 
     jqUnit.test("Test the interleave transform", function () {
         jqUnit.expect(2);
@@ -184,9 +184,20 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     jqUnit.test("Test the multiplication transform", function () {
         jqUnit.expect(1);
 
-        var multipliedObject = floe.chartAuthoring.sonifier.multiplierTransform(floe.tests.chartAuthoring.unmultipliedObject, 2);
+        var multiplicationTests = [
+            {
+                msg: "Object containing mix of number and non-number values is multiplied as expected",
+                initial: floe.tests.chartAuthoring.unmultipliedObject,
+                expected: floe.tests.chartAuthoring.expectedMultipliedObject,
+                multiplier: 2
+            }
+        ];
 
-        jqUnit.assertDeepEq("Object containing mix of number and non-number values is multiplied as expected", multipliedObject, floe.tests.chartAuthoring.expectedMultipliedObject);
+        fluid.each(multiplicationTests, function (test) {
+            var multiplied = floe.chartAuthoring.sonifier.multiplierTransform(floe.tests.chartAuthoring.unmultipliedObject, 2);
+
+            jqUnit.assertDeepEq(test.msg, test.expected, multiplied);
+        });
     });
 
     jqUnit.test("Test the sonification data conversion", function () {
