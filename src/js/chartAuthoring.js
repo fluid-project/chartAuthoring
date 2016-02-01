@@ -139,8 +139,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                                 },
                                 listeners: {
                                     "onCreate.escalate": {
-                                        funcName: "{chartAuthoring}.events.onSonifierReady.fire",
-                                        priority: "last"
+                                        funcName: "{chartAuthoring}.events.onSonifierReady.fire"
                                     }
                                 }
                             }
@@ -192,7 +191,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             }
         },
         model: {
-            currentlyPlayingData: null,
             activeRowId: null,
             activeSliceId: null
         },
