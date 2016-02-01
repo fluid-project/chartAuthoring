@@ -118,7 +118,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         // indicate displayed total is a live region
         var totalValue = that.locate("totalValue");
         totalValue.attr({
-            "aria-labelledby":totalLabelId,
+            "aria-labelledby": totalLabelId,
             "aria-live": "polite"
         });
 

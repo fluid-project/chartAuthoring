@@ -94,4 +94,4 @@ var demo = demo || {};
             }
         });
     });
-})(jQuery,fluid);
+})(jQuery, fluid);

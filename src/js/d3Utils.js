@@ -29,14 +29,14 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
      * - "undefined" if neither of these exist
      */
     floe.d3.idExtractor = function (d) {
-        return d.id !== undefined ? d.id : d.data !== undefined ? d.data.id !== undefined? d.data.id : undefined : undefined;
+        return d.id !== undefined ? d.id : d.data !== undefined ? d.data.id !== undefined ? d.data.id : undefined : undefined;
     };
 
     // Given a selection of D3 elements and an ID, returns only the elements
     // matching that ID
     floe.d3.filterById = function (d3Selection, currentlyPlayingDataId) {
         return d3Selection.filter(
-            function(d) {
+            function (d) {
                 var id = floe.d3.idExtractor(d);
                 return id === currentlyPlayingDataId;
             }
@@ -47,7 +47,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // that don't match that ID
     floe.d3.filterByNotId = function (d3Selection, currentlyPlayingDataId) {
         return d3Selection.filter(
-            function(d) {
+            function (d) {
                 var id = floe.d3.idExtractor(d);
                 return id !== currentlyPlayingDataId;
             }

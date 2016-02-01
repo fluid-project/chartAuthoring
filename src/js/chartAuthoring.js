@@ -169,7 +169,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             "onToolReady.addAriaConnections": "floe.chartAuthoring.addAriaConnections",
             "onToolReady.addSonificationListeners": "floe.chartAuthoring.addSonificationControlsHandlers"
         },
-        invokers:{
+        invokers: {
             "updateDataEntryPanelFromDataSet": {
                 funcName: "floe.chartAuthoring.updateDataEntryPanelFromDataSet",
                 args: ["{that}", "{arguments}.0"]
@@ -269,8 +269,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         var activeElement = floe.d3.filterById(selection, activeDataId);
         var inactiveElements = floe.d3.filterByNotId(selection, activeDataId);
-        activeElement.classed(dataPlayingHighlightClass,true);
-        inactiveElements.classed(dataPlayingHighlightClass,false);
+        activeElement.classed(dataPlayingHighlightClass, true);
+        inactiveElements.classed(dataPlayingHighlightClass, false);
     };
 
     floe.chartAuthoring.updateActiveElements = function (that) {
@@ -286,7 +286,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.chartAuthoring.dataEntriesToPieChartData = function (dataSet) {
 
         var pieChartData = [];
-        fluid.each(dataSet, function(item, key) {
+        fluid.each(dataSet, function (item, key) {
             var d = {
                 id: key,
                 label: item.label,

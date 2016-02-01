@@ -41,7 +41,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             singleTransform: {
                 type: "floe.chartAuthoring.transforms.stringToNumber"
             }
-        },{
+        },
+        {
             source: "",
             target: "percentage",
             singleTransform: {

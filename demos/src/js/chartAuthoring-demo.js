@@ -64,4 +64,4 @@ Varied#3: colors: ["#f15e4e", "#acdee4", "#73c163", "#ffc74a", "#41beae"]
                 value: 2
             }]
         });
-})(jQuery,fluid);
+})(jQuery, fluid);
