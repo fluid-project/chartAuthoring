@@ -46,7 +46,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         ];
 
         fluid.each(interleaveTests, function (test) {
-            var interleavedArray = floe.chartAuthoring.sonifier.interleaveTransform(test.array1, test.array2);
+            var interleavedArray = floe.chartAuthoring.sonifier.unitDivisorSonificationStrategy.interleaveTransform(test.array1, test.array2);
 
             jqUnit.assertDeepEq(test.msg, test.expected, interleavedArray);
         });
@@ -110,7 +110,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         ];
 
         fluid.each(multiplicationTests, function (test) {
-            var multiplied = floe.chartAuthoring.sonifier.multiplierTransform(test.initial, test.multiplier);
+            var multiplied = floe.chartAuthoring.sonifier.unitDivisorSonificationStrategy.multiplierTransform(test.initial, test.multiplier);
 
             jqUnit.assertDeepEq(test.msg, test.expected, multiplied);
         });
@@ -128,7 +128,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var trueResponse = "Greater than or equal to five";
         var falseResponse = "Less than five";
 
-        var truthTransformed = floe.chartAuthoring.sonifier.truthValueTransform(floe.tests.chartAuthoring.truthValueTransformArray, isGtEq5, trueResponse, falseResponse);
+        var truthTransformed = floe.chartAuthoring.sonifier.unitDivisorSonificationStrategy.truthValueTransform(floe.tests.chartAuthoring.truthValueTransformArray, isGtEq5, trueResponse, falseResponse);
 
         jqUnit.assertDeepEq("Array is transformed as expected in response to true/false testing of each item, and the supplied response values for true/false", floe.tests.chartAuthoring.expectedTruthValueTransformArray,  truthTransformed);
 
