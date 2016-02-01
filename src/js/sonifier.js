@@ -61,7 +61,12 @@ var flockingEnvironment = flock.init();
             //     value: number,
             //     percentage: number
             // }
-            isPlaying: false
+            isPlaying: false,
+            isTextToSpeechSupported: {
+                expander: {
+                    func: "fluid.textToSpeech.isSupported"
+                }
+            }
         },
         modelListeners: {
             dataSet: {
@@ -388,10 +393,19 @@ var flockingEnvironment = flock.init();
 
         // We shouldn't use the gap if this is the first call for a dataset
         var pause = noGap ? delay : delay + gapDuration;
-        if (fluid.textToSpeech.isSupported()) {
+
+        // Play with speech labels if we support text to speech
+        if (that.model.isTextToSpeechSupported) {
             synth.scheduler.once(pause, function () {
                 that.applier.change("currentlyPlayingData", currentData);
                 textToSpeech.queueSpeech(currentData.label);
+            });
+
+        // Play without speech labels
+        } else {
+            synth.scheduler.once(pause, function () {
+                that.applier.change("currentlyPlayingData", currentData);
+                floe.chartAuthoring.sonifier.playDataAndQueueNext(that);
             });
         }
     };
@@ -399,7 +413,6 @@ var flockingEnvironment = flock.init();
     // Recursion function called from floe.chartAuthoring.sonifier.processSonificationQueue
 
     floe.chartAuthoring.sonifier.playDataAndQueueNext = function (that) {
-
         var synth = that.synth;
         var sonificationQueue = that.model.sonificationQueue;
         var data = sonificationQueue.shift();
@@ -454,7 +467,9 @@ var flockingEnvironment = flock.init();
         that.synth.pianoEnvelopeSynth.applier.change("inputs.envelopeSequencer", emptySequence);
 
         // Stop any queued voices
-        that.textToSpeech.cancel();
+        if (that.isTextToSpeechSupported) {
+            that.textToSpeech.cancel();
+        }
 
         // Stop the flocking environment
         flockingEnvironment.stop();
