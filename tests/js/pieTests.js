@@ -247,7 +247,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 dataSet: floe.tests.chartAuthoring.percentageArray
             },
             pieOptions: {
-                sliceTextDisplayTemplate: "%value/%total (%percentage%)",
+                sliceTextDisplayTemplate: "%value / %total (%percentage%)",
                 sliceTextPercentageDigits: 2,
                 width: "400",
                 height: "400"
