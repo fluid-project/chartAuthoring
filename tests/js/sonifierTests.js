@@ -178,7 +178,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             },
             notes: {
                 durations: [3 / 8, 3 / 8, 3 / 8, 3 / 8, 3 / 8, 3 / 8, 1 / 8, 1 / 8, 1 / 8, 1 / 8, 1 / 8, 1 / 8, 1 / 8],
-                values: [91, 91, 91, 91, 91, 91, 89, 89, 89, 89, 89, 89, 89]
+                values: [91, 91, 91, 91, 91, 91, 89, 89, 89, 89, 89, 89, 89],
+                totalDuration: 3.125
             },
             percentage: 67,
             value: 100,
@@ -193,7 +194,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             },
             notes: {
                 durations: [3 / 8, 3 / 8, 3 / 8, 1 / 8, 1 / 8, 1 / 8],
-                values: [91, 91, 91, 89, 89, 89]
+                values: [91, 91, 91, 89, 89, 89],
+                totalDuration: 1.5
             },
             percentage: 33,
             value: 50,
@@ -212,7 +214,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             },
             notes: {
                 durations: [6 / 8, 6 / 8, 6 / 8, 6 / 8, 6 / 8, 6 / 8, 2 / 8, 2 / 8, 2 / 8, 2 / 8, 2 / 8, 2 / 8, 2 / 8],
-                values: [91, 91, 91, 91, 91, 91, 89, 89, 89, 89, 89, 89, 89]
+                values: [91, 91, 91, 91, 91, 91, 89, 89, 89, 89, 89, 89, 89],
+                totalDuration: 6.25
             },
             percentage: 67,
             value: 100,
@@ -227,7 +230,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             },
             notes: {
                 durations: [6 / 8, 6 / 8, 6 / 8, 2 / 8, 2 / 8, 2 / 8],
-                values: [91, 91, 91, 89, 89, 89]
+                values: [91, 91, 91, 89, 89, 89],
+                totalDuration: 3
             },
             percentage: 33,
             value: 50,

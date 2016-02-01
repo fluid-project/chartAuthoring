@@ -203,7 +203,8 @@ var flockingEnvironment = flock.init();
                     units: units,
                     notes: {
                         durations: noteDurations,
-                        values: noteValues
+                        values: noteValues,
+                        totalDuration: floe.chartAuthoring.sonifier.getTotalDuration(noteDurations)
                     },
                     envelope: {
                         durations: envelopeDurations,
@@ -218,6 +219,15 @@ var flockingEnvironment = flock.init();
         return sonificationData;
     };
 
+
+    // Given an array containing indiividual durations, accumulate them and
+    // return the total duration
+    floe.chartAuthoring.sonifier.getTotalDuration = function (durationsArray) {
+        var sum = function (duration, runningTotal) {
+            return duration + runningTotal;
+        };
+        return fluid.accumulate(durationsArray, sum, 0);
+    };
 
     // Given a value and a divisor, return an array consisting of
     // - the number of divisors
@@ -425,7 +435,7 @@ var flockingEnvironment = flock.init();
         //
         // The check for undefined prevents an error if a stop has been called
         // but this function is queued or in the midst of execution
-        var noteDuration = (data !== undefined) ? floe.chartAuthoring.sonifier.getTotalDuration(data.notes.durations) : 0;
+        var noteDuration = (data !== undefined) ? data.notes.totalDuration : 0;
 
         // Recursively calls processSonificationQueue again if the queue isn't
         // empty yet
@@ -442,15 +452,6 @@ var flockingEnvironment = flock.init();
             synth.midiNoteSynth.applier.change("inputs.noteSequencer", data.notes);
             synth.pianoEnvelopeSynth.applier.change("inputs.envelopeSequencer", data.envelope);
         }
-    };
-
-    // Given an array containing indiividual durations, accumulate them and
-    // return the total duration
-    floe.chartAuthoring.sonifier.getTotalDuration = function (durationsArray) {
-        var sum = function (duration, runningTotal) {
-            return duration + runningTotal;
-        };
-        return fluid.accumulate(durationsArray, sum, 0);
     };
 
     floe.chartAuthoring.sonifier.stopSonification = function (that) {
