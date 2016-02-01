@@ -237,7 +237,7 @@ var flockingEnvironment = flock.init();
     // Used to generate value and duration configs
     floe.chartAuthoring.sonifier.getConfigByDivisor = function (units, unitDivisor, config) {
         var collection = fluid.transform(units, function(unit) {
-            return config [unit === unitDivisor ? "divisorReturnValue" : "remainderReturnValue"];
+            return config[unit === unitDivisor ? "divisorReturnValue" : "remainderReturnValue"];
         });
         return collection;
     };
@@ -271,7 +271,7 @@ var flockingEnvironment = flock.init();
     // truth function is true or false, return another array of values based on
     // testing each value in the original array
     floe.chartAuthoring.sonifier.truthValueTransform = function (valueArray, truthFunction, trueValue, falseValue) {
-        var transformedArray = fluid.transform(valueArray, function(value) {
+        var transformedArray = fluid.transform(valueArray, function (value) {
             var testedValue = truthFunction(value) ? trueValue : falseValue;
             return testedValue;
         });
@@ -285,7 +285,7 @@ var flockingEnvironment = flock.init();
     floe.chartAuthoring.sonifier.interleaveTransform = function (array1, array2) {
         // var shorterLength = array1.length >= array2.length ? array1.length : array2.length;
 
-        var interleaved = fluid.transform(array1, function(item, index) {
+        var interleaved = fluid.transform(array1, function (item, index) {
             return [item, array2[index]];
         });
 
@@ -303,7 +303,7 @@ var flockingEnvironment = flock.init();
 
     floe.chartAuthoring.sonifier.multiplierTransform = function (object, multiplier) {
         if (fluid.isPlainObject(object)) {
-            var transformed = fluid.transform(object, function(v) {
+            var transformed = fluid.transform(object, function (v) {
                     return floe.chartAuthoring.sonifier.multiplierTransform(v, multiplier);
                 });
             return transformed;
@@ -343,7 +343,7 @@ var flockingEnvironment = flock.init();
         flockingEnvironment.start();
 
         // Copy the sonification definition into the queue
-        that.applier.change("sonificationQueue",that.model.sonifiedData);
+        that.applier.change("sonificationQueue", that.model.sonifiedData);
     };
 
     // Passed a sonified dataset, this function + playDataAndQueueNext acts recursively
@@ -381,9 +381,9 @@ var flockingEnvironment = flock.init();
         // gap
 
         // We shouldn't use the gap if this is the first call for a dataset
-        var pause = noGap? delay : delay+gapDuration;
+        var pause = noGap ? delay : delay + gapDuration;
         if (fluid.textToSpeech.isSupported()) {
-            synth.scheduler.once(pause, function() {
+            synth.scheduler.once(pause, function () {
                 that.applier.change("currentlyPlayingData", currentData);
                 textToSpeech.queueSpeech(currentData.label);
             });
@@ -407,7 +407,7 @@ var flockingEnvironment = flock.init();
         } else {
             // Schedule to stop the sonification after the last sonification is
             // played
-            synth.scheduler.once(noteDuration, function() {
+            synth.scheduler.once(noteDuration, function () {
                 that.stopSonification();
             });
         }
@@ -421,7 +421,7 @@ var flockingEnvironment = flock.init();
     // return the total duration
     floe.chartAuthoring.sonifier.getTotalDuration = function (durationsArray) {
         var sum = function (duration, runningTotal) {
-            return duration+runningTotal;
+            return duration + runningTotal;
         };
         return fluid.accumulate(durationsArray, sum, 0);
     };
@@ -433,7 +433,7 @@ var flockingEnvironment = flock.init();
         }
 
         // Empty the sonification queue
-        that.applier.change("sonificationQueue",[]);
+        that.applier.change("sonificationQueue", []);
 
         // Clear any outstanding schedulers on the synth
         that.synth.scheduler.clearAll();
