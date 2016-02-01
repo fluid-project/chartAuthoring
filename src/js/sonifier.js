@@ -361,9 +361,9 @@ var flockingEnvironment = flock.init();
         that.applier.change("sonificationQueue", that.model.sonifiedData);
     };
 
-    // Passed a sonified dataset, this function + playDataAndQueueNext acts recursively
-    // to loop through the dataset, play a voice label + sonified data, then
-    // schedule the next play event based on the timing
+    // Passed a sonified dataset, this function + others acts recursively
+    // to loop through the dataset, play a voice label (if TTS is enabled) +
+    // sonified data, then schedule the next play event based on the timing
 
     // The "delay" variable manages the time to elapse (in seconds) before
     // beginning the voice label + sonification of the particular datapoint.
@@ -391,16 +391,21 @@ var flockingEnvironment = flock.init();
         floe.chartAuthoring.sonifier.scheduleNextPlayData(pause, that);
     };
 
-    // Schedule the next data play, accounting for both the variable-length
-    // delay (the time to play the preceding sonification) and the fixed-length
-    // gap
-
     floe.chartAuthoring.sonifier.scheduleNextPlayData = function (delay, that) {
 
         var synth = that.synth;
         var currentData = that.model.sonificationQueue[0];
-
         var textToSpeech = that.textToSpeech;
+
+        // Schedule the next data play, accounting for both the variable-length
+        // delay (the time to play the preceding sonification) and the
+        // fixed-length gap
+        //
+        // When TTS is available, adds speech labels and relies on the
+        // onStop.playDataAndQueueNext event to call the playDataAndQueueNext
+        // function; when TTS is unavailable, simply schedules the next
+        // playDataAndQueueNext event itself
+
         synth.scheduler.once(delay, function () {
             that.applier.change("currentlyPlayingData", currentData);
             if (that.model.isTextToSpeechSupported) {
@@ -416,6 +421,9 @@ var flockingEnvironment = flock.init();
     floe.chartAuthoring.sonifier.playDataAndQueueNext = function (that) {
         var synth = that.synth;
         var sonificationQueue = that.model.sonificationQueue;
+
+        // Pops the next data to be sonified out of the queue and into
+        // the variable
         var data = sonificationQueue.shift();
 
         // This prevents an error being thrown if a stop has been called but
