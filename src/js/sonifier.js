@@ -141,6 +141,10 @@ var flockingEnvironment = flock.init();
                 funcName: "floe.chartAuthoring.sonifier.processSonificationQueue",
                 args: [0, true, "{that}"]
             },
+            "playDataAndQueueNext" : {
+                funcName: "floe.chartAuthoring.sonifier.playDataAndQueueNext",
+                args: ["{that}"]
+            },
             "unitDivisorSonificationStrategy": {
                 funcName: "floe.chartAuthoring.sonifier.unitDivisorStrategy",
                 args: ["{that}", "{that}.options.sonificationOptions.strategies.unitDivisor.config.unitDivisorValue"]
@@ -381,33 +385,30 @@ var flockingEnvironment = flock.init();
         that.applier.change("isPlaying", true);
         var gapDuration = that.options.playbackOptions.gapDuration;
 
-        var synth = that.synth;
-
-        var currentData = sonificationQueue[0];
-
-        var textToSpeech = that.textToSpeech;
-
-        // Schedule the next voice label, accounting for both the variable-length
-        // delay (the time to play the preceding sonification) and the fixed-length
-        // gap
-
         // We shouldn't use the gap if this is the first call for a dataset
         var pause = noGap ? delay : delay + gapDuration;
 
-        // Play with speech labels if we support text to speech
-        if (that.model.isTextToSpeechSupported) {
-            synth.scheduler.once(pause, function () {
-                that.applier.change("currentlyPlayingData", currentData);
-                textToSpeech.queueSpeech(currentData.label);
-            });
+        floe.chartAuthoring.sonifier.scheduleNextPlayData(pause, that);
+    };
 
-        // Play without speech labels
-        } else {
-            synth.scheduler.once(pause, function () {
-                that.applier.change("currentlyPlayingData", currentData);
-                floe.chartAuthoring.sonifier.playDataAndQueueNext(that);
-            });
-        }
+    // Schedule the next data play, accounting for both the variable-length
+    // delay (the time to play the preceding sonification) and the fixed-length
+    // gap
+
+    floe.chartAuthoring.sonifier.scheduleNextPlayData = function (delay, that) {
+
+        var synth = that.synth;
+        var currentData = that.model.sonificationQueue[0];
+
+        var textToSpeech = that.textToSpeech;
+        synth.scheduler.once(delay, function () {
+            that.applier.change("currentlyPlayingData", currentData);
+            if (that.model.isTextToSpeechSupported) {
+                textToSpeech.queueSpeech(currentData.label);
+            } else {
+                that.playDataAndQueueNext();
+            }
+        });
     };
 
     // Recursion function called from floe.chartAuthoring.sonifier.processSonificationQueue
