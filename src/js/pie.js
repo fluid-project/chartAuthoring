@@ -21,7 +21,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // 4. update the pie when the data set changes, including adding or removing slices
 
     fluid.defaults("floe.chartAuthoring.pieChart.pie", {
-        gradeNames: ["floe.chartAuthoring.valueBinding","floe.chartAuthoring.totalRelaying", "floe.d3ViewComponent"],
+        gradeNames: ["floe.chartAuthoring.valueBinding", "floe.chartAuthoring.totalRelaying", "floe.d3ViewComponent"],
         model: {
             // dataSet accepts:
             // 1. an array of primitive values, such as numbers;
@@ -37,8 +37,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             // }
         },
         bindings: {
-            title:"pieTitle",
-            description:"pieDescription"
+            title: "pieTitle",
+            description: "pieDescription"
         },
         pieOptions: {
             width: 300,
@@ -115,7 +115,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         that.paths.enter()
             .append("path")
             .attr({
-                "fill": function(d, i) {
+                "fill": function (d, i) {
                     return color(i);
                 },
                 "d": arc,
@@ -151,7 +151,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         that.paths.transition().duration(animationDuration).attrTween("d", function (d) {
             var interpolation = d3.interpolate(this._current, d);
             this._current = interpolation(0);
-            return function(t) {
+            return function (t) {
                 return arc(interpolation(t));
             };
         });
