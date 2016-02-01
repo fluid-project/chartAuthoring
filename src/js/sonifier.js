@@ -76,7 +76,6 @@ var flockingEnvironment = flock.init();
             strategies: {
                 unitDivisor: {
                     config: {
-                        unitDivisorValue: 10,
                         notes: {
                             durations: {
                                 play: {
@@ -139,12 +138,20 @@ var flockingEnvironment = flock.init();
                 funcName: "floe.chartAuthoring.sonifier.playDataAndQueueNext",
                 args: ["{that}"]
             },
-            "unitDivisorSonificationStrategy": {
+            "unitDivisor10xSonificationStrategy": {
                 funcName: "floe.chartAuthoring.sonifier.unitDivisorStrategy",
-                args: ["{that}", "{that}.options.sonificationOptions.strategies.unitDivisor.config.unitDivisorValue"]
+                args: ["{that}", 10]
+            },
+            "unitDivisor5xSonificationStrategy": {
+                funcName: "floe.chartAuthoring.sonifier.unitDivisorStrategy",
+                args: ["{that}", 5]
+            },
+            "unitDivisor1xSonificationStrategy": {
+                funcName: "floe.chartAuthoring.sonifier.unitDivisorStrategy",
+                args: ["{that}", 1]
             },
             // Calls the default sonification strategy
-            "defaultSonificationStrategy": "{that}.unitDivisorSonificationStrategy"
+            "defaultSonificationStrategy": "{that}.unitDivisor10xSonificationStrategy"
         },
         events: {
             // Fires to trigger creation of the synth the first time it's needed
