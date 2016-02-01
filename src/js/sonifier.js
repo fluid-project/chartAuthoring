@@ -177,7 +177,7 @@ var flockingEnvironment = flock.init();
             envelopeDurationConfig = floe.chartAuthoring.sonifier.applyZoomToDurationConfig(sonificationOptions.strategies.unitDivisor.config.envelope.durations,playbackOptions.zoom),
             envelopeValuesConfig = sonificationOptions.strategies.unitDivisor.config.envelope.values;
 
-        fluid.each(dataSet, function(item,key) {
+        fluid.each(dataSet, function (item, key) {
             if (item.value !== null) {
                 var percentage = Number(floe.chartAuthoring.percentage.calculate(item.value, totalValue).toFixed(0));
                 var units = floe.chartAuthoring.sonifier.getDivisorStrategyUnits(percentage, unitDivisor);
@@ -217,12 +217,12 @@ var flockingEnvironment = flock.init();
     floe.chartAuthoring.sonifier.getDivisorStrategyUnits = function (value, unitDivisor) {
         var numberDivisors = Math.floor(value / unitDivisor);
         var numberRemainders = value % unitDivisor;
-        var divisorArray =[];
+        var divisorArray = [];
         var remainderArray = [];
-        for(var i = 0; i < numberDivisors; i++) {
+        for (var i = 0; i < numberDivisors; i++) {
             divisorArray.push(unitDivisor);
         }
-        for(i = 0; i < numberRemainders; i++) {
+        for (i = 0; i < numberRemainders; i++) {
             remainderArray.push(1);
         }
 
@@ -236,7 +236,7 @@ var flockingEnvironment = flock.init();
     //
     // Used to generate value and duration configs
     floe.chartAuthoring.sonifier.getConfigByDivisor = function (units, unitDivisor, config) {
-        var collection = fluid.transform(units, function(unit) {
+        var collection = fluid.transform(units, function (unit) {
             return config[unit === unitDivisor ? "divisorReturnValue" : "remainderReturnValue"];
         });
         return collection;
