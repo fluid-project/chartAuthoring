@@ -279,14 +279,15 @@ var flockingEnvironment = flock.init();
     };
 
 
-    // Given two arrays, interleaves the shorter array into the larger one,
-    // starting with the first item of array1
-    // TODO: needs a test; needs to check on array length and behave appropriately
+    // Given two arrays, interleaves them together, starting with the first item of array1
     floe.chartAuthoring.sonifier.interleaveTransform = function (array1, array2) {
-        // var shorterLength = array1.length >= array2.length ? array1.length : array2.length;
+        var longerArray = array1.length >= array2.length ? array1 : array2;
 
-        var interleaved = fluid.transform(array1, function (item, index) {
-            return [item, array2[index]];
+        var interleaved = fluid.transform(longerArray, function (item, index) {
+            var array1Item = array1[index],
+                array2Item = array2[index];
+
+            return (array1Item !== undefined && array2Item !== undefined) ? [array1[index], array2[index]] : array1Item !== undefined ? [array1Item] : array2Item !== undefined ? array2Item : [];
         });
 
         var concat = function (curentArray, totalArray) {

@@ -148,6 +148,39 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         innerArray: [4, 5, 16 / 16, "Still not a numb3r"]
     };
 
+    floe.tests.chartAuthoring.shorterArray = [1, 2];
+
+    floe.tests.chartAuthoring.longerArray = [3, 5, 7, 9];
+
+    floe.tests.chartAuthoring.expectedInterleavedArrayShorterFirst = [1, 3, 2, 5, 7, 9];
+
+    floe.tests.chartAuthoring.expectedInterleavedArrayLongerFirst = [3, 1, 5, 2, 7, 9];
+
+    jqUnit.test("Test the interleave transform", function () {
+        jqUnit.expect(2);
+        var interleaveTests = [
+            {
+                msg: "Two differing-length arrays are interleaved as expected (shorter as first argument)",
+                array1: floe.tests.chartAuthoring.shorterArray,
+                array2: floe.tests.chartAuthoring.longerArray,
+                expected: floe.tests.chartAuthoring.expectedInterleavedArrayShorterFirst
+            },
+            {
+                msg: "Two differing-length arrays are interleaved as expected (longer as first argument)",
+                array1: floe.tests.chartAuthoring.longerArray,
+                array2: floe.tests.chartAuthoring.shorterArray,
+                expected: floe.tests.chartAuthoring.expectedInterleavedArrayLongerFirst
+            }
+        ];
+
+        fluid.each(interleaveTests, function (test) {
+            var interleavedArray = floe.chartAuthoring.sonifier.interleaveTransform(test.array1, test.array2);
+
+            jqUnit.assertDeepEq(test.msg, test.expected, interleavedArray);
+        });
+
+    });
+
     jqUnit.test("Test the multiplication transform", function () {
         jqUnit.expect(1);
 
@@ -165,7 +198,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             }
         });
 
-        jqUnit.assertDeepEq("Sonifier's dataset is converted into the expected sonification", floe.tests.chartAuthoring.sonificationData, that.model.sonifiedData);
+        jqUnit.assertDeepEq("Dataset is converted into the expected sonification data", floe.tests.chartAuthoring.sonificationData, that.model.sonifiedData);
     });
 
     jqUnit.test("Test the sonification data conversion with zoom", function () {
@@ -180,7 +213,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             }
         });
 
-        jqUnit.assertDeepEq("Sonifier's dataset is converted into the expected sonification", floe.tests.chartAuthoring.sonificationDataWith2xZoom, that.model.sonifiedData);
+        jqUnit.assertDeepEq("Dataset is converted into the expected sonification with 2x zoom", floe.tests.chartAuthoring.sonificationDataWith2xZoom, that.model.sonifiedData);
     });
 
     jqUnit.test("Test the sonification play behaviour", function () {
