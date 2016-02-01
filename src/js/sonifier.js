@@ -190,8 +190,8 @@ var flockingEnvironment = flock.init();
             if (item.value !== null) {
                 var percentage = Number(floe.chartAuthoring.percentage.calculate(item.value, totalValue).toFixed(0));
                 var units = floe.chartAuthoring.sonifier.getDivisorStrategyUnits(percentage, unitDivisor);
-                var noteDurations = floe.chartAuthoring.sonifier.getSonificationNoteDurationsByDivisor(units, unitDivisor, noteDurationConfig);
-                var noteValues = floe.chartAuthoring.sonifier.getSonificationNoteValuesByDivisor(units, unitDivisor, noteValueConfig);
+                var noteDurations = floe.chartAuthoring.sonifier.getConfigByDivisor(units, unitDivisor, noteDurationConfig);
+                var noteValues = floe.chartAuthoring.sonifier.getConfigByDivisor(units, unitDivisor, noteValueConfig);
                 var envelopeDurations = floe.chartAuthoring.sonifier.getSonificationEnvelopeDurationsByDivisor(units, unitDivisor, envelopeDurationConfig);
                 var envelopeValues = floe.chartAuthoring.sonifier.getSonificationEnvelopeValuesByDivisor(envelopeDurations, envelopeDurationConfig, envelopeValuesConfig);
                 var d = {
@@ -249,14 +249,6 @@ var flockingEnvironment = flock.init();
             return config[unit === unitDivisor ? "divisorReturnValue" : "remainderReturnValue"];
         });
         return collection;
-    };
-
-    floe.chartAuthoring.sonifier.getSonificationNoteDurationsByDivisor = function (units, unitDivisor, noteDurationConfig) {
-        return floe.chartAuthoring.sonifier.getConfigByDivisor(units, unitDivisor, noteDurationConfig);
-    };
-
-    floe.chartAuthoring.sonifier.getSonificationNoteValuesByDivisor = function (units, unitDivisor, noteValueConfig) {
-        return floe.chartAuthoring.sonifier.getConfigByDivisor(units, unitDivisor, noteValueConfig);
     };
 
     floe.chartAuthoring.sonifier.getSonificationEnvelopeDurationsByDivisor = function (units, unitDivisor, envelopeDurationConfig) {
