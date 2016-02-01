@@ -197,7 +197,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         // For looping pieDataSet in parallel
         var indexCounter = 0;
 
-        fluid.each(dataEntryPanelDataSet, function(dataEntryPanelData,key) {
+        fluid.each(dataEntryPanelDataSet, function (dataEntryPanelData, key) {
 
             // Don't compare if the dataEntryPanelData has the default blank
             // values (these don't get relayed)
