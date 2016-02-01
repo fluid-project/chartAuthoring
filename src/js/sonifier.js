@@ -21,7 +21,7 @@ var flockingEnvironment = flock.init();
         components: {
             textToSpeech: {
                 type: "fluid.textToSpeech",
-                options:{
+                options: {
                     model: {
                         utteranceOpts: {
                             "lang": "en-US"
@@ -158,7 +158,7 @@ var flockingEnvironment = flock.init();
     // maintaining object constancy by using the dataEntry object name as the key
     floe.chartAuthoring.sonifier.dataEntriesToSonificationData = function (that) {
         var sonificationData = that.defaultSonificationStrategy();
-        that.applier.change("sonifiedData",sonificationData);
+        that.applier.change("sonifiedData", sonificationData);
     };
 
     // Creates a sonified data set based on unit divisors
@@ -172,9 +172,9 @@ var flockingEnvironment = flock.init();
         var sonificationOptions = that.options.sonificationOptions;
         var playbackOptions = that.options.playbackOptions;
 
-        var noteDurationConfig = floe.chartAuthoring.sonifier.applyZoomToDurationConfig(sonificationOptions.strategies.unitDivisor.config.notes.durations.play,playbackOptions.zoom),
+        var noteDurationConfig = floe.chartAuthoring.sonifier.applyZoomToDurationConfig(sonificationOptions.strategies.unitDivisor.config.notes.durations.play, playbackOptions.zoom),
             noteValueConfig = sonificationOptions.strategies.unitDivisor.config.notes.values,
-            envelopeDurationConfig = floe.chartAuthoring.sonifier.applyZoomToDurationConfig(sonificationOptions.strategies.unitDivisor.config.envelope.durations,playbackOptions.zoom),
+            envelopeDurationConfig = floe.chartAuthoring.sonifier.applyZoomToDurationConfig(sonificationOptions.strategies.unitDivisor.config.envelope.durations, playbackOptions.zoom),
             envelopeValuesConfig = sonificationOptions.strategies.unitDivisor.config.envelope.values;
 
         fluid.each(dataSet, function (item, key) {
