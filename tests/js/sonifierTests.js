@@ -128,6 +128,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     floe.tests.chartAuthoring.expectedInterleavedArrayLongerFirst = [3, 1, 5, 2, 7, 9];
 
+    floe.tests.chartAuthoring.unmultipliedValue = 3;
+
+    floe.tests.chartAuthoring.expectedMultipliedValue = 9;
+
     floe.tests.chartAuthoring.unmultipliedObject = {
         wholeNumber: 1,
         decimal: 1.5,
@@ -182,7 +186,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     });
 
     jqUnit.test("Test the multiplication transform", function () {
-        jqUnit.expect(1);
+        jqUnit.expect(3);
 
         var multiplicationTests = [
             {
@@ -190,11 +194,23 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 initial: floe.tests.chartAuthoring.unmultipliedObject,
                 expected: floe.tests.chartAuthoring.expectedMultipliedObject,
                 multiplier: 2
+            },
+            {
+                msg: "Number value is multiplied as expected",
+                initial: floe.tests.chartAuthoring.unmultipliedValue,
+                expected: floe.tests.chartAuthoring.expectedMultipliedValue,
+                multiplier: 3
+            },
+            {
+                msg: "A string value is simply left alone",
+                initial: "I keep telling you I'm not a number",
+                expected: "I keep telling you I'm not a number",
+                multiplier: 3
             }
         ];
 
         fluid.each(multiplicationTests, function (test) {
-            var multiplied = floe.chartAuthoring.sonifier.multiplierTransform(floe.tests.chartAuthoring.unmultipliedObject, 2);
+            var multiplied = floe.chartAuthoring.sonifier.multiplierTransform(test.initial, test.multiplier);
 
             jqUnit.assertDeepEq(test.msg, test.expected, multiplied);
         });

@@ -300,7 +300,7 @@ var flockingEnvironment = flock.init();
 
     // Given an object, recursively traverses it for any numeric values and
     // returns it with all numeric values transformed by the multiplier value
-    // Non-numeric values are left intact
+    // Non-numeric values are left unchanged
     // Uses typeof rather than isNan to test if it should multiply for
     // stricter compliance with whether or not a value is a "number"
     // ("3", false, and "" are all treated as numbers by isNan())
