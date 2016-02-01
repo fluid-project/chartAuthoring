@@ -26,12 +26,6 @@ var flockingEnvironment = flock.init();
                         utteranceOpts: {
                             "lang": "en-US"
                         }
-                    },
-                    listeners: {
-                        "onStop.playDataAndQueueNext": {
-                            funcName: "floe.chartAuthoring.sonifier.playDataAndQueueNext",
-                            args: "{floe.chartAuthoring.sonifier}"
-                        }
                     }
                 }
 
@@ -157,8 +151,15 @@ var flockingEnvironment = flock.init();
             onSynthNeeded: null,
             // Fires when a sonification play begins
             onSonificationStarted: null,
+            // Fires when a voice label read finishes (via event injection),
+            // or is fired manually by the floe.chartAuthoring.sonifier.scheduleNextPlayData
+            // function
+            onVoiceLabelCompleted: "{textToSpeech}.events.onStop",
             // Fires when stopSonification function is called
             onSonificationStopped: null
+        },
+        listeners: {
+            "onVoiceLabelCompleted": "{that}.playDataAndQueueNext"
         }
     });
 
@@ -383,27 +384,26 @@ var flockingEnvironment = flock.init();
         floe.chartAuthoring.sonifier.scheduleNextPlayData(pause, that);
     };
 
+    // Schedule the next data play
     floe.chartAuthoring.sonifier.scheduleNextPlayData = function (delay, that) {
 
         var synth = that.synth;
-        var currentData = that.model.sonificationQueue[0];
+        var headOfQueueData = that.model.sonificationQueue[0];
         var textToSpeech = that.textToSpeech;
 
-        // Schedule the next data play, accounting for both the variable-length
-        // delay (the time to play the preceding sonification) and the
-        // fixed-length gap
-        //
         // When TTS is available, adds speech labels and relies on the
-        // onStop.playDataAndQueueNext event to call the playDataAndQueueNext
-        // function; when TTS is unavailable, simply schedules the next
-        // playDataAndQueueNext event itself
+        // textToSpeech.onStop.playDataAndQueueNext event to fire (via
+        // injection) the onVoiceLabelCompleted event that's listened to for
+        // kicking off the next data play; when TTS is unavailable, simply fires
+        // the onVoiceLabelCompleted event ("completed" in the sense that it's)
+        // not supported and we should simply move on
 
         synth.scheduler.once(delay, function () {
-            that.applier.change("currentlyPlayingData", currentData);
+            that.applier.change("currentlyPlayingData", headOfQueueData);
             if (that.model.isTextToSpeechSupported) {
-                textToSpeech.queueSpeech(currentData.label);
+                textToSpeech.queueSpeech(headOfQueueData.label);
             } else {
-                that.playDataAndQueueNext();
+                that.events.onVoiceLabelCompleted.fire();
             }
         });
     };
@@ -418,10 +418,17 @@ var flockingEnvironment = flock.init();
         // the variable
         var data = sonificationQueue.shift();
 
-        // This prevents an error being thrown if a stop has been called but
-        // this function is queued or in the midst of execution
+        // Calculate the noteDuration to be used when calling the
+        // processSonificationQueue function recursively to clear the queue;
+        // this is used to delay the actual playing until the prior data has
+        // completed its play
+        //
+        // The check for undefined prevents an error if a stop has been called
+        // but this function is queued or in the midst of execution
         var noteDuration = (data !== undefined) ? floe.chartAuthoring.sonifier.getTotalDuration(data.notes.durations) : 0;
 
+        // Recursively calls processSonificationQueue again if the queue isn't
+        // empty yet
         if (sonificationQueue.length > 0) {
             floe.chartAuthoring.sonifier.processSonificationQueue(noteDuration, false, that);
         } else {
