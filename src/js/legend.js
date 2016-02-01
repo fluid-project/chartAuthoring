@@ -16,9 +16,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     fluid.defaults("floe.chartAuthoring.pieChart.legend", {
         gradeNames: ["floe.chartAuthoring.totalRelaying", "floe.d3ViewComponent", "autoInit"],
         strings: {
-            legendColHeading:"Legend",
-            labelColHeading:"Label",
-            valueColHeading:"Value" //,
+            legendColHeading: "Legend",
+            labelColHeading: "Label",
+            valueColHeading: "Value" //,
             // legendTitle:"" // title for the legend - translates to table caption
         },
         model: {
@@ -248,21 +248,21 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
             theadRow.append("th")
                 .attr({
-                    "scope":"col",
+                    "scope": "col",
                     "class": colorHeaderClass
                 })
                 .html(that.options.strings.legendColHeading);
 
             theadRow.append("th")
                 .attr({
-                    "scope":"col",
+                    "scope": "col",
                     "class": labelHeaderClass
                 })
                 .html(that.options.strings.labelColHeading);
 
             theadRow.append("th")
                 .attr({
-                    "scope":"col",
+                    "scope": "col",
                     "class": valueHeaderClass
                 })
                 .html(that.options.strings.valueColHeading);
