@@ -120,6 +120,42 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         }
     ];
 
+    floe.tests.chartAuthoring.unmultipliedObject = {
+        wholeNumber: 1,
+        decimal: 1.5,
+        fraction: 3 / 8,
+        string: "I'm not a number, but I have 1 or 2 in me",
+        stringNumber: "3",
+        innerObject: {
+            wholeNumber: 3,
+            decimal: 3.5,
+            fraction: 6 / 24
+        },
+        innerArray: [2, 2.5, 8 / 16, "Still not a numb3r"]
+    };
+
+    floe.tests.chartAuthoring.expectedMultipliedObject = {
+        wholeNumber: 2,
+        decimal: 3,
+        fraction: 6 / 8,
+        string: "I'm not a number, but I have 1 or 2 in me",
+        stringNumber: "3",
+        innerObject: {
+            wholeNumber: 6,
+            decimal: 7,
+            fraction: 12 / 24
+        },
+        innerArray: [4, 5, 16 / 16, "Still not a numb3r"]
+    };
+
+    jqUnit.test("Test the multiplication transform", function () {
+        jqUnit.expect(1);
+
+        var multipliedObject = floe.chartAuthoring.sonifier.multiplierTransform(floe.tests.chartAuthoring.unmultipliedObject, 2);
+
+        jqUnit.assertDeepEq("Object containing mix of number and non-number values is multiplied as expected", multipliedObject, floe.tests.chartAuthoring.expectedMultipliedObject);
+    });
+
     jqUnit.test("Test the sonification data conversion", function () {
         jqUnit.expect(1);
 
