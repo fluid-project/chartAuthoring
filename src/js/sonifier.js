@@ -28,11 +28,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
             },
             enviro: {
-                createOnEvent: "onSynthNeeded",
                 type: "flock.enviro"
             },
             synth: {
-                createOnEvent: "onSynthNeeded",
                 type: "floe.chartAuthoring.electricPianoBand",
                 options: {
                     components: {
@@ -101,8 +99,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             "defaultSonificationStrategy": "{that}.unitDivisor10xSonificationStrategy"
         },
         events: {
-            // Fires to trigger creation of the synth the first time it's needed
-            onSynthNeeded: null,
             // Fires when a sonification play begins
             onSonificationStarted: null,
             // Fires when a voice label read finishes (via event injection),
@@ -126,11 +122,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.chartAuthoring.sonifier.startSonification = function (that) {
         if (that.model.isPlaying) {
             return;
-        }
-
-        // Create the flocking environment & synth if needed
-        if (that.enviro === undefined || that.synth === undefined) {
-            that.events.onSynthNeeded.fire();
         }
 
         // Fire the start event
