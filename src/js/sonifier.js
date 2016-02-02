@@ -9,9 +9,6 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.txt
 */
 
-// Initialize the flocking environment
-var flockingEnvironment = flock.init();
-
 (function ($, fluid) {
 
     "use strict";
@@ -29,6 +26,10 @@ var flockingEnvironment = flock.init();
                     }
                 }
 
+            },
+            enviro: {
+                createOnEvent: "onSynthNeeded",
+                type: "flock.enviro"
             },
             synth: {
                 createOnEvent: "onSynthNeeded",
@@ -127,8 +128,8 @@ var flockingEnvironment = flock.init();
             return;
         }
 
-        // Create the synth if needed
-        if (that.synth === undefined) {
+        // Create the flocking environment & synth if needed
+        if (that.enviro === undefined || that.synth === undefined) {
             that.events.onSynthNeeded.fire();
         }
 
@@ -136,7 +137,7 @@ var flockingEnvironment = flock.init();
         that.events.onSonificationStarted.fire();
 
         // Start the flocking environment
-        flockingEnvironment.start();
+        that.enviro.start();
 
         // Copy the sonification definition into the queue
         that.applier.change("sonificationQueue", that.model.sonifiedData);
@@ -259,7 +260,7 @@ var flockingEnvironment = flock.init();
         }
 
         // Stop the flocking environment
-        flockingEnvironment.stop();
+        that.enviro.stop();
 
         // Update the model information about play state
         that.applier.change("isPlaying", false);
