@@ -166,7 +166,16 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         },
         listeners: {
             "onToolReady.addAriaConnections": "floe.chartAuthoring.addAriaConnections",
-            "onToolReady.addSonificationListeners": "floe.chartAuthoring.addSonificationControlsHandlers"
+            "onToolReady.bindPlayClick": {
+                "this": "{that}.dom.sonifierPlay",
+                "method": "click",
+                "args": ["{chartAuthoringInterface}.sonifier.playSonification"]
+            },
+            "onToolReady.bindStopClick": {
+                "this": "{that}.dom.sonifierStop",
+                "method": "click",
+                "args": ["{chartAuthoringInterface}.sonifier.stopSonification"]
+            }
         },
         invokers: {
             "updateDataEntryPanelFromDataSet": {
@@ -329,22 +338,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         });
 
         that.events.onDataAppliedToDataEntryPanel.fire();
-    };
-
-    floe.chartAuthoring.addSonificationControlsHandlers = function (that) {
-        var playButton = that.locate("sonifierPlay"),
-            stopButton = that.locate("sonifierStop");
-
-        playButton.click(function (e) {
-            that.chartAuthoringInterface.sonifier.playSonification();
-            e.preventDefault();
-        });
-
-        stopButton.click(function (e) {
-            that.chartAuthoringInterface.sonifier.stopSonification();
-            e.preventDefault();
-        });
-
     };
 
 })(jQuery, fluid);
