@@ -169,7 +169,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             "onToolReady.bindPlayClick": {
                 "this": "{that}.dom.sonifierPlay",
                 "method": "click",
-                "args": ["{chartAuthoringInterface}.sonifier.playSonification"]
+                "args": ["{chartAuthoringInterface}.sonifier.events.onSonificationRequested.fire"]
             },
             "onToolReady.bindStopClick": {
                 "this": "{that}.dom.sonifierStop",

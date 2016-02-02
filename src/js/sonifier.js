@@ -79,10 +79,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             zoom: 1
         },
         invokers: {
-            "playSonification": {
-                funcName: "floe.chartAuthoring.sonifier.startSonification",
-                args: "{that}"
-            },
             "stopSonification": {
                 funcName: "floe.chartAuthoring.sonifier.stopSonification",
                 args: "{that}"
@@ -99,8 +95,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             "defaultSonificationStrategy": "{that}.unitDivisor10xSonificationStrategy"
         },
         events: {
-            // Fires when a sonification play begins
-            onSonificationStarted: null,
+            // Fires when a sonification play is requested
+            onSonificationRequested: null,
             // Fires when a voice label read finishes (via event injection),
             // or is fired manually by the floe.chartAuthoring.sonifier.scheduleNextPlayData
             // function
@@ -109,28 +105,25 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             onSonificationStopped: null
         },
         listeners: {
-            "onVoiceLabelCompleted": "{that}.playDataAndQueueNext"
+            "onSonificationRequested.startEnviro": {
+                func: "{that}.enviro.start"
+            },
+            "onSonificationRequested.queueData": {
+                funcName: "floe.chartAuthoring.sonifier.addToSonificationQueue",
+                args: ["{that}"],
+                priority: "after:onSonificationRequested.startEnviro"
+            },
+            "onVoiceLabelCompleted.playDataAndQueueNext": "{that}.playDataAndQueueNext"
         }
     });
 
-    // Kicks off a sonification play. Specifically it:
-    // - creates the needed Flocking synth
-    // - starts the Flocking environment
-    // - calls the initial playDataset function that's used recursively to
-    // execute a sonification
-
-    floe.chartAuthoring.sonifier.startSonification = function (that) {
+    // Adds sonifiedData to the queue, but only if something isn't currently
+    // playing
+    floe.chartAuthoring.sonifier.addToSonificationQueue = function (that) {
+        // Don't add to the queue if sound is currently playing
         if (that.model.isPlaying) {
             return;
         }
-
-        // Fire the start event
-        that.events.onSonificationStarted.fire();
-
-        // Start the flocking environment
-        that.enviro.start();
-
-        // Copy the sonification definition into the queue
         that.applier.change("sonificationQueue", that.model.sonifiedData);
     };
 

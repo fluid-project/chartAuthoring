@@ -282,7 +282,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             }
         });
 
-        that.playSonification();
+        that.events.onSonificationRequested.fire();
 
         jqUnit.assertTrue("sonificationQueue has expected number of items in it", that.model.sonificationQueue.length === 2);
         fluid.each(that.model.sonificationQueue, function (queueItem, idx) {
