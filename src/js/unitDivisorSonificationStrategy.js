@@ -14,7 +14,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     "use strict";
 
     fluid.defaults("floe.chartAuthoring.sonifier.unitDivisorSonificationStrategy", {
-        gradeNames: ["fluid.component"],
         // can override these to control sonification behaviour
         // These need better explanations of what they do
         sonificationOptions: {
