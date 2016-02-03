@@ -52,8 +52,8 @@ body {
     display: inline-block;
 }
 
-.floe-sonifierPlay img, .floe-sonifierStop img {
-    max-width: 32px;
+.floe-sonifierPlay img, .floe-sonifierStop img {    
+    max-width: 2em;
 }
 
 .floe-sonifierPlay:hover img, .floe-sonifierStop:hover img, .floe-sonifierPlay:focus img, .floe-sonifierStop:focus img {
