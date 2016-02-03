@@ -1,6 +1,0 @@
-./tests/js/chartAuthoringTests.js
-./tests/js/d3UtilsTests.js
-./tests/js/legendTests.js
-./tests/js/pieTests.js
-./tests/js/sonifierTests.js
-./tests/js/totalRelayingTests.js
