@@ -44,8 +44,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                                 }
                             },
                             values: {
-                                openValue: 1.0,
-                                closedValue: 0.0
+                                trueValue: 1.0,
+                                falseValue: 0.0
                             }
                         }
                     }
@@ -80,7 +80,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         that.applier.change("sonifiedData", sonificationData);
     };
 
-    // Creates a sonified data set based on unit divisors
+    // Creates a sonification data set based on unit divisors
     // Longer tones represent the unit divisor, while a short tones is played
     // for each remaining "1" of the remainder
     floe.chartAuthoring.sonifier.unitDivisorSonificationStrategy.unitDivisorStrategy = function (that, unitDivisor) {
@@ -129,7 +129,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     };
 
 
-    // Given an array containing indiividual durations, accumulate them and
+    // Given an array containing individual durations, accumulate them and
     // return the total duration
     floe.chartAuthoring.sonifier.unitDivisorSonificationStrategy.getTotalDuration = function (durationsArray) {
         var sum = function (duration, runningTotal) {
@@ -159,8 +159,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     };
 
     // Given an array of units consisting of divisor and remainder values
-    // such as the one produced by floe.chartAuthoring.sonifier.unitDivisorSonificationStrategy.getDivisorStrategyUnits
-    // and a config, returns an array with those divisor and remainder
+    // such as the one produced by getDivisorStrategyUnits
+    // and a config in the style, returns an array with those divisor and remainder
     // values translated into the equivalent units required for sonification
     //
     // Used to generate value and duration configs
@@ -171,6 +171,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         return collection;
     };
 
+    // Envelope durations are formed from the combined play and silence duration
+    // configurations (after transformation by getConfigByDivisor), interleaved
+    // together
     floe.chartAuthoring.sonifier.unitDivisorSonificationStrategy.getSonificationEnvelopeDurationsByDivisor = function (units, unitDivisor, envelopeDurationConfig) {
         var playDurations = floe.chartAuthoring.sonifier.unitDivisorSonificationStrategy.getConfigByDivisor(units, unitDivisor, envelopeDurationConfig.play);
 
@@ -179,13 +182,17 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         return floe.chartAuthoring.sonifier.unitDivisorSonificationStrategy.interleaveTransform(playDurations, silenceDurations);
     };
 
+    // Envelope values are assigned by passing the envelope durations array
+    // from getSonificationEnvelopeDurationsByDivisor, with a truthValueTransform
+    // to return an array of open (the synth should play) or closed (the synth
+    // should be silent) values.
     floe.chartAuthoring.sonifier.unitDivisorSonificationStrategy.getSonificationEnvelopeValuesByDivisor = function (envelopeDurations, envelopeDurationConfig, envelopeValuesConfig) {
 
         var isDurationMatchesPlayValue = function (duration) {
             return duration === envelopeDurationConfig.play.divisorReturnValue || duration === envelopeDurationConfig.play.remainderReturnValue;
         };
 
-        return  floe.chartAuthoring.sonifier.unitDivisorSonificationStrategy.truthValueTransform(envelopeDurations, isDurationMatchesPlayValue, envelopeValuesConfig.openValue, envelopeValuesConfig.closedValue);
+        return floe.chartAuthoring.sonifier.unitDivisorSonificationStrategy.truthValueTransform(envelopeDurations, isDurationMatchesPlayValue, envelopeValuesConfig.trueValue, envelopeValuesConfig.falseValue);
     };
 
     // Given an array of values, a truthFunction and values to return when the
