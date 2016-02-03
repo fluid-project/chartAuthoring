@@ -275,7 +275,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var activeDataId = that.model.currentlyPlayingData !== null ? that.model.currentlyPlayingData.id : null;
 
         var activeElement = floe.d3.filterById(selection, activeDataId);
-        var inactiveElements = floe.d3.filterByNotId(selection, activeDataId);
+        var inactiveElements = floe.d3.filterById(selection, activeDataId, true);
         activeElement.classed(dataPlayingHighlightClass, true);
         inactiveElements.classed(dataPlayingHighlightClass, false);
     };

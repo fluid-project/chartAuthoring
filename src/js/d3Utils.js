@@ -34,22 +34,12 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     // Given a selection of D3 elements and an ID, returns only the elements
     // matching that ID
-    floe.d3.filterById = function (d3Selection, currentlyPlayingDataId) {
+    floe.d3.filterById = function (d3Selection, idToFilter, invertResult) {
+        var shouldInvert = invertResult === undefined ? false : invertResult;
         return d3Selection.filter(
             function (d) {
                 var id = floe.d3.idExtractor(d);
-                return id === currentlyPlayingDataId;
-            }
-        );
-    };
-
-    // Given a selection of D3 elements and an ID, returns only the elements
-    // that don't match that ID
-    floe.d3.filterByNotId = function (d3Selection, currentlyPlayingDataId) {
-        return d3Selection.filter(
-            function (d) {
-                var id = floe.d3.idExtractor(d);
-                return id !== currentlyPlayingDataId;
+                return shouldInvert ? id !== idToFilter : id === idToFilter;
             }
         );
     };
