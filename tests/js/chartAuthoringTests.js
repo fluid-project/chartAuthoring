@@ -108,12 +108,11 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                     args: ["{floe.tests.chartAuthoring}"],
                     event: "{floe.tests.chartAuthoring}.events.onToolReady"
                 }, {
-                    func: "{floe.tests.chartAuthoring}.updateDataEntryPanelFromDataSet",
-                    args: [floe.tests.chartAuthoring.updateDataSet]
+                    func: "floe.tests.chartAuthoringTester.verifyUpdateDataEntryPanel",
+                    args: ["{floe.tests.chartAuthoring}"]
                 }, {
-                    listener: "floe.tests.chartAuthoringTester.verifyUpdate",
-                    args: ["{floe.tests.chartAuthoring}"],
-                    event: "{floe.tests.chartAuthoring}.events.onDataAppliedToDataEntryPanel"
+                    func: "floe.tests.chartAuthoringTester.verifyRelay",
+                    args: ["{floe.tests.chartAuthoring}"]
                 }]
             }]
         }]
@@ -160,14 +159,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         jqUnit.assertDeepEq("The reset has an aria-controls attribute properly referencing the form, pie, legend and total", resetAriaControlsAttr, dataEntryFormlId + " " + legendTableId + " " + pieChartPieId + " " + dataEntryFormTotalId);
     };
 
-    floe.tests.chartAuthoringTester.verifyUpdate = function (that) {
-        floe.tests.chartAuthoringTester.verifyRelay(that);
-        floe.tests.chartAuthoringTester.verifyUpdateDataEntryPanel(that);
-    };
-
     // Verify that the updateDataEntryPanel function updates the UI
     floe.tests.chartAuthoringTester.verifyUpdateDataEntryPanel = function (that) {
-        // floe.tests.chartAuthoring.updateDataSet
+        that.updateDataEntryPanelFromDataSet(floe.tests.chartAuthoring.updateDataSet);
+
         var dataEntries = that.chartAuthoringInterface.dataEntryPanel.locate("dataEntry");
 
         var dataEntryLabelSelector = that.chartAuthoringInterface.dataEntryPanel.dataEntry.options.selectors.label;

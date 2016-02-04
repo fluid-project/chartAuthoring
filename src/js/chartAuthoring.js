@@ -161,8 +161,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                     onSonifierReady: "onSonifierReady"
                 },
                 args: ["{that}"]
-            },
-            onDataAppliedToDataEntryPanel: null
+            }
         },
         listeners: {
             "onToolReady.addAriaConnections": "floe.chartAuthoring.addAriaConnections",
@@ -335,8 +334,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             $(this).find(dataEntryLabelSelector).val(currentData.label).trigger("change");
             $(this).find(dataEntryValueSelector).val(currentData.value).trigger("change");
         });
-
-        that.events.onDataAppliedToDataEntryPanel.fire();
     };
 
 })(jQuery, fluid);
