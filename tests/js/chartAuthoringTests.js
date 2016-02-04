@@ -93,8 +93,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         modules: [{
             name: "Test the chart authoring component",
             tests: [{
-                name: "Chart Authoring Init",
-                expect: 40,
+                name: "Chart Authoring Init, Changes and Button Behaviour",
+                expect: 63,
                 sequence: [{
                     listener: "floe.tests.chartAuthoringTester.verifyInit",
                     args: ["{chartAuthoring}"],
@@ -129,7 +129,40 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                     jQueryTrigger: "click",
                     element: "{floe.tests.chartAuthoring}.dom.sonifierStop"
                 }, {
-                    // Listen for stop event
+                    // Listen for stop event from button click
+                    listener: "floe.tests.chartAuthoringTester.verifySonificationStopped",
+                    args: ["{floe.tests.chartAuthoring}"],
+                    event: "{floe.tests.chartAuthoring}.chartAuthoringInterface.sonifier.events.onSonificationStopped"
+                }, {
+                    // Click the play button again
+                    jQueryTrigger: "click",
+                    element: "{floe.tests.chartAuthoring}.dom.sonifierPlay"
+                }, {
+                    // Listen to change #1 to currentlyPlayingData
+                    listener: "floe.tests.chartAuthoringTester.verifyDatapointPlay",
+                    args: ["{floe.tests.chartAuthoring}"],
+                    path: "currentlyPlayingData",
+                    changeEvent: "{floe.tests.chartAuthoring}.applier.modelChanged"
+                }, {
+                    func: "fluid.identity"
+                }, {
+                    // Listen to change #2 to currentlyPlayingData
+                    listener: "floe.tests.chartAuthoringTester.verifyDatapointPlay",
+                    args: ["{floe.tests.chartAuthoring}"],
+                    path: "currentlyPlayingData",
+                    changeEvent: "{floe.tests.chartAuthoring}.applier.modelChanged"
+                }, {
+                    func: "fluid.identity"
+                }, {
+                    // Listen to change #3 to currentlyPlayingData
+                    listener: "floe.tests.chartAuthoringTester.verifyDatapointPlay",
+                    args: ["{floe.tests.chartAuthoring}"],
+                    path: "currentlyPlayingData",
+                    changeEvent: "{floe.tests.chartAuthoring}.applier.modelChanged"
+                }, {
+                    func: "fluid.identity"
+                }, {
+                    // Listen for "natural" stop event
                     listener: "floe.tests.chartAuthoringTester.verifySonificationStopped",
                     args: ["{floe.tests.chartAuthoring}"],
                     event: "{floe.tests.chartAuthoring}.chartAuthoringInterface.sonifier.events.onSonificationStopped"
@@ -228,7 +261,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // Verifies that a play button click triggers the sonification request to
     // begin - there are items in the queue but currentlyPlayingData is empty
     floe.tests.chartAuthoringTester.verifySonificationQueued = function (that) {
-        console.log("floe.tests.chartAuthoringTester.verifySonificationQueued");
         var sonifier = that.chartAuthoringInterface.sonifier;
         jqUnit.assertEquals("Sonifier queue is full", 3, sonifier.model.sonificationQueue.length);
         jqUnit.assertUndefined("No currentlyPlayingData", sonifier.currentlyPlayingData);
@@ -237,10 +269,29 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // Verify a stop button click triggers the sonification to stop -
     // the queue is empty, no currentlyPlayingData
     floe.tests.chartAuthoringTester.verifySonificationStopped = function (that) {
-        console.log("floe.tests.chartAuthoringTester.verifySonificationStopped");
         var sonifier = that.chartAuthoringInterface.sonifier;
         jqUnit.assertEquals("Sonifier queue is empty", 0, sonifier.model.sonificationQueue.length);
         jqUnit.assertUndefined("No currentlyPlayingData", sonifier.currentlyPlayingData);
+    };
+
+    // Verifies datapoint play behaviour in the context of the chart authoring
+    // tool
+    floe.tests.chartAuthoringTester.verifyDatapointPlay = function (that) {
+        jqUnit.assertDeepEq("currentlyPlayingData is properly relayed between chartAuthoring component and sonifier subcomponent", that.chartAuthoringInterface.sonifier.model.currentlyPlayingData, that.model.currentlyPlayingData);
+        jqUnit.assertDeepEq("activeRowId is the id of the currently playing data in the sonifier", that.chartAuthoringInterface.sonifier.model.currentlyPlayingData.id, that.model.activeRowId);
+        jqUnit.assertDeepEq("activeSliceId is the id of the currently playing data in the sonifier", that.chartAuthoringInterface.sonifier.model.currentlyPlayingData.id, that.model.activeSliceId);
+        floe.tests.chartAuthoringTester.verifyPlayHighlighting(that.chartAuthoringInterface.pieChart.legend.rows, that.model.activeRowId, that.options.styles.dataPlayingHighlightClass);
+        floe.tests.chartAuthoringTester.verifyPlayHighlighting(that.chartAuthoringInterface.pieChart.pie.paths, that.model.activeSliceId, that.options.styles.dataPlayingHighlightClass);
+    };
+
+    floe.tests.chartAuthoringTester.verifyPlayHighlighting = function (d3Selector, currentlyPlayingDataId, highlightClass) {
+        var activeElement = floe.d3.filterById(d3Selector, currentlyPlayingDataId);
+        var activeElementClasses = activeElement.attr("class");
+        jqUnit.assertTrue("Active element contains the highlight class", activeElementClasses.indexOf(highlightClass) > -1);
+
+        var inactiveElements = floe.d3.filterById(d3Selector, currentlyPlayingDataId, true);
+        var inActiveElementClasses = inactiveElements.attr("class");
+        jqUnit.assertFalse("Inactive elements do not contain the highlight class", inActiveElementClasses.indexOf(highlightClass) > -1);
     };
 
     $(document).ready(function () {
