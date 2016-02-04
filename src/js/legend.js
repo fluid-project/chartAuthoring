@@ -98,8 +98,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 excludeSource: "init"
             },
             activeRowId: {
-                funcName: "floe.chartAuthoring.pieChart.legend.highlightActiveRow",
-                args: ["{that}"]
+                func: "floe.d3.toggleCSSClassById",
+                args: ["{that}.rows", "{that}.model.activeRowId", "{that}.options.styles.highlight"]
             }
         },
         invokers: {
@@ -117,11 +117,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             }
         }
     });
-
-    // TODO: needs test coverage independently of overall chartAuthoring tests
-    floe.chartAuthoring.pieChart.legend.highlightActiveRow = function (that) {
-        floe.d3.toggleCSSClassById(that.rows, that.model.activeRowId, that.options.styles.highlight);
-    };
 
     // Add new rows for new data, apply appropriate classes for selectors and styling
 

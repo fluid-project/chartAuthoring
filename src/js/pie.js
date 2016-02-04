@@ -96,8 +96,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 excludeSource: "init"
             },
             activeSliceId: {
-                funcName: "floe.chartAuthoring.pieChart.pie.highlightActiveSlice",
-                args: ["{that}"]
+                func: "floe.d3.toggleCSSClassById",
+                args: ["{that}.paths", "{that}.model.activeSliceId", "{that}.options.styles.highlight"]
             }
         },
         invokers: {
@@ -111,11 +111,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             }
         }
     });
-
-    // TODO: needs test coverage independently of overall chartAuthoring tests
-    floe.chartAuthoring.pieChart.pie.highlightActiveSlice = function (that) {
-        floe.d3.toggleCSSClassById(that.paths, that.model.activeSliceId, that.options.styles.highlight);
-    };
 
     floe.chartAuthoring.pieChart.pie.addSlices = function (that) {
         var color = that.colorScale,
