@@ -272,7 +272,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         var selection = d3Selector;
 
-        var activeDataId = that.model.currentlyPlayingData !== null ? that.model.currentlyPlayingData.id : null;
+        var activeDataId = fluid.get(that.model, "currentlyPlayingData.id");
 
         var activeElement = floe.d3.filterById(selection, activeDataId);
         var inactiveElements = floe.d3.filterById(selection, activeDataId, true);
@@ -281,8 +281,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     };
 
     floe.chartAuthoring.updateActiveElements = function (that) {
-        var currentlyPlayingData = that.model.currentlyPlayingData;
-        var currentlyPlayingDataId = currentlyPlayingData !== null ? currentlyPlayingData.id : null;
+        var currentlyPlayingDataId = fluid.get(that.model, "currentlyPlayingData.id");
         that.applier.change("activeRowId", currentlyPlayingDataId);
         that.applier.change("activeSliceId", currentlyPlayingDataId);
     };
