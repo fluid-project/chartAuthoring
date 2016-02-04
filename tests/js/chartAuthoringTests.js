@@ -94,7 +94,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             name: "Test the chart authoring component",
             tests: [{
                 name: "Chart Authoring Init",
-                expect: 38,
+                expect: 40,
                 sequence: [{
                     listener: "floe.tests.chartAuthoringTester.verifyInit",
                     args: ["{chartAuthoring}"],
@@ -114,12 +114,25 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                     func: "floe.tests.chartAuthoringTester.verifyRelay",
                     args: ["{floe.tests.chartAuthoring}"]
                 }, {
+                    // Simulate click on play button
                     jQueryTrigger: "click",
                     element: "{floe.tests.chartAuthoring}.dom.sonifierPlay"
                 }, {
+                    // Listen for the sonificationQueue to change in response to
+                    // the play button click
                     listener: "floe.tests.chartAuthoringTester.verifySonificationQueued",
                     args: ["{floe.tests.chartAuthoring}"],
-                    event: "{floe.tests.chartAuthoring}.chartAuthoringInterface.sonifier.events.onSonificationDataQueued"
+                    path: "isPlaying",
+                    changeEvent: "{floe.tests.chartAuthoring}.applier.modelChanged"
+                }, {
+                    // Simulate click on stop button
+                    jQueryTrigger: "click",
+                    element: "{floe.tests.chartAuthoring}.dom.sonifierStop"
+                }, {
+                    // Listen for stop event
+                    listener: "floe.tests.chartAuthoringTester.verifySonificationStopped",
+                    args: ["{floe.tests.chartAuthoring}"],
+                    event: "{floe.tests.chartAuthoring}.chartAuthoringInterface.sonifier.events.onSonificationStopped"
                 }]
             }]
         }]
@@ -215,22 +228,19 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // Verifies that a play button click triggers the sonification request to
     // begin - there are items in the queue but currentlyPlayingData is empty
     floe.tests.chartAuthoringTester.verifySonificationQueued = function (that) {
+        console.log("floe.tests.chartAuthoringTester.verifySonificationQueued");
         var sonifier = that.chartAuthoringInterface.sonifier;
         jqUnit.assertEquals("Sonifier queue is full", 3, sonifier.model.sonificationQueue.length);
-        jqUnit.assertEquals("No currentlyPlayingData", undefined, sonifier.currentlyPlayingData);
-
+        jqUnit.assertUndefined("No currentlyPlayingData", sonifier.currentlyPlayingData);
     };
 
-    // Verify sonification has started - there are items in the queue and
-    // currentlyPlayingData is not empty
-    floe.tests.chartAuthoringTester.verifySonificationStarted = function (that) {
-        console.log("floe.tests.chartAuthoringTester.verifySonificationStarted");
-    };
-
-    // Verify sonification has ended - there are no items in the queue and
-    // currentlyPlayingData is empty
-    floe.tests.chartAuthoringTester.verifySonificationFinished = function (that) {
-        console.log("floe.tests.chartAuthoringTester.verifySonificationStarted");
+    // Verify a stop button click triggers the sonification to stop -
+    // the queue is empty, no currentlyPlayingData
+    floe.tests.chartAuthoringTester.verifySonificationStopped = function (that) {
+        console.log("floe.tests.chartAuthoringTester.verifySonificationStopped");
+        var sonifier = that.chartAuthoringInterface.sonifier;
+        jqUnit.assertEquals("Sonifier queue is empty", 0, sonifier.model.sonificationQueue.length);
+        jqUnit.assertUndefined("No currentlyPlayingData", sonifier.currentlyPlayingData);
     };
 
     $(document).ready(function () {
