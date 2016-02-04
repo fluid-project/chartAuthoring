@@ -118,6 +118,34 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                             createOnEvent: "{chartAuthoring}.events.onChartAuthoringInterfaceReady",
                             container: "{chartAuthoring}.dom.pieChart",
                             options: {
+                                components: {
+                                    pie: {
+                                        options: {
+                                            modelRelay: {
+                                                source: "{chartAuthoring}.model.currentlyPlayingData",
+                                                target: "{that}.model.activeSliceId",
+                                                singleTransform: {
+                                                    type: "fluid.transforms.free",
+                                                    args: "{chartAuthoring}.model.currentlyPlayingData",
+                                                    func: "floe.d3.idExtractor"
+                                                }
+                                            }
+                                        }
+                                    },
+                                    legend: {
+                                        options: {
+                                            modelRelay: {
+                                                source: "{chartAuthoring}.model.currentlyPlayingData",
+                                                target: "{that}.model.activeRowId",
+                                                singleTransform: {
+                                                    type: "fluid.transforms.free",
+                                                    args: "{chartAuthoring}.model.currentlyPlayingData",
+                                                    func: "floe.d3.idExtractor"
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
                                 resources: {
                                     template: "{templateLoader}.resources.pieChart"
                                 },
@@ -184,44 +212,15 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             "resetDataEntryPanel": {
                 funcName: "floe.chartAuthoring.updateDataEntryPanelFromDataSet",
                 args: ["{that}", []]
-            },
-            "updateActiveElements": {
-                funcName: "floe.chartAuthoring.updateActiveElements",
-                args: ["{that}"]
-            },
-            "highlightActiveLegendRow": {
-                funcName: "floe.chartAuthoring.highlightChange",
-                args: ["{that}", "{that}.chartAuthoringInterface.pieChart.legend.rows"]
-            },
-            "highlightActivePieSlice": {
-                funcName: "floe.chartAuthoring.highlightChange",
-                args: ["{that}", "{that}.chartAuthoringInterface.pieChart.pie.paths"]
             }
         },
         model: {
             activeRowId: null,
             activeSliceId: null
         },
-        modelListeners: {
-            currentlyPlayingData: {
-                funcName: "{that}.updateActiveElements",
-                excludeSource: "init"
-            },
-            activeRowId: {
-                funcName: "{that}.highlightActiveLegendRow",
-                excludeSource: "init"
-            },
-            activeSliceId: {
-                funcName: "{that}.highlightActivePieSlice",
-                excludeSource: "init"
-            }
-        },
         strings: {
             defaultTitleText: "Enter Chart Title",
             defaultDescriptionText: "Enter Chart Description"
-        },
-        styles: {
-            dataPlayingHighlightClass: "floe-ca-currently-playing"
         },
         // The terms and/or resources need to be set to the appropriate locations
         // by the integrator.
@@ -265,25 +264,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             target: "{that fluid.inlineEdit}.options"
         }]
     });
-
-    floe.chartAuthoring.highlightChange = function (that, d3Selector) {
-        var dataPlayingHighlightClass = that.options.styles.dataPlayingHighlightClass;
-
-        var selection = d3Selector;
-
-        var activeDataId = fluid.get(that.model, "currentlyPlayingData.id");
-
-        var activeElement = floe.d3.filterById(selection, activeDataId);
-        var inactiveElements = floe.d3.filterById(selection, activeDataId, true);
-        activeElement.classed(dataPlayingHighlightClass, true);
-        inactiveElements.classed(dataPlayingHighlightClass, false);
-    };
-
-    floe.chartAuthoring.updateActiveElements = function (that) {
-        var currentlyPlayingDataId = fluid.get(that.model, "currentlyPlayingData.id");
-        that.applier.change("activeRowId", currentlyPlayingDataId);
-        that.applier.change("activeSliceId", currentlyPlayingDataId);
-    };
 
     // Given an object in the style of floe.chartAuthoring.dataEntryPanel.model.dataSet,
     // convert it to an array of objects in the style used by the pieChart components,

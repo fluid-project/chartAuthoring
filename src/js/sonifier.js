@@ -48,7 +48,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             // dataSet:,
             // sonifiedData:
             // sonificationQueue:
-            // currentlyPlayingData:
+            // currentlyPlayingData: a data object, or false if no data playing
             // Supplied by relaying in floe.chartAuthoring.totalRelaying grade
             // total: {
             //     value: number,
@@ -251,7 +251,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         // Update the model information about play state
         that.applier.change("isPlaying", false);
-        that.applier.change("currentlyPlayingData", null);
+        that.applier.change("currentlyPlayingData", false);
 
         // Fire the stop event
         that.events.onSonificationStopped.fire();

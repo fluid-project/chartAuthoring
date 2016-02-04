@@ -30,7 +30,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             // total: {
             //     value: number,
             //     percentage: number
-            // }
+            // },
+            // Tracks the "active" row
+            // activeRowId:
         },
         legendOptions: {
             // An array of colors to fill slices generated for corresponding values of model.dataSet
@@ -64,7 +66,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             valueHeader: "floe-ca-pieChart-legend-value-header",
             colorCell: "floe-ca-pieChart-legend-color-cell",
             labelCell: "floe-ca-pieChart-legend-label-cell",
-            valueCell: "floe-ca-pieChart-legend-value-cell"
+            valueCell: "floe-ca-pieChart-legend-value-cell",
+            highlight: "floe-ca-currently-playing"
         },
         selectors: {
             legend: ".floec-ca-pieChart-legend",
@@ -93,6 +96,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             dataSet: {
                 funcName: "{that}.draw",
                 excludeSource: "init"
+            },
+            activeRowId: {
+                funcName: "floe.chartAuthoring.pieChart.legend.highlightActiveRow",
+                args: ["{that}"]
             }
         },
         invokers: {
@@ -110,6 +117,11 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             }
         }
     });
+
+    // TODO: needs test coverage independently of overall chartAuthoring tests
+    floe.chartAuthoring.pieChart.legend.highlightActiveRow = function (that) {
+        floe.d3.toggleCSSClassById(that.rows, that.model.activeRowId, that.options.styles.highlight);
+    };
 
     // Add new rows for new data, apply appropriate classes for selectors and styling
 

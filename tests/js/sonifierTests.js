@@ -299,7 +299,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         jqUnit.test("Test that the stop behaves as expected", function () {
             jqUnit.expect(3);
             jqUnit.assertEquals("isPlaying boolean was false after play finished", false, that.model.isPlaying);
-            jqUnit.assertEquals("currentlyPlayingData is null", null, that.model.currentlyPlayingData);
+            jqUnit.assertEquals("currentlyPlayingData is false", false, that.model.currentlyPlayingData);
             jqUnit.assertTrue("sonificationQueue is empty after play finished", that.model.sonificationQueue.length === 0);
         });
     };

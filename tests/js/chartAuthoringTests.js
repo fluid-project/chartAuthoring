@@ -278,10 +278,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // tool
     floe.tests.chartAuthoringTester.verifyDatapointPlay = function (that) {
         jqUnit.assertDeepEq("currentlyPlayingData is properly relayed between chartAuthoring component and sonifier subcomponent", that.chartAuthoringInterface.sonifier.model.currentlyPlayingData, that.model.currentlyPlayingData);
-        jqUnit.assertDeepEq("activeRowId is the id of the currently playing data in the sonifier", that.chartAuthoringInterface.sonifier.model.currentlyPlayingData.id, that.model.activeRowId);
-        jqUnit.assertDeepEq("activeSliceId is the id of the currently playing data in the sonifier", that.chartAuthoringInterface.sonifier.model.currentlyPlayingData.id, that.model.activeSliceId);
-        floe.tests.chartAuthoringTester.verifyPlayHighlighting(that.chartAuthoringInterface.pieChart.legend.rows, that.model.activeRowId, that.options.styles.dataPlayingHighlightClass);
-        floe.tests.chartAuthoringTester.verifyPlayHighlighting(that.chartAuthoringInterface.pieChart.pie.paths, that.model.activeSliceId, that.options.styles.dataPlayingHighlightClass);
+        jqUnit.assertDeepEq("activeRowId is the id of the currently playing data in the sonifier", that.chartAuthoringInterface.sonifier.model.currentlyPlayingData.id, that.chartAuthoringInterface.pieChart.legend.model.activeRowId);
+        jqUnit.assertDeepEq("activeSliceId is the id of the currently playing data in the sonifier", that.chartAuthoringInterface.sonifier.model.currentlyPlayingData.id, that.chartAuthoringInterface.pieChart.pie.model.activeSliceId);
+        floe.tests.chartAuthoringTester.verifyPlayHighlighting(that.chartAuthoringInterface.pieChart.legend.rows, that.chartAuthoringInterface.pieChart.legend.model.activeRowId, that.chartAuthoringInterface.pieChart.legend.options.styles.highlight);
+        floe.tests.chartAuthoringTester.verifyPlayHighlighting(that.chartAuthoringInterface.pieChart.pie.paths, that.chartAuthoringInterface.pieChart.pie.model.activeSliceId, that.chartAuthoringInterface.pieChart.pie.options.styles.highlight);
     };
 
     floe.tests.chartAuthoringTester.verifyPlayHighlighting = function (d3Selector, currentlyPlayingDataId, highlightClass) {

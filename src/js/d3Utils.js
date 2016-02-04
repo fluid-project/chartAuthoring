@@ -44,6 +44,17 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         );
     };
 
+    // Given a selection of D3 elements, an ID and a CSS class, turns that
+    // class on for any elements matching the ID and makes sure it's turn off
+    // for any elements not matching it
+    // TODO: needs test coverage
+    floe.d3.toggleCSSClassById = function (d3Selection, id, toggleClass) {
+        var activeElement = floe.d3.filterById(d3Selection, id);
+        var inactiveElements = floe.d3.filterById(d3Selection, id, true);
+        activeElement.classed(toggleClass, true);
+        inactiveElements.classed(toggleClass, false);
+    };
+
     floe.d3.addD3Listeners = function (jQueryElem, eventName, listener, that) {
         var d3Elem = floe.d3.jQueryToD3(jQueryElem);
         d3Elem.on(eventName, function (data, i) {

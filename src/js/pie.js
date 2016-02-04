@@ -35,6 +35,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             //     value: number,
             //     percentage: number
             // }
+            // Tracks active slice
+            // activeRowId:
         },
         bindings: {
             title: "pieTitle",
@@ -67,7 +69,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         styles: {
             pie: "floe-ca-pieChart-pie",
             slice: "floe-ca-pieChart-slice",
-            text: "floe-ca-pieChart-text"
+            text: "floe-ca-pieChart-text",
+            highlight: "floe-ca-currently-playing"
         },
         selectors: {
             pie: ".floec-ca-pieChart-pie",
@@ -91,6 +94,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             dataSet: {
                 funcName: "{that}.draw",
                 excludeSource: "init"
+            },
+            activeSliceId: {
+                funcName: "floe.chartAuthoring.pieChart.pie.highlightActiveSlice",
+                args: ["{that}"]
             }
         },
         invokers: {
@@ -104,6 +111,11 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             }
         }
     });
+
+    // TODO: needs test coverage independently of overall chartAuthoring tests
+    floe.chartAuthoring.pieChart.pie.highlightActiveSlice = function (that) {
+        floe.d3.toggleCSSClassById(that.paths, that.model.activeSliceId, that.options.styles.highlight);
+    };
 
     floe.chartAuthoring.pieChart.pie.addSlices = function (that) {
         var color = that.colorScale,
