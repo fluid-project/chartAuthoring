@@ -92,11 +92,13 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 args: ["{that}"]
             },
             // Calls the default sonification strategy
-            "defaultSonificationStrategy": "{that}.unitDivisor10xSonificationStrategy"
+            "defaultSonificationStrategy": "{that}.unitDivisorStrategy(10)"
         },
         events: {
             // Fires when a sonification play is requested
             onSonificationRequested: null,
+            // Fires after sonification data is queued for play
+            onSonificationDataQueued: null,
             // Fires when a voice label read finishes (via event injection),
             // or is fired manually by the floe.chartAuthoring.sonifier.scheduleNextPlayData
             // function
@@ -125,6 +127,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             return;
         }
         that.applier.change("sonificationQueue", that.model.sonifiedData);
+        that.events.onSonificationDataQueued.fire();
     };
 
     // Passed a sonified dataset, this function + others acts recursively

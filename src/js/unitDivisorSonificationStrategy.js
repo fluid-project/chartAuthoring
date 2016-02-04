@@ -54,31 +54,15 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         },
         invokers: {
             "sonifyData": {
-                funcName: "floe.chartAuthoring.sonifier.unitDivisorSonificationStrategy.dataEntriesToSonificationData",
-                args: "{that}"
+                changePath: "sonifiedData",
+                value: "@expand:{that}.unitDivisorStrategy(10)"
             },
-            "unitDivisor10xSonificationStrategy": {
+            "unitDivisorStrategy": {
                 funcName: "floe.chartAuthoring.sonifier.unitDivisorSonificationStrategy.unitDivisorStrategy",
-                args: ["{that}", 10]
-            },
-            "unitDivisor5xSonificationStrategy": {
-                funcName: "floe.chartAuthoring.sonifier.unitDivisorSonificationStrategy.unitDivisorStrategy",
-                args: ["{that}", 5]
-            },
-            "unitDivisor1xSonificationStrategy": {
-                funcName: "floe.chartAuthoring.sonifier.unitDivisorSonificationStrategy.unitDivisorStrategy",
-                args: ["{that}", 1]
+                args: ["{that}", "{arguments}.0"]
             }
         }
     });
-
-    // Given an object in the style of floe.chartAuthoring.dataEntryPanel.model.dataEntries,
-    // convert it to an array of objects in the style used by the sonification components,
-    // maintaining object constancy by using the dataEntry object name as the key
-    floe.chartAuthoring.sonifier.unitDivisorSonificationStrategy.dataEntriesToSonificationData = function (that) {
-        var sonificationData = that.defaultSonificationStrategy();
-        that.applier.change("sonifiedData", sonificationData);
-    };
 
     // Creates a sonification data set based on unit divisors
     // Longer tones represent the unit divisor, while a short tones is played
