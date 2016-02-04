@@ -201,7 +201,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         //
         // The check for undefined prevents an error if a stop has been called
         // but this function is queued or in the midst of execution
-        var noteDuration = (data !== undefined) ? data.notes.totalDuration : 0;
+        var noteDuration = fluid.get(data, "notes.totalDuration") || 0;
 
         // Recursively calls processSonificationQueue again if the queue isn't
         // empty yet
