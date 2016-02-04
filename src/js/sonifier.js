@@ -72,7 +72,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         // options that control playback behaviour
         playbackOptions: {
             // Additional gap of silence between individual data points when
-            // playing a sequence
+            // playing a sequence, in seconds
             gapDuration: 1,
             // Zoom factor - affects the durationConfigs of the synth when
             // played. Higher numbers = slower playback
