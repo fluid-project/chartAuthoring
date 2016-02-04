@@ -275,7 +275,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             },
             // We kick off the next test when this one finishes
             listeners: {
-                "onSonificationStopped": {
+                "onSonificationStopped.validateStopped": {
                     funcName: "floe.tests.chartAuthoring.validateStopped",
                     args: "{that}"
                 }
