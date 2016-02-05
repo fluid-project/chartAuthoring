@@ -95,7 +95,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     });
 
-    jqUnit.test("Test floe.d3.filterById", function () {
+    jqUnit.test("Test floe.d3.filterByDataId", function () {
         jqUnit.expect(5);
         var dataSet = [
             {value: 100, id: "id1"},
@@ -106,19 +106,19 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         testRows.data(dataSet);
 
-        var filteredRow = floe.d3.filterById(testRows, "id1");
+        var filteredRow = floe.d3.filterByDataId(testRows, "id1");
 
         jqUnit.assertEquals("Filtered row has expected length", 1, filteredRow[0].length);
         jqUnit.assertEquals("Filtered row's first item has expected ID", "id1", filteredRow[0][0].__data__.id);
 
-        var inverseFilteredRow = floe.d3.filterById(testRows, "id1", true);
+        var inverseFilteredRow = floe.d3.filterByDataId(testRows, "id1", true);
 
         jqUnit.assertEquals("Inverse filtered row has expected length", 2, inverseFilteredRow[0].length);
         jqUnit.assertEquals("Inverse filtered row's first item has expected ID", "id2", inverseFilteredRow[0][0].__data__.id);
         jqUnit.assertEquals("Inverse filtered row's second item has expected ID", "id3", inverseFilteredRow[0][1].__data__.id);
     });
 
-    jqUnit.test("Test floe.d3.toggleCSSClassById", function () {
+    jqUnit.test("Test floe.d3.toggleCSSClassByDataId", function () {
         var testToggleClass = "floc-testToggleClass";
         jqUnit.expect(3);
         var dataSet = [
@@ -130,7 +130,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         testRows.data(dataSet);
 
-        floe.d3.toggleCSSClassById(testRows, "id1", testToggleClass);
+        floe.d3.toggleCSSClassByDataId(testRows, "id1", testToggleClass);
 
         jqUnit.assertTrue("Class is toggled on to row with specified ID", testRows[0][0].className.indexOf(testToggleClass) > -1);
         jqUnit.assertTrue("Class is not present on second row without specified ID", testRows[0][1].className.indexOf(testToggleClass) === -1);

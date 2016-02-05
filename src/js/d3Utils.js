@@ -34,7 +34,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     // Given a selection of D3 elements and an ID, returns only the elements
     // matching that ID
-    floe.d3.filterById = function (d3Selection, idToFilter, invertResult) {
+    floe.d3.filterByDataId = function (d3Selection, idToFilter, invertResult) {
         var shouldInvert = invertResult === undefined ? false : invertResult;
         return d3Selection.filter(
             function (d) {
@@ -48,9 +48,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // class on for any elements matching the ID and makes sure it's turn off
     // for any elements not matching it
     // TODO: needs test coverage outside of overall chartAuthoring tests
-    floe.d3.toggleCSSClassById = function (d3Selection, id, toggleClass) {
-        var activeElement = floe.d3.filterById(d3Selection, id);
-        var inactiveElements = floe.d3.filterById(d3Selection, id, true);
+    floe.d3.toggleCSSClassByDataId = function (d3Selection, id, toggleClass) {
+        var activeElement = floe.d3.filterByDataId(d3Selection, id);
+        var inactiveElements = floe.d3.filterByDataId(d3Selection, id, true);
         activeElement.classed(toggleClass, true);
         inactiveElements.classed(toggleClass, false);
     };

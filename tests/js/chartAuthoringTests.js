@@ -285,11 +285,11 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     };
 
     floe.tests.chartAuthoringTester.verifyPlayHighlighting = function (d3Selector, currentlyPlayingDataId, highlightClass) {
-        var activeElement = floe.d3.filterById(d3Selector, currentlyPlayingDataId);
+        var activeElement = floe.d3.filterByDataId(d3Selector, currentlyPlayingDataId);
         var activeElementClasses = activeElement.attr("class");
         jqUnit.assertTrue("Active element contains the highlight class", activeElementClasses.indexOf(highlightClass) > -1);
 
-        var inactiveElements = floe.d3.filterById(d3Selector, currentlyPlayingDataId, true);
+        var inactiveElements = floe.d3.filterByDataId(d3Selector, currentlyPlayingDataId, true);
         var inActiveElementClasses = inactiveElements.attr("class");
         jqUnit.assertFalse("Inactive elements do not contain the highlight class", inActiveElementClasses.indexOf(highlightClass) > -1);
     };

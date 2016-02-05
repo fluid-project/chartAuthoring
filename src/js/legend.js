@@ -98,7 +98,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 excludeSource: "init"
             },
             activeRowId: {
-                func: "floe.d3.toggleCSSClassById",
+                func: "floe.d3.toggleCSSClassByDataId",
                 args: ["{that}.rows", "{that}.model.activeRowId", "{that}.options.styles.highlight"]
             }
         },
