@@ -44,15 +44,65 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         );
     };
 
+    // Given an array "elements" consisting of element IDs, returns a joined
+    // string of IDs suitable for use as a jQuery selector
+    floe.d3.getElementIdsAsSelector = function(elementIds) {
+        if(fluid.isArrayable(elementIds)) {
+            var elemIdCollectionWithPreface = fluid.transform(elementIds, function(elemId) {
+                    return "#" + elemId;
+            });
+            var keyedElements = elemIdCollectionWithPreface.join(",");
+            return keyedElements;
+        }
+        return undefined;
+    };
+
+    // Given a D3 data key, return the affiliated D3-bound elements using the model's
+    // dataKeys information
+    // TODO: test
+    floe.d3.getElementsByDataKey = function(dataKey, that) {
+        var elemIdCollection = that.model.dataKeys[dataKey];
+        return $(floe.d3.getElementIdsAsSelector(elemIdCollection));
+    };
+
+    // Given a D3 data key, returns all D3-bound elements that aren't associated
+    // with that key
+    // TOOD: test
+
+    floe.d3.getElementsNotMatchingDataKey = function(dataKey, that) {
+        var dataKeys = that.model.dataKeys;
+        var matchedElements = [];
+        fluid.each(dataKeys, function(elementIds, currentKey) {
+            if(currentKey !== dataKey) {
+                var selector = floe.d3.getElementIdsAsSelector(elementIds);
+                matchedElements.push(selector);
+            }
+        });
+        return $(matchedElements.join(","));
+    };
+
     // Given a selection of D3 elements, an ID and a CSS class, turns that
     // class on for any elements matching the ID and makes sure it's turn off
     // for any elements not matching it
     // TODO: needs test coverage outside of overall chartAuthoring tests
-    floe.d3.toggleCSSClassByDataId = function (d3Selection, id, toggleClass) {
-        var activeElement = floe.d3.filterByDataId(d3Selection, id);
-        var inactiveElements = floe.d3.filterByDataId(d3Selection, id, true);
-        activeElement.classed(toggleClass, true);
-        inactiveElements.classed(toggleClass, false);
+    floe.d3.toggleCSSClassByDataId = function (d3Selection, id, toggleClass, that) {
+        var associatedElements = floe.d3.getElementsByDataKey(id, that);
+
+        if(associatedElements !== undefined) {
+            associatedElements.addClass(toggleClass);
+            associatedElements.each(function (idx, elem) {
+                elem.classList.add(toggleClass);
+            });
+        }
+
+        var unassociatedElements = floe.d3.getElementsNotMatchingDataKey(id, that);
+
+        if(unassociatedElements !== undefined) {
+            unassociatedElements.removeClass(toggleClass);
+            unassociatedElements.each(function (idx, elem) {
+                elem.classList.remove(toggleClass);
+            });
+        }
     };
 
     floe.d3.addD3Listeners = function (jQueryElem, eventName, listener, that) {

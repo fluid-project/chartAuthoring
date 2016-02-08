@@ -97,7 +97,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             },
             activeSliceId: {
                 func: "floe.d3.toggleCSSClassByDataId",
-                args: ["{that}.paths", "{that}.model.activeSliceId", "{that}.options.styles.highlight"]
+                args: ["{that}.paths", "{that}.model.activeSliceId", "{that}.options.styles.highlight", "{that}"]
             }
         },
         invokers: {
@@ -166,6 +166,18 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         // Update and reposition text labels for existing slices
         that.texts.text(function (d) {
             return floe.d3ViewComponent.getTemplatedDisplayValue(totalValue, percentageDigits, sliceTextDisplayTemplate, d);
+        });
+
+        that.paths.each(function(d) {
+            // Assign unique ID for the path element
+            var pathId = fluid.allocateSimpleId(this);
+            that.updateDataKeys(d.data.id, pathId);
+        });
+
+        that.texts.each(function (d) {
+            // Assign unique ID for the text element
+            var textId = fluid.allocateSimpleId(this);
+            that.updateDataKeys(d.data.id, textId);
         });
 
         that.texts.transition().duration(animationDuration).attr("transform", that.textTransform);

@@ -28,6 +28,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 }
             }
         },
+        model: {
+            // Keeps track of D3 keys and their associated DOM elements
+            dataKeys: {}
+        },
         invokers: {
             jQueryToD3: {
                 funcName: "floe.d3.jQueryToD3",
@@ -36,9 +40,26 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             addD3Listeners: {
                 funcName: "floe.d3.addD3Listeners",
                 args: ["{arguments}.0", "{arguments}.1", "{arguments}.2", "{that}"]
+            },
+            updateDataKeys: {
+                funcName: "floe.d3ViewComponent.updateDataKeys",
+                args: ["{arguments}.0", "{arguments}.1", "{that}"]
             }
         }
     });
+
+    floe.d3ViewComponent.updateDataKeys = function (d3Key, elemId, that) {
+        var keyPath = "dataKeys."+d3Key;
+        var elements = fluid.get(that.model, keyPath);
+        if(elements === undefined) {
+            that.applier.change(keyPath, []);
+            elements = fluid.get(that.model, keyPath);
+        }
+        if(!elements.includes(elemId)) {
+            elements.push(elemId);
+        }
+        that.applier.change(keyPath, elements);
+    };
 
     /**
      * Validate the given string is in the form of a css class, such as ".floe-css-name"

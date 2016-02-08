@@ -99,7 +99,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             },
             activeRowId: {
                 func: "floe.d3.toggleCSSClassByDataId",
-                args: ["{that}.rows", "{that}.model.activeRowId", "{that}.options.styles.highlight"]
+                args: ["{that}.rows", "{that}.model.activeRowId", "{that}.options.styles.highlight", "{that}"]
             }
         },
         invokers: {
@@ -160,6 +160,12 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             valueTextDisplayTemplate = that.options.legendOptions.valueTextDisplayTemplate;
 
         that.rows.each(function (d) {
+
+            // Assign unique ID for the row
+            var rowId = fluid.allocateSimpleId(this);
+
+            that.updateDataKeys(d.id, rowId);
+
             d3.select(this)
                 .select(colorCellSelector)
                 .attr({
