@@ -49,13 +49,13 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     });
 
     floe.d3ViewComponent.updateDataKeys = function (d3Key, elemId, that) {
-        var keyPath = "dataKeys."+d3Key;
+        var keyPath = "dataKeys." + d3Key;
         var elements = fluid.get(that.model, keyPath);
-        if(elements === undefined) {
+        if (elements === undefined) {
             that.applier.change(keyPath, []);
             elements = fluid.get(that.model, keyPath);
         }
-        if(!elements.includes(elemId)) {
+        if (!elements.includes(elemId)) {
             elements.push(elemId);
         }
         that.applier.change(keyPath, elements);
@@ -140,6 +140,71 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var percentageForTemplate = percentage !== null ? percentage.toFixed(percentageDigits) : percentage;
         var output = fluid.stringTemplate(template, {label: d.label, value: d.value, percentage: percentageForTemplate, total: totalValue});
         return output;
+    };
+
+    // Given an array "elements" consisting of element IDs, returns a joined
+    // string of IDs suitable for use as a jQuery selector
+    floe.d3ViewComponent.getElementIdsAsSelector = function (elementIds) {
+        if (fluid.isArrayable(elementIds)) {
+            var elemIdCollectionWithPreface = fluid.transform(elementIds, function (elemId) {
+                    return "#" + elemId;
+                });
+            var keyedElements = elemIdCollectionWithPreface.join(",");
+            return keyedElements;
+        }
+    };
+
+    // Given an array of D3 data keys, returns all affiliated D3-bound elements
+    // using the model's dataKeys information
+    floe.d3ViewComponent.getElementsByDataKeys = function (dataKeys, that) {
+        var matchedElements = [];
+        fluid.each(dataKeys, function (dataKey) {
+            var elementIds = that.model.dataKeys[dataKey];
+            var selector = floe.d3ViewComponent.getElementIdsAsSelector(elementIds);
+            matchedElements.push(selector);
+        });
+        return $(matchedElements.join(","));
+    };
+
+    // Given a D3 data key, return the affiliated D3-bound elements using the
+    // model's dataKeys information
+    // TODO: test
+    floe.d3ViewComponent.getElementsByDataKey = function (dataKey, that) {
+        return floe.d3ViewComponent.getElementsByDataKeys([dataKey], that);
+    };
+
+    // Given a D3 data key, returns all D3-bound elements that aren't associated
+    // with that key
+    // TOOD: test
+
+    floe.d3ViewComponent.getElementsNotMatchingDataKey = function (dataKey, that) {
+        var dataKeys = fluid.copy(that.model.dataKeys);
+        fluid.remove_if(dataKeys, function (currentObj, currentKey) {
+            return currentKey === dataKey;
+        });
+
+        return floe.d3ViewComponent.getElementsByDataKeys(Object.keys(dataKeys), that);
+    };
+
+    // Given a selection of D3 elements, an ID and a CSS class, turns that
+    // class on for any elements matching the ID and makes sure it's turn off
+    // for any elements not matching it
+    // TODO: needs test coverage outside of overall chartAuthoring tests
+    floe.d3ViewComponent.toggleCSSClassByDataId = function (d3Selection, id, toggleClass, that) {
+        var associatedElements = floe.d3ViewComponent.getElementsByDataKey(id, that);
+
+        associatedElements.addClass(toggleClass);
+        associatedElements.each(function (idx, elem) {
+            elem.classList.add(toggleClass);
+        });
+
+        var unassociatedElements = floe.d3ViewComponent.getElementsNotMatchingDataKey(id, that);
+
+        unassociatedElements.removeClass(toggleClass);
+        unassociatedElements.each(function (idx, elem) {
+            elem.classList.remove(toggleClass);
+        });
+
     };
 
 })(jQuery, fluid);
