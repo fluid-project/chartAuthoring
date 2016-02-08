@@ -181,6 +181,13 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         }
     };
 
+    // Given a D3 data key, return the affiliated D3-bound elements using the
+    // model's dataKeys information
+    // TODO: test
+    floe.d3ViewComponent.getElementsByDataKey = function (dataKey, that) {
+        return floe.d3ViewComponent.getElementsByDataKeys([dataKey], that);
+    };
+
     // Given an array of D3 data keys, returns all affiliated D3-bound elements
     // using the model's dataKeys information
     floe.d3ViewComponent.getElementsByDataKeys = function (dataKeys, that) {
@@ -192,13 +199,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             matchedElements.push(selector);
         });
         return $(matchedElements.join(","));
-    };
-
-    // Given a D3 data key, return the affiliated D3-bound elements using the
-    // model's dataKeys information
-    // TODO: test
-    floe.d3ViewComponent.getElementsByDataKey = function (dataKey, that) {
-        return floe.d3ViewComponent.getElementsByDataKeys([dataKey], that);
     };
 
     // Given a D3 data key, returns all D3-bound elements that aren't associated
