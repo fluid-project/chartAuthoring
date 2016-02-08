@@ -164,7 +164,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             // Assign unique ID for the row
             var rowId = fluid.allocateSimpleId(this);
 
-            that.updateDataKeys(d.id, rowId);
+            that.addElementIdToDataKey(d.id, rowId);
 
             d3.select(this)
                 .select(colorCellSelector)
@@ -190,6 +190,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     floe.chartAuthoring.pieChart.legend.removeRows = function (that) {
         var removedRows = that.rows.exit();
+        removedRows.each(function (d) {
+            var pathId = this.id;
+            that.removeElementIdFromDataKey(d.data.id, pathId);
+        });
         removedRows.remove();
     };
 

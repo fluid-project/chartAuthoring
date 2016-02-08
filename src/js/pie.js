@@ -171,13 +171,13 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         that.paths.each(function (d) {
             // Assign unique ID for the path element
             var pathId = fluid.allocateSimpleId(this);
-            that.updateDataKeys(d.data.id, pathId);
+            that.addElementIdToDataKey(d.data.id, pathId);
         });
 
         that.texts.each(function (d) {
             // Assign unique ID for the text element
             var textId = fluid.allocateSimpleId(this);
-            that.updateDataKeys(d.data.id, textId);
+            that.addElementIdToDataKey(d.data.id, textId);
         });
 
         that.texts.transition().duration(animationDuration).attr("transform", that.textTransform);
@@ -185,9 +185,23 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     };
 
     floe.chartAuthoring.pieChart.pie.removeSlices = function (that) {
-        that.paths.exit().remove();
+        var removedSlices = that.paths.exit();
 
-        that.texts.exit().remove();
+        removedSlices.each(function (d) {
+            var pathId = this.id;
+            that.removeElementIdFromDataKey(d.data.id, pathId);
+        });
+
+        removedSlices.remove();
+
+        var removedTexts = that.texts.exit();
+
+        removedTexts.each(function (d) {
+            var textId = this.id;
+            that.removeElementIdFromDataKey(d.data.id, textId);
+        });
+
+        removedTexts.remove();
     };
 
     floe.chartAuthoring.pieChart.pie.draw = function (that) {

@@ -41,25 +41,17 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 funcName: "floe.d3.addD3Listeners",
                 args: ["{arguments}.0", "{arguments}.1", "{arguments}.2", "{that}"]
             },
-            updateDataKeys: {
-                funcName: "floe.d3ViewComponent.updateDataKeys",
+            addElementIdToDataKey: {
+                funcName: "floe.d3ViewComponent.addElementIdToDataKey",
+                args: ["{arguments}.0", "{arguments}.1", "{that}"]
+            },
+            removeElementIdFromDataKey: {
+                funcName: "floe.d3ViewComponent.removeElementIdFromDataKey",
                 args: ["{arguments}.0", "{arguments}.1", "{that}"]
             }
+
         }
     });
-
-    floe.d3ViewComponent.updateDataKeys = function (d3Key, elemId, that) {
-        var keyPath = "dataKeys." + d3Key;
-        var elements = fluid.get(that.model, keyPath);
-        if (elements === undefined) {
-            that.applier.change(keyPath, []);
-            elements = fluid.get(that.model, keyPath);
-        }
-        if (!elements.includes(elemId)) {
-            elements.push(elemId);
-        }
-        that.applier.change(keyPath, elements);
-    };
 
     /**
      * Validate the given string is in the form of a css class, such as ".floe-css-name"
@@ -142,6 +134,33 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         return output;
     };
 
+    // Given a data key used to maintain object constancy in D3, a DOM
+    // element with a unique ID and the component, updates the key's
+    // value (an array of IDs) to include that ID
+    floe.d3ViewComponent.addElementIdToDataKey = function (d3Key, idToAdd, that) {
+        var keyPath = "dataKeys." + d3Key;
+        var elementIds = fluid.get(that.model, keyPath);
+        // Create an empty array at the path if the key isn't currently defined
+        if (elementIds === undefined) {
+            that.applier.change(keyPath, []);
+            elementIds = fluid.get(that.model, keyPath);
+        }
+        if (!elementIds.includes(idToAdd)) {
+            elementIds.push(idToAdd);
+        }
+        that.applier.change(keyPath, elementIds);
+    };
+
+    // Corresponding "remove" functionality to addElementIdToDataKey
+    floe.d3ViewComponent.removeElementIdFromDataKey = function (d3Key, idToRemove, that) {
+        var keyPath = "dataKeys." + d3Key;
+        var elementIds = fluid.get(that.model, keyPath);
+        fluid.remove_if(elementIds, function (currentId) {
+            return currentId === idToRemove;
+        });
+        that.applier.change(keyPath, elementIds);
+    };
+
     // Given an array "elements" consisting of element IDs, returns a joined
     // string of IDs suitable for use as a jQuery selector
     floe.d3ViewComponent.getElementIdsAsSelector = function (elementIds) {
@@ -160,6 +179,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var matchedElements = [];
         fluid.each(dataKeys, function (dataKey) {
             var elementIds = that.model.dataKeys[dataKey];
+
             var selector = floe.d3ViewComponent.getElementIdsAsSelector(elementIds);
             matchedElements.push(selector);
         });
@@ -182,7 +202,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         fluid.remove_if(dataKeys, function (currentObj, currentKey) {
             return currentKey === dataKey;
         });
-
         return floe.d3ViewComponent.getElementsByDataKeys(Object.keys(dataKeys), that);
     };
 
