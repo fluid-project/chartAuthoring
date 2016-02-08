@@ -217,7 +217,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // class on for any elements matching the ID and makes sure it's turn off
     // for any elements not matching it
     // TODO: needs test coverage outside of overall chartAuthoring tests
-    floe.d3ViewComponent.toggleCSSClassByDataId = function (d3Selection, id, toggleClass, that) {
+    floe.d3ViewComponent.toggleCSSClassByDataId = function (id, toggleClass, that) {
         var associatedElements = floe.d3ViewComponent.getElementsByDataKey(id, that);
 
         associatedElements.addClass(toggleClass);

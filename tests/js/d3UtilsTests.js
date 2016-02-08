@@ -95,23 +95,4 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     });
 
-    // jqUnit.test("Test floe.d3ViewComponent.toggleCSSClassByDataId", function () {
-    //     var testToggleClass = "floc-testToggleClass";
-    //     jqUnit.expect(3);
-    //     var dataSet = [
-    //         {value: 3, id: "id1"},
-    //         {value: 6, id: "id2"},
-    //         {value: 9, id: "id3"}
-    //     ];
-    //     var testRows = d3.select(".floc-toggleCSSClassByIdTable").selectAll(".floc-testRow");
-    //
-    //     testRows.data(dataSet);
-    //
-    //     floe.d3ViewComponent.toggleCSSClassByDataId(testRows, "id1", testToggleClass);
-    //
-    //     jqUnit.assertTrue("Class is toggled on to row with specified ID", testRows[0][0].className.indexOf(testToggleClass) > -1);
-    //     jqUnit.assertTrue("Class is not present on second row without specified ID", testRows[0][1].className.indexOf(testToggleClass) === -1);
-    //     jqUnit.assertTrue("Class is not present on third row without specified ID", testRows[0][2].className.indexOf(testToggleClass) === -1);
-    // });
-
 })(jQuery, fluid);
