@@ -192,7 +192,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var removedRows = that.rows.exit();
         removedRows.each(function (d) {
             var pathId = this.id;
-            that.removeElementIdFromDataKey(d.data.id, pathId);
+            that.removeElementIdFromDataKey(d.id, pathId);
         });
         removedRows.remove();
     };
