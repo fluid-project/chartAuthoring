@@ -32,18 +32,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         return fluid.get(d, "id") || fluid.get(d, "data.id");
     };
 
-    // Given a selection of D3 elements and an ID, returns only the elements
-    // matching that ID
-    floe.d3.filterByDataId = function (d3Selection, idToFilter, invertResult) {
-        var shouldInvert = invertResult === undefined ? false : invertResult;
-        return d3Selection.filter(
-            function (d) {
-                var id = floe.d3.idExtractor(d);
-                return shouldInvert ? id !== idToFilter : id === idToFilter;
-            }
-        );
-    };
-
     floe.d3.addD3Listeners = function (jQueryElem, eventName, listener, that) {
         var d3Elem = floe.d3.jQueryToD3(jQueryElem);
         d3Elem.on(eventName, function (data, i) {

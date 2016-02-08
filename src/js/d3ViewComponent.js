@@ -48,6 +48,14 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             removeElementIdFromDataKey: {
                 funcName: "floe.d3ViewComponent.removeElementIdFromDataKey",
                 args: ["{arguments}.0", "{arguments}.1", "{that}"]
+            },
+            getElementsByDataKey: {
+                funcName: "floe.d3ViewComponent.getElementsByDataKey",
+                args: ["{arguments}.0", "{that}"]
+            },
+            getElementsNotMatchingDataKey: {
+                funcName: "floe.d3ViewComponent.getElementsNotMatchingDataKey",
+                args: ["{arguments}.0", "{that}"]
             }
 
         }

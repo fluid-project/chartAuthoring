@@ -95,29 +95,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     });
 
-    jqUnit.test("Test floe.d3.filterByDataId", function () {
-        jqUnit.expect(5);
-        var dataSet = [
-            {value: 100, id: "id1"},
-            {value: 200, id: "id2"},
-            {value: 300, id: "id3"}
-        ];
-        var testRows = d3.select(".floc-filterByIdTable").selectAll(".floc-testRow");
-
-        testRows.data(dataSet);
-
-        var filteredRow = floe.d3.filterByDataId(testRows, "id1");
-
-        jqUnit.assertEquals("Filtered row has expected length", 1, filteredRow[0].length);
-        jqUnit.assertEquals("Filtered row's first item has expected ID", "id1", filteredRow[0][0].__data__.id);
-
-        var inverseFilteredRow = floe.d3.filterByDataId(testRows, "id1", true);
-
-        jqUnit.assertEquals("Inverse filtered row has expected length", 2, inverseFilteredRow[0].length);
-        jqUnit.assertEquals("Inverse filtered row's first item has expected ID", "id2", inverseFilteredRow[0][0].__data__.id);
-        jqUnit.assertEquals("Inverse filtered row's second item has expected ID", "id3", inverseFilteredRow[0][1].__data__.id);
-    });
-
     // jqUnit.test("Test floe.d3ViewComponent.toggleCSSClassByDataId", function () {
     //     var testToggleClass = "floc-testToggleClass";
     //     jqUnit.expect(3);
