@@ -153,10 +153,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var keyPath = "dataKeys." + d3Key;
         var elementIds = fluid.get(that.model, keyPath);
         // Create an empty array at the path if the key isn't currently defined
-        if (elementIds === undefined) {
-            that.applier.change(keyPath, []);
-            elementIds = fluid.get(that.model, keyPath);
-        }
+        elementIds = elementIds || [];
+
         if (!elementIds.includes(idToAdd)) {
             elementIds.push(idToAdd);
         }
