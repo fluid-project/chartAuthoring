@@ -210,8 +210,14 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         });
     });
 
+    jqUnit.test("Test floe.d3ViewComponent.getElementIdsAsSelector", function () {
+        var testIdArray = ["id-1", "id-2", "id-3"];
+        var expectedSelector = "#id-1, #id-2, #id-3";
+        jqUnit.assertEquals("testIdArray is converted into expected selector string", expectedSelector, floe.d3ViewComponent.getElementIdsAsSelector(testIdArray));
+    });
+
     jqUnit.test("Test floe.d3ViewComponent.toggleCSSClassByDataId", function () {
-        var testToggleClass = "floc-testToggleClass";
+        var testToggleClass = "floec-testToggleClass";
         jqUnit.expect(3);
         var dataSet = [
             {value: 3, id: "id1"},
@@ -221,7 +227,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         var that = floe.tests.d3ViewComponent(".floec-toggleCSSClassById");
 
-        var testRows = d3.select(".floc-toggleCSSClassByIdTable").selectAll(".floc-testRow");
+        var testRows = d3.select(".floec-toggleCSSClassByIdTable").selectAll(".floec-testRow");
 
         testRows.data(dataSet);
 
@@ -229,12 +235,54 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             var testRowId = fluid.allocateSimpleId(this);
             that.addElementIdToDataKey(d.id, testRowId);
         });
-        
+
         floe.d3ViewComponent.toggleCSSClassByDataId("id1", testToggleClass, that);
 
         jqUnit.assertTrue("Class is toggled on to row with specified ID", testRows[0][0].className.indexOf(testToggleClass) > -1);
         jqUnit.assertTrue("Class is not present on second row without specified ID", testRows[0][1].className.indexOf(testToggleClass) === -1);
         jqUnit.assertTrue("Class is not present on third row without specified ID", testRows[0][2].className.indexOf(testToggleClass) === -1);
+    });
+
+    jqUnit.test("Test dataKey management functionality", function () {
+
+        jqUnit.expect(6);
+        var dataSet = [
+            {value: 3, id: "id1"},
+            {value: 6, id: "id2"},
+            {value: 9, id: "id3"}
+        ];
+
+        var that = floe.tests.d3ViewComponent(".floec-dataKey");
+
+        var testRows = d3.select(".floec-dataKeyTable").selectAll(".floec-testRow");
+
+        testRows.data(dataSet);
+
+        testRows.each(function (d) {
+            var testRowId = fluid.allocateSimpleId(this);
+            that.addElementIdToDataKey(d.id, testRowId);
+        });
+
+        // Using the dataset, retrieve the associated DOM elements via the
+        // dataKey inventory and check that it has the expected bound data
+        fluid.each(dataSet, function (data) {
+            var retrievedElement = that.getElementsByDataKey(data.id);
+            jqUnit.assertEquals("getElementsByDataKey with data ID " + data.id + " retrieved an element with the expected bound data", data.value, retrievedElement[0].__data__.value);
+        });
+
+        // Remove some rows and their corresponding IDs from the dataKey
+        // inventory
+        testRows.each(function (d) {
+            that.removeElementIdFromDataKey(d.id, this.id);
+            this.remove();
+        });
+
+        fluid.each(that.model.dataKeys, function (elements, key) {
+            jqUnit.assertTrue("No elements in dataKey " + key + " removeElementIdFromDataKey", elements.length === 0);
+        });
+
+
+
     });
 
 })(jQuery, fluid);

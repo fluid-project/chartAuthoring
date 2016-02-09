@@ -145,7 +145,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // Given a data key used to maintain object constancy in D3, a DOM
     // element with a unique ID and the component, updates the key's
     // value (an array of IDs) to include that ID
-    // TODO: test
     floe.d3ViewComponent.addElementIdToDataKey = function (d3Key, idToAdd, that) {
         var keyPath = "dataKeys." + d3Key;
         var elementIds = fluid.get(that.model, keyPath);
@@ -161,7 +160,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     };
 
     // Corresponding "remove" functionality to addElementIdToDataKey
-    // TODO: test
     floe.d3ViewComponent.removeElementIdFromDataKey = function (d3Key, idToRemove, that) {
         var keyPath = "dataKeys." + d3Key;
         var elementIds = fluid.get(that.model, keyPath);
@@ -172,20 +170,21 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     };
 
     // Given an array "elements" consisting of element IDs, returns a joined
-    // string of IDs suitable for use as a jQuery selector
+    // string of IDs suitable for use as a jQuery selector to select all
+    // those IDs
     // TODO: test
     floe.d3ViewComponent.getElementIdsAsSelector = function (elementIds) {
         if (fluid.isArrayable(elementIds)) {
             var elemIdCollectionWithPreface = fluid.transform(elementIds, function (elemId) {
                     return "#" + elemId;
                 });
-            var keyedElements = elemIdCollectionWithPreface.join(",");
+            var keyedElements = elemIdCollectionWithPreface.join(", ");
             return keyedElements;
         }
     };
 
     // Given a D3 data key, return the affiliated D3-bound elements using the
-    // model's dataKeys information
+    // model's dataKeys information (singular convenience form)
     // TODO: test
     floe.d3ViewComponent.getElementsByDataKey = function (dataKey, that) {
         return floe.d3ViewComponent.getElementsByDataKeys([dataKey], that);
@@ -218,7 +217,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     // Given a selection of D3 elements, an ID and a CSS class, turns that
     // class on for any elements matching the ID and makes sure it's turn off
-    // for any elements not matching it    
+    // for any elements not matching it
     floe.d3ViewComponent.toggleCSSClassByDataId = function (id, toggleClass, that) {
         var associatedElements = floe.d3ViewComponent.getElementsByDataKey(id, that);
 
