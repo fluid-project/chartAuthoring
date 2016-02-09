@@ -50,8 +50,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 args: ["{arguments}.0", "{arguments}.1", "{that}"]
             },
             getElementsByDataKey: {
-                funcName: "floe.d3ViewComponent.getElementsByDataKey",
-                args: ["{arguments}.0", "{that}"]
+                funcName: "floe.d3ViewComponent.getElementsByDataKeys",
+                args: [["{arguments}.0"], "{that}"]
             },
             getElementsNotMatchingDataKey: {
                 funcName: "floe.d3ViewComponent.getElementsNotMatchingDataKey",
@@ -182,13 +182,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         }
     };
 
-    // Given a D3 data key, return the affiliated D3-bound elements using the
-    // model's dataKeys information (singular convenience form)
-    // TODO: test
-    floe.d3ViewComponent.getElementsByDataKey = function (dataKey, that) {
-        return floe.d3ViewComponent.getElementsByDataKeys([dataKey], that);
-    };
-
     // Given an array of D3 data keys, returns all affiliated D3-bound elements
     // using the model's dataKeys information
     floe.d3ViewComponent.getElementsByDataKeys = function (dataKeys, that) {
@@ -217,14 +210,14 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // class on for any elements matching the ID and makes sure it's turn off
     // for any elements not matching it
     floe.d3ViewComponent.toggleCSSClassByDataId = function (id, toggleClass, that) {
-        var associatedElements = floe.d3ViewComponent.getElementsByDataKey(id, that);
+        var associatedElements = that.getElementsByDataKey(id);
 
         associatedElements.addClass(toggleClass);
         associatedElements.each(function (idx, elem) {
             elem.classList.add(toggleClass);
         });
 
-        var unassociatedElements = floe.d3ViewComponent.getElementsNotMatchingDataKey(id, that);
+        var unassociatedElements = that.getElementsNotMatchingDataKey(id);
 
         unassociatedElements.removeClass(toggleClass);
         unassociatedElements.each(function (idx, elem) {
