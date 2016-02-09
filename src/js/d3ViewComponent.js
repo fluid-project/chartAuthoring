@@ -172,7 +172,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // Given an array "elements" consisting of element IDs, returns a joined
     // string of IDs suitable for use as a jQuery selector to select all
     // those IDs
-    // TODO: test
     floe.d3ViewComponent.getElementIdsAsSelector = function (elementIds) {
         if (fluid.isArrayable(elementIds)) {
             var elemIdCollectionWithPreface = fluid.transform(elementIds, function (elemId) {
@@ -205,7 +204,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     // Given a D3 data key, returns all D3-bound elements that aren't associated
     // with that key
-    // TODO: test
 
     floe.d3ViewComponent.getElementsNotMatchingDataKey = function (dataKey, that) {
         var dataKeys = fluid.copy(that.model.dataKeys);

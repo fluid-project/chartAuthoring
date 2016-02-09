@@ -243,9 +243,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         jqUnit.assertTrue("Class is not present on third row without specified ID", testRows[0][2].className.indexOf(testToggleClass) === -1);
     });
 
-    jqUnit.test("Test dataKey management functionality", function () {
+    jqUnit.test("Test model.dataKey functionality", function () {
 
-        jqUnit.expect(6);
+        jqUnit.expect(11);
         var dataSet = [
             {value: 3, id: "id1"},
             {value: 6, id: "id2"},
@@ -263,11 +263,22 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             that.addElementIdToDataKey(d.id, testRowId);
         });
 
-        // Using the dataset, retrieve the associated DOM elements via the
-        // dataKey inventory and check that it has the expected bound data
+        // Starting from the dataset, retrieve the associated DOM elements via
+        // the dataKey inventory and check that it has the expected bound data
         fluid.each(dataSet, function (data) {
             var retrievedElement = that.getElementsByDataKey(data.id);
-            jqUnit.assertEquals("getElementsByDataKey with data ID " + data.id + " retrieved an element with the expected bound data", data.value, retrievedElement[0].__data__.value);
+            jqUnit.assertEquals("getElementsByDataKey with data ID " + data.id + " retrieved an element with the expected bound data value", data.value, retrievedElement[0].__data__.value);
+            jqUnit.assertEquals("getElementsByDataKey with data ID " + data.id + " retrieved an element with the expected bound data ID", data.id, retrievedElement[0].__data__.id);
+        });
+
+        // Starting from the dataset, retrieve all DOM elements that don't match
+        // a specific ID via the dataKey inventory and check that none of the
+        // returned elements have the bound data expected to be excluded
+
+        var expectedExcludedId = "id1";
+        var retrievedElements = that.getElementsNotMatchingDataKey(expectedExcludedId);
+        fluid.each(retrievedElements, function (element, key) {
+            jqUnit.assertNotEquals("Element at position " + key + " does not bind excluded data ID", expectedExcludedId, element.__data__.id);
         });
 
         // Remove some rows and their corresponding IDs from the dataKey
