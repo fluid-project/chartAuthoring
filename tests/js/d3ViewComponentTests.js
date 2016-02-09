@@ -232,8 +232,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         testRows.data(dataSet);
 
         testRows.each(function (d) {
-            var testRowId = fluid.allocateSimpleId(this);
-            that.addElementIdToDataKey(d.id, testRowId);
+            that.trackD3BoundElement(d.id, this);
         });
 
         floe.d3ViewComponent.toggleCSSClassByDataId("id1", testToggleClass, that);
@@ -259,8 +258,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         testRows.data(dataSet);
 
         testRows.each(function (d) {
-            var testRowId = fluid.allocateSimpleId(this);
-            that.addElementIdToDataKey(d.id, testRowId);
+            that.trackD3BoundElement(d.id, this);
         });
 
         // Starting from the dataset, retrieve the associated DOM elements via

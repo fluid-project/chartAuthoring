@@ -160,11 +160,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             valueTextDisplayTemplate = that.options.legendOptions.valueTextDisplayTemplate;
 
         that.rows.each(function (d) {
-
-            // Assign unique ID for the row
-            var rowId = fluid.allocateSimpleId(this);
-
-            that.addElementIdToDataKey(d.id, rowId);
+            that.trackD3BoundElement(d.id, this);
 
             d3.select(this)
                 .select(colorCellSelector)

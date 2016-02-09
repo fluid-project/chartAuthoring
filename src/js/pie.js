@@ -167,17 +167,13 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         that.texts.text(function (d) {
             return floe.d3ViewComponent.getTemplatedDisplayValue(totalValue, percentageDigits, sliceTextDisplayTemplate, d);
         });
-
+    
         that.paths.each(function (d) {
-            // Assign unique ID for the path element
-            var pathId = fluid.allocateSimpleId(this);
-            that.addElementIdToDataKey(d.data.id, pathId);
+            that.trackD3BoundElement(d.data.id, this);
         });
 
         that.texts.each(function (d) {
-            // Assign unique ID for the text element
-            var textId = fluid.allocateSimpleId(this);
-            that.addElementIdToDataKey(d.data.id, textId);
+            that.trackD3BoundElement(d.data.id, this);
         });
 
         that.texts.transition().duration(animationDuration).attr("transform", that.textTransform);
