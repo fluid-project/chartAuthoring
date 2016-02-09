@@ -233,7 +233,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // Given a dataKey (d.id / d.data.id, etc) and an element, track the
     // dataKey -> element linkage in the component model
     // Intended for use when binding data with D3
-    floe.d3ViewComponent.trackD3BoundElement = function(dataKey, d3Element, that) {
+    floe.d3ViewComponent.trackD3BoundElement = function (dataKey, d3Element, that) {
         var elementId = fluid.allocateSimpleId(d3Element);
         that.addElementIdToDataKey(dataKey, elementId);
     };
