@@ -214,10 +214,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 args: ["{that}", []]
             }
         },
-        model: {
-            activeRowId: null,
-            activeSliceId: null
-        },
         strings: {
             defaultTitleText: "Enter Chart Title",
             defaultDescriptionText: "Enter Chart Description"
