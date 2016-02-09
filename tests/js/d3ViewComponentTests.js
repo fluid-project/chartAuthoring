@@ -211,9 +211,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     });
 
     jqUnit.test("Test floe.d3ViewComponent.getElementIdsAsSelector", function () {
-        var testIdArray = ["id-1", "id-2", "id-3"];
+        var testIdObject = {"id-1": true, "id-2": true, "id-3": true};
         var expectedSelector = "#id-1, #id-2, #id-3";
-        jqUnit.assertEquals("testIdArray is converted into expected selector string", expectedSelector, floe.d3ViewComponent.getElementIdsAsSelector(testIdArray));
+        jqUnit.assertEquals("testIdArray is converted into expected selector string", expectedSelector, floe.d3ViewComponent.getElementIdsAsSelector(testIdObject));
     });
 
     jqUnit.test("Test floe.d3ViewComponent.toggleCSSClassByDataId", function () {
@@ -287,7 +287,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         });
 
         fluid.each(that.model.dataKeys, function (elements, key) {
-            jqUnit.assertTrue("No elements in dataKey " + key + " removeElementIdFromDataKey", elements.length === 0);
+            jqUnit.assertDeepEq("No elements in dataKey " + key + " after removeElementIdFromDataKey", {}, elements);
         });
 
 

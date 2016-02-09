@@ -150,33 +150,23 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // element with a unique ID and the component, updates the key's
     // value (an array of IDs) to include that ID
     floe.d3ViewComponent.addElementIdToDataKey = function (d3Key, idToAdd, that) {
-        var keyPath = "dataKeys." + d3Key;
-        var elementIds = fluid.get(that.model, keyPath);
-        // Create an empty array at the path if the key isn't currently defined
-        elementIds = elementIds || [];
-
-        if (!elementIds.includes(idToAdd)) {
-            elementIds.push(idToAdd);
-        }
-        that.applier.change(keyPath, elementIds);
+        var keyPath = ["dataKeys", d3Key, idToAdd];
+        that.applier.change(keyPath, true);
     };
 
     // Corresponding "remove" functionality to addElementIdToDataKey
     floe.d3ViewComponent.removeElementIdFromDataKey = function (d3Key, idToRemove, that) {
-        var keyPath = "dataKeys." + d3Key;
-        var elementIds = fluid.get(that.model, keyPath);
-        fluid.remove_if(elementIds, function (currentId) {
-            return currentId === idToRemove;
-        });
-        that.applier.change(keyPath, elementIds);
+        var keyPath = ["dataKeys", d3Key, idToRemove];
+        that.applier.change(keyPath, false, "DELETE");
     };
 
-    // Given an array "elements" consisting of element IDs, returns a joined
-    // string of IDs suitable for use as a jQuery selector to select all
+    // Given an object "elements" with element IDs as keys, returns a
+    // joined string of IDs suitable for use as a jQuery selector to select all
     // those IDs
     floe.d3ViewComponent.getElementIdsAsSelector = function (elementIds) {
-        if (fluid.isArrayable(elementIds)) {
-            var elemIdCollectionWithPreface = fluid.transform(elementIds, function (elemId) {
+        if (fluid.isPlainObject(elementIds)) {
+            var keys = Object.keys(elementIds);
+            var elemIdCollectionWithPreface = fluid.transform(keys, function (elemId) {
                     return "#" + elemId;
                 });
             var keyedElements = elemIdCollectionWithPreface.join(", ");
@@ -190,11 +180,11 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var matchedElements = [];
         fluid.each(dataKeys, function (dataKey) {
             var elementIds = that.model.dataKeys[dataKey];
-
             var selector = floe.d3ViewComponent.getElementIdsAsSelector(elementIds);
             matchedElements.push(selector);
         });
-        return $(matchedElements.join(","));
+        var elements = $(matchedElements.join(","));
+        return elements;
     };
 
     // Given a D3 data key, returns all D3-bound elements that aren't associated
@@ -202,6 +192,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     floe.d3ViewComponent.getElementsNotMatchingDataKey = function (dataKey, that) {
         var dataKeys = fluid.copy(that.model.dataKeys);
+
         fluid.remove_if(dataKeys, function (currentObj, currentKey) {
             return currentKey === dataKey;
         });
