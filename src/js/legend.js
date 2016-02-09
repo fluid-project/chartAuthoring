@@ -99,7 +99,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             },
             activeRowId: {
                 func: "floe.d3ViewComponent.toggleCSSClassByDataId",
-                args: ["{that}.rows", "{that}.model.activeRowId", "{that}.options.styles.highlight", "{that}"]
+                args: ["{that}.model.activeRowId", "{that}.options.styles.highlight", "{that}"]
             }
         },
         invokers: {
