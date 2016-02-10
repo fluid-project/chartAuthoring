@@ -20,6 +20,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             strategies: {
                 unitDivisor: {
                     config: {
+                        divisor: 10,
                         notes: {
                             durations: {
                                 play: {
@@ -55,7 +56,12 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         invokers: {
             "sonifyData": {
                 changePath: "sonifiedData",
-                value: "@expand:{that}.unitDivisorStrategy(10)"
+                value: {
+                    expander: {
+                        func: "{that}.unitDivisorStrategy",
+                        args: "{that}.options.sonificationOptions.strategies.unitDivisor.config.divisor"
+                    }
+                }
             },
             "unitDivisorStrategy": {
                 funcName: "floe.chartAuthoring.sonifier.unitDivisorSonificationStrategy.unitDivisorStrategy",
