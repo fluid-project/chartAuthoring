@@ -167,7 +167,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         that.texts.text(function (d) {
             return floe.d3ViewComponent.getTemplatedDisplayValue(totalValue, percentageDigits, sliceTextDisplayTemplate, d);
         });
-    
+
         that.paths.each(function (d) {
             that.trackD3BoundElement(d.data.id, this);
         });
@@ -182,22 +182,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     floe.chartAuthoring.pieChart.pie.removeSlices = function (that) {
         var removedSlices = that.paths.exit();
-
-        removedSlices.each(function (d) {
-            var pathId = this.id;
-            that.removeElementIdFromDataKey(d.data.id, pathId);
-        });
-
-        removedSlices.remove();
+        that.exitD3Elements(removedSlices);
 
         var removedTexts = that.texts.exit();
-
-        removedTexts.each(function (d) {
-            var textId = this.id;
-            that.removeElementIdFromDataKey(d.data.id, textId);
-        });
-
-        removedTexts.remove();
+        that.exitD3Elements(removedTexts);
     };
 
     floe.chartAuthoring.pieChart.pie.draw = function (that) {

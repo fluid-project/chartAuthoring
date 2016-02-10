@@ -186,11 +186,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     floe.chartAuthoring.pieChart.legend.removeRows = function (that) {
         var removedRows = that.rows.exit();
-        removedRows.each(function (d) {
-            var pathId = this.id;
-            that.removeElementIdFromDataKey(d.id, pathId);
-        });
-        removedRows.remove();
+        that.exitD3Elements(removedRows);
     };
 
     floe.chartAuthoring.pieChart.legend.draw = function (that) {

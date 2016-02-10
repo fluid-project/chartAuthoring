@@ -56,6 +56,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             trackD3BoundElement: {
                 funcName: "floe.d3ViewComponent.trackD3BoundElement",
                 args: ["{arguments}.0", "{arguments}.1", "{that}"]
+            },
+            exitD3Elements: {
+                funcName: "floe.d3ViewComponent.exitD3Elements",
+                args: ["{arguments}.0", "{that}"]
             }
 
         }
@@ -203,6 +207,18 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.d3ViewComponent.trackD3BoundElement = function (dataKey, d3Element, that) {
         var elementId = fluid.allocateSimpleId(d3Element);
         that.addElementIdToDataKey(dataKey, elementId);
+    };
+
+    // Generic D3 "remove" functionality for DOM elements not needing more
+    // complicated exit logic than being untracked from the component
+    // model and then removed by D3 from the DOM
+    // Expects the results of a D3 exit() selection as the first arg
+    floe.d3ViewComponent.exitD3Elements = function (d3ExitSelection, that) {
+        d3ExitSelection.each(function (d) {
+            that.removeElementIdFromDataKey(floe.d3.idExtractor(d.id), this.id);
+        });
+
+        d3ExitSelection.remove();
     };
 
 })(jQuery, fluid);
