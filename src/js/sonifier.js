@@ -90,9 +90,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             "playDataAndQueueNext" : {
                 funcName: "floe.chartAuthoring.sonifier.playDataAndQueueNext",
                 args: ["{that}"]
-            },
-            // Calls the default sonification strategy
-            "defaultSonificationStrategy": "{that}.unitDivisorStrategy(10)"
+            }
         },
         events: {
             // Fires when a sonification play is requested
