@@ -28,6 +28,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 }
             }
         },
+        model: {
+            // Keeps track of D3 keys and their associated DOM elements
+            dataKeys: {}
+        },
         invokers: {
             jQueryToD3: {
                 funcName: "floe.d3.jQueryToD3",
@@ -36,7 +40,28 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             addD3Listeners: {
                 funcName: "floe.d3.addD3Listeners",
                 args: ["{arguments}.0", "{arguments}.1", "{arguments}.2", "{that}"]
+            },
+            addElementIdToDataKey: {
+                funcName: "floe.d3ViewComponent.addElementIdToDataKey",
+                args: ["{arguments}.0", "{arguments}.1", "{that}"]
+            },
+            removeElementIdFromDataKey: {
+                funcName: "floe.d3ViewComponent.removeElementIdFromDataKey",
+                args: ["{arguments}.0", "{arguments}.1", "{that}"]
+            },
+            getElementsByDataKey: {
+                funcName: "floe.d3ViewComponent.getElementsByDataKeys",
+                args: [["{arguments}.0"], "{that}"]
+            },
+            trackD3BoundElement: {
+                funcName: "floe.d3ViewComponent.trackD3BoundElement",
+                args: ["{arguments}.0", "{arguments}.1", "{that}"]
+            },
+            exitD3Elements: {
+                funcName: "floe.d3ViewComponent.exitD3Elements",
+                args: ["{arguments}.0", "{that}"]
             }
+
         }
     });
 
@@ -94,7 +119,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             var resultArray = styleValue.split(" ");
             var correspondingSelectorArray = fluid.get(consolidatedClasses, key);
 
-            if(correspondingSelectorArray) {
+            if (correspondingSelectorArray) {
                 resultArray = correspondingSelectorArray.concat(resultArray);
             }
             // Only keep unique values for each consolidated class array
@@ -106,7 +131,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         // 2. For each key/value pair in the consolidatedClasses object, turn the value from an array
         // to a space-delimited string
 
-        var togo = fluid.transform(consolidatedClasses, function (selectorArray){
+        var togo = fluid.transform(consolidatedClasses, function (selectorArray) {
             return selectorArray.join(" ");
         });
 
@@ -114,11 +139,80 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     };
 
     // Returns a formatted string for a numeric data value based on a supplied template
-    floe.d3ViewComponent.getTemplatedDisplayValue = function(totalValue, percentageDigits, template, d) {
+    floe.d3ViewComponent.getTemplatedDisplayValue = function (totalValue, percentageDigits, template, d) {
         var percentage = floe.chartAuthoring.percentage.calculate(d.value, totalValue);
         var percentageForTemplate = percentage !== null ? percentage.toFixed(percentageDigits) : percentage;
         var output = fluid.stringTemplate(template, {label: d.label, value: d.value, percentage: percentageForTemplate, total: totalValue});
         return output;
+    };
+
+    // Given a data key used to maintain object constancy in D3, a DOM
+    // element with a unique ID and the component, updates the key's
+    // value (an array of IDs) to include that ID
+    floe.d3ViewComponent.addElementIdToDataKey = function (d3Key, idToAdd, that) {
+        var keyPath = ["dataKeys", d3Key, idToAdd];
+        that.applier.change(keyPath, true);
+    };
+
+    // Corresponding "remove" functionality to addElementIdToDataKey
+    floe.d3ViewComponent.removeElementIdFromDataKey = function (d3Key, idToRemove, that) {
+        var keyPath = ["dataKeys", d3Key, idToRemove];
+        that.applier.change(keyPath, false, "DELETE");
+    };
+
+    // Given an array of D3 data keys, returns all affiliated D3-bound elements
+    // using the model's dataKeys information
+    floe.d3ViewComponent.getElementsByDataKeys = function (dataKeys, that) {
+
+        var accruedSelections;
+        var accrueSelection = function (selection) {
+            var currSelection = $(selection);
+            accruedSelections = accruedSelections !== undefined ? accruedSelections.add(currSelection) : currSelection;
+            return accruedSelections;
+        };
+
+        fluid.each(dataKeys, function (dataKey) {
+            var elementIds = fluid.get(that.model.dataKeys, dataKey);
+            var selection = fluid.transform(fluid.keys(elementIds), fluid.byId);
+            accruedSelections = fluid.accumulate(selection, accrueSelection, accruedSelections);
+        });
+
+        return accruedSelections;
+    };
+
+    // Given a selection of D3 elements, an ID and a CSS class, turns that
+    // class on for any elements matching the ID and makes sure it's turned off
+    // for any elements not matching it
+    floe.d3ViewComponent.toggleCSSClassByDataId = function (id, cssClass, that) {
+        // Get all D3-bound elements
+        var allElements = floe.d3ViewComponent.getElementsByDataKeys(fluid.keys(that.model.dataKeys), that);
+
+        allElements.each(function (idx, elem) {
+            var dataId = floe.d3.idExtractor(elem.__data__);
+            var shouldHighlight = id === dataId ? true : false;
+            $(elem).toggleClass(cssClass, shouldHighlight);
+            elem.classList[shouldHighlight ? "add" : "remove"](cssClass);
+        });
+    };
+
+    // Given a dataKey (d.id / d.data.id, etc) and an element, track the
+    // dataKey -> element linkage in the component model
+    // Intended for use when binding data with D3
+    floe.d3ViewComponent.trackD3BoundElement = function (dataKey, d3Element, that) {
+        var elementId = fluid.allocateSimpleId(d3Element);
+        that.addElementIdToDataKey(dataKey, elementId);
+    };
+
+    // Generic D3 "remove" functionality for DOM elements not needing more
+    // complicated exit logic than being untracked from the component
+    // model and then removed by D3 from the DOM
+    // Expects the results of a D3 exit() selection as the first arg
+    floe.d3ViewComponent.exitD3Elements = function (d3ExitSelection, that) {
+        d3ExitSelection.each(function (d) {
+            that.removeElementIdFromDataKey(floe.d3.idExtractor(d.id), this.id);
+        });
+
+        d3ExitSelection.remove();
     };
 
 })(jQuery, fluid);

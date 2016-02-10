@@ -1,5 +1,5 @@
 /*
-Copyright 2015 OCAD University
+Copyright 2015-2016 OCAD University
 
 Licensed under the Educational Community License (ECL), Version 2.0 or the New
 BSD license. You may not use this file except in compliance with one these
@@ -16,9 +16,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     fluid.defaults("floe.chartAuthoring.pieChart.legend", {
         gradeNames: ["floe.chartAuthoring.totalRelaying", "floe.d3ViewComponent", "autoInit"],
         strings: {
-            legendColHeading:"Legend",
-            labelColHeading:"Label",
-            valueColHeading:"Value" //,
+            legendColHeading: "Legend",
+            labelColHeading: "Label",
+            valueColHeading: "Value" //,
             // legendTitle:"" // title for the legend - translates to table caption
         },
         model: {
@@ -30,7 +30,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             // total: {
             //     value: number,
             //     percentage: number
-            // }
+            // },
+            // Tracks the "active" row
+            // activeRowId:
         },
         legendOptions: {
             // An array of colors to fill slices generated for corresponding values of model.dataSet
@@ -64,7 +66,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             valueHeader: "floe-ca-pieChart-legend-value-header",
             colorCell: "floe-ca-pieChart-legend-color-cell",
             labelCell: "floe-ca-pieChart-legend-label-cell",
-            valueCell: "floe-ca-pieChart-legend-value-cell"
+            valueCell: "floe-ca-pieChart-legend-value-cell",
+            highlight: "floe-ca-currently-playing"
         },
         selectors: {
             legend: ".floec-ca-pieChart-legend",
@@ -93,6 +96,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             dataSet: {
                 funcName: "{that}.draw",
                 excludeSource: "init"
+            },
+            activeRowId: {
+                func: "floe.d3ViewComponent.toggleCSSClassByDataId",
+                args: ["{that}.model.activeRowId", "{that}.options.styles.highlight", "{that}"]
             }
         },
         invokers: {
@@ -101,7 +108,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 args: ["{that}"]
             },
             sort: {
-                funcName: "floe.chartAuthoring.pieChart.legend.sortAscending",
+                funcName: "floe.chartAuthoring.utils.sortAscending",
                 args: ["{arguments}.0", "{arguments}.1"]
             },
             getColorCellStyle: {
@@ -113,7 +120,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     // Add new rows for new data, apply appropriate classes for selectors and styling
 
-    floe.chartAuthoring.pieChart.legend.addRows = function(that) {
+    floe.chartAuthoring.pieChart.legend.addRows = function (that) {
         var rowClass = that.classes.row,
             colorCellClass = that.classes.colorCell,
             labelCellClass = that.classes.labelCell,
@@ -153,6 +160,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             valueTextDisplayTemplate = that.options.legendOptions.valueTextDisplayTemplate;
 
         that.rows.each(function (d) {
+            that.trackD3BoundElement(d.id, this);
+
             d3.select(this)
                 .select(colorCellSelector)
                 .attr({
@@ -163,13 +172,13 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
             d3.select(this)
                 .select(labelCellSelector)
-                .text(function(d) {
+                .text(function (d) {
                     return floe.d3ViewComponent.getTemplatedDisplayValue(totalValue, percentageDigits, labelTextDisplayTemplate, d);
                 });
 
             d3.select(this)
                 .select(valueCellSelector)
-                .text(function(d) {
+                .text(function (d) {
                     return floe.d3ViewComponent.getTemplatedDisplayValue(totalValue, percentageDigits, valueTextDisplayTemplate, d);
                 });
         });
@@ -177,7 +186,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     floe.chartAuthoring.pieChart.legend.removeRows = function (that) {
         var removedRows = that.rows.exit();
-        removedRows.remove();
+        that.exitD3Elements(removedRows);
     };
 
     floe.chartAuthoring.pieChart.legend.draw = function (that) {
@@ -227,7 +236,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 "aria-relevant": "all"
             });
 
-        if(that.options.strings.legendTitle !== null) {
+        if (that.options.strings.legendTitle !== null) {
             that.table.append("caption")
             .attr({
                 "class": that.classes.caption
@@ -237,7 +246,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         that.table.append("thead");
         that.table.append("tbody");
-        if(showLegendHeadings) {
+        if (showLegendHeadings) {
             var thead = that.table.selectAll("thead");
 
             var theadRow = thead.append("tr");
@@ -248,21 +257,21 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
             theadRow.append("th")
                 .attr({
-                    "scope":"col",
+                    "scope": "col",
                     "class": colorHeaderClass
                 })
                 .html(that.options.strings.legendColHeading);
 
             theadRow.append("th")
                 .attr({
-                    "scope":"col",
+                    "scope": "col",
                     "class": labelHeaderClass
                 })
                 .html(that.options.strings.labelColHeading);
 
             theadRow.append("th")
                 .attr({
-                    "scope":"col",
+                    "scope": "col",
                     "class": valueHeaderClass
                 })
                 .html(that.options.strings.valueColHeading);
@@ -271,10 +280,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         that.draw();
 
         that.events.onLegendCreated.fire();
-    };
-
-    floe.chartAuthoring.pieChart.legend.sortAscending = function (a, b) {
-        return b.value - a.value;
     };
 
     floe.chartAuthoring.pieChart.legend.getColorCellStyle = function (data) {
@@ -288,7 +293,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     floe.chartAuthoring.pieChart.legend.addValueFromArray = function (objectArray, valueArray, newValueName) {
         // Don't do anything if not passed an actual array in the value array
-        if(fluid.isArrayable(valueArray)) {
+        if (fluid.isArrayable(valueArray)) {
             return fluid.transform(objectArray, function (object, idx) {
                 var consolidated = fluid.copy(object);
                 consolidated[newValueName] = valueArray[idx];

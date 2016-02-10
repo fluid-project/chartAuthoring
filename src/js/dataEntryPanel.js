@@ -25,7 +25,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             totalLabel: ".floec-ca-dataEntryPanel-totalLabel"
         },
         strings: {
-            dataEntryLabel: "Enter your values",
+            dataEntryLabel: "Enter your labels and values",
             emptyTotalValue: "Value",
             totalPercentage: "%percentage%",
             totalLabel: "Total"
@@ -118,7 +118,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         // indicate displayed total is a live region
         var totalValue = that.locate("totalValue");
         totalValue.attr({
-            "aria-labelledby":totalLabelId,
+            "aria-labelledby": totalLabelId,
             "aria-live": "polite"
         });
 
@@ -127,7 +127,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             var deCont = floe.chartAuthoring.dataEntryPanel.append(that.locate("dataEntries"), dataEntryContainerTemplate);
             that.events.createDataEntryField.fire(deCont);
         }
-    
+
     };
 
     floe.chartAuthoring.dataEntryPanel.renderTotals = function (that) {

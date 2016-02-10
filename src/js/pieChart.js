@@ -1,5 +1,5 @@
 /*
-Copyright 2015 OCAD University
+Copyright 2015-2016 OCAD University
 
 Licensed under the Educational Community License (ECL), Version 2.0 or the New
 BSD license. You may not use this file except in compliance with one these
@@ -31,12 +31,11 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 container: "{that}.dom.pie",
                 options: {
                     pieOptions: "{pieChart}.drawingOptions",
-                    strings: {
-                        pieTitle: "{pieChart}.options.pieChartOptions.pieTitle",
-                        pieDescription: "{pieChart}.options.pieChartOptions.pieDescription"
-                    },
                     model: {
-                        dataSet: "{pieChart}.model.dataSet"
+                        dataSet: "{pieChart}.model.dataSet",
+                        pieTitle: "{pieChart}.model.pieTitle",
+                        pieDescription: "{pieChart}.model.pieDescription",
+                        activeSliceId: "{pieChart}.model.activeDataId"
                     },
                     events: {
                         onPieCreated: "{pieChart}.events.onPieCreated",
@@ -54,7 +53,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                         legendTitle: "{pieChart}.options.pieChartOptions.legendTitle"
                     },
                     model: {
-                        dataSet: "{pieChart}.model.dataSet"
+                        dataSet: "{pieChart}.model.dataSet",
+                        activeRowId: "{pieChart}.model.activeDataId"
                     },
                     events: {
                         onLegendCreated: "{pieChart}.events.onLegendCreated",
@@ -66,7 +66,11 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         model: {
             // dataSet accepts an array of objects in a format of
             // [{id: string, value: number, label: string}, ... ]
-            dataSet: []
+            dataSet: [],
+            pieTitle: "Pie Chart",
+            pieDescription: "A pie chart."
+            // activeDataId: relayed to activeRowId/activeSliceId of legend/pie
+
         },
         pieChartOptions: {
             // width: number,
@@ -76,8 +80,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             // innerRadius: number,
             // animationDuration: number,
             // sort: boolean   // Whether or not to sort the data by values when creating the legend,
-            // pieTitle: string // the accessible title to be applied to the pie chart,
-            // pieDescription: string // the accessible description to be applied to the pie chart,
             // sliceTextDisplayTemplate: string // fluid.stringTemplate to format the pie chart slice text
             // sliceTextPercentageDigits: number // number of digits after decimal for percentages in pie chart slice text
             // labelTextDisplayTemplate: string // fluid.stringTemplate to format the legend label cell

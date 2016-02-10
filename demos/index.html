@@ -10,19 +10,32 @@
 
         <script type="text/javascript" src="../src/lib/infusion/infusion-custom.js"></script>
         <script type="text/javascript" src="../src/lib/d3/d3.js"></script>
+
+        <script type="text/javascript" src="../src/lib/flocking/flocking-base.js"></script>
+        <script type="text/javascript" src="../src/lib/flocking/ugens/oscillators.js"></script>
+        <script type="text/javascript" src="../src/lib/flocking/ugens/math.js"></script>
+        <script type="text/javascript" src="../src/lib/flocking/ugens/envelopes.js"></script>
+        <script type="text/javascript" src="../src/lib/flocking/ugens/midi.js"></script>
+        <script type="text/javascript" src="../src/lib/flocking/ugens/scheduling.js"></script>
+
         <script type="text/javascript" src="../src/js/valueBinding.js"></script>
         <script type="text/javascript" src="../src/js/percentage.js"></script>
         <script type="text/javascript" src="../src/js/transformations.js"></script>
         <script type="text/javascript" src="../src/js/templateInjection.js"></script>
-        <script type="text/javascript" src="../src/js/dataEntry.js"></script>
-        <script type="text/javascript" src="../src/js/dataEntryPanel.js"></script>
-        <script type="text/javascript" src="../src/js/chartAuthoring.js"></script>
         <script type="text/javascript" src="../src/js/d3ViewComponent.js"></script>
         <script type="text/javascript" src="../src/js/totalRelaying.js"></script>
         <script type="text/javascript" src="../src/js/legend.js"></script>
         <script type="text/javascript" src="../src/js/pie.js"></script>
         <script type="text/javascript" src="../src/js/pieChart.js"></script>
         <script type="text/javascript" src="../src/js/d3Utils.js"></script>
+        <script type="text/javascript" src="../src/js/utils.js"></script>
+        <script type="text/javascript" src="../src/js/dataEntry.js"></script>
+        <script type="text/javascript" src="../src/js/dataEntryPanel.js"></script>
+        <script type="text/javascript" src="../src/js/electricPianoBand.js"></script>
+        <script type="text/javascript" src="../src/js/unitDivisorSonificationStrategy.js"></script>
+        <script type="text/javascript"
+        <script type="text/javascript" src="../src/js/sonifier.js"></script>
+        <script type="text/javascript" src="../src/js/chartAuthoring.js"></script>
 
         <script type="text/javascript" src="src/js/chartAuthoring-demo-overview.js"></script>
         <script type="text/javascript" src="src/js/chartAuthoring-demo.js"></script>
@@ -42,28 +55,7 @@
                 <div id="floec-chartAuthoring"></div>
 
                 <script type="text/javascript">
-                    floe.chartAuthoring.demo("#floec-chartAuthoring", {
-                        templateLoader: {
-                            terms: {
-                                templatePrefix: "../src/html"
-                            }
-                        },
-                        dataEntryPanel: {
-                            strings: {
-                                dataEntryLabel: "Enter your labels and values"
-                            }
-                        },
-                        pieChart: {
-                            pieChartOptions: {
-                                sliceTextDisplayTemplate: "%percentage%",
-                                labelTextDisplayTemplate: "%label",
-                                valueTextDisplayTemplate: "%percentage% (%value/%total)",
-                                colors: ["#00a59a", "#9bc863", "#1a6b61", "#e9ea7b", "#1b443d"],
-                                width: 400,
-                                height: 400
-                            }
-                        }
-                    });
+                    floe.chartAuthoring.demo("#floec-chartAuthoring");
                     </script>
             </div>
 

@@ -24,22 +24,44 @@ Varied#3: colors: ["#f15e4e", "#acdee4", "#73c163", "#ffc74a", "#41beae"]
         gradeNames: ["floe.chartAuthoring"],
         listeners: {
             "onToolReady.addExampleInput": {
-                funcName: "{that}.updateDataEntryPanel",
+                funcName: "{that}.updateDataEntryPanelFromDataSet",
                 args: ["{that}.options.initialData"]
+            }
+        },
+        templateLoader: {
+            terms: {
+                templatePrefix: "../src/html"
+            }
+        },
+        pieChart: {
+            pieChartOptions: {
+                sliceTextDisplayTemplate: "%percentage%",
+                valueTextDisplayTemplate: "%percentage% (%value/%total)",
+                colors: ["#00a59a", "#9bc863", "#1a6b61", "#e9ea7b", "#1b443d"],
+                width: 400,
+                height: 400
             }
         },
         initialData:
             [{
-                label: "Value #1",
-                value: 75
+                label: "Android",
+                value: 48
             },
             {
-                label: "Value #2",
-                value: 17
+                label: "Apple",
+                value: 28
             },
             {
-                label: "Value #3",
-                value: 33
+                label: "Blackberry",
+                value: 18
+            },
+            {
+                label: "Microsoft",
+                value: 4
+            },
+            {
+                label: "Other",
+                value: 2
             }]
         });
-})(jQuery,fluid);
+})(jQuery, fluid);

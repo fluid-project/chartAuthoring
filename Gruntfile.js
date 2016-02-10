@@ -12,7 +12,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 // Declare dependencies
 /* global module */
 
-module.exports = function(grunt) {
+module.exports = function (grunt) {
     "use strict";
 
     // Project configuration.
