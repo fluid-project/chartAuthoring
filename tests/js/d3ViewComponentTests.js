@@ -210,12 +210,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         });
     });
 
-    jqUnit.test("Test floe.d3ViewComponent.getElementIdsAsSelector", function () {
-        var testIdObject = {"id-1": true, "id-2": true, "id-3": true};
-        var expectedSelector = "#id-1, #id-2, #id-3";
-        jqUnit.assertEquals("testIdArray is converted into expected selector string", expectedSelector, floe.d3ViewComponent.getElementIdsAsSelector(testIdObject));
-    });
-
     jqUnit.test("Test floe.d3ViewComponent.toggleCSSClassByDataId", function () {
         var testToggleClass = "floec-testToggleClass";
         jqUnit.expect(3);
@@ -244,7 +238,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     jqUnit.test("Test model.dataKey functionality", function () {
 
-        jqUnit.expect(11);
+        jqUnit.expect(9);
         var dataSet = [
             {value: 3, id: "id1"},
             {value: 6, id: "id2"},
@@ -267,16 +261,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             var retrievedElement = that.getElementsByDataKey(data.id);
             jqUnit.assertEquals("getElementsByDataKey with data ID " + data.id + " retrieved an element with the expected bound data value", data.value, retrievedElement[0].__data__.value);
             jqUnit.assertEquals("getElementsByDataKey with data ID " + data.id + " retrieved an element with the expected bound data ID", data.id, retrievedElement[0].__data__.id);
-        });
-
-        // Starting from the dataset, retrieve all DOM elements that don't match
-        // a specific ID via the dataKey inventory and check that none of the
-        // returned elements have the bound data expected to be excluded
-
-        var expectedExcludedId = "id1";
-        var retrievedElements = that.getElementsNotMatchingDataKey(expectedExcludedId);
-        fluid.each(retrievedElements, function (element, key) {
-            jqUnit.assertNotEquals("Element at position " + key + " does not bind excluded data ID", expectedExcludedId, element.__data__.id);
         });
 
         // Remove some rows and their corresponding IDs from the dataKey

@@ -53,10 +53,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 funcName: "floe.d3ViewComponent.getElementsByDataKeys",
                 args: [["{arguments}.0"], "{that}"]
             },
-            getElementsNotMatchingDataKey: {
-                funcName: "floe.d3ViewComponent.getElementsNotMatchingDataKey",
-                args: ["{arguments}.0", "{that}"]
-            },
             trackD3BoundElement: {
                 funcName: "floe.d3ViewComponent.trackD3BoundElement",
                 args: ["{arguments}.0", "{arguments}.1", "{that}"]
@@ -160,43 +156,24 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         that.applier.change(keyPath, false, "DELETE");
     };
 
-    // Given an object "elements" with element IDs as keys, returns a
-    // joined string of IDs suitable for use as a jQuery selector to select all
-    // those IDs
-    floe.d3ViewComponent.getElementIdsAsSelector = function (elementIds) {
-        if (fluid.isPlainObject(elementIds)) {
-            var keys = Object.keys(elementIds);
-            var elemIdCollectionWithPreface = fluid.transform(keys, function (elemId) {
-                    return "#" + elemId;
-                });
-            var keyedElements = elemIdCollectionWithPreface.join(", ");
-            return keyedElements;
-        }
-    };
-
     // Given an array of D3 data keys, returns all affiliated D3-bound elements
     // using the model's dataKeys information
     floe.d3ViewComponent.getElementsByDataKeys = function (dataKeys, that) {
-        var matchedElements = [];
+
+        var accruedSelections;
+        var accrueSelection = function (selection) {
+            var currSelection = $(selection);
+            accruedSelections = accruedSelections !== undefined ? accruedSelections.add(currSelection) : currSelection;
+            return accruedSelections;
+        };
+
         fluid.each(dataKeys, function (dataKey) {
-            var elementIds = that.model.dataKeys[dataKey];
-            var selector = floe.d3ViewComponent.getElementIdsAsSelector(elementIds);
-            matchedElements.push(selector);
+            var elementIds = fluid.get(that.model.dataKeys, dataKey);
+            var selection = fluid.transform(Object.keys(elementIds), fluid.byId);
+            accruedSelections = fluid.accumulate(selection, accrueSelection, accruedSelections);
         });
-        var elements = $(matchedElements.join(","));
-        return elements;
-    };
 
-    // Given a D3 data key, returns all D3-bound elements that aren't associated
-    // with that key
-
-    floe.d3ViewComponent.getElementsNotMatchingDataKey = function (dataKey, that) {
-        var dataKeys = fluid.copy(that.model.dataKeys);
-
-        fluid.remove_if(dataKeys, function (currentObj, currentKey) {
-            return currentKey === dataKey;
-        });
-        return floe.d3ViewComponent.getElementsByDataKeys(Object.keys(dataKeys), that);
+        return accruedSelections;
     };
 
     // Given a selection of D3 elements, an ID and a CSS class, turns that

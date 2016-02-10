@@ -290,7 +290,11 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var activeElementClasses = activeElements.attr("class");
         jqUnit.assertTrue("Active element contains the highlight class", activeElementClasses.indexOf(highlightClass) > -1);
 
-        var inactiveElements = d3ViewComponent.getElementsNotMatchingDataKey(currentlyPlayingDataId);
+        var inactiveElements = floe.d3ViewComponent.getElementsByDataKeys(Object.keys(d3ViewComponent.model.dataKeys), d3ViewComponent);
+        fluid.remove_if(inactiveElements, function (elem) {
+            return elem.__data__.id === currentlyPlayingDataId;
+        });
+
         fluid.each(inactiveElements, function (currentElem) {
             var elemClass = $(currentElem).attr("class");
             jqUnit.assertFalse("Inactive elements do not contain the highlight class", elemClass.indexOf(highlightClass) > -1);
