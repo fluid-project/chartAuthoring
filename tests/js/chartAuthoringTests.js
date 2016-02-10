@@ -292,7 +292,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         var inactiveElements = floe.d3ViewComponent.getElementsByDataKeys(fluid.keys(d3ViewComponent.model.dataKeys), d3ViewComponent);
         fluid.remove_if(inactiveElements, function (elem) {
-            return elem.__data__.id === currentlyPlayingDataId;
+            return floe.d3.idExtractor(elem.__data__) === currentlyPlayingDataId;
         });
 
         fluid.each(inactiveElements, function (currentElem) {

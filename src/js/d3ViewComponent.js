@@ -188,7 +188,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var allElements = floe.d3ViewComponent.getElementsByDataKeys(fluid.keys(that.model.dataKeys), that);
 
         allElements.each(function (idx, elem) {
-            var dataId = elem.__data__.id;
+            var dataId = floe.d3.idExtractor(elem.__data__);
             if (id === dataId) {
                 // Toggle on
                 $(elem).addClass(toggleClass);

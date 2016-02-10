@@ -260,7 +260,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         fluid.each(dataSet, function (data) {
             var retrievedElement = that.getElementsByDataKey(data.id);
             jqUnit.assertEquals("getElementsByDataKey with data ID " + data.id + " retrieved an element with the expected bound data value", data.value, retrievedElement[0].__data__.value);
-            jqUnit.assertEquals("getElementsByDataKey with data ID " + data.id + " retrieved an element with the expected bound data ID", data.id, retrievedElement[0].__data__.id);
+            jqUnit.assertEquals("getElementsByDataKey with data ID " + data.id + " retrieved an element with the expected bound data ID", data.id, floe.d3.idExtractor(retrievedElement[0].__data__));
         });
 
         // Remove some rows and their corresponding IDs from the dataKey
