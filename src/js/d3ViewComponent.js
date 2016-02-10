@@ -169,7 +169,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         fluid.each(dataKeys, function (dataKey) {
             var elementIds = fluid.get(that.model.dataKeys, dataKey);
-            var selection = fluid.transform(Object.keys(elementIds), fluid.byId);
+            var selection = fluid.transform(fluid.keys(elementIds), fluid.byId);
             accruedSelections = fluid.accumulate(selection, accrueSelection, accruedSelections);
         });
 
@@ -181,7 +181,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // for any elements not matching it
     floe.d3ViewComponent.toggleCSSClassByDataId = function (id, toggleClass, that) {
         // Get all D3-bound elements
-        var allElements = floe.d3ViewComponent.getElementsByDataKeys(Object.keys(that.model.dataKeys), that);
+        var allElements = floe.d3ViewComponent.getElementsByDataKeys(fluid.keys(that.model.dataKeys), that);
 
         allElements.each(function (idx, elem) {
             var dataId = elem.__data__.id;
