@@ -94,7 +94,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             name: "Test the chart authoring component",
             tests: [{
                 name: "Chart Authoring Init, Changes and Button Behaviour",
-                expect: 66,
+                expect: 72,
                 sequence: [{
                     listener: "floe.tests.chartAuthoringTester.verifyInit",
                     args: ["{chartAuthoring}"],
@@ -140,7 +140,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 }, {
                     // Listen to change #1 to currentlyPlayingData
                     listener: "floe.tests.chartAuthoringTester.verifyDatapointPlay",
-                    args: ["{floe.tests.chartAuthoring}"],
+                    args: ["{floe.tests.chartAuthoring}", 0],
                     path: "currentlyPlayingData",
                     changeEvent: "{floe.tests.chartAuthoring}.chartAuthoringInterface.sonifier.applier.modelChanged"
                 }, {
@@ -148,7 +148,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 }, {
                     // Listen to change #2 to currentlyPlayingData
                     listener: "floe.tests.chartAuthoringTester.verifyDatapointPlay",
-                    args: ["{floe.tests.chartAuthoring}"],
+                    args: ["{floe.tests.chartAuthoring}", 1],
                     path: "currentlyPlayingData",
                     changeEvent: "{floe.tests.chartAuthoring}.chartAuthoringInterface.sonifier.applier.modelChanged"
                 }, {
@@ -156,7 +156,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 }, {
                     // Listen to change #3 to currentlyPlayingData
                     listener: "floe.tests.chartAuthoringTester.verifyDatapointPlay",
-                    args: ["{floe.tests.chartAuthoring}"],
+                    args: ["{floe.tests.chartAuthoring}", 2],
                     path: "currentlyPlayingData",
                     changeEvent: "{floe.tests.chartAuthoring}.chartAuthoringInterface.sonifier.applier.modelChanged"
                 }, {
@@ -275,16 +275,45 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     };
 
     // Verifies datapoint play behaviour in the context of the chart authoring
-    // tool
-    floe.tests.chartAuthoringTester.verifyDatapointPlay = function (that) {
-        jqUnit.assertDeepEq("activeRowId is the id of the currently playing data in the sonifier", that.chartAuthoringInterface.sonifier.model.currentlyPlayingData.id, that.chartAuthoringInterface.pieChart.legend.model.activeRowId);
-        jqUnit.assertDeepEq("activeSliceId is the id of the currently playing data in the sonifier", that.chartAuthoringInterface.sonifier.model.currentlyPlayingData.id, that.chartAuthoringInterface.pieChart.pie.model.activeSliceId);
+    // tool; idx should be supplied by the testCaseHolder as each subsequent
+    // sonification event is listened for, to look up the expected playing
+    // data (which moves from sonificationQueue to currentlyPlayingData as the
+    // play occurs) against the unchanging sonifiedData
+    floe.tests.chartAuthoringTester.verifyDatapointPlay = function (that, idx) {
+
+        var matchingSonifiedData = that.chartAuthoringInterface.sonifier.model.sonifiedData[idx];
+
+        var cases = [{
+            msg: "ActiveRowId is the id of the currently playing data in the sonifier",
+            input: that.chartAuthoringInterface.pieChart.legend.model.activeRowId,
+            expected: that.chartAuthoringInterface.sonifier.model.currentlyPlayingData.id
+        },
+        {
+            msg: "activeSliceId is the id of the currently playing data in the sonifier",
+            input: that.chartAuthoringInterface.pieChart.pie.model.activeSliceId,
+            expected: that.chartAuthoringInterface.sonifier.model.currentlyPlayingData.id
+        },
+        {
+            msg: "activeRowId on play #" + idx + " is the id the sonified dataset has at position " + idx,
+            input: that.chartAuthoringInterface.pieChart.legend.model.activeRowId,
+            expected: matchingSonifiedData.id
+        },
+        {
+            msg: "activeSliceId on play #" + idx + "is the id the sonified dataset has at position " + idx,
+            input: that.chartAuthoringInterface.pieChart.pie.model.activeSliceId,
+            expected: matchingSonifiedData.id
+        }];
+
+        fluid.each(cases, function (oneCase) {
+            jqUnit.assertEquals(oneCase.msg, oneCase.expected, oneCase.input);
+        });
+
         floe.tests.chartAuthoringTester.verifyPlayHighlighting(that.chartAuthoringInterface.pieChart.legend, that.chartAuthoringInterface.pieChart.legend.model.activeRowId, that.chartAuthoringInterface.pieChart.legend.options.styles.highlight);
+
         floe.tests.chartAuthoringTester.verifyPlayHighlighting(that.chartAuthoringInterface.pieChart.legend, that.chartAuthoringInterface.pieChart.pie.model.activeSliceId, that.chartAuthoringInterface.pieChart.pie.options.styles.highlight);
     };
 
     floe.tests.chartAuthoringTester.verifyPlayHighlighting = function (d3ViewComponent, currentlyPlayingDataId, highlightClass) {
-
         var activeElements = d3ViewComponent.getElementsByDataKey(currentlyPlayingDataId);
         var activeElementClasses = activeElements.attr("class");
         jqUnit.assertTrue("Active element contains the highlight class", activeElementClasses.indexOf(highlightClass) > -1);
