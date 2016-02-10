@@ -183,21 +183,15 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // Given a selection of D3 elements, an ID and a CSS class, turns that
     // class on for any elements matching the ID and makes sure it's turned off
     // for any elements not matching it
-    floe.d3ViewComponent.toggleCSSClassByDataId = function (id, toggleClass, that) {
+    floe.d3ViewComponent.toggleCSSClassByDataId = function (id, cssClass, that) {
         // Get all D3-bound elements
         var allElements = floe.d3ViewComponent.getElementsByDataKeys(fluid.keys(that.model.dataKeys), that);
 
         allElements.each(function (idx, elem) {
             var dataId = floe.d3.idExtractor(elem.__data__);
-            if (id === dataId) {
-                // Toggle on
-                $(elem).addClass(toggleClass);
-                elem.classList.add(toggleClass);
-            } else {
-                // Toggle off
-                $(elem).removeClass(toggleClass);
-                elem.classList.remove(toggleClass);
-            }
+            var shouldHighlight = id === dataId ? true : false;
+            $(elem).toggleClass(cssClass, shouldHighlight);
+            elem.classList[shouldHighlight ? "add" : "remove"](cssClass);
         });
     };
 
