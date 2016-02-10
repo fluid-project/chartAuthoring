@@ -94,7 +94,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             name: "Test the chart authoring component",
             tests: [{
                 name: "Chart Authoring Init, Changes and Button Behaviour",
-                expect: 69,
+                expect: 66,
                 sequence: [{
                     listener: "floe.tests.chartAuthoringTester.verifyInit",
                     args: ["{chartAuthoring}"],
@@ -123,7 +123,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                     listener: "floe.tests.chartAuthoringTester.verifySonificationQueued",
                     args: ["{floe.tests.chartAuthoring}"],
                     path: "isPlaying",
-                    changeEvent: "{floe.tests.chartAuthoring}.applier.modelChanged"
+                    changeEvent: "{floe.tests.chartAuthoring}.chartAuthoringInterface.sonifier.applier.modelChanged"
                 }, {
                     // Simulate click on stop button
                     jQueryTrigger: "click",
@@ -142,7 +142,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                     listener: "floe.tests.chartAuthoringTester.verifyDatapointPlay",
                     args: ["{floe.tests.chartAuthoring}"],
                     path: "currentlyPlayingData",
-                    changeEvent: "{floe.tests.chartAuthoring}.applier.modelChanged"
+                    changeEvent: "{floe.tests.chartAuthoring}.chartAuthoringInterface.sonifier.applier.modelChanged"
                 }, {
                     func: "fluid.identity"
                 }, {
@@ -150,7 +150,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                     listener: "floe.tests.chartAuthoringTester.verifyDatapointPlay",
                     args: ["{floe.tests.chartAuthoring}"],
                     path: "currentlyPlayingData",
-                    changeEvent: "{floe.tests.chartAuthoring}.applier.modelChanged"
+                    changeEvent: "{floe.tests.chartAuthoring}.chartAuthoringInterface.sonifier.applier.modelChanged"
                 }, {
                     func: "fluid.identity"
                 }, {
@@ -158,7 +158,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                     listener: "floe.tests.chartAuthoringTester.verifyDatapointPlay",
                     args: ["{floe.tests.chartAuthoring}"],
                     path: "currentlyPlayingData",
-                    changeEvent: "{floe.tests.chartAuthoring}.applier.modelChanged"
+                    changeEvent: "{floe.tests.chartAuthoring}.chartAuthoringInterface.sonifier.applier.modelChanged"
                 }, {
                     func: "fluid.identity"
                 }, {
@@ -277,7 +277,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // Verifies datapoint play behaviour in the context of the chart authoring
     // tool
     floe.tests.chartAuthoringTester.verifyDatapointPlay = function (that) {
-        jqUnit.assertDeepEq("currentlyPlayingData is properly relayed between chartAuthoring component and sonifier subcomponent", that.chartAuthoringInterface.sonifier.model.currentlyPlayingData, that.model.currentlyPlayingData);
         jqUnit.assertDeepEq("activeRowId is the id of the currently playing data in the sonifier", that.chartAuthoringInterface.sonifier.model.currentlyPlayingData.id, that.chartAuthoringInterface.pieChart.legend.model.activeRowId);
         jqUnit.assertDeepEq("activeSliceId is the id of the currently playing data in the sonifier", that.chartAuthoringInterface.sonifier.model.currentlyPlayingData.id, that.chartAuthoringInterface.pieChart.pie.model.activeSliceId);
         floe.tests.chartAuthoringTester.verifyPlayHighlighting(that.chartAuthoringInterface.pieChart.legend, that.chartAuthoringInterface.pieChart.legend.model.activeRowId, that.chartAuthoringInterface.pieChart.legend.options.styles.highlight);
