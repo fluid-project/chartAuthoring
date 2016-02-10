@@ -99,7 +99,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                                 },
                                 modelRelay: {
                                     source: "{that}.model.dataSet",
-                                    target: "{floe.chartAuthoring.pieChart}.model.dataSet",
+                                    target: "{pieChart}.model.dataSet",
                                     singleTransform: {
                                         type: "fluid.transforms.free",
                                         args: ["{that}.model.dataSet"],
@@ -118,34 +118,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                             createOnEvent: "{chartAuthoring}.events.onChartAuthoringInterfaceReady",
                             container: "{chartAuthoring}.dom.pieChart",
                             options: {
-                                components: {
-                                    pie: {
-                                        options: {
-                                            modelRelay: {
-                                                source: "{chartAuthoring}.model.currentlyPlayingData",
-                                                target: "{that}.model.activeSliceId",
-                                                singleTransform: {
-                                                    type: "fluid.transforms.free",
-                                                    args: "{chartAuthoring}.model.currentlyPlayingData",
-                                                    func: "floe.d3.idExtractor"
-                                                }
-                                            }
-                                        }
-                                    },
-                                    legend: {
-                                        options: {
-                                            modelRelay: {
-                                                source: "{chartAuthoring}.model.currentlyPlayingData",
-                                                target: "{that}.model.activeRowId",
-                                                singleTransform: {
-                                                    type: "fluid.transforms.free",
-                                                    args: "{chartAuthoring}.model.currentlyPlayingData",
-                                                    func: "floe.d3.idExtractor"
-                                                }
-                                            }
-                                        }
-                                    }
-                                },
                                 resources: {
                                     template: "{templateLoader}.resources.pieChart"
                                 },
@@ -157,17 +129,23 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
                         sonifier: {
                             type: "floe.chartAuthoring.sonifier",
-                            createOnEvent: "{chartAuthoring}.events.onPieChartReady",
+                            createOnEvent: "{chartAuthoring}.events.onPanelReady",
                             options: {
                                 model: {
-                                    "dataSet": "{dataEntryPanel}.model.dataSet",
-                                    // We relay currentlyPlayingData and isPlaying to the overall component so that sonification play events can be used to change the rest of the interface
-                                    currentlyPlayingData: "{chartAuthoring}.model.currentlyPlayingData",
-                                    isPlaying: "{chartAuthoring}.model.isPlaying"
+                                    "dataSet": "{dataEntryPanel}.model.dataSet"
                                 },
                                 listeners: {
                                     "onCreate.escalate": {
                                         funcName: "{chartAuthoring}.events.onSonifierReady.fire"
+                                    }
+                                },
+                                modelRelay: {
+                                    source: "{that}.model.currentlyPlayingData",
+                                    target: "{floe.chartAuthoring.pieChart}.model.activeDataId",
+                                    singleTransform: {
+                                        type: "fluid.transforms.free",
+                                        args: "{that}.model.currentlyPlayingData",
+                                        func: "floe.d3.idExtractor"
                                     }
                                 }
                             }

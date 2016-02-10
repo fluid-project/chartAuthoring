@@ -34,7 +34,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                     model: {
                         dataSet: "{pieChart}.model.dataSet",
                         pieTitle: "{pieChart}.model.pieTitle",
-                        pieDescription: "{pieChart}.model.pieDescription"
+                        pieDescription: "{pieChart}.model.pieDescription",
+                        activeSliceId: "{pieChart}.model.activeDataId"
                     },
                     events: {
                         onPieCreated: "{pieChart}.events.onPieCreated",
@@ -52,7 +53,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                         legendTitle: "{pieChart}.options.pieChartOptions.legendTitle"
                     },
                     model: {
-                        dataSet: "{pieChart}.model.dataSet"
+                        dataSet: "{pieChart}.model.dataSet",
+                        activeRowId: "{pieChart}.model.activeDataId"
                     },
                     events: {
                         onLegendCreated: "{pieChart}.events.onLegendCreated",
@@ -67,6 +69,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             dataSet: [],
             pieTitle: "Pie Chart",
             pieDescription: "A pie chart."
+            // activeDataId: relayed to activeRowId/activeSliceId of legend/pie
+
         },
         pieChartOptions: {
             // width: number,
