@@ -82,8 +82,8 @@ var demo = demo || {};
                 titleLinkText: "Chart Authoring"
             },
             markup: {
-                description: "The Chart Authoring Tool supports the authoring, export and embedding of highly accessible charts. Development of this component is currently in progress and does not represent final state. Eventually, these charts will feature sonified representation of their data in addition to visual display.",
-                instructions: "<p>Enter labels and data for your pie chart in the data entry area. The pie chart and its corresponding legend will update each time you update your data.</p>"
+                description: "The Chart Authoring Tool supports the authoring, export and embedding of highly accessible charts, including sonification of the data. The current version supports creating pie charts and transforming the data into sonified form via a pattern where long notes represent 10% of the pie chart and short tones represent 1%. Anticipated future development includes supporting other kinds of charts, providing other sonification strategies for data, and export functionality.",
+                instructions: "<p>Enter labels and data for your pie chart in the data entry area. The pie chart and its corresponding legend will update each time you update your data. Use the play button to hear the current chart sonification or the stop button to stop a sonification before it finishes.</p>"
             },
             links: {
                 titleLink: "https://github.com/fluid-project/chartAuthoring",
