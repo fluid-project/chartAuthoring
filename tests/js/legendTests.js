@@ -1,5 +1,5 @@
 /*
-Copyright 2015 OCAD University
+Copyright 2015-2016 OCAD University
 
 Licensed under the Educational Community License (ECL), Version 2.0 or the New
 BSD license. You may not use this file except in compliance with one these
@@ -56,6 +56,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         color:  "#0000ff"
     }];
 
+    floe.tests.chartAuthoring.objectArrayTotal = 147;
+
     floe.tests.chartAuthoring.objectArrayAdd = [{
         id: "id0",
         value: 15,
@@ -84,6 +86,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         color: "#aabbcc"
     }];
 
+    floe.tests.chartAuthoring.objectArrayAddTotal = 173;
+
     floe.tests.chartAuthoring.objectArrayRemove = [{
         id: "id0",
         value: 15,
@@ -101,6 +105,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         color: "#00ff00"
     }];
 
+    floe.tests.chartAuthoring.objectArrayRemoveTotal = 102;
+
     floe.tests.chartAuthoring.objectArrayChangeInPlace = [{
         id: "id0",
         value: 36,
@@ -117,6 +123,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         label: "Three",
         color: "#00ff00"
     }];
+
+    floe.tests.chartAuthoring.objectArrayChangeInPlaceTotal = 129;
 
     floe.tests.chartAuthoring.objectArraySorted = [{
         id: "id1",
@@ -205,13 +213,33 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         color: "#2ca02c"
     }];
 
+    floe.tests.chartAuthoring.objectArrayForCustomDisplay = [{
+        id: "custom1",
+        value: 65,
+        label: "Label One",
+        color: "#ff7f0e"
+    }, {
+        id: "custom2",
+        value: 35,
+        label: "Label Two",
+        color: "#1f77b4"
+    }];
+
+    floe.tests.chartAuthoring.expectedCustomDisplay = [{
+        expectedValue: "65 (out of 100)",
+        expectedLabel: "Label One (65%)"
+    }, {
+        expectedValue: "35 (out of 100)",
+        expectedLabel: "Label Two (35%)"
+    }];
+
     floe.tests.chartAuthoring.mouseOverListener = function (data, i, that) {
         that.mouseOverListenerCalled = true;
     };
 
     // convenience function for easing testing of colors (jquery returns only RGB)
     // Based off http://stackoverflow.com/questions/4262417/jquery-hex-to-rgb-calculation-different-between-browsers
-    floe.tests.chartAuthoring.hexToRGB = function (hexStr){
+    floe.tests.chartAuthoring.hexToRGB = function (hexStr) {
         // note: hexStr should be #rrggbb
         var hex = parseInt(hexStr.substring(1), 16);
         var r = (hex & 0xff0000) >> 16;
@@ -220,10 +248,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         return "rgb(" + r + ", " + g + ", " + b + ")";
     };
 
-    floe.tests.chartAuthoring.testLegendSyncWithModelDataSet = function(that, expectedDataSet) {
+    floe.tests.chartAuthoring.testLegendSyncWithModelDataSet = function (that, expectedDataSet) {
         var dataSet = expectedDataSet;
         var rows = floe.d3.jQueryToD3(that.locate("row"));
-        rows.each(function (d,i) {
+        rows.each(function (d, i) {
             var displayedColor = d3.select(this).select(that.options.selectors.colorCell).style("background-color"),
                 expectedColor = dataSet[i].color,
                 displayedLabel = d3.select(this).select(that.options.selectors.labelCell).text(),
@@ -233,7 +261,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
             jqUnit.assertEquals("Displayed colors are in sync with the current model's colors", displayedColor, floe.tests.chartAuthoring.hexToRGB(expectedColor));
             jqUnit.assertEquals("Displayed labels are in sync with the current model's labels", expectedLabel, displayedLabel);
-            jqUnit.assertEquals("Displayed values are in sync with the current model's values", expectedValue, displayedValue);
+            // Coerce displayedValue to number for comparison with model value
+            jqUnit.assertEquals("Displayed values are in sync with the current model's values", expectedValue, Number(displayedValue));
         });
     };
 
@@ -244,7 +273,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         jqUnit.assertTrue("The mouseover listener for legend rows has been triggered", that.mouseOverListenerCalled);
     };
 
-    floe.tests.chartAuthoring.validateLegend = function (that, expectedDataSet) {
+    floe.tests.chartAuthoring.validateLegend = function (that, expectedDataSet, expectedTotalValue) {
         var table = that.locate("table");
 
         // Test the legend creation
@@ -266,10 +295,13 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var d3ValueCells = that.jQueryToD3($(that.locate("valueCell")));
 
         d3ValueCells.each(function (d) {
-            jqUnit.assertEquals("The data values are applied correctly in the legend", d.value, ($(this).html()));
+            // Coerce displayed value to number for comparison with DOM-bound d3 value
+            jqUnit.assertEquals("The data values are applied correctly in the legend", d.value, Number(($(this).html())));
         });
 
         jqUnit.assertEquals("The legend's title is applied as a caption", that.options.strings.legendTitle, that.locate("caption").text());
+
+        jqUnit.assertEquals("The total value is calculated as expected", expectedTotalValue, that.model.total.value);
 
         floe.tests.chartAuthoring.testLegendSyncWithModelDataSet(that, expectedDataSet);
 
@@ -279,7 +311,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         // Legend is created from dataset
 
-        floe.tests.chartAuthoring.validateLegend(that, objectArray);
+        floe.tests.chartAuthoring.validateLegend(that, objectArray, floe.tests.chartAuthoring.objectArrayTotal);
 
         floe.tests.chartAuthoring.testMouseOverListener(that);
 
@@ -288,29 +320,29 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         // Item added to dataset
 
         that.applier.change("dataSet", floe.tests.chartAuthoring.objectArrayAdd);
-        floe.tests.chartAuthoring.validateLegend(that, objectArrayAdd);
+        floe.tests.chartAuthoring.validateLegend(that, objectArrayAdd, floe.tests.chartAuthoring.objectArrayAddTotal);
 
         // Item removed from dataset
 
         that.applier.change("dataSet", floe.tests.chartAuthoring.objectArrayRemove);
-        floe.tests.chartAuthoring.validateLegend(that, objectArrayRemove);
+        floe.tests.chartAuthoring.validateLegend(that, objectArrayRemove, floe.tests.chartAuthoring.objectArrayRemoveTotal);
 
         // Items changed in place
 
         that.applier.change("dataSet", floe.tests.chartAuthoring.objectArrayChangeInPlace);
-        floe.tests.chartAuthoring.validateLegend(that, objectArrayChangeInPlace);
+        floe.tests.chartAuthoring.validateLegend(that, objectArrayChangeInPlace, floe.tests.chartAuthoring.objectArrayChangeInPlaceTotal);
 
     };
 
     jqUnit.test("Test the legend component created based off an array of objects, unsorted, user-supplied colours", function () {
-        jqUnit.expect(119);
+        jqUnit.expect(123);
 
         var that = floe.tests.chartAuthoring.pieChart.legend(".floe-ca-legend-objects-unsorted", {
             model: {
                 dataSet: floe.tests.chartAuthoring.objectArray
             },
             legendOptions: {
-                sort:false
+                sort: false
             }
         });
 
@@ -319,14 +351,14 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     });
 
     jqUnit.test("Test the legend component created based off an array of objects, sorted, default colours", function () {
-        jqUnit.expect(119);
+        jqUnit.expect(123);
 
         var that = floe.tests.chartAuthoring.pieChart.legend(".floe-ca-legend-objects-sorted", {
             model: {
                 dataSet: floe.tests.chartAuthoring.objectArray
             },
             legendOptions: {
-                sort:true,
+                sort: true,
                 colors: null
             }
         });
@@ -335,10 +367,33 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     });
 
-    jqUnit.test("Test ascending sort function", function () {
-        var unsorted = [{value: 5}, {value: 8}, {value: 6}, {value: 1}];
-        var expectedSorted = [{value: 8},  {value: 6}, {value: 5}, {value: 1}];
-        jqUnit.assertDeepEq("Ascending sort function behaving as expected", expectedSorted, unsorted.sort(floe.chartAuthoring.pieChart.legend.sortAscending));
+    floe.tests.chartAuthoring.testCustomDisplay = function (that, message, cellSelector, expectedValuePath) {
+        var d3Cells = that.jQueryToD3($(that.locate(cellSelector)));
+        d3Cells.each(function (d, i) {
+            var expectedLabel = floe.tests.chartAuthoring.expectedCustomDisplay[i][expectedValuePath];
+            jqUnit.assertEquals(message, expectedLabel, ($(this).html()));
+        });
+    };
+
+    jqUnit.test("Test the legend component with custom value and label display templates", function () {
+        jqUnit.expect(4);
+
+        var that = floe.tests.chartAuthoring.pieChart.legend(".floe-ca-legend-custom-labels", {
+            model: {
+                dataSet: floe.tests.chartAuthoring.objectArrayForCustomDisplay
+            },
+            legendOptions: {
+                sort: false,
+                colors: null,
+                labelTextDisplayTemplate: "%label (%percentage%)",
+                valueTextDisplayTemplate: "%value (out of %total)"
+            }
+        });
+
+        floe.tests.chartAuthoring.testCustomDisplay(that, "The custom labels are applied correctly in the legend", "labelCell", "expectedLabel");
+
+        floe.tests.chartAuthoring.testCustomDisplay(that, "The custom values are applied correctly in the legend", "valueCell", "expectedValue");
+
     });
 
     jqUnit.test("Test addValueFromArray function", function () {

@@ -14,7 +14,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     "use strict";
 
     fluid.defaults("floe.chartAuthoring.dataEntryPanel", {
-        gradeNames: ["floe.chartAuthoring.templateInjection"],
+        gradeNames: ["floe.chartAuthoring.totalRelaying", "floe.chartAuthoring.templateInjection"],
         selectors: {
             dataEntryForm: ".floec-ca-dataEntryPanel-dataEntryForm",
             dataEntryLabel: ".floec-ca-dataEntryPanel-dataEntryLabel",
@@ -25,7 +25,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             totalLabel: ".floec-ca-dataEntryPanel-totalLabel"
         },
         strings: {
-            dataEntryLabel: "Enter your values",
+            dataEntryLabel: "Enter your labels and values",
             emptyTotalValue: "Value",
             totalPercentage: "%percentage%",
             totalLabel: "Total"
@@ -54,29 +54,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 // value: number,
                 // percentage: number
             },
-            dataEntries: {
+            dataSet: {
                 // "dataEntryComponent-uuid": {}
             }
         },
-        modelRelay: [{
-            source: "dataEntries",
-            target: "total.value",
-            singleTransform: {
-                type: "floe.chartAuthoring.transforms.reduce",
-                value: "{that}.model.dataEntries",
-                initialValue: null,
-                extractor: "floe.chartAuthoring.transforms.reduce.valueExtractor",
-                func: "floe.chartAuthoring.transforms.reduce.add"
-            }
-        }, {
-            source: "total.value",
-            target: "total.percentage",
-            singleTransform: {
-                type: "floe.chartAuthoring.transforms.percentage",
-                value: "{that}.model.total.value",
-                total: "{that}.model.total.value"
-            }
-        }],
         numDataEntryFields: 5,
         events: {
             createDataEntryField: null
@@ -98,7 +79,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     floe.chartAuthoring.dataEntryPanel.generateModelRelaysConnectionGrade = function (nickName, id) {
         var gradeName = "floe.chartAuthoring.dataEntryPanel.modelRelayConnections." + fluid.allocateGuid();
-        var modelPathBase = "{dataEntryPanel}.model.dataEntries." + nickName + "-" + id + ".";
+        var modelPathBase = "{dataEntryPanel}.model.dataSet." + nickName + "-" + id + ".";
 
         fluid.defaults(gradeName, {
             model: {
@@ -137,7 +118,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         // indicate displayed total is a live region
         var totalValue = that.locate("totalValue");
         totalValue.attr({
-            "aria-labelledby":totalLabelId,
+            "aria-labelledby": totalLabelId,
             "aria-live": "polite"
         });
 
@@ -146,6 +127,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             var deCont = floe.chartAuthoring.dataEntryPanel.append(that.locate("dataEntries"), dataEntryContainerTemplate);
             that.events.createDataEntryField.fire(deCont);
         }
+
     };
 
     floe.chartAuthoring.dataEntryPanel.renderTotals = function (that) {

@@ -1,5 +1,5 @@
 /*
-Copyright 2015 OCAD University
+Copyright 2015-2016 OCAD University
 
 Licensed under the Educational Community License (ECL), Version 2.0 or the New
 BSD license. You may not use this file except in compliance with one these
@@ -67,6 +67,32 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 jqUnit.assertEquals(oneCase.msg, oneCase.expected[i], colorScale(i));
             }
         });
+    });
+
+    jqUnit.test("Test floe.d3.idExtractor()", function () {
+        jqUnit.expect(3);
+
+        var cases = [{
+            msg: "Handle d.id scenario",
+            input: {id: "id1"},
+            expected: "id1"
+        },
+        {
+            msg: "Handle d.data.id scenario",
+            input: {data: {id: "id2"}},
+            expected: "id2"
+        },
+        {
+            msg: "Handle no id scenario",
+            input: {title: "oh gosh, I am not actually a D3 'd' object"},
+            expected: undefined
+        }];
+
+        fluid.each(cases, function (oneCase) {
+            var extractedId = floe.d3.idExtractor(oneCase.input);
+            jqUnit.assertEquals(oneCase.msg, oneCase.expected, extractedId);
+        });
+
     });
 
 })(jQuery, fluid);

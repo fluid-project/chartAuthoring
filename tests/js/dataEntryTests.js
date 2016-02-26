@@ -104,11 +104,12 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     };
 
     floe.tests.chartAuthoring.dataEntryTester.verifyEntry = function (that, expected) {
-        floe.tests.chartAuthoring.dataEntryTester.verifyInput("value", that.locate("value"), expected.value);
+        // Coerce expected.value to string for comparison with rendered value in HTML
+        floe.tests.chartAuthoring.dataEntryTester.verifyInput("value", that.locate("value"), String(expected.value));
         floe.tests.chartAuthoring.dataEntryTester.verifyPercentage(that.locate("percentage"), expected.percentage);
     };
 
-    floe.tests.chartAuthoring.dataEntryTester.verifyAccessibility = function(that) {
+    floe.tests.chartAuthoring.dataEntryTester.verifyAccessibility = function (that) {
         var valueInput = that.locate("value");
         var labelInput = that.locate("label");
         jqUnit.assertEquals("An aria-label for the label input has been set", that.options.strings.labelInputAriaLabel, labelInput.attr("aria-label"));

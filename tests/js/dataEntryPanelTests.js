@@ -37,6 +37,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                                 "<span class=\"floec-ca-dataEntryPanel-totalValue\">Value</span>" +
                                 "<span class=\"floec-ca-dataEntryPanel-totalPercentage\">%</span>" +
                                 "</fieldset>" +
+                                "<button class=\"floec-ca-dataEntryPanel-resetButton floe-ca-dataEntryPanel-resetButton\" type=\"reset\">Reset</button>" +
                                 "</form>"
             },
             dataEntry: {
@@ -94,7 +95,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 func: "jqUnit.assertValue",
                 args: ["The component should have been initialized.", "{dataEntryPanel}"]
             }, {
-                expect: 13,
+                expect: 14,
                 name: "Test Initial Rendering",
                 type: "test",
                 func: "floe.tests.chartAuthoring.dataEntryPanelTester.testRendering",
@@ -130,7 +131,11 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         // Test creation of dataEntry components
         var expectedDataEntryFields = that.options.numDataEntryFields;
         jqUnit.assertEquals("There should be " + expectedDataEntryFields + " data entry components added", expectedDataEntryFields, that.locate("dataEntry").length);
-        jqUnit.assertEquals("There should be " + expectedDataEntryFields + " data entries added to the model", expectedDataEntryFields, fluid.keys(that.model.dataEntries).length);
+        jqUnit.assertEquals("There should be " + expectedDataEntryFields + " data entries added to the model", expectedDataEntryFields, fluid.keys(that.model.dataSet).length);
+
+        var resetButton = that.locate("resetButton");
+        jqUnit.assertEquals("The reset button is rendered", 1, resetButton.length);
+        // TODO: need test for reset binding and behaviour to the button
 
         floe.tests.chartAuthoring.dataEntryPanelTester.verifyTotalOutput(that, {
             label: that.options.strings.totalLabel,
@@ -151,7 +156,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     floe.tests.chartAuthoring.dataEntryPanelTester.verifyTotalOutput = function (that, expected) {
         jqUnit.assertEquals("The total label should be set", expected.label, that.locate("totalLabel").text());
-        jqUnit.assertEquals("The total value should be set", expected.value, that.locate("totalValue").text());
+        // Coerce expected.value to string for comparison with rendered value in HTML
+        jqUnit.assertEquals("The total value should be set", String(expected.value), that.locate("totalValue").text());
         jqUnit.assertEquals("The total percentage should be set", expected.percentage, that.locate("totalPercentage").text());
 
         for (var i = 0; i < that.options.numDataEntryFields; i++) {
