@@ -28,12 +28,28 @@ module.exports = function (grunt) {
         },
         jsonlint: {
             all: ["package.json", ".jshintrc", "src/**/*.json", "tests/**/*.json", "demos/**/*.json"]
+        },
+        copy: {
+            // Copy external front end dependencies into appropriate directories
+            frontEndDependencies: {
+                files: [
+                    // D3
+                    {src: "./node_modules/d3/d3.js", dest: "./public/src/lib/ext/d3/d3.js"},
+                    // D3 license
+                    {src: "./node_modules/d3/LICENSE", dest: "./public/src/lib/ext/d3LICENSE"},
+                    // Flocking /dist directory
+                    {expand: true, cwd: "./node_modules/flocking/dist/", src: "**", dest: "./public/src/lib/ext/flocking/dist/"},
+                    // Flocking /src directory
+                    {expand: true, cwd: "./node_modules/flocking/src/", src: "**", dest: "./public/src/lib/ext/flocking/src/"}
+                ]
+            }
         }
     });
 
     // Load the plugin(s):
     grunt.loadNpmTasks("grunt-contrib-jshint");
     grunt.loadNpmTasks("grunt-jsonlint");
+    grunt.loadNpmTasks("grunt-contrib-copy");
 
     // Custom tasks:
 

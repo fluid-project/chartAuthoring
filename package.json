@@ -5,7 +5,10 @@
   "author": "Fluid Project",
   "bugs": "https://issues.fluidproject.org/browse/FLOE/component/11615",
   "homepage": "http://www.fluidproject.org/",
-  "dependencies": {},
+  "dependencies": {
+      "d3":"latest",
+      "flocking":"https://github.com/colinbdclark/Flocking"      
+  },
   "licenses": [
     {
       "type": "BSD-3-Clause",
@@ -32,6 +35,7 @@
   "devDependencies": {
     "grunt": "~0.4.5",
     "grunt-contrib-jshint": "~0.9.0",
-    "grunt-jsonlint": "1.0.4"
+    "grunt-jsonlint": "1.0.4",
+    "grunt-contrib-copy": "latest"
   }
 }
