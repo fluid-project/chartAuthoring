@@ -34,13 +34,9 @@ module.exports = function (grunt) {
             frontEndDependencies: {
                 files: [
                     // D3
-                    {src: "./node_modules/d3/d3.js", dest: "./public/src/lib/ext/d3/d3.js"},
-                    // D3 license
-                    {src: "./node_modules/d3/LICENSE", dest: "./public/src/lib/ext/d3LICENSE"},
-                    // Flocking /dist directory
-                    {expand: true, cwd: "./node_modules/flocking/dist/", src: "**", dest: "./public/src/lib/ext/flocking/dist/"},
-                    // Flocking /src directory
-                    {expand: true, cwd: "./node_modules/flocking/src/", src: "**", dest: "./public/src/lib/ext/flocking/src/"}
+                    {expand: true, cwd: "./node_modules/d3/", src: "**", dest: "./public/src/lib/ext/d3/"},
+                    // Flocking
+                    {expand: true, cwd: "./node_modules/flocking/", src: "**", dest: "./public/src/lib/ext/flocking/"}
                 ]
             }
         }
