@@ -21,51 +21,51 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     floe.tests.chartAuthoring.timeSeriesData1 = [
         {
-            date: "2015-01-14",
+            date: "2015-01-01",
             value: 17
         },
         {
-            date: "2015-02-14",
+            date: "2015-02-01",
             value: 8
         },
         {
-            date: "2015-03-14",
+            date: "2015-03-01",
             value: 36
         },
         {
-            date: "2015-04-14",
+            date: "2015-04-01",
             value: 12
         },
         {
-            date: "2015-05-14",
+            date: "2015-05-01",
             value: 22
         },
         {
-            date: "2015-06-14",
+            date: "2015-06-01",
             value: 29
         },
         {
-            date: "2015-07-14",
+            date: "2015-07-01",
             value: 15
         },
         {
-            date: "2015-08-14",
+            date: "2015-08-01",
             value: 17
         },
         {
-            date: "2015-09-14",
+            date: "2015-09-01",
             value: 19
         },
         {
-            date: "2015-10-14",
+            date: "2015-10-01",
             value: 46
         },
         {
-            date: "2015-11-14",
+            date: "2015-11-01",
             value: 44
         },
         {
-            date: "2015-12-14",
+            date: "2015-12-01",
             value: 24
         }
     ];
@@ -100,6 +100,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 dataSet: floe.tests.chartAuthoring.timeSeriesData1
             }
         });
+
+        // that.applier.change("dataSet", floe.tests.chartAuthoring.timeSeriesData2);
+
 
     });
 

@@ -25,16 +25,20 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             description: "lineDescription"
         },
         lineOptions: {
-            width: 500,
+            width: 700,
             height: 500,
-            padding: 25
+            padding: 50
         },
         styles: {
             line: "floe-ca-lineChart-line"
         },
         selectors: {
             title: ".floec-ca-lineChart-title",
-            description: ".floec-ca-lineChart-description"
+            description: ".floec-ca-lineChart-description",
+            yAxis: ".floec-ca-lineChart-y-axis",
+            xAxis: ".floec-ca-lineChart-x-axis",
+            line: ".floec-ca-lineChart-line",
+            chartLine: ".floec-ca-lineChart-chartLine"
         },
         events: {
             onLineCreated: null,  // Fire when the line is created. Ready to register D3 DOM event listeners,
@@ -73,12 +77,20 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     };
 
     floe.chartAuthoring.lineChart.line.draw = function (that) {
-        console.log("floe.chartAuthoring.lineChart.line.draw");
+        // console.log("floe.chartAuthoring.lineChart.line.draw");
 
-        var svg = that.svg;
-        var height = that.options.lineOptions.height;
-        var padding = that.options.lineOptions.padding;
-        var dataSet = that.model.dataSet;
+        var svg = that.svg,
+            height = that.options.lineOptions.height,
+            padding = that.options.lineOptions.padding,
+            dataSet = that.model.dataSet,
+            xAxisClass = that.classes.xAxis,
+            yAxisClass = that.classes.yAxis,
+            chartLineClass = that.classes.chartLine;
+
+        // Remove any older drawn elements
+        that.locate("xAxis").remove();
+        that.locate("yAxis").remove();
+        that.locate("chartLine").remove();
 
         that.yScale = floe.chartAuthoring.lineChart.line.getYScale(that);
 
@@ -90,27 +102,19 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         that.line = floe.chartAuthoring.lineChart.line.getLineFunction(that);
 
-        console.log(svg);
-
         svg.append("g")
-            .attr("transform", "translate("+padding+",0)")
+            .attr("transform", "translate(" + padding + ",0)")
+            .attr("class", yAxisClass)
             .call(that.yAxis);
 
         svg.append("g")
             .attr("transform", "translate(0," + (height - padding) + ")")
+            .attr("class", xAxisClass)
             .call(that.xAxis);
-
-        var line = d3.svg.line()
-            // .interpolate("basis")
-            .x(function(d){
-                return that.xScale(new Date(d.date));
-            })
-            .y(function(d) {
-                return that.yScale(d.value);
-            });
 
         svg.append("path")
             .datum(dataSet)
+            .attr("class", chartLineClass)
             .attr("fill", "none")
             .attr("stroke", "steelblue")
             .attr("stroke-width", "1.5px")
@@ -118,37 +122,33 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     };
 
-    floe.chartAuthoring.lineChart.line.getYScale = function(that) {
+    floe.chartAuthoring.lineChart.line.getYScale = function (that) {
         var height = that.options.lineOptions.height;
         var padding = that.options.lineOptions.padding;
         var dataSet = that.model.dataSet;
 
-        var dataSetMin = d3.min(dataSet, function(d) {
-            return d.value;
-        });
-
-        var dataSetMax = d3.max(dataSet, function(d) {
+        var dataSetMax = d3.max(dataSet, function (d) {
             return d.value;
         });
 
         return d3.scale.linear()
-            .domain([dataSetMin, dataSetMax])
-            .range([height - padding, padding])
+            .domain([0, dataSetMax])
+            .range([height - padding, padding]);
     };
 
-    floe.chartAuthoring.lineChart.line.getXScale = function(that) {
+    floe.chartAuthoring.lineChart.line.getXScale = function (that) {
         var width = that.options.lineOptions.width;
         var padding = that.options.lineOptions.padding;
         var dataSet = that.model.dataSet;
         var minDate = new Date(dataSet[0].date);
-        var maxDate = new Date(dataSet[dataSet.length -1].date);
+        var maxDate = new Date(dataSet[dataSet.length - 1].date);
 
         return d3.time.scale()
             .domain([minDate, maxDate])
             .range([padding, width - padding * 2]);
     };
 
-    floe.chartAuthoring.lineChart.line.getYAxis = function(that) {
+    floe.chartAuthoring.lineChart.line.getYAxis = function (that) {
         var width = that.options.lineOptions.width;
         var padding = that.options.lineOptions.padding;
         var yScale = that.yScale;
@@ -156,7 +156,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var yAxis = d3.svg.axis()
             .orient("left")
             .scale(yScale)
-            .innerTickSize(-width+padding*3)
+            .innerTickSize(- width + padding * 3)
             .outerTickSize(0)
             .tickPadding(10);
 
@@ -173,8 +173,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
           [":%S", function(d) { return d.getSeconds(); }],
           ["%I:%M", function(d) { return d.getMinutes(); }],
           ["%I %p", function(d) { return d.getHours(); }],
-          ["%a %d", function(d) { return d.getDay() && d.getDate() != 1; }],
-          ["%b %d", function(d) { return d.getDate() != 1; }],
+          ["%a %d", function(d) { return d.getDay() && d.getDate() !== 1; }],
+          ["%b %d", function(d) { return d.getDate() !== 1; }],
           ["%b", function(d) { return d.getMonth(); }],
           ["%Y", function() { return true; }]
         ]);
@@ -202,7 +202,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     };
 
     floe.chartAuthoring.lineChart.line.create = function (that) {
-        console.log("floe.chartAuthoring.lineChart.line.create");
+        // console.log("floe.chartAuthoring.lineChart.line.create");
 
         var container = that.container,
             width = that.options.lineOptions.width,
