@@ -27,7 +27,12 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         lineOptions: {
             width: 700,
             height: 500,
-            padding: 50
+            padding: 50,
+            // interpolation mode for chart line
+            // see line.interpolate at https://github.com/mbostock/d3/wiki/SVG-Shapes
+            // generally, "linear" for sharp lines, "basis" for smooth
+            interpolation: "linear"
+
         },
         styles: {
             line: "floe-ca-lineChart-line"
@@ -113,7 +118,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             .call(that.xAxis);
 
         svg.append("path")
-            .datum(dataSet)
+            .data([dataSet])
             .attr("class", chartLineClass)
             .attr("fill", "none")
             .attr("stroke", "steelblue")
@@ -189,8 +194,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     };
 
     floe.chartAuthoring.lineChart.line.getLineFunction = function(that) {
+        var interpolation = that.options.lineOptions.interpolation;
+
         var line = d3.svg.line()
-            // .interpolate("basis")
+            .interpolate(interpolation)
             .x(function(d){
                 return that.xScale(new Date(d.date));
             })
