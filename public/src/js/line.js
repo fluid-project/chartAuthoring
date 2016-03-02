@@ -74,10 +74,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         // console.log("floe.chartAuthoring.lineChart.line.draw");
 
         var svg = that.svg,
-            height = that.options.lineOptions.height,
-            padding = that.options.lineOptions.padding,
             dataSet = that.model.dataSet,
-            xAxisClass = that.classes.xAxis,
             chartLineClass = that.classes.chartLine,
             shouldAddArea = that.options.lineOptions.addArea;
 
@@ -112,7 +109,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             .attr("d", that.line);
 
         // Append the area file for the line
-        if(shouldAddArea) {
+        if (shouldAddArea) {
             svg.append("path")
                 .data([dataSet])
                 .attr("fill", "blue")
@@ -183,20 +180,18 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         return yAxis;
     };
 
-    floe.chartAuthoring.lineChart.line.getXAxis = function(that) {
-        var height = that.options.lineOptions.height;
-        var padding = that.options.lineOptions.padding;
+    floe.chartAuthoring.lineChart.line.getXAxis = function (that) {
         var xScale = that.xScale;
 
         var customTickFormat = d3.time.format.multi([
-          [".%L", function(d) { return d.getMilliseconds(); }],
-          [":%S", function(d) { return d.getSeconds(); }],
-          ["%I:%M", function(d) { return d.getMinutes(); }],
-          ["%I %p", function(d) { return d.getHours(); }],
-          ["%a %d", function(d) { return d.getDay() && d.getDate() !== 1; }],
-          ["%b %d", function(d) { return d.getDate() !== 1; }],
-          ["%b", function(d) { return d.getMonth(); }],
-          ["%Y", function() { return true; }]
+            [".%L", function (d) { return d.getMilliseconds(); }],
+            [":%S", function (d) { return d.getSeconds(); }],
+            ["%I:%M", function (d) { return d.getMinutes(); }],
+            ["%I %p", function (d) { return d.getHours(); }],
+            ["%a %d", function (d) { return d.getDay() && d.getDate() !== 1; }],
+            ["%b %d", function (d) { return d.getDate() !== 1; }],
+            ["%b", function (d) { return d.getMonth(); }],
+            ["%Y", function () { return true; }]
         ]);
 
         var xAxis = d3.svg.axis()
@@ -208,33 +203,33 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     };
 
-    floe.chartAuthoring.lineChart.line.getLineGenerator = function(that) {
+    floe.chartAuthoring.lineChart.line.getLineGenerator = function (that) {
         var interpolation = that.options.lineOptions.interpolation;
 
         var line = d3.svg.line()
             .interpolate(interpolation)
-            .x(function(d){
+            .x(function (d) {
                 return that.xScale(new Date(d.date));
             })
-            .y(function(d) {
+            .y(function (d) {
                 return that.yScale(d.value);
             });
 
         return line;
     };
 
-    floe.chartAuthoring.lineChart.line.getAreaGenerator = function(that) {
+    floe.chartAuthoring.lineChart.line.getAreaGenerator = function (that) {
         var interpolation = that.options.lineOptions.interpolation;
         var height = that.options.lineOptions.height,
             padding = that.options.lineOptions.padding;
 
         var area = d3.svg.area()
             .interpolate(interpolation)
-            .x(function(d){
+            .x(function (d) {
                 return that.xScale(new Date(d.date));
             })
             .y0(height - padding)
-            .y1(function(d) {
+            .y1(function (d) {
                 return that.yScale(d.value);
             });
 
@@ -258,37 +253,37 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 "width": width,
                 "height": height,
                 "class": lineClass,
-                // Set aria role to image - this causes the pie to appear as a
+                // Set aria role to image - this causes the chart to appear as a
                 // static image to AT rather than as a number of separate
                 // images
                 "role": "img"
             });
 
-            that.svg
-                .append("title")
-                .attr({
-                    "class": titleClass
-                })
-                .text(that.model.lineTitle);
+        that.svg
+            .append("title")
+            .attr({
+                "class": titleClass
+            })
+            .text(that.model.lineTitle);
 
-            // Allocate ID for the title element
-            var lineTitleId = fluid.allocateSimpleId(that.locate("title"));
+        // Allocate ID for the title element
+        var lineTitleId = fluid.allocateSimpleId(that.locate("title"));
 
-            that.svg
-                .append("desc")
-                .attr({
-                    "class": descriptionClass
-                })
-                .text(that.model.lineDescription);
+        that.svg
+            .append("desc")
+            .attr({
+                "class": descriptionClass
+            })
+            .text(that.model.lineDescription);
 
-            // Allocate ID for the desc element
-            var lineDescId = fluid.allocateSimpleId(that.locate("description"));
+        // Allocate ID for the desc element
+        var lineDescId = fluid.allocateSimpleId(that.locate("description"));
 
-            // Now that they've been created and have IDs, explicitly associate SVG
-            // title & desc via aria-labelledby
-            that.svg.attr({
-                "aria-labelledby": lineTitleId + " " + lineDescId
-            });
+        // Now that they've been created and have IDs, explicitly associate SVG
+        // title & desc via aria-labelledby
+        that.svg.attr({
+            "aria-labelledby": lineTitleId + " " + lineDescId
+        });
 
         that.draw();
 
