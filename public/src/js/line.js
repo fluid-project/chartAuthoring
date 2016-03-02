@@ -31,8 +31,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             // interpolation mode for chart line
             // see line.interpolate at https://github.com/mbostock/d3/wiki/SVG-Shapes
             // generally, "linear" for sharp lines, "basis" for smooth
-            interpolation: "linear"
-
+            interpolation: "linear",
+            // Whether or not to add an area fill under the chart line
+            addArea: false
         },
         styles: {
             line: "floe-ca-lineChart-line"
@@ -90,7 +91,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             dataSet = that.model.dataSet,
             xAxisClass = that.classes.xAxis,
             yAxisClass = that.classes.yAxis,
-            chartLineClass = that.classes.chartLine;
+            chartLineClass = that.classes.chartLine,
+            shouldAddArea = that.options.lineOptions.addArea;
 
         // Remove any older drawn elements
         that.locate("xAxis").remove();
@@ -105,18 +107,23 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         that.xAxis = floe.chartAuthoring.lineChart.line.getXAxis(that);
 
-        that.line = floe.chartAuthoring.lineChart.line.getLineFunction(that);
+        that.line = floe.chartAuthoring.lineChart.line.getLineGenerator(that);
 
+        that.area = floe.chartAuthoring.lineChart.line.getAreaGenerator(that);
+
+        // Append the y axis
         svg.append("g")
             .attr("transform", "translate(" + padding + ",0)")
             .attr("class", yAxisClass)
             .call(that.yAxis);
 
+        // Append the x axis
         svg.append("g")
             .attr("transform", "translate(0," + (height - padding) + ")")
             .attr("class", xAxisClass)
             .call(that.xAxis);
 
+        // Append the line based on the dataset
         svg.append("path")
             .data([dataSet])
             .attr("class", chartLineClass)
@@ -124,6 +131,14 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             .attr("stroke", "steelblue")
             .attr("stroke-width", "1.5px")
             .attr("d", that.line);
+
+        // Append the area file for the line
+        if(shouldAddArea) {
+            svg.append("path")
+                .data([dataSet])
+                .attr("fill", "blue")
+                .attr("d", that.area);
+        }
 
     };
 
@@ -193,7 +208,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     };
 
-    floe.chartAuthoring.lineChart.line.getLineFunction = function(that) {
+    floe.chartAuthoring.lineChart.line.getLineGenerator = function(that) {
         var interpolation = that.options.lineOptions.interpolation;
 
         var line = d3.svg.line()
@@ -206,6 +221,24 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             });
 
         return line;
+    };
+
+    floe.chartAuthoring.lineChart.line.getAreaGenerator = function(that) {
+        var interpolation = that.options.lineOptions.interpolation;
+        var height = that.options.lineOptions.height,
+            padding = that.options.lineOptions.padding;
+
+        var area = d3.svg.area()
+            .interpolate(interpolation)
+            .x(function(d){
+                return that.xScale(new Date(d.date));
+            })
+            .y0(height - padding)
+            .y1(function(d) {
+                return that.yScale(d.value);
+            });
+
+        return area;
     };
 
     floe.chartAuthoring.lineChart.line.create = function (that) {
