@@ -70,18 +70,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         }
     });
 
-    floe.chartAuthoring.lineChart.line.addDataPoints = function (that) {
-
-    };
-
-    floe.chartAuthoring.lineChart.line.updateDataPoints = function (that) {
-
-    };
-
-    floe.chartAuthoring.lineChart.line.removeDataPoints = function (that) {
-
-    };
-
     floe.chartAuthoring.lineChart.line.draw = function (that) {
         // console.log("floe.chartAuthoring.lineChart.line.draw");
 
