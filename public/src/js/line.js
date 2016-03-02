@@ -33,7 +33,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             // generally, "linear" for sharp lines, "basis" for smooth
             interpolation: "linear",
             // Whether or not to add an area fill under the chart line
-            addArea: false
+            addArea: false,
+            // Whether or not to add a point to each datapoint forming the line
+            addPoints: false
         },
         styles: {
             line: "floe-ca-lineChart-line"
@@ -44,7 +46,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             yAxis: ".floec-ca-lineChart-y-axis",
             xAxis: ".floec-ca-lineChart-x-axis",
             line: ".floec-ca-lineChart-line",
-            chartLine: ".floec-ca-lineChart-chartLine"
+            chartLine: ".floec-ca-lineChart-chartLine",
+            chartLinePoint: ".floec-ca-lineChart-chartLine-point"
         },
         events: {
             onLineCreated: null,  // Fire when the line is created. Ready to register D3 DOM event listeners,
@@ -76,12 +79,15 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var svg = that.svg,
             dataSet = that.model.dataSet,
             chartLineClass = that.classes.chartLine,
-            shouldAddArea = that.options.lineOptions.addArea;
+            chartLinePointClass = that.classes.chartLinePoint,
+            shouldAddArea = that.options.lineOptions.addArea,
+            shouldAddPoints = that.options.lineOptions.addPoints;
 
         // Remove any older drawn elements
         that.locate("xAxis").remove();
         that.locate("yAxis").remove();
         that.locate("chartLine").remove();
+        that.locate("chartLinePoint").remove();
 
         that.yScale = floe.chartAuthoring.lineChart.line.getYScale(that);
 
@@ -114,6 +120,22 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 .data([dataSet])
                 .attr("fill", "blue")
                 .attr("d", that.area);
+        }
+
+        if (shouldAddPoints) {
+        // Append a point for each datapoint
+        svg.selectAll("circle")
+            .data(dataSet)
+            .enter()
+            .append("circle")
+            .attr("class", chartLinePointClass)
+            .attr("r", 2)
+            .attr("cy", function(d) {
+                return that.yScale(d.value);
+            })
+            .attr("cx", function(d) {
+                return that.xScale(new Date(d.date));
+            });
         }
 
     };
