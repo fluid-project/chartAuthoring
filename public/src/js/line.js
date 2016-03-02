@@ -14,7 +14,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     "use strict";
 
     fluid.defaults("floe.chartAuthoring.lineChart.line", {
-        gradeNames: ["floe.chartAuthoring.valueBinding", "floe.chartAuthoring.totalRelaying", "floe.d3ViewComponent"],
+        gradeNames: ["floe.chartAuthoring.valueBinding", "floe.d3ViewComponent"],
         model: {
             dataSet: [],
             lineTitle: "Line Chart",
