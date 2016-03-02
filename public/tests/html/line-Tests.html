@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>Line Chart Tests</title>
+
+        <link rel="stylesheet" media="screen" href="../lib/infusion/lib/qunit/css/qunit.css" />
+
+        <script src="../lib/infusion/lib/qunit/js/qunit.js"></script>
+        <script src="../../src/lib/infusion/infusion-custom.js"></script>
+        <script src="../../src/lib/ext/d3/d3.js"></script>
+        <script src="../lib/infusion/test-core/jqUnit/js/jqUnit.js"></script>
+        <script src="../lib/infusion/test-core/jqUnit/js/jqUnit-browser.js"></script>
+        <script src="../lib/infusion/test-core/utils/js/IoCTestUtils.js"></script>
+
+        <script src="../../src/js/d3Utils.js"></script>
+        <script src="../../src/js/d3ViewComponent.js"></script>
+        <script src="../../src/js/valueBinding.js"></script>
+        <script src="../../src/js/percentage.js"></script>
+        <script src="../../src/js/transformations.js"></script>
+        <script src="../../src/js/totalRelaying.js"></script>
+        <script src="../../src/js/line.js"></script>
+        <script src="../js/lineTests.js"></script>
+
+        <style>
+        .tick line {
+          opacity: 0.2;
+          stroke-width: 1px;
+          stroke: steelblue;
+        }
+
+        .tick text {
+            font-family: sans-serif;
+            font-size: 11px;
+        }
+
+        </style>
+
+    </head>
+
+    <body id="body">
+        <h1 id="qunit-header">Line Chart Tests</h1>
+        <h2 id="qunit-banner"></h2>
+        <div id="qunit-testrunner-toolbar"></div>
+        <h2 id="qunit-userAgent"></h2>
+        <ol id="qunit-tests"></ol>
+
+        <!-- Test HTML -->
+        <div class="floec-ca-lineChart"></div>
+    </body>
+</html>
