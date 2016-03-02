@@ -247,7 +247,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var container = that.container,
             width = that.options.lineOptions.width,
             height = that.options.lineOptions.height,
+            titleClass = that.classes.title,
+            descriptionClass = that.classes.description,
             lineClass = that.classes.line;
+
 
         that.svg = that.jQueryToD3(container)
             .append("svg")
@@ -255,11 +258,36 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 "width": width,
                 "height": height,
                 "class": lineClass,
-                // "viewBox": floe.chartAuthoring.pieChart.getViewBoxConfiguration(0, 0, width, height),
                 // Set aria role to image - this causes the pie to appear as a
                 // static image to AT rather than as a number of separate
                 // images
                 "role": "img"
+            });
+
+            that.svg
+                .append("title")
+                .attr({
+                    "class": titleClass
+                })
+                .text(that.model.lineTitle);
+
+            // Allocate ID for the title element
+            var lineTitleId = fluid.allocateSimpleId(that.locate("title"));
+
+            that.svg
+                .append("desc")
+                .attr({
+                    "class": descriptionClass
+                })
+                .text(that.model.lineDescription);
+
+            // Allocate ID for the desc element
+            var lineDescId = fluid.allocateSimpleId(that.locate("description"));
+
+            // Now that they've been created and have IDs, explicitly associate SVG
+            // title & desc via aria-labelledby
+            that.svg.attr({
+                "aria-labelledby": lineTitleId + " " + lineDescId
             });
 
         that.draw();
