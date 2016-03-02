@@ -35,10 +35,12 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             // Whether or not to add an area fill under the chart line
             addArea: false,
             // Whether or not to add a point to each datapoint forming the line
-            addPoints: false
+            addPoints: false,
+            pointRadius: 2
         },
         styles: {
-            line: "floe-ca-lineChart-line"
+            line: "floe-ca-lineChart-line",
+            chartLinePoint: "floe-ca-lineChart-line-chartLine-point"
         },
         selectors: {
             title: ".floec-ca-lineChart-title",
@@ -81,9 +83,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             chartLineClass = that.classes.chartLine,
             chartLinePointClass = that.classes.chartLinePoint,
             shouldAddArea = that.options.lineOptions.addArea,
-            shouldAddPoints = that.options.lineOptions.addPoints;
+            shouldAddPoints = that.options.lineOptions.addPoints,
+            pointRadius = that.options.lineOptions.pointRadius;
 
-        // Remove any older drawn elements
+        // Remove any older drawn elements from a previous dataset
         that.locate("xAxis").remove();
         that.locate("yAxis").remove();
         that.locate("chartLine").remove();
@@ -129,7 +132,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             .enter()
             .append("circle")
             .attr("class", chartLinePointClass)
-            .attr("r", 2)
+            .attr("r", pointRadius)
             .attr("cy", function(d) {
                 return that.yScale(d.value);
             })
