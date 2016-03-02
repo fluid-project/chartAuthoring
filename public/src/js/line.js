@@ -90,7 +90,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             padding = that.options.lineOptions.padding,
             dataSet = that.model.dataSet,
             xAxisClass = that.classes.xAxis,
-            yAxisClass = that.classes.yAxis,
             chartLineClass = that.classes.chartLine,
             shouldAddArea = that.options.lineOptions.addArea;
 
@@ -111,17 +110,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         that.area = floe.chartAuthoring.lineChart.line.getAreaGenerator(that);
 
-        // Append the y axis
-        svg.append("g")
-            .attr("transform", "translate(" + padding + ",0)")
-            .attr("class", yAxisClass)
-            .call(that.yAxis);
+        floe.chartAuthoring.lineChart.line.addYAxis(that);
 
-        // Append the x axis
-        svg.append("g")
-            .attr("transform", "translate(0," + (height - padding) + ")")
-            .attr("class", xAxisClass)
-            .call(that.xAxis);
+        floe.chartAuthoring.lineChart.line.addXAxis(that);
 
         // Append the line based on the dataset
         svg.append("path")
@@ -140,6 +131,27 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 .attr("d", that.area);
         }
 
+    };
+
+    floe.chartAuthoring.lineChart.line.addYAxis = function (that) {
+        var yAxisClass = that.classes.yAxis,
+            padding = that.options.lineOptions.padding;
+        // Append the y axis
+        that.svg.append("g")
+            .attr("transform", "translate(" + padding + ",0)")
+            .attr("class", yAxisClass)
+            .call(that.yAxis);
+    };
+
+    floe.chartAuthoring.lineChart.line.addXAxis = function (that) {
+        var xAxisClass = that.classes.xAxis,
+            padding = that.options.lineOptions.padding,
+            height = that.options.lineOptions.height;
+        // Append the x axis
+        that.svg.append("g")
+            .attr("transform", "translate(0," + (height - padding) + ")")
+            .attr("class", xAxisClass)
+            .call(that.xAxis);
     };
 
     floe.chartAuthoring.lineChart.line.getYScale = function (that) {
