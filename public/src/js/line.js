@@ -52,7 +52,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             yAxis: ".floec-ca-lineChart-y-axis",
             xAxis: ".floec-ca-lineChart-x-axis",
             chartLine: ".floec-ca-lineChart-chartLine",
-            chartLinePoint: ".floec-ca-lineChart-chartLine-point"
+            chartLinePoint: ".floec-ca-lineChart-chartLine-point",
+            chartLineArea: ".floec-ca-lineChart-chartLine-area"
         },
         events: {
             onLineCreated: null,  // Fire when the line is created. Ready to register D3 DOM event listeners,
@@ -155,13 +156,14 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     };
 
     floe.chartAuthoring.lineChart.line.addArea = function (that) {
+        var chartLineAreaClass = that.classes.chartLineArea;
         // Append the area file for the line
         var svg = that.svg,
             dataSet = that.model.dataSet;
 
         svg.append("path")
+            .attr("class", chartLineAreaClass)
             .data([dataSet])
-            .attr("fill", "blue")
             .attr("d", that.area);
     };
 
