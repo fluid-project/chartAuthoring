@@ -273,9 +273,16 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         fluid.each(that.model.dataKeys, function (elements, key) {
             jqUnit.assertDeepEq("No elements in dataKey " + key + " after removeElementIdFromDataKey", {}, elements);
         });
+    });
 
+    jqUnit.test("Test getViewBoxConfiguration function", function () {
+        jqUnit.expect(1);
 
+        var expectedViewBoxConfig = "0,0,300,500";
 
+        var getViewBoxConfigurationOutput = floe.d3ViewComponent.getViewBoxConfiguration(0, 0, 300, 500);
+
+        jqUnit.assertEquals("function output matches expected format", expectedViewBoxConfig, getViewBoxConfigurationOutput);
     });
 
 })(jQuery, fluid);

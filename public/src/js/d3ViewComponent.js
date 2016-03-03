@@ -215,4 +215,13 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         d3ExitSelection.remove();
     };
 
+    // Returns a properly formatted viewBox attribute that helps in making
+    // SVG elements scalable
+    // https://sarasoueidan.com/blog/svg-coordinate-systems/ has a lengthy
+    // explanation
+
+    floe.d3ViewComponent.getViewBoxConfiguration = function (x, y, width, height) {
+        return x + "," + y + "," + width + "," + height;
+    };
+
 })(jQuery, fluid);

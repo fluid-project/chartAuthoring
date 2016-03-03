@@ -237,7 +237,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 "width": width,
                 "height": height,
                 "class": pieClass,
-                "viewBox": floe.chartAuthoring.pieChart.getViewBoxConfiguration(0, 0, width, height),
+                "viewBox": floe.d3ViewComponent.getViewBoxConfiguration(0, 0, width, height),
                 // Set aria role to image - this causes the pie to appear as a
                 // static image to AT rather than as a number of separate
                 // images
@@ -298,10 +298,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     floe.chartAuthoring.pieChart.textTransform = function (arc, d) {
         return "translate(" + arc.centroid(d) + ")";
-    };
-
-    floe.chartAuthoring.pieChart.getViewBoxConfiguration = function (x, y, width, height) {
-        return x + "," + y + "," + width + "," + height;
     };
 
 })(jQuery, fluid);
