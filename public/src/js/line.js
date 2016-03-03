@@ -195,6 +195,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         return d3.scale.linear()
             .domain([0, dataSetMax])
+            .nice()
             .range([height - padding, padding]);
     };
 
