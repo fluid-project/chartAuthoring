@@ -238,23 +238,32 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     ];
 
     floe.tests.chartAuthoring.validateLine = function (that, expectedDataSet) {
-        jqUnit.expect(2);
         // Test that the chart line is created
         var chartLine = that.locate("chartLine");
 
         jqUnit.assertNotEquals("The chart line element is created with the proper selector", 0, chartLine.length);
 
-        jqUnit.assertEquals("The length of the data bound to the chart line is the same as that of the dataset", expectedDataSet.length, chartLine[0].__data__.length);
+        floe.tests.chartAuthoring.validateBoundData(chartLine, expectedDataSet);
+    };
+
+    // Given a single element expected to have bound data and an expected
+    // dataset, checks that the data is bound and matches the dataset
+    floe.tests.chartAuthoring.validateBoundData = function (boundElement,  expectedDataSet) {
+        var boundElementData =  boundElement[0].__data__;
+
+        jqUnit.assertEquals("The length of the data bound to the chart line is the same as that of the expected dataset", expectedDataSet.length, boundElementData.length);
+
+        fluid.each(expectedDataSet, function (dataPoint, idx) {
+            jqUnit.assertDeepEq("dataPoint from dataSet at position " + idx + " has a matching object in the line's bound data", dataPoint, boundElementData[idx]);
+        });
     };
 
     floe.tests.chartAuthoring.validateLineChart = function (that, expectedDataSet) {
-        jqUnit.expect(6);
         // Test the base chart SVG element created
         var chart = that.locate("svg"),
             lineTitleId = that.locate("title").attr("id"),
             lineDescId = that.locate("description").attr("id"),
             lineAriaLabelledByAttr = chart.attr("aria-labelledby");
-
 
         jqUnit.assertNotEquals("The SVG element is created with the proper selector", 0, chart.length);
 
@@ -277,7 +286,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         floe.tests.chartAuthoring.validateLine(that, expectedDataSet);
     };
 
-    jqUnit.test("Test line chart creation", function () {
+    jqUnit.test("Test line chart creation and response to changed data", function () {
+        jqUnit.expect(68);
         var that = floe.tests.chartAuthoring.lineChart.chart(".floec-ca-lineChart", {
             model: {
                 dataSet: floe.tests.chartAuthoring.timeSeriesData1
@@ -286,7 +296,32 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         floe.tests.chartAuthoring.validateLineChart(that, floe.tests.chartAuthoring.timeSeriesData1);
 
-        // that.applier.change("dataSet", floe.tests.chartAuthoring.timeSeriesData2);
+        that.applier.change("dataSet", floe.tests.chartAuthoring.timeSeriesData2);
+
+        floe.tests.chartAuthoring.validateLineChart(that, floe.tests.chartAuthoring.timeSeriesData2);
+    });
+
+    jqUnit.test("Test line chart creation with area enabled", function () {
+        jqUnit.expect(62);
+        var that = floe.tests.chartAuthoring.lineChart.chart(".floec-ca-lineChart-area", {
+            model: {
+                dataSet: floe.tests.chartAuthoring.timeSeriesData1
+            },
+            lineOptions: {
+                addArea: true
+            }
+        });
+
+        floe.tests.chartAuthoring.validateLineChart(that, floe.tests.chartAuthoring.timeSeriesData1);
+
+
+        // Test that the area is created
+        var chartLineArea = that.locate("chartLineArea");
+
+        jqUnit.assertNotEquals("The chart area element is created with the proper selector", 0, chartLineArea.length);
+
+        floe.tests.chartAuthoring.validateBoundData(chartLineArea, floe.tests.chartAuthoring.timeSeriesData1);
+
     });
 
 })(jQuery, fluid);
