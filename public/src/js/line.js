@@ -52,6 +52,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             yAxis: ".floec-ca-lineChart-y-axis",
             xAxis: ".floec-ca-lineChart-x-axis",
             chartLine: ".floec-ca-lineChart-chartLine",
+            chartLinePointGroup: ".floec-ca-lineChart-chartLinePointGroup",
             chartLinePoint: ".floec-ca-lineChart-chartLinePoint",
             chartLineArea: ".floec-ca-lineChart-chartLineArea"
         },
@@ -169,11 +170,15 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.chartAuthoring.lineChart.chart.addPoints = function (that) {
         var svg = that.svg,
             dataSet = that.model.dataSet,
+            chartLinePointGroupClass = that.classes.chartLinePointGroup,
             chartLinePointClass = that.classes.chartLinePoint,
             pointRadius = that.options.lineOptions.pointRadius;
 
+        // Append a group for the datapoints
+        that.dataPoints = svg.append("g").attr("class", chartLinePointGroupClass);
+
         // Append a point for each datapoint
-        svg.selectAll("circle")
+        that.dataPoints.selectAll("circle")
         .data(dataSet)
         .enter()
         .append("circle")

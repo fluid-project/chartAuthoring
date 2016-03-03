@@ -301,19 +301,19 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         floe.tests.chartAuthoring.validateLineChart(that, floe.tests.chartAuthoring.timeSeriesData2);
     });
 
-    jqUnit.test("Test line chart creation with area enabled", function () {
+    jqUnit.test("Test line chart creation with area and data points enabled", function () {
         jqUnit.expect(62);
         var that = floe.tests.chartAuthoring.lineChart.chart(".floec-ca-lineChart-area", {
             model: {
                 dataSet: floe.tests.chartAuthoring.timeSeriesData1
             },
             lineOptions: {
-                addArea: true
+                addArea: true,
+                addPoints: true
             }
         });
 
         floe.tests.chartAuthoring.validateLineChart(that, floe.tests.chartAuthoring.timeSeriesData1);
-
 
         // Test that the area is created
         var chartLineArea = that.locate("chartLineArea");
