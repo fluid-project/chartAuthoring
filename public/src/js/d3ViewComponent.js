@@ -17,6 +17,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // 1. Convert jQuery DOM elements to D3 elements;
     // 2. Attach D3 DOM event listeners;
     // 3. Synthesize that.options.styles and that.options.selectors to combine elements with the same key into that.classes
+    // 4. Create a basic SVG drawing area for use by implementing grades that actually
+    // draw charts
 
     fluid.defaults("floe.d3ViewComponent", {
         gradeNames: ["fluid.viewComponent", "autoInit"],
@@ -30,7 +32,19 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         },
         model: {
             // Keeps track of D3 keys and their associated DOM elements
-            dataKeys: {}
+            dataKeys: {},
+            svgTitle: "An SVG",
+            svgDescription: "An SVG image"
+        },
+        // Options controlling the behaviour of the base SVG drawing area
+        svgOptions: {
+            width: 500,
+            height: 500
+        },
+        selectors: {
+            title: ".floec-ca-d3ViewComponent-title",
+            description: ".floec-ca-d3ViewComponent-description",
+            svg: ".floec-ca-d3ViewComponent-svg"
         },
         invokers: {
             jQueryToD3: {
@@ -222,6 +236,57 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     floe.d3ViewComponent.getViewBoxConfiguration = function (x, y, width, height) {
         return x + "," + y + "," + width + "," + height;
+    };
+
+    // Given width, height and class, creates an initial SVG to draw in,
+    // and appends tags and attributes for alternative representation
+    floe.d3ViewComponent.createSVGDrawingArea = function (that) {
+        var container = that.container,
+            width = that.options.svgOptions.width,
+            height = that.options.svgOptions.height,
+            titleClass = that.classes.title,
+            descriptionClass = that.classes.description,
+            svgClass = that.classes.svg;
+
+
+        that.svg = that.jQueryToD3(container)
+            .append("svg")
+            .attr({
+                "width": width,
+                "height": height,
+                "class": svgClass,
+                "viewBox": floe.d3ViewComponent.getViewBoxConfiguration(0, 0, width, height),
+                // Set aria role to image - this causes the chart to appear as a
+                // static image to AT rather than as a number of separate
+                // images
+                "role": "img"
+            });
+
+        that.svg
+            .append("title")
+            .attr({
+                "class": titleClass
+            })
+            .text(that.model.svgTitle);
+
+        // Allocate ID for the title element
+        var svgTitleId = fluid.allocateSimpleId(that.locate("title"));
+
+        that.svg
+            .append("desc")
+            .attr({
+                "class": descriptionClass
+            })
+            .text(that.model.svgDescription);
+
+        // Allocate ID for the desc element
+        var svgDescId = fluid.allocateSimpleId(that.locate("description"));
+
+        // Now that they've been created and have IDs, explicitly associate SVG
+        // title & desc via aria-labelledby
+        that.svg.attr({
+            "aria-labelledby": svgTitleId + " " + svgDescId
+        });
     };
 
 })(jQuery, fluid);

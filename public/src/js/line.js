@@ -17,8 +17,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         gradeNames: ["floe.chartAuthoring.valueBinding", "floe.d3ViewComponent"],
         model: {
             dataSet: [],
-            lineTitle: "Line Chart",
-            lineDescription: "A line chart."
+            svgTitle: "Line Chart",
+            svgDescription: "A line chart."
         },
         bindings: {
             title: "lineTitle",
@@ -39,15 +39,15 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             pointRadius: 2
         },
         styles: {
-            line: "floe-ca-lineChart-line",
+            svg: "floe-ca-lineChart-line",
             chartLinePoint: "floe-ca-lineChart-line-chartLine-point"
         },
         selectors: {
             title: ".floec-ca-lineChart-title",
             description: ".floec-ca-lineChart-description",
+            svg: ".floec-ca-lineChart-line",
             yAxis: ".floec-ca-lineChart-y-axis",
             xAxis: ".floec-ca-lineChart-x-axis",
-            line: ".floec-ca-lineChart-line",
             chartLine: ".floec-ca-lineChart-chartLine",
             chartLinePoint: ".floec-ca-lineChart-chartLine-point"
         },
@@ -264,52 +264,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.chartAuthoring.lineChart.line.create = function (that) {
         // console.log("floe.chartAuthoring.lineChart.line.create");
 
-        var container = that.container,
-            width = that.options.lineOptions.width,
-            height = that.options.lineOptions.height,
-            titleClass = that.classes.title,
-            descriptionClass = that.classes.description,
-            lineClass = that.classes.line;
-
-
-        that.svg = that.jQueryToD3(container)
-            .append("svg")
-            .attr({
-                "width": width,
-                "height": height,
-                "class": lineClass,
-                "viewBox": floe.d3ViewComponent.getViewBoxConfiguration(0, 0, width, height),
-                // Set aria role to image - this causes the chart to appear as a
-                // static image to AT rather than as a number of separate
-                // images
-                "role": "img"
-            });
-
-        that.svg
-            .append("title")
-            .attr({
-                "class": titleClass
-            })
-            .text(that.model.lineTitle);
-
-        // Allocate ID for the title element
-        var lineTitleId = fluid.allocateSimpleId(that.locate("title"));
-
-        that.svg
-            .append("desc")
-            .attr({
-                "class": descriptionClass
-            })
-            .text(that.model.lineDescription);
-
-        // Allocate ID for the desc element
-        var lineDescId = fluid.allocateSimpleId(that.locate("description"));
-
-        // Now that they've been created and have IDs, explicitly associate SVG
-        // title & desc via aria-labelledby
-        that.svg.attr({
-            "aria-labelledby": lineTitleId + " " + lineDescId
-        });
+        floe.d3ViewComponent.createSVGDrawingArea(that);
 
         that.draw();
 
