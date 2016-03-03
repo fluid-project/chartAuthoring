@@ -31,6 +31,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 container: "{that}.dom.pie",
                 options: {
                     pieOptions: "{pieChart}.drawingOptions",
+                    svgOptions: "{pieChart}.options.svgOptions",
                     model: {
                         dataSet: "{pieChart}.model.dataSet",
                         svgTitle: "{pieChart}.model.svgTitle",
@@ -72,9 +73,11 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             // activeDataId: relayed to activeRowId/activeSliceId of legend/pie
 
         },
-        pieChartOptions: {
+        svgOptions: {
             // width: number,
-            // height: number,
+            // height: number
+        },
+        pieChartOptions: {
             // colors: array, // An array of colors to fill slices generated for corresponding values of model.dataSet
             // outerRadius: number,
             // innerRadius: number,
