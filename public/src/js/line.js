@@ -117,8 +117,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             .attr("stroke-width", "1.5px")
             .attr("d", that.line);
 
-        // Append the area file for the line
         if (shouldAddArea) {
+            // Append the area file for the line
             svg.append("path")
                 .data([dataSet])
                 .attr("fill", "blue")
@@ -126,17 +126,17 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         }
 
         if (shouldAddPoints) {
-        // Append a point for each datapoint
-        svg.selectAll("circle")
+            // Append a point for each datapoint
+            svg.selectAll("circle")
             .data(dataSet)
             .enter()
             .append("circle")
             .attr("class", chartLinePointClass)
             .attr("r", pointRadius)
-            .attr("cy", function(d) {
+            .attr("cy", function (d) {
                 return that.yScale(d.value);
             })
-            .attr("cx", function(d) {
+            .attr("cx", function (d) {
                 return that.xScale(new Date(d.date));
             });
         }
