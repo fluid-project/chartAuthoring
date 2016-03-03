@@ -21,8 +21,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             svgDescription: "A line chart."
         },
         bindings: {
-            title: "lineTitle",
-            description: "lineDescription"
+            title: "svgTitle",
+            description: "svgDescription"
         },
         lineOptions: {
             width: 700,
