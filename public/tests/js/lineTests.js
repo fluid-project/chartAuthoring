@@ -251,11 +251,11 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         // Test the SVG element created
         jqUnit.assertNotEquals("The SVG element is created with the proper selector", 0, line.length);
 
-        jqUnit.assertEquals("The pie's title has been created", that.model.lineTitle, that.locate("title").text());
+        jqUnit.assertEquals("The line's title has been created", that.model.lineTitle, that.locate("title").text());
 
-        jqUnit.assertEquals("The pie's description has been created", that.model.lineDescription, that.locate("description").text());
+        jqUnit.assertEquals("The line's description has been created", that.model.lineDescription, that.locate("description").text());
 
-        jqUnit.assertDeepEq("The pie's title and description are connected through the aria-labelledby attribute of the pie SVG", lineAriaLabelledByAttr, lineTitleId + " " + lineDescId);
+        jqUnit.assertDeepEq("The line's title and description are connected through the aria-labelledby attribute of the line SVG", lineAriaLabelledByAttr, lineTitleId + " " + lineDescId);
 
         // that.applier.change("dataSet", floe.tests.chartAuthoring.timeSeriesData2);
 
