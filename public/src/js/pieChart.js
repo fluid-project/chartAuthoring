@@ -33,8 +33,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                     pieOptions: "{pieChart}.drawingOptions",
                     model: {
                         dataSet: "{pieChart}.model.dataSet",
-                        pieTitle: "{pieChart}.model.pieTitle",
-                        pieDescription: "{pieChart}.model.pieDescription",
+                        svgTitle: "{pieChart}.model.svgTitle",
+                        svgDescription: "{pieChart}.model.svgDescription",
                         activeSliceId: "{pieChart}.model.activeDataId"
                     },
                     events: {
@@ -67,8 +67,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             // dataSet accepts an array of objects in a format of
             // [{id: string, value: number, label: string}, ... ]
             dataSet: [],
-            pieTitle: "Pie Chart",
-            pieDescription: "A pie chart."
+            svgTitle: "Pie Chart",
+            svgDescription: "A pie chart."
             // activeDataId: relayed to activeRowId/activeSliceId of legend/pie
 
         },
