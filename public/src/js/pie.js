@@ -28,8 +28,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             // 2. an array of objects. The "value" element of each object needs to containe the value for drawing each pie slice.
             // Example: [{id: string, value: number} ... ]
             dataSet: [],
-            pieTitle: "Pie Chart",
-            pieDescription: "A pie chart."
+            svgTitle: "Pie Chart",
+            svgDescription: "A pie chart."
             // Supplied by relaying in floe.chartAuthoring.totalRelaying grade
             // total: {
             //     value: number,
@@ -39,12 +39,14 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             // activeRowId:
         },
         bindings: {
-            title: "pieTitle",
-            description: "pieDescription"
+            title: "svgTitle",
+            description: "svgDescription"
+        },
+        svgOptions: {
+            width: 300,
+            height: 300
         },
         pieOptions: {
-            width: 300,
-            height: 300,
             // An array of colors to fill slices generated for corresponding values of model.dataSet
             // Or, a d3 color scale that's generated based off an array of colors
             colors: null,
@@ -67,13 +69,13 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             pieBackgroundColor: "#F2F2F2"
         },
         styles: {
-            pie: "floe-ca-pieChart-pie",
+            svg: "floe-ca-pieChart-pie",
             slice: "floe-ca-pieChart-slice",
             text: "floe-ca-pieChart-text",
             highlight: "floe-ca-currently-playing"
         },
         selectors: {
-            pie: ".floec-ca-pieChart-pie",
+            svg: ".floec-ca-pieChart-pie",
             slice: ".floec-ca-pieChart-slice",
             text: ".floec-ca-pieChart-text",
             title: ".floec-ca-pieChart-title",
@@ -208,18 +210,13 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     };
 
     floe.chartAuthoring.pieChart.pie.create = function (that) {
-        var container = that.container,
-            p = that.options.pieOptions,
-            width = p.width,
-            height = p.height,
+        var p = that.options.pieOptions,
+            width = that.options.svgOptions.width,
             colors = p.colors,
             outerRadius = p.outerRadius || width / 2,
             innerRadius = p.innerRadius || 0,
             displayPieBackground = p.displayPieBackground,
             pieBackgroundColor = p.pieBackgroundColor,
-            pieClass = that.classes.pie,
-            titleClass = that.classes.title,
-            descriptionClass = that.classes.description,
             backgroundClass = that.classes.background;
 
         that.arc = d3.svg.arc()
@@ -231,18 +228,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 return typeof (d) === "object" ? d.value : d;
             });
 
-        that.svg = that.jQueryToD3(container)
-            .append("svg")
-            .attr({
-                "width": width,
-                "height": height,
-                "class": pieClass,
-                "viewBox": floe.d3ViewComponent.getViewBoxConfiguration(0, 0, width, height),
-                // Set aria role to image - this causes the pie to appear as a
-                // static image to AT rather than as a number of separate
-                // images
-                "role": "img"
-            });
+        floe.d3ViewComponent.createSVGDrawingArea(that);
 
         // Draw a background circle for the pie if configured
         if (displayPieBackground) {
@@ -256,33 +242,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                     "class": backgroundClass
                 });
         }
-
-        that.svg
-            .append("title")
-            .attr({
-                "class": titleClass
-            })
-            .text(that.model.pieTitle);
-
-        // Allocate ID for the title element
-        var pieTitleId = fluid.allocateSimpleId(that.locate("title"));
-
-        that.svg
-            .append("desc")
-            .attr({
-                "class": descriptionClass
-            })
-            .text(that.model.pieDescription);
-
-        // Allocate ID for the desc element
-        var pieDescId = fluid.allocateSimpleId(that.locate("description"));
-
-        // Now that they've been created and have IDs, explicitly associate SVG
-        // title & desc via aria-labelledby
-        that.svg.attr({
-            "aria-labelledby": pieTitleId + " " + pieDescId
-        });
-
 
         that.pieGroup = that.svg.append("g")
             .attr({

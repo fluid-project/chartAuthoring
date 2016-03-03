@@ -17,14 +17,16 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     fluid.defaults("floe.tests.chartAuthoring.pieChart.pie", {
         gradeNames: ["floe.chartAuthoring.pieChart.pie", "autoInit"],
+        svgOptions: {
+            width: 300,
+            height: 300
+        },
         pieOptions: {
-            width: "200",
-            height: "200",
             colors: ["#000000", "#ff0000", "#00ff00", "#0000ff", "#aabbcc", "#ccbbaa"]
         },
         model: {
-            pieTitle: "A pie chart used in the unit tests.",
-            pieDescription: "Description of the pie chart used in the unit tests."
+            svgTitle: "A pie chart used in the unit tests.",
+            svgDescription: "Description of the pie chart used in the unit tests."
         },
         listeners: {
             "onPieCreated.addMouseoverListener": {
@@ -47,7 +49,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     };
 
     floe.tests.chartAuthoring.validatePie = function (that, testSliceDataFunc) {
-        var pie = that.locate("pie"),
+        var pie = that.locate("svg"),
             pieTitleId = that.locate("title").attr("id"),
             pieDescId = that.locate("description").attr("id"),
             pieAriaLabelledByAttr = pie.attr("aria-labelledby");
@@ -59,17 +61,17 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         if (that.options.pieOptions.displayPieBackground) {
             var pieBackground = that.locate("background");
             jqUnit.assertNotEquals("The background circle is created", 0, pieBackground.length);
-            jqUnit.assertEquals("The background circle's radius is half the pie width", that.options.pieOptions.width / 2, Number(pieBackground.attr("r")));
+            jqUnit.assertEquals("The background circle's radius is half the pie width", that.options.svgOptions.width / 2, Number(pieBackground.attr("r")));
             jqUnit.assertEquals("The background circle's color is set to the user-supplied color", that.options.pieOptions.pieBackgroundColor, pieBackground.attr("fill"));
         }
 
         // Test the pie
-        jqUnit.assertEquals("The width is set correctly on the pie chart", that.options.pieOptions.width, pie.attr("width"));
-        jqUnit.assertEquals("The height is set correctly on the pie chart", that.options.pieOptions.height, pie.attr("height"));
+        jqUnit.assertEquals("The width is set correctly on the pie chart", that.options.svgOptions.width, Number(pie.attr("width")));
+        jqUnit.assertEquals("The height is set correctly on the pie chart", that.options.svgOptions.height, Number(pie.attr("height")));
         jqUnit.assertEquals("The pie slices have been created with the proper selectors", that.model.dataSet.length, that.locate("slice").length);
         jqUnit.assertEquals("The texts for pie slices have been created with the proper selectors", that.model.dataSet.length, that.locate("text").length);
-        jqUnit.assertEquals("The pie's title has been created", that.model.pieTitle, that.locate("title").text());
-        jqUnit.assertEquals("The pie's description has been created", that.model.pieDescription, that.locate("description").text());
+        jqUnit.assertEquals("The pie's title has been created", that.model.svgTitle, that.locate("title").text());
+        jqUnit.assertEquals("The pie's description has been created", that.model.svgDescription, that.locate("description").text());
         jqUnit.assertDeepEq("The pie's title and description are connected through the aria-labelledby attribute of the pie SVG", pieAriaLabelledByAttr, pieTitleId + " " + pieDescId);
 
         // Test that displayed values are in sync with the current model
@@ -87,10 +89,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         floe.tests.chartAuthoring.validatePie(that, testSliceDataFunc);
 
         // Test the description value binding
-        floe.tests.chartAuthoring.testValueBinding(that, "pieDescription", "description", "An updated pie chart description.");
+        floe.tests.chartAuthoring.testValueBinding(that, "svgDescription", "description", "An updated pie chart description.");
 
         // Test the title value binding
-        floe.tests.chartAuthoring.testValueBinding(that, "pieTitle", "title", "An updated pie chart title.");
+        floe.tests.chartAuthoring.testValueBinding(that, "svgTitle", "title", "An updated pie chart title.");
 
         // The D3 DOM event listener is registered
         jqUnit.assertFalse("The mouseover listener for pie slices have not been triggered", that.mouseOverListenerCalled);
@@ -246,11 +248,13 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             model: {
                 dataSet: floe.tests.chartAuthoring.percentageArray
             },
-            pieOptions: {
-                sliceTextDisplayTemplate: "%value / %total (%percentage%)",
-                sliceTextPercentageDigits: 2,
+            svgOptions: {
                 width: "400",
                 height: "400"
+            },
+            pieOptions: {
+                sliceTextDisplayTemplate: "%value / %total (%percentage%)",
+                sliceTextPercentageDigits: 2
             }
         });
 
