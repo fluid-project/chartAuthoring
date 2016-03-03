@@ -74,6 +74,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             exitD3Elements: {
                 funcName: "floe.d3ViewComponent.exitD3Elements",
                 args: ["{arguments}.0", "{that}"]
+            },
+            createBaseSVGDrawingArea: {
+                funcName: "floe.d3ViewComponent.createBaseSVGDrawingArea",
+                args: ["{that}"]
             }
 
         }
@@ -240,7 +244,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     // Given width, height and class, creates an initial SVG to draw in,
     // and appends tags and attributes for alternative representation
-    floe.d3ViewComponent.createSVGDrawingArea = function (that) {
+    floe.d3ViewComponent.createBaseSVGDrawingArea = function (that) {
         var container = that.container,
             width = that.options.svgOptions.width,
             height = that.options.svgOptions.height,

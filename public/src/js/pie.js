@@ -228,7 +228,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 return typeof (d) === "object" ? d.value : d;
             });
 
-        floe.d3ViewComponent.createSVGDrawingArea(that);
+        that.createBaseSVGDrawingArea();
 
         // Draw a background circle for the pie if configured
         if (displayPieBackground) {

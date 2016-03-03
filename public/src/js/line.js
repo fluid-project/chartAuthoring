@@ -264,7 +264,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.chartAuthoring.lineChart.line.create = function (that) {
         // console.log("floe.chartAuthoring.lineChart.line.create");
 
-        floe.d3ViewComponent.createSVGDrawingArea(that);
+        that.createBaseSVGDrawingArea()
 
         that.draw();
 
