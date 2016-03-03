@@ -35,6 +35,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             // Whether or not to add an area fill under the chart line
             addArea: false,
             // Whether or not to add a point to each datapoint forming the line
+            // Should not be used when using basis interpolation
             addPoints: false,
             pointRadius: 2
         },
@@ -78,13 +79,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.chartAuthoring.lineChart.line.draw = function (that) {
         // console.log("floe.chartAuthoring.lineChart.line.draw");
 
-        var svg = that.svg,
-            dataSet = that.model.dataSet,
-            chartLineClass = that.classes.chartLine,
-            chartLinePointClass = that.classes.chartLinePoint,
-            shouldAddArea = that.options.lineOptions.addArea,
-            shouldAddPoints = that.options.lineOptions.addPoints,
-            pointRadius = that.options.lineOptions.pointRadius;
+        var shouldAddArea = that.options.lineOptions.addArea,
+            shouldAddPoints = that.options.lineOptions.addPoints;
 
         // Remove any older drawn elements from a previous dataset
         that.locate("xAxis").remove();
@@ -108,37 +104,14 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         floe.chartAuthoring.lineChart.line.addXAxis(that);
 
-        // Append the line based on the dataset
-        svg.append("path")
-            .data([dataSet])
-            .attr("class", chartLineClass)
-            .attr("fill", "none")
-            .attr("stroke", "steelblue")
-            .attr("stroke-width", "1.5px")
-            .attr("d", that.line);
+        floe.chartAuthoring.lineChart.line.addChartLine(that);
 
         if (shouldAddArea) {
-            // Append the area file for the line
-            svg.append("path")
-                .data([dataSet])
-                .attr("fill", "blue")
-                .attr("d", that.area);
+            floe.chartAuthoring.lineChart.line.addArea(that);
         }
 
         if (shouldAddPoints) {
-            // Append a point for each datapoint
-            svg.selectAll("circle")
-            .data(dataSet)
-            .enter()
-            .append("circle")
-            .attr("class", chartLinePointClass)
-            .attr("r", pointRadius)
-            .attr("cy", function (d) {
-                return that.yScale(d.value);
-            })
-            .attr("cx", function (d) {
-                return that.xScale(new Date(d.date));
-            });
+            floe.chartAuthoring.lineChart.line.addPoints(that);
         }
 
     };
@@ -162,6 +135,53 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             .attr("transform", "translate(0," + (height - padding) + ")")
             .attr("class", xAxisClass)
             .call(that.xAxis);
+    };
+
+    floe.chartAuthoring.lineChart.line.addChartLine = function (that) {
+        var dataSet = that.model.dataSet,
+            chartLineClass = that.classes.chartLine,
+            svg = that.svg;
+
+        // Append the line based on the dataset
+        svg.append("path")
+            .data([dataSet])
+            .attr("class", chartLineClass)
+            .attr("fill", "none")
+            .attr("stroke", "steelblue")
+            .attr("stroke-width", "1.5px")
+            .attr("d", that.line);
+    };
+
+    floe.chartAuthoring.lineChart.line.addArea = function (that) {
+        // Append the area file for the line
+        var svg = that.svg,
+            dataSet = that.model.dataSet;
+
+        svg.append("path")
+            .data([dataSet])
+            .attr("fill", "blue")
+            .attr("d", that.area);
+    };
+
+    floe.chartAuthoring.lineChart.line.addPoints = function (that) {
+        var svg = that.svg,
+            dataSet = that.model.dataSet,
+            chartLinePointClass = that.classes.chartLinePoint,
+            pointRadius = that.options.lineOptions.pointRadius;
+
+        // Append a point for each datapoint
+        svg.selectAll("circle")
+        .data(dataSet)
+        .enter()
+        .append("circle")
+        .attr("class", chartLinePointClass)
+        .attr("r", pointRadius)
+        .attr("cy", function (d) {
+            return that.yScale(d.value);
+        })
+        .attr("cx", function (d) {
+            return that.xScale(new Date(d.date));
+        });
     };
 
     floe.chartAuthoring.lineChart.line.getYScale = function (that) {
