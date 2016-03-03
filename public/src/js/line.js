@@ -24,9 +24,11 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             title: "svgTitle",
             description: "svgDescription"
         },
-        lineOptions: {
+        svgOptions: {
             width: 700,
-            height: 500,
+            height: 500
+        },
+        lineOptions: {
             padding: 50,
             // interpolation mode for chart line
             // see line.interpolate at https://github.com/mbostock/d3/wiki/SVG-Shapes
@@ -129,7 +131,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.chartAuthoring.lineChart.line.addXAxis = function (that) {
         var xAxisClass = that.classes.xAxis,
             padding = that.options.lineOptions.padding,
-            height = that.options.lineOptions.height;
+            height = that.options.svgOptions.height;
         // Append the x axis
         that.svg.append("g")
             .attr("transform", "translate(0," + (height - padding) + ")")
@@ -185,7 +187,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     };
 
     floe.chartAuthoring.lineChart.line.getYScale = function (that) {
-        var height = that.options.lineOptions.height;
+        var height = that.options.svgOptions.height;
         var padding = that.options.lineOptions.padding;
         var dataSet = that.model.dataSet;
 
@@ -200,7 +202,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     };
 
     floe.chartAuthoring.lineChart.line.getXScale = function (that) {
-        var width = that.options.lineOptions.width;
+        var width = that.options.svgOptions.width;
         var padding = that.options.lineOptions.padding;
         var dataSet = that.model.dataSet;
         var minDate = new Date(dataSet[0].date);
@@ -212,7 +214,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     };
 
     floe.chartAuthoring.lineChart.line.getYAxis = function (that) {
-        var width = that.options.lineOptions.width;
+        var width = that.options.svgOptions.width;
         var padding = that.options.lineOptions.padding;
         var yScale = that.yScale;
 
@@ -266,7 +268,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     floe.chartAuthoring.lineChart.line.getAreaGenerator = function (that) {
         var interpolation = that.options.lineOptions.interpolation;
-        var height = that.options.lineOptions.height,
+        var height = that.options.svgOptions.height,
             padding = that.options.lineOptions.padding;
 
         var area = d3.svg.area()
