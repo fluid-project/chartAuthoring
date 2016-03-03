@@ -35,7 +35,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     jqUnit.test("Test d3ViewComponent API", function () {
         jqUnit.expect(3);
 
-        var that = floe.tests.d3ViewComponent(".floec-d3");
+        var that = floe.tests.d3ViewComponent(".floec-d3-api");
 
         // The D3 DOM event listener is registered
         jqUnit.assertFalse("The mouseover listener for pie slices have not been triggered", that.mouseOverListenerCalled);
@@ -45,6 +45,18 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         d3Elem.on("mouseover")();
         jqUnit.assertTrue("The mouseover listener for pie slices have been registered", that.mouseOverListenerCalled);
+    });
+
+    jqUnit.test("Test createBaseSVGDrawingArea function", function () {
+        var that = floe.tests.d3ViewComponent(".floec-d3-baseSVG");
+
+        that.createBaseSVGDrawingArea();
+
+        var svg = that.locate("svg");
+
+        jqUnit.assertEquals("The width is set correctly on the SVG", that.options.svgOptions.width, Number(svg.attr("width")));
+        jqUnit.assertEquals("The height is set correctly on the SVG", that.options.svgOptions.height, Number(svg.attr("height")));
+
     });
 
     jqUnit.test("Test floe.d3ViewComponent.extractSelectorName()", function () {

@@ -252,7 +252,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             descriptionClass = that.classes.description,
             svgClass = that.classes.svg;
 
-
         that.svg = that.jQueryToD3(container)
             .append("svg")
             .attr({
