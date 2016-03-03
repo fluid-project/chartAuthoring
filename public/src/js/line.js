@@ -150,8 +150,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             .data([dataSet])
             .attr("class", chartLineClass)
             .attr("fill", "none")
-            .attr("stroke", "steelblue")
-            .attr("stroke-width", "1.5px")
+            .attr("stroke", "black")
             .attr("d", that.line);
     };
 
