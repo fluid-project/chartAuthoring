@@ -235,11 +235,27 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     jqUnit.test("Test line chart creation", function () {
 
+        jqUnit.expect(4);
+
         var that = floe.tests.chartAuthoring.lineChart.line(".floec-ca-lineChart", {
             model: {
                 dataSet: floe.tests.chartAuthoring.timeSeriesData1
             }
         });
+
+        var line = that.locate("line"),
+            lineTitleId = that.locate("title").attr("id"),
+            lineDescId = that.locate("description").attr("id"),
+            lineAriaLabelledByAttr = line.attr("aria-labelledby");
+
+        // Test the SVG element created
+        jqUnit.assertNotEquals("The SVG element is created with the proper selector", 0, line.length);
+
+        jqUnit.assertEquals("The pie's title has been created", that.model.lineTitle, that.locate("title").text());
+
+        jqUnit.assertEquals("The pie's description has been created", that.model.lineDescription, that.locate("description").text());
+
+        jqUnit.assertDeepEq("The pie's title and description are connected through the aria-labelledby attribute of the pie SVG", lineAriaLabelledByAttr, lineTitleId + " " + lineDescId);
 
         // that.applier.change("dataSet", floe.tests.chartAuthoring.timeSeriesData2);
 
