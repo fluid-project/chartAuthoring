@@ -15,8 +15,12 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     fluid.registerNamespace("floe.tests.chartAuthoring");
 
-    fluid.defaults("floe.tests.chartAuthoring.lineChart.line", {
-        gradeNames: ["floe.chartAuthoring.lineChart.chart", "autoInit"]
+    fluid.defaults("floe.tests.chartAuthoring.lineChart.chart", {
+        gradeNames: ["floe.chartAuthoring.lineChart.chart", "autoInit"],
+        svgOptions: {
+            height: 400,
+            width: 400
+        }
     });
 
     floe.tests.chartAuthoring.timeSeriesData1 = [
@@ -129,127 +133,130 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.tests.chartAuthoring.timeSeriesData2 = [
         {
             "date": "2015-05-31",
-            "value": 22
+            "value": 33
         },
         {
             "date": "2015-06-07",
-            "value": 17
+            "value": 28
         },
         {
             "date": "2015-06-14",
-            "value": 47
+            "value": 58
         },
         {
             "date": "2015-06-21",
-            "value": 34
+            "value": 56
         },
         {
             "date": "2015-06-28",
-            "value": 47
+            "value": 69
         },
         {
             "date": "2015-07-05",
-            "value": 31
+            "value": 53
         },
         {
             "date": "2015-07-12",
-            "value": 30
+            "value": 63
         },
         {
             "date": "2015-07-19",
-            "value": 27
+            "value": 60
         },
         {
             "date": "2015-07-26",
-            "value": 18
+            "value": 51
         },
         {
             "date": "2015-08-02",
-            "value": 28
+            "value": 72
         },
         {
             "date": "2015-08-09",
-            "value": 28
+            "value": 72
         },
         {
             "date": "2015-08-16",
-            "value": 9
+            "value": 53
         },
         {
             "date": "2015-08-23",
-            "value": 21
+            "value": 65
         },
         {
             "date": "2015-08-30",
-            "value": 45
+            "value": 89
         },
         {
             "date": "2015-09-06",
-            "value": 21
+            "value": 65
         },
         {
             "date": "2015-09-13",
-            "value": 10
+            "value": 54
         },
         {
             "date": "2015-09-20",
-            "value": 23
+            "value": 77
         },
         {
             "date": "2015-09-27",
-            "value": 5
+            "value": 49
         },
         {
             "date": "2015-10-04",
-            "value": 47
+            "value": 91
         },
         {
             "date": "2015-10-11",
-            "value": 31
+            "value": 75
         },
         {
             "date": "2015-10-18",
-            "value": 46
+            "value": 90
         },
         {
             "date": "2015-10-25",
-            "value": 13
+            "value": 68
         },
         {
             "date": "2015-11-01",
-            "value": 50
+            "value": 105
         },
         {
             "date": "2015-11-08",
-            "value": 16
+            "value": 61
         },
         {
             "date": "2015-11-15",
-            "value": 11
+            "value": 111
         },
         {
             "date": "2015-11-22",
-            "value": 37
+            "value": 92
         }
     ];
 
-    jqUnit.test("Test line chart creation", function () {
+    floe.tests.chartAuthoring.validateLine = function (that, expectedDataSet) {
+        jqUnit.expect(2);
+        // Test that the chart line is created
+        var chartLine = that.locate("chartLine");
 
-        jqUnit.expect(4);
+        jqUnit.assertNotEquals("The chart line element is created with the proper selector", 0, chartLine.length);
 
-        var that = floe.tests.chartAuthoring.lineChart.line(".floec-ca-lineChart", {
-            model: {
-                dataSet: floe.tests.chartAuthoring.timeSeriesData1
-            }
-        });
+        jqUnit.assertEquals("The length of the data bound to the chart line is the same as that of the dataset", expectedDataSet.length, chartLine[0].__data__.length);
+    };
 
-        var line = that.locate("svg"),
+    floe.tests.chartAuthoring.validateLineChart = function (that, expectedDataSet) {
+        jqUnit.expect(6);
+        // Test the base chart SVG element created
+        var chart = that.locate("svg"),
             lineTitleId = that.locate("title").attr("id"),
             lineDescId = that.locate("description").attr("id"),
-            lineAriaLabelledByAttr = line.attr("aria-labelledby");
+            lineAriaLabelledByAttr = chart.attr("aria-labelledby");
 
-        // Test the SVG element created
-        jqUnit.assertNotEquals("The SVG element is created with the proper selector", 0, line.length);
+
+        jqUnit.assertNotEquals("The SVG element is created with the proper selector", 0, chart.length);
 
         jqUnit.assertEquals("The line's title has been created", that.model.svgTitle, that.locate("title").text());
 
@@ -257,9 +264,29 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         jqUnit.assertDeepEq("The line's title and description are connected through the aria-labelledby attribute of the line SVG", lineAriaLabelledByAttr, lineTitleId + " " + lineDescId);
 
+        // Test that the y-axis is created
+        var yAxis = that.locate("yAxis");
+
+        jqUnit.assertNotEquals("The y-axis element is created with the proper selector", 0, yAxis.length);
+
+        // Test that the x-axis is created
+        var xAxis = that.locate("xAxis");
+
+        jqUnit.assertNotEquals("The x-axis element is created with the proper selector", 0, xAxis.length);
+
+        floe.tests.chartAuthoring.validateLine(that, expectedDataSet);
+    };
+
+    jqUnit.test("Test line chart creation", function () {
+        var that = floe.tests.chartAuthoring.lineChart.chart(".floec-ca-lineChart", {
+            model: {
+                dataSet: floe.tests.chartAuthoring.timeSeriesData1
+            }
+        });
+
+        floe.tests.chartAuthoring.validateLineChart(that, floe.tests.chartAuthoring.timeSeriesData1);
+
         // that.applier.change("dataSet", floe.tests.chartAuthoring.timeSeriesData2);
-
-
     });
 
 })(jQuery, fluid);
