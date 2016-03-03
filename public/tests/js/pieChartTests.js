@@ -35,9 +35,11 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     fluid.defaults("floe.tests.chartAuthoring.pieChart", {
         gradeNames: ["floe.chartAuthoring.pieChart", "autoInit"],
-        pieChartOptions: {
+        svgOptions: {
             width: 200,
-            height: 200,
+            height: 200
+        },
+        pieChartOptions: {
             colors: ["#000000", "#ff0000", "#00ff00", "#0000ff", "#aabbcc", "#ccbbaa"],
             sort: false
         },
