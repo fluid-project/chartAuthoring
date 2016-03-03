@@ -16,7 +16,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     fluid.registerNamespace("floe.tests.chartAuthoring");
 
     fluid.defaults("floe.tests.chartAuthoring.lineChart.line", {
-        gradeNames: ["floe.chartAuthoring.lineChart.line", "autoInit"]
+        gradeNames: ["floe.chartAuthoring.lineChart.chart", "autoInit"]
     });
 
     floe.tests.chartAuthoring.timeSeriesData1 = [
