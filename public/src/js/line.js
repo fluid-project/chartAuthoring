@@ -247,14 +247,16 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             .data(setItem.data)
             .enter()
             .append("circle")
-            .attr("class", chartLinePointClass)
-            .attr("fill", color(idx))
-            .attr("r", pointRadius)
-            .attr("cy", function (d) {
-                return that.yScale(d.value);
-            })
-            .attr("cx", function (d) {
-                return that.xScale(new Date(d.date));
+            .attr({
+                "class": chartLinePointClass,
+                "fill": color(idx),
+                "r": pointRadius,
+                "cy": function (d) {
+                    return that.yScale(d.value);
+                },
+                "cx": function (d) {
+                    return that.xScale(new Date(d.date));
+                }
             });
         });
     };
