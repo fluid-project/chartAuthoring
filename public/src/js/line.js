@@ -228,12 +228,11 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             pointRadius = that.options.lineOptions.pointRadius,
             color = that.colorScale;
 
-        // Append a group for the datapoints
-        that.dataPoints = svg.append("g").attr("class", chartLinePointGroupClass);
-
         fluid.each(dataSet, function (setItem, idx) {
+            // Append a group for the datapoints
+            var dataPoints = svg.append("g").attr("class", chartLinePointGroupClass);
             // Append a point for each datapoint
-            that.dataPoints.selectAll("circle")
+            dataPoints.selectAll("circle")
             .data(setItem.data)
             .enter()
             .append("circle")

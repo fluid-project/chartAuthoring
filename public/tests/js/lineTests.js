@@ -460,18 +460,28 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     ];
 
     floe.tests.chartAuthoring.validateLine = function (that, expectedDataSet) {
+
+        var isMultiDataSet = floe.chartAuthoring.lineChart.chart.isMultiDataSet(expectedDataSet);
+
+        if (!isMultiDataSet) {
+            expectedDataSet = floe.chartAuthoring.lineChart.chart.wrapSingleDataSet(expectedDataSet);
+        }
+
         // Test that the chart line is created
-        var chartLine = that.locate("chartLine");
 
-        jqUnit.assertNotEquals("The chart line element is created with the proper selector", 0, chartLine.length);
+        var chartLines = that.locate("chartLine");
 
-        floe.tests.chartAuthoring.validateBoundData(chartLine, expectedDataSet);
+        fluid.each(chartLines, function (chartLine, idx) {
+            jqUnit.assertNotEquals("The chart line element is created with the proper selector", 0, chartLine.length);
+            floe.tests.chartAuthoring.validateBoundData(chartLine, expectedDataSet[idx].data);
+        });
     };
 
     // Given a single element expected to have bound data and an expected
     // dataset, checks that the data is bound and matches the dataset
     floe.tests.chartAuthoring.validateBoundData = function (boundElement,  expectedDataSet) {
-        var boundElementData =  boundElement[0].__data__;
+
+        var boundElementData = boundElement.__data__ !== undefined ? boundElement.__data__ : boundElement[0].__data__;
 
         jqUnit.assertEquals("The length of the data bound to the chart line is the same as that of the expected dataset", expectedDataSet.length, boundElementData.length);
 
@@ -555,12 +565,20 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         });
     });
 
-    jqUnit.test("Test line multiple lines", function () {
+    jqUnit.test("Test line chart with multiple lines", function () {
+        jqUnit.expect(62);
         var that = floe.tests.chartAuthoring.lineChart.chart(".floec-ca-lineChart-multi", {
             model: {
                 dataSet: floe.tests.chartAuthoring.timeSeriesDataMulti
+            },
+            lineOptions: {
+                addPoints: true,
+                addArea: true
             }
         });
+
+        floe.tests.chartAuthoring.validateLineChart(that, floe.tests.chartAuthoring.timeSeriesDataMulti);
+
     });
 
 
