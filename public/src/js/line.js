@@ -13,10 +13,23 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     "use strict";
 
+    // Draws time series line charts
+
     fluid.defaults("floe.chartAuthoring.lineChart.chart", {
         gradeNames: ["floe.chartAuthoring.valueBinding", "floe.d3ViewComponent"],
         model: {
             dataSet: [],
+            // a dataset for this chart type should look like this:
+            // [
+            //  {
+            //     "date": "2014-12-31",
+            //     "value": 45
+            //  },
+            //  {
+            //     "date": "2015-01-07",
+            //     "value": 24
+            //  }
+            // ]
             svgTitle: "Line Chart",
             svgDescription: "A line chart."
         },
