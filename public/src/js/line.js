@@ -220,11 +220,14 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         fluid.each(dataSet, function (setItem, idx) {
             svg.append("path")
-                .attr("class", chartLineAreaClass)
-                .attr("fill", color(idx))
-                .attr("opacity", "0.2")
                 .data([setItem.data])
-                .attr("d", that.area);
+                .attr({
+                    "class": chartLineAreaClass,
+                    "fill": color(idx),
+                    "opacity": "0.2",
+                    "d": that.area
+                });
+
         });
     };
 
