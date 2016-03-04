@@ -13,7 +13,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     "use strict";
 
-    // Draws time series line charts
+    // Draws simple time series line charts
 
     fluid.defaults("floe.chartAuthoring.lineChart.chart", {
         gradeNames: ["floe.chartAuthoring.valueBinding", "floe.d3ViewComponent"],
@@ -93,17 +93,42 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         }
     });
 
+    // Test if a dataset is multi
+    floe.chartAuthoring.lineChart.chart.isMultiDataSet = function (dataSet) {
+        if(dataSet[0].id !== undefined && dataSet[0].data !== undefined) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+    // Wrap a non-multi dataset so we can process it with the same functions
+    floe.chartAuthoring.lineChart.chart.wrapSingleDataSet = function (dataSet) {
+        var wrapped = [
+            {id: "dataSet",
+            data: dataSet }
+        ];
+        return wrapped;
+    };
+
     floe.chartAuthoring.lineChart.chart.draw = function (that) {
         // console.log("floe.chartAuthoring.lineChart.chart.draw");
 
         var shouldAddArea = that.options.lineOptions.addArea,
-            shouldAddPoints = that.options.lineOptions.addPoints;
+            shouldAddPoints = that.options.lineOptions.addPoints,
+            dataSet = that.model.dataSet;
 
         // Remove any older drawn elements from a previous dataset
         that.locate("xAxis").remove();
         that.locate("yAxis").remove();
         that.locate("chartLine").remove();
         that.locate("chartLinePoint").remove();
+
+        var isMultiDataSet = floe.chartAuthoring.lineChart.chart.isMultiDataSet(dataSet);
+
+        if(!isMultiDataSet) {
+            that.model.dataSet = floe.chartAuthoring.lineChart.chart.wrapSingleDataSet(dataSet);
+        }
 
         that.yScale = floe.chartAuthoring.lineChart.chart.getYScale(that);
 
@@ -162,12 +187,15 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             svg = that.svg;
 
         // Append the line based on the dataset
-        svg.append("path")
-            .data([dataSet])
-            .attr("class", chartLineClass)
-            .attr("fill", "none")
-            .attr("stroke", "black")
-            .attr("d", that.line);
+        fluid.each(dataSet, function (setItem) {
+            svg.append("path")
+                .data([setItem.data])
+                .attr("class", chartLineClass)
+                .attr("fill", "none")
+                .attr("stroke", "black")
+                .attr("d", that.line);
+        });
+
     };
 
     floe.chartAuthoring.lineChart.chart.addArea = function (that) {
@@ -176,10 +204,12 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var svg = that.svg,
             dataSet = that.model.dataSet;
 
-        svg.append("path")
-            .attr("class", chartLineAreaClass)
-            .data([dataSet])
-            .attr("d", that.area);
+        fluid.each(dataSet, function (setItem) {
+            svg.append("path")
+                .attr("class", chartLineAreaClass)
+                .data([setItem.data])
+                .attr("d", that.area);
+        });
     };
 
     floe.chartAuthoring.lineChart.chart.addPoints = function (that) {
@@ -192,18 +222,20 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         // Append a group for the datapoints
         that.dataPoints = svg.append("g").attr("class", chartLinePointGroupClass);
 
-        // Append a point for each datapoint
-        that.dataPoints.selectAll("circle")
-        .data(dataSet)
-        .enter()
-        .append("circle")
-        .attr("class", chartLinePointClass)
-        .attr("r", pointRadius)
-        .attr("cy", function (d) {
-            return that.yScale(d.value);
-        })
-        .attr("cx", function (d) {
-            return that.xScale(new Date(d.date));
+        fluid.each(dataSet, function (setItem) {
+            // Append a point for each datapoint
+            that.dataPoints.selectAll("circle")
+            .data(setItem.data)
+            .enter()
+            .append("circle")
+            .attr("class", chartLinePointClass)
+            .attr("r", pointRadius)
+            .attr("cy", function (d) {
+                return that.yScale(d.value);
+            })
+            .attr("cx", function (d) {
+                return that.xScale(new Date(d.date));
+            });
         });
     };
 
@@ -212,8 +244,17 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var padding = that.options.lineOptions.padding;
         var dataSet = that.model.dataSet;
 
-        var dataSetMax = d3.max(dataSet, function (d) {
-            return d.value;
+        var maxValues = [];
+
+        fluid.each(dataSet, function (setItem) {
+            var maxValue = d3.max(setItem.data, function (d) {
+                return d.value;
+            });
+            maxValues.push(maxValue);
+        });
+
+        var dataSetMax = d3.max(maxValues, function (d) {
+            return d;
         });
 
         return d3.scale.linear()
@@ -226,8 +267,30 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var width = that.options.svgOptions.width;
         var padding = that.options.lineOptions.padding;
         var dataSet = that.model.dataSet;
-        var minDate = new Date(dataSet[0].date);
-        var maxDate = new Date(dataSet[dataSet.length - 1].date);
+
+        var minDates = [];
+        var maxDates = [];
+
+        fluid.each(dataSet, function(setItem) {
+            var minDate = d3.min(setItem.data, function (d) {
+                return new Date(d.date);
+            });
+            minDates.push(minDate);
+
+            var maxDate = d3.max(setItem.data, function (d) {
+                return new Date(d.date);
+            });
+            maxDates.push(maxDate);
+
+        });
+
+        var minDate = d3.min(minDates, function(d) {
+            return new Date(d);
+        });
+
+        var maxDate = d3.max(maxDates, function(d) {
+            return new Date(d);
+        });
 
         return d3.time.scale()
             .domain([minDate, maxDate])
