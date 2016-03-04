@@ -57,8 +57,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             chartLineArea: ".floec-ca-lineChart-chartLineArea"
         },
         events: {
-            onLineCreated: null,  // Fire when the line is created. Ready to register D3 DOM event listeners,
-            onLineRedrawn: null // Fire when the line is redrawn.
+            onChartCreated: null,  // Fire when the line is created. Ready to register D3 DOM event listeners,
+            onChartRedrawn: null // Fire when the chart is redrawn.
         },
         listeners: {
             "onCreate.create": {
@@ -118,6 +118,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             floe.chartAuthoring.lineChart.chart.addPoints(that);
         }
 
+        that.events.onChartRedrawn.fire();
+
     };
 
     floe.chartAuthoring.lineChart.chart.addYAxis = function (that) {
@@ -157,7 +159,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     floe.chartAuthoring.lineChart.chart.addArea = function (that) {
         var chartLineAreaClass = that.classes.chartLineArea;
-        // Append the area file for the line
+        // Append the area path for the line
         var svg = that.svg,
             dataSet = that.model.dataSet;
 
@@ -297,7 +299,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         that.draw();
 
-        that.events.onLineCreated.fire();
+        that.events.onChartCreated.fire();
 
     };
 
