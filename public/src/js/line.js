@@ -201,10 +201,12 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         fluid.each(dataSet, function (setItem, idx) {
             svg.append("path")
                 .data([setItem.data])
-                .attr("class", chartLineClass)
-                .attr("fill", "none")
-                .attr("stroke", color(idx))
-                .attr("d", that.line);
+                .attr({
+                    "class": chartLineClass,
+                    "fill": "none",
+                    "stroke": color(idx),
+                    "d": that.line
+                });
         });
 
     };
