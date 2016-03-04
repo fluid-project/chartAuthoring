@@ -131,7 +131,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var isMultiDataSet = floe.chartAuthoring.lineChart.chart.isMultiDataSet(dataSet);
 
         if (!isMultiDataSet) {
-            that.model.dataSet = floe.chartAuthoring.lineChart.chart.wrapSingleDataSet(dataSet);
+            that.wrappedDataSet = floe.chartAuthoring.lineChart.chart.wrapSingleDataSet(dataSet);
+        } else {
+            that.wrappedDataSet = dataSet;
         }
 
         that.yScale = floe.chartAuthoring.lineChart.chart.getYScale(that);
@@ -169,8 +171,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             padding = that.options.lineOptions.padding;
         // Append the y axis
         that.svg.append("g")
-            .attr("transform", "translate(" + padding + ",0)")
-            .attr("class", yAxisClass)
+            .attr({
+                "transform": "translate(" + padding + ",0)",
+                "class": yAxisClass
+            })
             .call(that.yAxis);
     };
 
@@ -180,13 +184,15 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             height = that.options.svgOptions.height;
         // Append the x axis
         that.svg.append("g")
-            .attr("transform", "translate(0," + (height - padding) + ")")
-            .attr("class", xAxisClass)
+            .attr({
+                "transform": "translate(0," + (height - padding) + ")",
+                "class": xAxisClass
+            })
             .call(that.xAxis);
     };
 
     floe.chartAuthoring.lineChart.chart.addChartLine = function (that) {
-        var dataSet = that.model.dataSet,
+        var dataSet = that.wrappedDataSet,
             chartLineClass = that.classes.chartLine,
             svg = that.svg,
             color = that.colorScale;
@@ -208,7 +214,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             color = that.colorScale;
         // Append the area path for the line
         var svg = that.svg,
-            dataSet = that.model.dataSet;
+            dataSet = that.wrappedDataSet;
 
         fluid.each(dataSet, function (setItem, idx) {
             svg.append("path")
@@ -222,7 +228,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     floe.chartAuthoring.lineChart.chart.addPoints = function (that) {
         var svg = that.svg,
-            dataSet = that.model.dataSet,
+            dataSet = that.wrappedDataSet,
             chartLinePointGroupClass = that.classes.chartLinePointGroup,
             chartLinePointClass = that.classes.chartLinePoint,
             pointRadius = that.options.lineOptions.pointRadius,
@@ -251,7 +257,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.chartAuthoring.lineChart.chart.getYScale = function (that) {
         var height = that.options.svgOptions.height;
         var padding = that.options.lineOptions.padding;
-        var dataSet = that.model.dataSet;
+        var dataSet = that.wrappedDataSet;
 
         var maxValues = [];
 
@@ -275,7 +281,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.chartAuthoring.lineChart.chart.getXScale = function (that) {
         var width = that.options.svgOptions.width;
         var padding = that.options.lineOptions.padding;
-        var dataSet = that.model.dataSet;
+        var dataSet = that.wrappedDataSet;
 
         var minDates = [];
         var maxDates = [];
