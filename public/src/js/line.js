@@ -42,6 +42,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             height: 500
         },
         lineOptions: {
+            // An array of colors to use for lines drawn from the data
+            // Or, a d3 color scale that's generated based off an array of colors
+            colors: null,
+            // Padding of the chart elements inside the SVG container
             padding: 50,
             // interpolation mode for chart line
             // see line.interpolate at https://github.com/mbostock/d3/wiki/SVG-Shapes
@@ -95,7 +99,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     // Test if a dataset is multi
     floe.chartAuthoring.lineChart.chart.isMultiDataSet = function (dataSet) {
-        if(dataSet[0].id !== undefined && dataSet[0].data !== undefined) {
+        if (dataSet[0].id !== undefined && dataSet[0].data !== undefined) {
             return true;
         } else {
             return false;
@@ -126,7 +130,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         var isMultiDataSet = floe.chartAuthoring.lineChart.chart.isMultiDataSet(dataSet);
 
-        if(!isMultiDataSet) {
+        if (!isMultiDataSet) {
             that.model.dataSet = floe.chartAuthoring.lineChart.chart.wrapSingleDataSet(dataSet);
         }
 
@@ -184,29 +188,33 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.chartAuthoring.lineChart.chart.addChartLine = function (that) {
         var dataSet = that.model.dataSet,
             chartLineClass = that.classes.chartLine,
-            svg = that.svg;
+            svg = that.svg,
+            color = that.colorScale;
 
         // Append the line based on the dataset
-        fluid.each(dataSet, function (setItem) {
+        fluid.each(dataSet, function (setItem, idx) {
             svg.append("path")
                 .data([setItem.data])
                 .attr("class", chartLineClass)
                 .attr("fill", "none")
-                .attr("stroke", "black")
+                .attr("stroke", color(idx))
                 .attr("d", that.line);
         });
 
     };
 
     floe.chartAuthoring.lineChart.chart.addArea = function (that) {
-        var chartLineAreaClass = that.classes.chartLineArea;
+        var chartLineAreaClass = that.classes.chartLineArea,
+            color = that.colorScale;
         // Append the area path for the line
         var svg = that.svg,
             dataSet = that.model.dataSet;
 
-        fluid.each(dataSet, function (setItem) {
+        fluid.each(dataSet, function (setItem, idx) {
             svg.append("path")
                 .attr("class", chartLineAreaClass)
+                .attr("fill", color(idx))
+                .attr("opacity", "0.2")
                 .data([setItem.data])
                 .attr("d", that.area);
         });
@@ -217,18 +225,20 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             dataSet = that.model.dataSet,
             chartLinePointGroupClass = that.classes.chartLinePointGroup,
             chartLinePointClass = that.classes.chartLinePoint,
-            pointRadius = that.options.lineOptions.pointRadius;
+            pointRadius = that.options.lineOptions.pointRadius,
+            color = that.colorScale;
 
         // Append a group for the datapoints
         that.dataPoints = svg.append("g").attr("class", chartLinePointGroupClass);
 
-        fluid.each(dataSet, function (setItem) {
+        fluid.each(dataSet, function (setItem, idx) {
             // Append a point for each datapoint
             that.dataPoints.selectAll("circle")
             .data(setItem.data)
             .enter()
             .append("circle")
             .attr("class", chartLinePointClass)
+            .attr("fill", color(idx))
             .attr("r", pointRadius)
             .attr("cy", function (d) {
                 return that.yScale(d.value);
@@ -271,7 +281,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var minDates = [];
         var maxDates = [];
 
-        fluid.each(dataSet, function(setItem) {
+        fluid.each(dataSet, function (setItem) {
             var minDate = d3.min(setItem.data, function (d) {
                 return new Date(d.date);
             });
@@ -284,11 +294,11 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         });
 
-        var minDate = d3.min(minDates, function(d) {
+        var minDate = d3.min(minDates, function (d) {
             return new Date(d);
         });
 
-        var maxDate = d3.max(maxDates, function(d) {
+        var maxDate = d3.max(maxDates, function (d) {
             return new Date(d);
         });
 
@@ -369,9 +379,11 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     };
 
     floe.chartAuthoring.lineChart.chart.create = function (that) {
-        // console.log("floe.chartAuthoring.lineChart.chart.create");
+        var colors = that.options.lineOptions.colors;
 
         that.createBaseSVGDrawingArea();
+
+        that.colorScale = (typeof(colors) === "function") ? colors : floe.d3.getColorScale(colors);
 
         that.draw();
 
