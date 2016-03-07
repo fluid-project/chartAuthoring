@@ -121,11 +121,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var shouldAddArea = that.options.lineOptions.addArea,
             shouldAddPoints = that.options.lineOptions.addPoints;
 
-        // Remove any older drawn elements from a previous dataset
-        that.locate("xAxis").remove();
-        that.locate("yAxis").remove();
-        that.locate("chartLine").remove();
-        that.locate("chartLinePoint").remove();
+        floe.chartAuthoring.lineChart.chart.cleanUp(that);
 
         that.yScale = floe.chartAuthoring.lineChart.chart.getYScale(that);
 
@@ -155,6 +151,14 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         that.events.onChartRedrawn.fire();
 
+    };
+
+    floe.chartAuthoring.lineChart.chart.cleanUp = function (that) {
+        // Remove any older drawn elements from a previous dataset
+        that.locate("xAxis").remove();
+        that.locate("yAxis").remove();
+        that.locate("chartLine").remove();
+        that.locate("chartLinePoint").remove();
     };
 
     floe.chartAuthoring.lineChart.chart.addYAxis = function (that) {
