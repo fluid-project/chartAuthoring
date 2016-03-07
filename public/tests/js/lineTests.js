@@ -495,7 +495,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var chart = that.locate("svg"),
             lineTitleId = that.locate("title").attr("id"),
             lineDescId = that.locate("description").attr("id"),
-            lineAriaLabelledByAttr = chart.attr("aria-labelledby");
+            lineAriaLabelledByAttr = chart.attr("aria-labelledby"),
+            shouldHaveArea = that.options.lineOptions.addArea,
+            shouldHavPoints = that.options.lineOptions.addPoints;
 
         jqUnit.assertNotEquals("The SVG element is created with the proper selector", 0, chart.length);
 
@@ -516,6 +518,22 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         jqUnit.assertNotEquals("The x-axis element is created with the proper selector", 0, xAxis.length);
 
         floe.tests.chartAuthoring.validateLine(that, expectedDataSet);
+
+        if (shouldHaveArea) {
+            // Test that the area is created
+            var chartLineAreas = that.locate("chartLineArea");
+
+            jqUnit.assertNotEquals("The chart area element is created with the proper selector", 0, chartLineAreas.length);
+
+            fluid.each(chartLineAreas, function (chartLineArea, idx) {
+                floe.tests.chartAuthoring.validateBoundData(chartLineArea, that.model.wrappedDataSet[idx].data);
+            });
+        }
+
+        if (shouldHavPoints) {
+
+        }
+
     };
 
     jqUnit.test("Test line chart creation and response to changed data", function () {
@@ -547,13 +565,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         floe.tests.chartAuthoring.validateLineChart(that, that.model.wrappedDataSet);
 
-        // Test that the area is created
-        var chartLineArea = that.locate("chartLineArea");
-
-        jqUnit.assertNotEquals("The chart area element is created with the proper selector", 0, chartLineArea.length);
-
-        floe.tests.chartAuthoring.validateBoundData(chartLineArea, that.model.wrappedDataSet[0].data);
-
         var chartLinePointGroup = that.locate("chartLinePointGroup");
 
         jqUnit.assertNotEquals("The chart line point group element is created with the proper selector", 0, chartLinePointGroup.length);
@@ -566,7 +577,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     });
 
     jqUnit.test("Test line chart with multiple lines", function () {
-        jqUnit.expect(62);
+        jqUnit.expect(117);
         var that = floe.tests.chartAuthoring.lineChart.chart(".floec-ca-lineChart-multi", {
             model: {
                 dataSet: floe.tests.chartAuthoring.timeSeriesDataMulti
