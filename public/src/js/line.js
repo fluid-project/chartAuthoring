@@ -19,17 +19,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         gradeNames: ["floe.chartAuthoring.valueBinding", "floe.d3ViewComponent"],
         model: {
             dataSet: [],
-            // a dataset for this chart type should look like this:
-            // [
-            //  {
-            //     "date": "2014-12-31",
-            //     "value": 45
-            //  },
-            //  {
-            //     "date": "2015-01-07",
-            //     "value": 24
-            //  }
-            // ]
+            // See lineTests.js for the style of the dataSets that are
+            // allowed
             svgTitle: "Line Chart",
             svgDescription: "A line chart."
         },
@@ -53,7 +44,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             interpolation: "linear",
             // Whether or not to add an area fill under the chart line
             addArea: false,
-            // Whether or not to add a point to each datapoint forming the line            
+            // Whether or not to add a point to each datapoint forming the line
             addPoints: false,
             pointRadius: 2
         },
@@ -88,6 +79,15 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 excludeSource: "init"
             }
         },
+        modelRelay: {
+            source: "{that}.model.dataSet",
+            target: "{that}.model.wrappedDataSet",
+            singleTransform: {
+                type: "fluid.transforms.free",
+                args: ["{that}.model.dataSet"],
+                func: "floe.chartAuthoring.lineChart.chart.wrapSingleDataSet"
+            }
+        },
         invokers: {
             draw: {
                 funcName: "floe.chartAuthoring.lineChart.chart.draw",
@@ -105,35 +105,27 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         }
     };
 
-    // Wrap a non-multi dataset so we can process it with the same functions
+    // Wrap a non-multi dataset (a simple array without ID keys) so we can
+    // process it with the same function used for multi datasets
     floe.chartAuthoring.lineChart.chart.wrapSingleDataSet = function (dataSet) {
         var wrapped = [
             {id: "dataSet",
             data: dataSet }
         ];
-        return wrapped;
+        return (floe.chartAuthoring.lineChart.chart.isMultiDataSet(dataSet)) ? dataSet : wrapped;
     };
 
     floe.chartAuthoring.lineChart.chart.draw = function (that) {
         // console.log("floe.chartAuthoring.lineChart.chart.draw");
 
         var shouldAddArea = that.options.lineOptions.addArea,
-            shouldAddPoints = that.options.lineOptions.addPoints,
-            dataSet = that.model.dataSet;
+            shouldAddPoints = that.options.lineOptions.addPoints;
 
         // Remove any older drawn elements from a previous dataset
         that.locate("xAxis").remove();
         that.locate("yAxis").remove();
         that.locate("chartLine").remove();
         that.locate("chartLinePoint").remove();
-
-        var isMultiDataSet = floe.chartAuthoring.lineChart.chart.isMultiDataSet(dataSet);
-
-        if (!isMultiDataSet) {
-            that.wrappedDataSet = floe.chartAuthoring.lineChart.chart.wrapSingleDataSet(dataSet);
-        } else {
-            that.wrappedDataSet = dataSet;
-        }
 
         that.yScale = floe.chartAuthoring.lineChart.chart.getYScale(that);
 
@@ -191,7 +183,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     };
 
     floe.chartAuthoring.lineChart.chart.addChartLine = function (that) {
-        var dataSet = that.wrappedDataSet,
+        var dataSet = that.model.wrappedDataSet,
             chartLineClass = that.classes.chartLine,
             svg = that.svg,
             color = that.colorScale;
@@ -215,7 +207,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             color = that.colorScale;
         // Append the area path for the line
         var svg = that.svg,
-            dataSet = that.wrappedDataSet;
+            dataSet = that.model.wrappedDataSet;
 
         fluid.each(dataSet, function (setItem, idx) {
             svg.append("path")
@@ -232,7 +224,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     floe.chartAuthoring.lineChart.chart.addPoints = function (that) {
         var svg = that.svg,
-            dataSet = that.wrappedDataSet,
+            dataSet = that.model.wrappedDataSet,
             chartLinePointGroupClass = that.classes.chartLinePointGroup,
             chartLinePointClass = that.classes.chartLinePoint,
             pointRadius = that.options.lineOptions.pointRadius,
@@ -263,7 +255,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.chartAuthoring.lineChart.chart.getYScale = function (that) {
         var height = that.options.svgOptions.height;
         var padding = that.options.lineOptions.padding;
-        var dataSet = that.wrappedDataSet;
+        var dataSet = that.model.wrappedDataSet;
 
         var maxValues = [];
 
@@ -287,7 +279,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.chartAuthoring.lineChart.chart.getXScale = function (that) {
         var width = that.options.svgOptions.width;
         var padding = that.options.lineOptions.padding;
-        var dataSet = that.wrappedDataSet;
+        var dataSet = that.model.wrappedDataSet;
 
         var minDates = [];
         var maxDates = [];
