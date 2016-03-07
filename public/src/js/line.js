@@ -49,12 +49,11 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             padding: 50,
             // interpolation mode for chart line
             // see line.interpolate at https://github.com/mbostock/d3/wiki/SVG-Shapes
-            // generally, "linear" for sharp lines, "basis" for smooth
+            // generally, "linear" for sharp lines, "cardinal" for smooth
             interpolation: "linear",
             // Whether or not to add an area fill under the chart line
             addArea: false,
-            // Whether or not to add a point to each datapoint forming the line
-            // Should not be used when using basis interpolation
+            // Whether or not to add a point to each datapoint forming the line            
             addPoints: false,
             pointRadius: 2
         },
