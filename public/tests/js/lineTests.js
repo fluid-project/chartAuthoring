@@ -531,7 +531,17 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         }
 
         if (shouldHavPoints) {
+            var chartLinePointGroups = that.locate("chartLinePointGroup");
 
+            jqUnit.assertNotEquals("The chart line point group element is created with the proper selector", 0, chartLinePointGroups.length);
+
+
+            fluid.each(chartLinePointGroups, function (chartLinePointGroup, idx) {
+                var chartLinePointElements = $(chartLinePointGroup).children("circle");
+                fluid.each(that.model.wrappedDataSet[idx].data, function (dataPoint, idx) {
+                    jqUnit.assertDeepEq("dataPoint from dataSet at position " + idx + " has a matching object in the line's bound data", dataPoint, chartLinePointElements[idx].__data__);
+                });
+            });
         }
 
     };
@@ -564,20 +574,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         });
 
         floe.tests.chartAuthoring.validateLineChart(that, that.model.wrappedDataSet);
-
-        var chartLinePointGroup = that.locate("chartLinePointGroup");
-
-        jqUnit.assertNotEquals("The chart line point group element is created with the proper selector", 0, chartLinePointGroup.length);
-
-        var chartLinePointElements = chartLinePointGroup.children("circle");
-
-        fluid.each(that.model.wrappedDataSet[0].data, function (dataPoint, idx) {
-            jqUnit.assertDeepEq("dataPoint from dataSet at position " + idx + " has a matching object in the line's bound data", dataPoint, chartLinePointElements[idx].__data__);
-        });
     });
 
     jqUnit.test("Test line chart with multiple lines", function () {
-        jqUnit.expect(117);
+        jqUnit.expect(170);
         var that = floe.tests.chartAuthoring.lineChart.chart(".floec-ca-lineChart-multi", {
             model: {
                 dataSet: floe.tests.chartAuthoring.timeSeriesDataMulti
