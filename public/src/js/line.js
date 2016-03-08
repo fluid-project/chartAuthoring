@@ -196,7 +196,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             transitionLength = that.options.lineOptions.transitionLength;
 
         // Bind data
-        var chartLinePaths = svg.selectAll("path")
+        var chartLinePaths = svg.selectAll("path." + chartLineClass)
             .data(dataSet, function (d) {
                 return d.id;
             });
@@ -236,19 +236,42 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             color = that.colorScale;
         // Append the area path for the line
         var svg = that.svg,
-            dataSet = that.model.wrappedDataSet;
+            dataSet = that.model.wrappedDataSet,
+            transitionLength = that.options.lineOptions.transitionLength;
 
-        fluid.each(dataSet, function (setItem, idx) {
-            svg.append("path")
-                .data([setItem.data])
-                .attr({
-                    "class": chartLineAreaClass,
-                    "fill": color(idx),
-                    "opacity": "0.2",
-                    "d": that.area
-                });
+        // Bind data
+        var chartLineAreaPaths = svg.selectAll("path." + chartLineAreaClass)
+            .data(dataSet, function (d) {
+                return d.id;
+            });
 
-        });
+        // Append any needed area paths
+
+        chartLineAreaPaths.enter()
+            .append("path")
+            .attr({
+                "class": chartLineAreaClass,
+                "fill": function (d, idx) {
+                    return color(idx);
+                },
+                "opacity": "0.2",
+                "d": function (d) {
+                    return that.area(d.data);
+                }
+            });
+
+        // Remove areas for any removed data
+        chartLineAreaPaths.exit().remove();
+
+        // Transition lines where needed
+        var transitionPaths = svg.selectAll("." + chartLineAreaClass);
+
+        transitionPaths.transition().duration(transitionLength)
+            .attr({
+                "d": function (d) {
+                    return that.area(d.data);
+                }
+            });
     };
 
     floe.chartAuthoring.lineChart.chart.addPoints = function (that) {
