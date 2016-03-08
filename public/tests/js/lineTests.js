@@ -563,7 +563,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     });
 
     jqUnit.test("Test line chart creation with area and data points enabled", function () {
-        jqUnit.expect(89);
+        jqUnit.expect(178);
         var that = floe.tests.chartAuthoring.lineChart.chart(".floec-ca-lineChart-area", {
             model: {
                 dataSet: floe.tests.chartAuthoring.timeSeriesData1
@@ -574,6 +574,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 interpolation: "cardinal"
             }
         });
+
+        floe.tests.chartAuthoring.validateLineChart(that, that.model.wrappedDataSet);
+
+        that.applier.change("dataSet", floe.tests.chartAuthoring.timeSeriesData2);
 
         floe.tests.chartAuthoring.validateLineChart(that, that.model.wrappedDataSet);
     });

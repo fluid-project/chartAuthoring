@@ -160,7 +160,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         that.locate("xAxis").remove();
         that.locate("yAxis").remove();
         // that.locate("chartLine").remove();
-        that.locate("chartLinePoint").remove();
+        // that.locate("chartLinePoint").remove();
     };
 
     floe.chartAuthoring.lineChart.chart.addYAxis = function (that) {
@@ -280,28 +280,63 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             chartLinePointGroupClass = that.classes.chartLinePointGroup,
             chartLinePointClass = that.classes.chartLinePoint,
             pointRadius = that.options.lineOptions.pointRadius,
-            color = that.colorScale;
+            color = that.colorScale,
+            transitionLength = that.options.lineOptions.transitionLength;
 
-        fluid.each(dataSet, function (setItem, idx) {
-            // Append a group for the datapoints
-            var dataPoints = svg.append("g").attr("class", chartLinePointGroupClass);
-            // Append a point for each datapoint
-            dataPoints.selectAll("circle")
-            .data(setItem.data)
-            .enter()
-            .append("circle")
-            .attr({
-                "class": chartLinePointClass,
-                "fill": color(idx),
-                "r": pointRadius,
-                "cy": function (d) {
-                    return that.yScale(d.value);
-                },
-                "cx": function (d) {
-                    return that.xScale(new Date(d.date));
-                }
-            });
+        // Bind data for circle groups
+        that.chartLinePointGroups = svg.selectAll("g." + chartLinePointGroupClass)
+        .data(dataSet, function (d) {
+            return d.id;
         });
+
+        // Append any needed circle groups
+
+        that.chartLinePointGroups.enter()
+            .append("g")
+            .attr("class", chartLinePointGroupClass);
+
+        // Exit any removed circle groups
+        that.chartLinePointGroups.exit().remove();
+
+        // Append needed circles for each group
+        that.chartLinePointGroups.each(function (d, idx) {
+            var currentGroup = d3.select(this);
+
+            currentGroup.selectAll("circle")
+                .data(d.data, function (currentData, index) {
+                    return d.id + "-" + index;
+                })
+                .enter()
+                .append("circle")
+                .attr({
+                    "class": chartLinePointClass,
+                    "fill": color(idx),
+                    "r": pointRadius,
+                    "cy": function (d) {
+                        return that.yScale(d.value);
+                    },
+                    "cx": function (d) {
+                        return that.xScale(new Date(d.date));
+                    }
+                });
+        });
+
+        // Transition circles
+        that.chartLinePointGroups.each(function () {
+            var currentGroup = d3.select(this);
+
+            currentGroup.selectAll("circle")
+                .transition().duration(transitionLength)
+                .attr({
+                    "cy": function (d) {
+                        return that.yScale(d.value);
+                    },
+                    "cx": function (d) {
+                        return that.xScale(new Date(d.date));
+                    }
+                });
+        });
+
     };
 
     floe.chartAuthoring.lineChart.chart.getYScale = function (that) {
