@@ -158,21 +158,36 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.chartAuthoring.lineChart.chart.cleanUp = function (that) {
         // Remove any older drawn elements from a previous dataset
         that.locate("xAxis").remove();
-        that.locate("yAxis").remove();
+        // that.locate("yAxis").remove();
         // that.locate("chartLine").remove();
         // that.locate("chartLinePoint").remove();
     };
 
     floe.chartAuthoring.lineChart.chart.addYAxis = function (that) {
         var yAxisClass = that.classes.yAxis,
-            padding = that.options.lineOptions.padding;
-        // Append the y axis
-        that.svg.append("g")
-            .attr({
-                "transform": "translate(" + padding + ",0)",
-                "class": yAxisClass
-            })
-            .call(that.yAxis);
+            padding = that.options.lineOptions.padding,
+            transitionLength = that.options.lineOptions.transitionLength;
+
+        var yAxisExists = (that.locate("yAxis").length > 0) ? true : false;
+
+        // Append the y axis if it's not drawn yet
+        if (!yAxisExists) {
+            that.svg.append("g")
+                .attr({
+                    "transform": "translate(" + padding + ",0)",
+                    "class": yAxisClass
+                })
+                .call(that.yAxis);
+        }
+
+        // Transition the y axis if it's already drawn
+
+        if (yAxisExists) {
+            that.svg.select("." + yAxisClass)
+                .transition()
+                .duration(transitionLength)
+                .call(that.yAxis);
+        }
     };
 
     floe.chartAuthoring.lineChart.chart.addXAxis = function (that) {
