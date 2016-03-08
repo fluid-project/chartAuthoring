@@ -46,7 +46,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             addArea: false,
             // Whether or not to add a point to each datapoint forming the line
             addPoints: false,
-            pointRadius: 2
+            pointRadius: 2,
+            // In milliseconds
+            transitionLength: 2000
         },
         styles: {
             svg: "floe-ca-lineChart-chart",
@@ -157,7 +159,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         // Remove any older drawn elements from a previous dataset
         that.locate("xAxis").remove();
         that.locate("yAxis").remove();
-        that.locate("chartLine").remove();
+        // that.locate("chartLine").remove();
         that.locate("chartLinePoint").remove();
     };
 
@@ -190,20 +192,43 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var dataSet = that.model.wrappedDataSet,
             chartLineClass = that.classes.chartLine,
             svg = that.svg,
-            color = that.colorScale;
+            color = that.colorScale,
+            transitionLength = that.options.lineOptions.transitionLength;
 
-        // Append the line based on the dataset
-        fluid.each(dataSet, function (setItem, idx) {
-            svg.append("path")
-                .data([setItem.data])
-                .attr({
-                    "class": chartLineClass,
-                    "fill": "none",
-                    "stroke": color(idx),
-                    "d": that.line
-                });
-        });
+        // Bind data
+        var chartLinePaths = svg.selectAll("path")
+            .data(dataSet, function (d) {
+                return d.id;
+            });
 
+        // Append lines where needed
+        chartLinePaths.enter()
+            .append("path")
+            .attr({
+                "class": chartLineClass,
+                "fill": "none",
+                "stroke": function (d, idx) {
+                    return color(idx);
+
+                },
+                "d": function (d) {
+                    return that.line(d.data);
+                }
+
+            });
+
+        // Remove any removed lines
+        chartLinePaths.exit().remove();
+
+        // Transition lines where needed
+        var transitionPaths = svg.selectAll("." + chartLineClass);
+
+        transitionPaths.transition().duration(transitionLength)
+            .attr({
+                "d": function (d) {
+                    return that.line(d.data);
+                }
+            });
     };
 
     floe.chartAuthoring.lineChart.chart.addArea = function (that) {

@@ -473,6 +473,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         fluid.each(chartLines, function (chartLine, idx) {
             jqUnit.assertNotEquals("The chart line element is created with the proper selector", 0, chartLine.length);
+
             floe.tests.chartAuthoring.validateBoundData(chartLine, expectedDataSet[idx].data);
         });
     };
@@ -481,7 +482,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // dataset, checks that the data is bound and matches the dataset
     floe.tests.chartAuthoring.validateBoundData = function (boundElement,  expectedDataSet) {
 
-        var boundElementData = boundElement.__data__ !== undefined ? boundElement.__data__ : boundElement[0].__data__;
+        var boundElementData = boundElement.__data__ !== undefined ? boundElement.__data__.data : boundElement[0].__data__.data;
 
         jqUnit.assertEquals("The length of the bound data is the same as that of the expected dataset", expectedDataSet.length, boundElementData.length);
 
@@ -497,7 +498,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             lineDescId = that.locate("description").attr("id"),
             lineAriaLabelledByAttr = chart.attr("aria-labelledby"),
             shouldHaveArea = that.options.lineOptions.addArea,
-            shouldHavPoints = that.options.lineOptions.addPoints;
+            shouldHavePoints = that.options.lineOptions.addPoints;
 
         jqUnit.assertNotEquals("The SVG element is created with the proper selector", 0, chart.length);
 
@@ -530,7 +531,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             });
         }
 
-        if (shouldHavPoints) {
+        if (shouldHavePoints) {
             var chartLinePointGroups = that.locate("chartLinePointGroup");
 
             jqUnit.assertNotEquals("The chart line point group element is created with the proper selector", 0, chartLinePointGroups.length);
@@ -569,7 +570,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             },
             lineOptions: {
                 addArea: true,
-                addPoints: true
+                addPoints: true,
+                interpolation: "cardinal"
             }
         });
 
