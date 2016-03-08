@@ -123,8 +123,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var shouldAddArea = that.options.lineOptions.addArea,
             shouldAddPoints = that.options.lineOptions.addPoints;
 
-        floe.chartAuthoring.lineChart.chart.cleanUp(that);
-
         that.yScale = floe.chartAuthoring.lineChart.chart.getYScale(that);
 
         that.xScale = floe.chartAuthoring.lineChart.chart.getXScale(that);
@@ -155,14 +153,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     };
 
-    floe.chartAuthoring.lineChart.chart.cleanUp = function (that) {
-        // Remove any older drawn elements from a previous dataset
-        that.locate("xAxis").remove();
-        // that.locate("yAxis").remove();
-        // that.locate("chartLine").remove();
-        // that.locate("chartLinePoint").remove();
-    };
-
     floe.chartAuthoring.lineChart.chart.addYAxis = function (that) {
         var yAxisClass = that.classes.yAxis,
             padding = that.options.lineOptions.padding,
@@ -178,11 +168,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                     "class": yAxisClass
                 })
                 .call(that.yAxis);
-        }
-
-        // Transition the y axis if it's already drawn
-
-        if (yAxisExists) {
+        } else {
+            // Transition the y axis if it's already drawn
             that.svg.select("." + yAxisClass)
                 .transition()
                 .duration(transitionLength)
@@ -193,14 +180,25 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.chartAuthoring.lineChart.chart.addXAxis = function (that) {
         var xAxisClass = that.classes.xAxis,
             padding = that.options.lineOptions.padding,
-            height = that.options.svgOptions.height;
-        // Append the x axis
-        that.svg.append("g")
-            .attr({
-                "transform": "translate(0," + (height - padding) + ")",
-                "class": xAxisClass
-            })
-            .call(that.xAxis);
+            height = that.options.svgOptions.height,
+            transitionLength = that.options.lineOptions.transitionLength;
+
+        var xAxisExists = (that.locate("xAxis").length > 0) ? true : false;
+
+        // Append the x axis if it's not drawn yet
+        if (!xAxisExists) {
+            that.svg.append("g")
+                .attr({
+                    "transform": "translate(0," + (height - padding) + ")",
+                    "class": xAxisClass
+                })
+                .call(that.xAxis);
+        } else {
+            that.svg.select("." + xAxisClass)
+                .transition()
+                .duration(transitionLength)
+                .call(that.xAxis);
+        }
     };
 
     floe.chartAuthoring.lineChart.chart.addChartLine = function (that) {
