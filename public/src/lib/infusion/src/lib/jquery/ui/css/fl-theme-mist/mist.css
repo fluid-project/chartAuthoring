@@ -822,7 +822,7 @@ body .ui-tooltip {
 .fl-theme-mist .ui-state-default,
 .fl-theme-mist .ui-widget-content .ui-state-default,
 .fl-theme-mist .ui-widget-header .ui-state-default {
-	border: 1px solid #d3/d3d3;
+	border: 1px solid #d3d3d3;
 	background: #d9e8f7 url(images/ui-bg_glass_75_d9e8f7_1x400.png) 50% 50% repeat-x;
 	font-weight: normal;
 	color: #555555;
