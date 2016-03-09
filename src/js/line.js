@@ -224,8 +224,14 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
             });
 
+
+        chartLinePaths.each(function (d) {
+            that.trackD3BoundElement(d.id, this);
+        });
+
         // Remove any removed lines
-        chartLinePaths.exit().remove();
+        var removedPaths = chartLinePaths.exit();
+        that.exitD3Elements(removedPaths);
 
         // Transition lines where needed
         var transitionPaths = svg.selectAll("." + chartLineClass);
@@ -267,8 +273,13 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 }
             });
 
+        chartLineAreaPaths.each(function (d) {
+            that.trackD3BoundElement(d.id, this);
+        });
+
         // Remove areas for any removed data
-        chartLineAreaPaths.exit().remove();
+        var removedPaths = chartLineAreaPaths.exit();
+        that.exitD3Elements(removedPaths);
 
         // Transition lines where needed
         var transitionPaths = svg.selectAll("." + chartLineAreaClass);
@@ -302,31 +313,48 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             .append("g")
             .attr("class", chartLinePointGroupClass);
 
+        that.chartLinePointGroups.each(function (d) {
+            that.trackD3BoundElement(d.id, this);
+        });
+
         // Exit any removed circle groups
-        that.chartLinePointGroups.exit().remove();
+        var removedPointGroups = that.chartLinePointGroups.exit();
+        that.exitD3Elements(removedPointGroups);
 
         // Append needed circles for each group
         that.chartLinePointGroups.each(function (d, idx) {
             var currentGroup = d3.select(this);
 
-            currentGroup.selectAll("circle")
-                .data(d.data, function (currentData, index) {
+            var circles = currentGroup.selectAll("circle")
+                    .data(d.data, function (currentData, index) {
                     return d.id + "-" + index;
-                })
-                .enter()
-                .append("circle")
-                .attr({
-                    "class": chartLinePointClass,
-                    "fill": color(idx),
-                    "r": pointRadius,
-                    "cy": function (d) {
-                        return that.yScale(d.value);
-                    },
-                    "cx": function (d) {
-                        return that.xScale(new Date(d.date));
-                    }
                 });
+
+            // Create new circles
+            circles.enter()
+            .append("circle")
+            .attr({
+                "class": chartLinePointClass,
+                "fill": color(idx),
+                "r": pointRadius,
+                "cy": function (d) {
+                    return that.yScale(d.value);
+                },
+                "cx": function (d) {
+                    return that.xScale(new Date(d.date));
+                }
+            })
+            .each(function (currentData, index) {
+                that.trackD3BoundElement(d.id + "-" + index, this);
+            });
+
+            // Remove exited circles
+            var removedCircles = circles.exit();
+            that.exitD3Elements(removedCircles);
+
         });
+
+
 
         // Transition circles
         that.chartLinePointGroups.each(function () {
