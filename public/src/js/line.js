@@ -108,7 +108,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     };
 
     // Wrap a non-multi dataset (a simple array without ID keys) so we can
-    // process it with the same function used for multi datasets
+    // process it with the same function used for multi datasets, and
+    // create a default id for it for object constancy
     floe.chartAuthoring.lineChart.chart.wrapSingleDataSet = function (dataSet) {
         var wrapped = [
             {id: "dataSet",
@@ -118,7 +119,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     };
 
     floe.chartAuthoring.lineChart.chart.draw = function (that) {
-        // console.log("floe.chartAuthoring.lineChart.chart.draw");
 
         var shouldAddArea = that.options.lineOptions.addArea,
             shouldAddPoints = that.options.lineOptions.addPoints;
@@ -153,52 +153,46 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     };
 
+    floe.chartAuthoring.lineChart.chart.manageAxis = function (that, axisSelector, axisClass, axisTransform, axisFunction) {
+
+        var transitionLength = that.options.lineOptions.transitionLength;
+
+        var axisExists = (that.locate(axisSelector).length > 0) ? true : false;
+
+        // Append the axis if it's not drawn yet
+        if (!axisExists) {
+            that.svg.append("g")
+                .attr({
+                    "transform": axisTransform,
+                    "class": axisClass
+                })
+                .call(axisFunction);
+        } else {
+            // Transition the axis if it's already drawn
+            that.svg.select("." + axisClass)
+                .transition()
+                .duration(transitionLength)
+                .call(axisFunction);
+        }
+
+    };
+
     floe.chartAuthoring.lineChart.chart.addYAxis = function (that) {
         var yAxisClass = that.classes.yAxis,
             padding = that.options.lineOptions.padding,
-            transitionLength = that.options.lineOptions.transitionLength;
+            axisTransform = "translate(" + padding + ",0)";
 
-        var yAxisExists = (that.locate("yAxis").length > 0) ? true : false;
+        floe.chartAuthoring.lineChart.chart.manageAxis(that, "yAxis", yAxisClass, axisTransform, that.yAxis);
 
-        // Append the y axis if it's not drawn yet
-        if (!yAxisExists) {
-            that.svg.append("g")
-                .attr({
-                    "transform": "translate(" + padding + ",0)",
-                    "class": yAxisClass
-                })
-                .call(that.yAxis);
-        } else {
-            // Transition the y axis if it's already drawn
-            that.svg.select("." + yAxisClass)
-                .transition()
-                .duration(transitionLength)
-                .call(that.yAxis);
-        }
     };
 
     floe.chartAuthoring.lineChart.chart.addXAxis = function (that) {
         var xAxisClass = that.classes.xAxis,
             padding = that.options.lineOptions.padding,
             height = that.options.svgOptions.height,
-            transitionLength = that.options.lineOptions.transitionLength;
+            axisTransform = "translate(0," + (height - padding) + ")";
 
-        var xAxisExists = (that.locate("xAxis").length > 0) ? true : false;
-
-        // Append the x axis if it's not drawn yet
-        if (!xAxisExists) {
-            that.svg.append("g")
-                .attr({
-                    "transform": "translate(0," + (height - padding) + ")",
-                    "class": xAxisClass
-                })
-                .call(that.xAxis);
-        } else {
-            that.svg.select("." + xAxisClass)
-                .transition()
-                .duration(transitionLength)
-                .call(that.xAxis);
-        }
+        floe.chartAuthoring.lineChart.chart.manageAxis(that, "xAxis", xAxisClass, axisTransform, that.xAxis);
     };
 
     floe.chartAuthoring.lineChart.chart.addChartLine = function (that) {
@@ -428,6 +422,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.chartAuthoring.lineChart.chart.getXAxis = function (that) {
         var xScale = that.xScale;
 
+        // See https://github.com/mbostock/d3/wiki/Time-Formatting for
+        // explanation of how time formatting works in D3
         var customTickFormat = d3.time.format.multi([
             [".%L", function (d) { return d.getMilliseconds(); }],
             [":%S", function (d) { return d.getSeconds(); }],
