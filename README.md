@@ -24,4 +24,4 @@ Steps:
 * `grunt copy:frontEndDependencies`
 
 Result:
-* The `public` directory can now serve up the demos and tests
+* The root directory can now serve up the demos and tests as a static site
