@@ -107,11 +107,13 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // process it with the same function used for multi datasets, and
     // create a default id for it for object constancy
     floe.chartAuthoring.lineChart.chart.wrapSingleDataSet = function (dataSet) {
-        var wrapped = [
-            {id: "dataSet",
-            data: dataSet }
-        ];
-        return (floe.chartAuthoring.lineChart.chart.isMultiDataSet(dataSet)) ? dataSet : wrapped;
+        if (!floe.chartAuthoring.lineChart.chart.isMultiDataSet(dataSet)) {
+            dataSet = [{
+                id: "dataSet",
+                data: dataSet
+            }];
+        }
+        return dataSet;
     };
 
     floe.chartAuthoring.lineChart.chart.draw = function (that) {
