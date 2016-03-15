@@ -157,8 +157,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         var axisExists = (that.locate(axisSelector).length > 0) ? true : false;
 
-        // Append the axis if it's not drawn yet
         if (!axisExists) {
+            // Append the axis if it's not drawn yet
             that.svg.append("g")
                 .attr({
                     "transform": axisTransform,
