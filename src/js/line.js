@@ -155,9 +155,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         var transitionLength = that.options.lineOptions.transitionLength;
 
-        var axisExists = (that.locate(axisSelector).length > 0) ? true : false;
+        var noAxisExists = (that.locate(axisSelector).length > 0) ? false : true;
 
-        if (!axisExists) {
+        if (noAxisExists) {
             // Append the axis if it's not drawn yet
             that.svg.append("g")
                 .attr({
