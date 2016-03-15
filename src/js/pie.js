@@ -21,7 +21,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // 4. update the pie when the data set changes, including adding or removing slices
 
     fluid.defaults("floe.chartAuthoring.pieChart.pie", {
-        gradeNames: ["floe.chartAuthoring.valueBinding", "floe.chartAuthoring.totalRelaying", "floe.d3ViewComponent"],
+        gradeNames: ["floe.chartAuthoring.valueBinding", "floe.chartAuthoring.totalRelaying", "floe.svgDrawingArea"],
         model: {
             // dataSet accepts:
             // 1. an array of primitive values, such as numbers;
