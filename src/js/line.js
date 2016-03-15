@@ -100,11 +100,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     // Test if a dataset is multi
     floe.chartAuthoring.lineChart.chart.isMultiDataSet = function (dataSet) {
-        if (dataSet[0].id !== undefined && dataSet[0].data !== undefined) {
-            return true;
-        } else {
-            return false;
-        }
+        return dataSet[0].id !== undefined && dataSet[0].data !== undefined;
     };
 
     // Wrap a non-multi dataset (a simple array without ID keys) so we can
