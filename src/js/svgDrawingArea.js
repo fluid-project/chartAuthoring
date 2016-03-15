@@ -13,12 +13,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     "use strict";
 
-    // The D3 view component that is able to:
-    // 1. Convert jQuery DOM elements to D3 elements;
-    // 2. Attach D3 DOM event listeners;
-    // 3. Synthesize that.options.styles and that.options.selectors to combine elements with the same key into that.classes
-    // 4. Create a basic SVG drawing area for use by implementing grades that actually
-    // draw charts
+    // A base SVG drawing area component
+    // Creates a basic SVG drawing area for use by implementing grades that actually
+    // draw charts; includes hooks for accessible title and description in model
 
     fluid.defaults("floe.svgDrawingArea", {
         gradeNames: ["floe.d3ViewComponent", "autoInit"],
