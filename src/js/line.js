@@ -121,16 +121,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var shouldAddArea = that.options.lineOptions.addArea,
             shouldAddPoints = that.options.lineOptions.addPoints;
 
-        that.xScale = floe.chartAuthoring.lineChart.chart.getXScale(that);
-
-        that.yAxis = floe.chartAuthoring.lineChart.chart.getYAxis(that);
-
-        that.xAxis = floe.chartAuthoring.lineChart.chart.getXAxis(that);
-
-        that.line = floe.chartAuthoring.lineChart.chart.getLineGenerator(that);
-
-        that.area = floe.chartAuthoring.lineChart.chart.getAreaGenerator(that);
-
         floe.chartAuthoring.lineChart.chart.addYAxis(that);
 
         floe.chartAuthoring.lineChart.chart.addXAxis(that);
@@ -176,9 +166,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.chartAuthoring.lineChart.chart.addYAxis = function (that) {
         var yAxisClass = that.classes.yAxis,
             padding = that.options.lineOptions.padding,
-            axisTransform = "translate(" + padding + ",0)";
+            axisTransform = "translate(" + padding + ",0)",
+            yAxis = floe.chartAuthoring.lineChart.chart.getYAxis(that);
 
-        floe.chartAuthoring.lineChart.chart.manageAxis(that, "yAxis", yAxisClass, axisTransform, that.yAxis);
+        floe.chartAuthoring.lineChart.chart.manageAxis(that, "yAxis", yAxisClass, axisTransform, yAxis);
 
     };
 
@@ -186,9 +177,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var xAxisClass = that.classes.xAxis,
             padding = that.options.lineOptions.padding,
             height = that.options.svgOptions.height,
-            axisTransform = "translate(0," + (height - padding) + ")";
+            axisTransform = "translate(0," + (height - padding) + ")",
+            xAxis = floe.chartAuthoring.lineChart.chart.getXAxis(that);
 
-        floe.chartAuthoring.lineChart.chart.manageAxis(that, "xAxis", xAxisClass, axisTransform, that.xAxis);
+        floe.chartAuthoring.lineChart.chart.manageAxis(that, "xAxis", xAxisClass, axisTransform, xAxis);
     };
 
     floe.chartAuthoring.lineChart.chart.addChartLine = function (that) {
@@ -196,7 +188,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             chartLineClass = that.classes.chartLine,
             svg = that.svg,
             color = that.colorScale,
-            transitionLength = that.options.lineOptions.transitionLength;
+            transitionLength = that.options.lineOptions.transitionLength,
+            line = floe.chartAuthoring.lineChart.chart.getLineGenerator(that);
 
         // Bind data
         var chartLinePaths = svg.selectAll("path." + chartLineClass)
@@ -215,7 +208,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
                 },
                 "d": function (d) {
-                    return that.line(d.data);
+                    return line(d.data);
                 }
 
             });
@@ -235,7 +228,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         transitionPaths.transition().duration(transitionLength)
             .attr({
                 "d": function (d) {
-                    return that.line(d.data);
+                    return line(d.data);
                 }
             });
     };
@@ -246,7 +239,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         // Append the area path for the line
         var svg = that.svg,
             dataSet = that.model.wrappedDataSet,
-            transitionLength = that.options.lineOptions.transitionLength;
+            transitionLength = that.options.lineOptions.transitionLength,
+            area = floe.chartAuthoring.lineChart.chart.getAreaGenerator(that);
 
         // Bind data
         var chartLineAreaPaths = svg.selectAll("path." + chartLineAreaClass)
@@ -265,7 +259,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 },
                 "opacity": "0.2",
                 "d": function (d) {
-                    return that.area(d.data);
+                    return area(d.data);
                 }
             });
 
@@ -283,7 +277,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         transitionPaths.transition().duration(transitionLength)
             .attr({
                 "d": function (d) {
-                    return that.area(d.data);
+                    return area(d.data);
                 }
             });
     };
@@ -296,7 +290,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             pointRadius = that.options.lineOptions.pointRadius,
             color = that.colorScale,
             transitionLength = that.options.lineOptions.transitionLength,
-            yScale = floe.chartAuthoring.lineChart.chart.getYScale(that);
+            yScale = floe.chartAuthoring.lineChart.chart.getYScale(that),
+            xScale = floe.chartAuthoring.lineChart.chart.getXScale(that);
 
         // Bind data for circle groups
         that.chartLinePointGroups = svg.selectAll("g." + chartLinePointGroupClass)
@@ -338,7 +333,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                     return yScale(d.value);
                 },
                 "cx": function (d) {
-                    return that.xScale(new Date(d.date));
+                    return xScale(new Date(d.date));
                 }
             })
             .each(function (currentData, index) {
@@ -364,7 +359,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                         return yScale(d.value);
                     },
                     "cx": function (d) {
-                        return that.xScale(new Date(d.date));
+                        return xScale(new Date(d.date));
                     }
                 });
         });
@@ -445,7 +440,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     };
 
     floe.chartAuthoring.lineChart.chart.getXAxis = function (that) {
-        var xScale = that.xScale;
+        var xScale = floe.chartAuthoring.lineChart.chart.getXScale(that);
 
         // See https://github.com/mbostock/d3/wiki/Time-Formatting for
         // explanation of how time formatting works in D3
@@ -471,12 +466,13 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     floe.chartAuthoring.lineChart.chart.getLineGenerator = function (that) {
         var interpolation = that.options.lineOptions.interpolation,
-            yScale = floe.chartAuthoring.lineChart.chart.getYScale(that);
+            yScale = floe.chartAuthoring.lineChart.chart.getYScale(that),
+            xScale = floe.chartAuthoring.lineChart.chart.getXScale(that);
 
         var line = d3.svg.line()
             .interpolate(interpolation)
             .x(function (d) {
-                return that.xScale(new Date(d.date));
+                return xScale(new Date(d.date));
             })
             .y(function (d) {
                 return yScale(d.value);
@@ -489,12 +485,13 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var interpolation = that.options.lineOptions.interpolation;
         var height = that.options.svgOptions.height,
             padding = that.options.lineOptions.padding,
-            yScale = floe.chartAuthoring.lineChart.chart.getYScale(that)
+            yScale = floe.chartAuthoring.lineChart.chart.getYScale(that),
+            xScale = floe.chartAuthoring.lineChart.chart.getXScale(that);
 
         var area = d3.svg.area()
             .interpolate(interpolation)
             .x(function (d) {
-                return that.xScale(new Date(d.date));
+                return xScale(new Date(d.date));
             })
             .y0(height - padding)
             .y1(function (d) {
