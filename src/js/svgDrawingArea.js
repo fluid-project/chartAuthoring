@@ -19,14 +19,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     fluid.defaults("floe.svgDrawingArea", {
         gradeNames: ["floe.d3ViewComponent", "autoInit"],
-        members: {
-            classes: {
-                expander: {
-                    funcName: "floe.d3ViewComponent.synthesizeClasses",
-                    args: ["{that}.options.styles", "{that}.options.selectors"]
-                }
-            }
-        },
         model: {
             svgTitle: "An SVG",
             svgDescription: "An SVG image"
