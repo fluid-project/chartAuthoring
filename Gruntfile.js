@@ -34,9 +34,9 @@ module.exports = function (grunt) {
             frontEndDependencies: {
                 files: [
                     // D3
-                    {expand: true, cwd: "./node_modules/d3/", src: "**", dest: "./src/lib/ext/d3/"},
+                    {expand: true, cwd: "./node_modules/d3/", src: "**", dest: "./src/lib/d3/"},
                     // Flocking
-                    {expand: true, cwd: "./node_modules/flocking/", src: "**", dest: "./src/lib/ext/flocking/"}
+                    {expand: true, cwd: "./node_modules/flocking/", src: "**", dest: "./src/lib/flocking/"}
                 ]
             }
         }

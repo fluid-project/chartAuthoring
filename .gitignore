@@ -1,2 +1,3 @@
 node_modules/
-src/lib/ext
+src/lib/flocking
+src/lib/d3
