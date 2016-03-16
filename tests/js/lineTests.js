@@ -461,11 +461,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     floe.tests.chartAuthoring.validateLine = function (that, expectedDataSet) {
 
-        var isMultiDataSet = floe.chartAuthoring.lineChart.chart.isMultiDataSet(expectedDataSet);
-
-        if (!isMultiDataSet) {
-            expectedDataSet = floe.chartAuthoring.lineChart.chart.wrapSingleDataSet(expectedDataSet);
-        }
+        expectedDataSet = floe.chartAuthoring.lineChart.chart.wrapSingleDataSet(expectedDataSet);
 
         // Test that the chart line is created
 
