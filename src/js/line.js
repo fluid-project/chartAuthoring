@@ -121,8 +121,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var shouldAddArea = that.options.lineOptions.addArea,
             shouldAddPoints = that.options.lineOptions.addPoints;
 
-        that.yScale = floe.chartAuthoring.lineChart.chart.getYScale(that);
-
         that.xScale = floe.chartAuthoring.lineChart.chart.getXScale(that);
 
         that.yAxis = floe.chartAuthoring.lineChart.chart.getYAxis(that);
@@ -297,7 +295,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             chartLinePointClass = that.classes.chartLinePoint,
             pointRadius = that.options.lineOptions.pointRadius,
             color = that.colorScale,
-            transitionLength = that.options.lineOptions.transitionLength;
+            transitionLength = that.options.lineOptions.transitionLength,
+            yScale = floe.chartAuthoring.lineChart.chart.getYScale(that);
 
         // Bind data for circle groups
         that.chartLinePointGroups = svg.selectAll("g." + chartLinePointGroupClass)
@@ -336,7 +335,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 "fill": color(idx),
                 "r": pointRadius,
                 "cy": function (d) {
-                    return that.yScale(d.value);
+                    return yScale(d.value);
                 },
                 "cx": function (d) {
                     return that.xScale(new Date(d.date));
@@ -362,7 +361,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 .transition().duration(transitionLength)
                 .attr({
                     "cy": function (d) {
-                        return that.yScale(d.value);
+                        return yScale(d.value);
                     },
                     "cx": function (d) {
                         return that.xScale(new Date(d.date));
@@ -433,7 +432,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.chartAuthoring.lineChart.chart.getYAxis = function (that) {
         var width = that.options.svgOptions.width;
         var padding = that.options.lineOptions.padding;
-        var yScale = that.yScale;
+        var yScale = floe.chartAuthoring.lineChart.chart.getYScale(that);
 
         var yAxis = d3.svg.axis()
             .orient("left")
@@ -471,7 +470,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     };
 
     floe.chartAuthoring.lineChart.chart.getLineGenerator = function (that) {
-        var interpolation = that.options.lineOptions.interpolation;
+        var interpolation = that.options.lineOptions.interpolation,
+            yScale = floe.chartAuthoring.lineChart.chart.getYScale(that);
 
         var line = d3.svg.line()
             .interpolate(interpolation)
@@ -479,7 +479,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 return that.xScale(new Date(d.date));
             })
             .y(function (d) {
-                return that.yScale(d.value);
+                return yScale(d.value);
             });
 
         return line;
@@ -488,7 +488,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.chartAuthoring.lineChart.chart.getAreaGenerator = function (that) {
         var interpolation = that.options.lineOptions.interpolation;
         var height = that.options.svgOptions.height,
-            padding = that.options.lineOptions.padding;
+            padding = that.options.lineOptions.padding,
+            yScale = floe.chartAuthoring.lineChart.chart.getYScale(that)
 
         var area = d3.svg.area()
             .interpolate(interpolation)
@@ -497,7 +498,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             })
             .y0(height - padding)
             .y1(function (d) {
-                return that.yScale(d.value);
+                return yScale(d.value);
             });
 
         return area;
