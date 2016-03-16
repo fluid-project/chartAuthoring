@@ -16,7 +16,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // Draws simple time series line charts
 
     fluid.defaults("floe.chartAuthoring.lineChart.chart", {
-        gradeNames: ["floe.chartAuthoring.valueBinding", "floe.d3ViewComponent"],
+        gradeNames: ["floe.chartAuthoring.valueBinding", "floe.svgDrawingArea"],
         model: {
             dataSet: [],
             // See lineTests.js for the style of the dataSets that are
@@ -100,22 +100,20 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     // Test if a dataset is multi
     floe.chartAuthoring.lineChart.chart.isMultiDataSet = function (dataSet) {
-        if (dataSet[0].id !== undefined && dataSet[0].data !== undefined) {
-            return true;
-        } else {
-            return false;
-        }
+        return dataSet[0].id !== undefined && dataSet[0].data !== undefined;
     };
 
     // Wrap a non-multi dataset (a simple array without ID keys) so we can
     // process it with the same function used for multi datasets, and
     // create a default id for it for object constancy
     floe.chartAuthoring.lineChart.chart.wrapSingleDataSet = function (dataSet) {
-        var wrapped = [
-            {id: "dataSet",
-            data: dataSet }
-        ];
-        return (floe.chartAuthoring.lineChart.chart.isMultiDataSet(dataSet)) ? dataSet : wrapped;
+        if (!floe.chartAuthoring.lineChart.chart.isMultiDataSet(dataSet)) {
+            dataSet = [{
+                id: "dataSet",
+                data: dataSet
+            }];
+        }
+        return dataSet;
     };
 
     floe.chartAuthoring.lineChart.chart.draw = function (that) {
@@ -157,10 +155,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         var transitionLength = that.options.lineOptions.transitionLength;
 
-        var axisExists = (that.locate(axisSelector).length > 0) ? true : false;
+        var noAxisExists = (that.locate(axisSelector).length > 0) ? false : true;
 
-        // Append the axis if it's not drawn yet
-        if (!axisExists) {
+        if (noAxisExists) {
+            // Append the axis if it's not drawn yet
             that.svg.append("g")
                 .attr({
                     "transform": axisTransform,
