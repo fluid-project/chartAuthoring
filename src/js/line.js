@@ -48,7 +48,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             addPoints: false,
             pointRadius: 2,
             // In milliseconds
-            transitionLength: 2000
+            transitionLength: 2000,
+            // Number of X axis ticks
+            numberOfXAxisTicks: 6
         },
         styles: {
             svg: "floe-ca-lineChart-chart",
@@ -440,7 +442,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     };
 
     floe.chartAuthoring.lineChart.chart.getXAxis = function (that) {
-        var xScale = floe.chartAuthoring.lineChart.chart.getXScale(that);
+        var xScale = floe.chartAuthoring.lineChart.chart.getXScale(that),
+            numberOfXAxisTicks = that.options.lineOptions.numberOfXAxisTicks;
 
         // See https://github.com/mbostock/d3/wiki/Time-Formatting for
         // explanation of how time formatting works in D3
@@ -457,6 +460,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         var xAxis = d3.svg.axis()
             .tickFormat(customTickFormat)
+            .ticks(numberOfXAxisTicks)
             .orient("bottom")
             .scale(xScale);
 
