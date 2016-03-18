@@ -493,8 +493,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             lineTitleId = that.locate("title").attr("id"),
             lineDescId = that.locate("description").attr("id"),
             lineAriaLabelledByAttr = chart.attr("aria-labelledby"),
-            shouldHaveArea = that.options.lineOptions.addArea,
-            shouldHavePoints = that.options.lineOptions.addPoints;
+            shouldHaveArea = that.options.lineOptions.drawArea,
+            shouldHavePoints = that.options.lineOptions.drawPoints;
 
         jqUnit.assertNotEquals("The SVG element is created with the proper selector", 0, chart.length);
 
@@ -565,8 +565,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 dataSet: floe.tests.chartAuthoring.timeSeriesData1
             },
             lineOptions: {
-                addArea: true,
-                addPoints: true,
+                drawArea: true,
+                drawPoints: true,
                 interpolation: "cardinal"
             }
         });
@@ -585,8 +585,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 dataSet: floe.tests.chartAuthoring.timeSeriesDataMulti
             },
             lineOptions: {
-                addPoints: true,
-                addArea: true
+                drawPoints: true,
+                drawArea: true
             }
         });
 

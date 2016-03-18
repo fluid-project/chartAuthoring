@@ -43,9 +43,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             // generally, "linear" for sharp lines, "cardinal" for smooth
             interpolation: "linear",
             // Whether or not to add an area fill under the chart line
-            addArea: false,
+            drawArea: false,
             // Whether or not to add a point to each datapoint forming the line
-            addPoints: false,
+            drawPoints: false,
             pointRadius: 2,
             // In milliseconds
             transitionLength: 2000,
@@ -76,24 +76,24 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 funcName: "floe.chartAuthoring.lineChart.chart.create",
                 args: ["{that}"]
             },
-            "onDraw.addYAxis": {
-                func: "{that}.addYAxis",
-                priority: "before:addChartLine"
+            "onDraw.drawYAxis": {
+                func: "{that}.drawYAxis",
+                priority: "before:drawChartLine"
             },
-            "onDraw.addXAxis": {
-                func: "{that}.addXAxis",
-                priority: "before:addChartLine"
+            "onDraw.drawXAxis": {
+                func: "{that}.drawXAxis",
+                priority: "before:drawChartLine"
             },
-            "onDraw.addChartLine": {
-                func: "{that}.addChartLine"
+            "onDraw.drawChartLine": {
+                func: "{that}.drawChartLine"
             },
-            "onDraw.addArea": {
-                func: "{that}.addArea",
-                priority: "after:addChartLine"
+            "onDraw.drawArea": {
+                func: "{that}.drawArea",
+                priority: "after:drawChartLine"
             },
-            "onDraw.addPoints": {
-                func: "{that}.addPoints",
-                priorty: "after.addArea"
+            "onDraw.drawPoints": {
+                func: "{that}.drawPoints",
+                priorty: "after.drawArea"
             }
         },
         modelListeners: {
@@ -112,24 +112,24 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             }
         },
         invokers: {
-            addXAxis: {
-                funcName: "floe.chartAuthoring.lineChart.chart.addXAxis",
+            drawXAxis: {
+                funcName: "floe.chartAuthoring.lineChart.chart.drawXAxis",
                 args: ["{that}"]
             },
-            addYAxis: {
-                funcName: "floe.chartAuthoring.lineChart.chart.addYAxis",
+            drawYAxis: {
+                funcName: "floe.chartAuthoring.lineChart.chart.drawYAxis",
                 args: ["{that}"]
             },
-            addChartLine: {
-                funcName: "floe.chartAuthoring.lineChart.chart.addChartLine",
+            drawChartLine: {
+                funcName: "floe.chartAuthoring.lineChart.chart.drawChartLine",
                 args: ["{that}"]
             },
-            addArea: {
-                funcName: "floe.chartAuthoring.lineChart.chart.addArea",
+            drawArea: {
+                funcName: "floe.chartAuthoring.lineChart.chart.drawArea",
                 args: ["{that}"]
             },
-            addPoints: {
-                funcName: "floe.chartAuthoring.lineChart.chart.addPoints",
+            drawPoints: {
+                funcName: "floe.chartAuthoring.lineChart.chart.drawPoints",
                 args: ["{that}"]
             }
         }
@@ -177,7 +177,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     };
 
-    floe.chartAuthoring.lineChart.chart.addYAxis = function (that) {
+    floe.chartAuthoring.lineChart.chart.drawYAxis = function (that) {
         var yAxisClass = that.classes.yAxis,
             padding = that.options.lineOptions.padding,
             axisTransform = "translate(" + padding + ",0)",
@@ -187,7 +187,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     };
 
-    floe.chartAuthoring.lineChart.chart.addXAxis = function (that) {
+    floe.chartAuthoring.lineChart.chart.drawXAxis = function (that) {
         var xAxisClass = that.classes.xAxis,
             padding = that.options.lineOptions.padding,
             height = that.options.svgOptions.height,
@@ -197,7 +197,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         floe.chartAuthoring.lineChart.chart.manageAxis(that, "xAxis", xAxisClass, axisTransform, xAxis);
     };
 
-    floe.chartAuthoring.lineChart.chart.addChartLine = function (that) {
+    floe.chartAuthoring.lineChart.chart.drawChartLine = function (that) {
         var dataSet = that.model.wrappedDataSet,
             chartLineClass = that.classes.chartLine,
             svg = that.svg,
@@ -247,8 +247,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             });
     };
 
-    floe.chartAuthoring.lineChart.chart.addArea = function (that) {
-        if (!that.options.lineOptions.addArea) {
+    floe.chartAuthoring.lineChart.chart.drawArea = function (that) {
+        if (!that.options.lineOptions.drawArea) {
             return;
         }
 
@@ -300,8 +300,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             });
     };
 
-    floe.chartAuthoring.lineChart.chart.addPoints = function (that) {
-        if (!that.options.lineOptions.addPoints) {
+    floe.chartAuthoring.lineChart.chart.drawPoints = function (that) {
+        if (!that.options.lineOptions.drawPoints) {
             return;
         }
 
