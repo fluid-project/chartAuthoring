@@ -96,6 +96,26 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             draw: {
                 funcName: "floe.chartAuthoring.lineChart.chart.draw",
                 args: ["{that}"]
+            },
+            addXAxis: {
+                funcName: "floe.chartAuthoring.lineChart.chart.addXAxis",
+                args: ["{that}"]
+            },
+            addYAxis: {
+                funcName: "floe.chartAuthoring.lineChart.chart.addYAxis",
+                args: ["{that}"]
+            },
+            addChartLine: {
+                funcName: "floe.chartAuthoring.lineChart.chart.addChartLine",
+                args: ["{that}"]
+            },
+            addArea: {
+                funcName: "floe.chartAuthoring.lineChart.chart.addArea",
+                args: ["{that}"]
+            },
+            addPoints: {
+                funcName: "floe.chartAuthoring.lineChart.chart.addPoints",
+                args: ["{that}"]
             }
         }
     });
@@ -120,21 +140,18 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     floe.chartAuthoring.lineChart.chart.draw = function (that) {
 
-        var shouldAddArea = that.options.lineOptions.addArea,
-            shouldAddPoints = that.options.lineOptions.addPoints;
+        that.addYAxis();
 
-        floe.chartAuthoring.lineChart.chart.addYAxis(that);
+        that.addXAxis();
 
-        floe.chartAuthoring.lineChart.chart.addXAxis(that);
+        that.addChartLine();
 
-        floe.chartAuthoring.lineChart.chart.addChartLine(that);
-
-        if (shouldAddArea) {
-            floe.chartAuthoring.lineChart.chart.addArea(that);
+        if (that.options.lineOptions.addArea) {
+            that.addArea();
         }
 
-        if (shouldAddPoints) {
-            floe.chartAuthoring.lineChart.chart.addPoints(that);
+        if (that.options.lineOptions.addPoints) {
+            that.addPoints();
         }
 
         that.events.onChartRedrawn.fire();
