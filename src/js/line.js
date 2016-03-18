@@ -500,6 +500,17 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var xScale = floe.chartAuthoring.lineChart.chart.getXScale(that),
             numberOfXAxisTicks = that.options.lineOptions.numberOfXAxisTicks;
 
+        var xAxis = d3.svg.axis()
+            .tickFormat(floe.chartAuthoring.lineChart.chart.getXAxisTickFormat())
+            .ticks(numberOfXAxisTicks)
+            .orient("bottom")
+            .scale(xScale);
+
+        return xAxis;
+
+    };
+
+    floe.chartAuthoring.lineChart.chart.getXAxisTickFormat = function () {
         // See https://github.com/mbostock/d3/wiki/Time-Formatting for
         // explanation of how time formatting works in D3
         var customTickFormat = d3.time.format.multi([
@@ -513,15 +524,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             ["%Y", function () { return true; }]
         ]);
 
-        var xAxis = d3.svg.axis()
-            .tickFormat(customTickFormat)
-            .ticks(numberOfXAxisTicks)
-            .orient("bottom")
-            .scale(xScale);
-
-        return xAxis;
-
+        return customTickFormat;
     };
+
 
     floe.chartAuthoring.lineChart.chart.getLineGenerator = function (that) {
         var interpolation = that.options.lineOptions.interpolation,
