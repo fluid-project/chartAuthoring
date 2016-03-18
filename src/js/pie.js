@@ -95,10 +95,12 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 func: "{that}.addSlices"
             },
             "onDraw.updateSlices": {
-                func: "{that}.updateSlices"
+                func: "{that}.updateSlices",
+                priority: "after:addSlices"
             },
             "onDraw.removeSlices": {
-                func: "{that}.removeSlices"
+                func: "{that}.removeSlices",
+                priority: "after:updateSlices"
             }
         },
         modelListeners: {
