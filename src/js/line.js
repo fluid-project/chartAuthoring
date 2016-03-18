@@ -335,13 +335,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         var svg = that.svg,
             dataSet = that.model.wrappedDataSet,
-            chartLinePointGroupClass = that.classes.chartLinePointGroup,
-            chartLinePointClass = that.classes.chartLinePoint,
-            pointRadius = that.options.lineOptions.pointRadius,
-            color = that.colorScale,
-            transitionLength = that.options.lineOptions.transitionLength,
-            yScale = floe.chartAuthoring.lineChart.chart.getYScale(that),
-            xScale = floe.chartAuthoring.lineChart.chart.getXScale(that);
+            chartLinePointGroupClass = that.classes.chartLinePointGroup;
 
         // Bind data for circle groups
         that.chartLinePointGroups = svg.selectAll("g." + chartLinePointGroupClass)
@@ -349,6 +343,17 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             return d.id;
         });
 
+        floe.chartAuthoring.lineChart.chart.addPointGroups(that);
+
+        floe.chartAuthoring.lineChart.chart.deletePointGroups(that);
+
+        floe.chartAuthoring.lineChart.chart.managePoints(that);
+
+        floe.chartAuthoring.lineChart.chart.updatePoints(that);
+    };
+
+    floe.chartAuthoring.lineChart.chart.addPointGroups = function (that) {
+        var chartLinePointGroupClass = that.classes.chartLinePointGroup;
         // Append any needed circle groups
 
         that.chartLinePointGroups.enter()
@@ -358,11 +363,20 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         that.chartLinePointGroups.each(function (d) {
             that.trackD3BoundElement(d.id, this);
         });
+    };
 
+    floe.chartAuthoring.lineChart.chart.deletePointGroups = function (that) {
         // Exit any removed circle groups
         var removedPointGroups = that.chartLinePointGroups.exit();
         that.exitD3Elements(removedPointGroups);
+    };
 
+    floe.chartAuthoring.lineChart.chart.managePoints = function (that) {
+        var chartLinePointClass = that.classes.chartLinePoint,
+            pointRadius = that.options.lineOptions.pointRadius,
+            color = that.colorScale,
+            yScale = floe.chartAuthoring.lineChart.chart.getYScale(that),
+            xScale = floe.chartAuthoring.lineChart.chart.getXScale(that);
         // Append needed circles for each group
         that.chartLinePointGroups.each(function (d, idx) {
             var currentGroup = d3.select(this);
@@ -393,12 +407,14 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             // Remove exited circles
             var removedCircles = circles.exit();
             that.exitD3Elements(removedCircles);
-
         });
+    };
 
-
-
-        // Transition circles
+    floe.chartAuthoring.lineChart.chart.updatePoints = function (that) {
+        var transitionLength = that.options.lineOptions.transitionLength,
+            yScale = floe.chartAuthoring.lineChart.chart.getYScale(that),
+            xScale = floe.chartAuthoring.lineChart.chart.getXScale(that);
+            // Transition circles
         that.chartLinePointGroups.each(function () {
             var currentGroup = d3.select(this);
 
@@ -413,7 +429,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                     }
                 });
         });
-
     };
 
     // Accumulator function for consolidating multiple dataset items together
