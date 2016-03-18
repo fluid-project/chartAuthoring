@@ -69,19 +69,38 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         },
         events: {
             onChartCreated: null,  // Fire when the line is created. Ready to register D3 DOM event listeners,
-            onChartRedrawn: null // Fire when the chart is redrawn.
+            onDraw: null
         },
         listeners: {
             "onCreate.create": {
                 funcName: "floe.chartAuthoring.lineChart.chart.create",
                 args: ["{that}"]
+            },
+            "onDraw.addYAxis": {
+                func: "{that}.addYAxis",
+                priority: "before:addChartLine"
+            },
+            "onDraw.addXAxis": {
+                func: "{that}.addXAxis",
+                priority: "before:addChartLine"
+            },
+            "onDraw.addChartLine": {
+                func: "{that}.addChartLine"
+            },
+            "onDraw.addArea": {
+                func: "{that}.addArea",
+                priority: "after:addChartLine"
+            },
+            "onDraw.addPoints": {
+                func: "{that}.addPoints",
+                priorty: "after.addArea"
             }
         },
         modelListeners: {
-            dataSet: {
-                funcName: "{that}.draw",
+            dataSet: [{
+                funcName: "{that}.events.onDraw.fire",
                 excludeSource: "init"
-            }
+            }]
         },
         modelRelay: {
             source: "{that}.model.dataSet",
@@ -93,10 +112,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             }
         },
         invokers: {
-            draw: {
-                funcName: "floe.chartAuthoring.lineChart.chart.draw",
-                args: ["{that}"]
-            },
             addXAxis: {
                 funcName: "floe.chartAuthoring.lineChart.chart.addXAxis",
                 args: ["{that}"]
@@ -136,26 +151,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             }];
         }
         return dataSet;
-    };
-
-    floe.chartAuthoring.lineChart.chart.draw = function (that) {
-
-        that.addYAxis();
-
-        that.addXAxis();
-
-        that.addChartLine();
-
-        if (that.options.lineOptions.addArea) {
-            that.addArea();
-        }
-
-        if (that.options.lineOptions.addPoints) {
-            that.addPoints();
-        }
-
-        that.events.onChartRedrawn.fire();
-
     };
 
     floe.chartAuthoring.lineChart.chart.manageAxis = function (that, axisSelector, axisClass, axisTransform, axisFunction) {
@@ -253,6 +248,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     };
 
     floe.chartAuthoring.lineChart.chart.addArea = function (that) {
+        if (!that.options.lineOptions.addArea) {
+            return;
+        }
+
         var chartLineAreaClass = that.classes.chartLineArea,
             color = that.colorScale;
         // Append the area path for the line
@@ -302,6 +301,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     };
 
     floe.chartAuthoring.lineChart.chart.addPoints = function (that) {
+        if (!that.options.lineOptions.addPoints) {
+            return;
+        }
+
         var svg = that.svg,
             dataSet = that.model.wrappedDataSet,
             chartLinePointGroupClass = that.classes.chartLinePointGroup,
@@ -529,7 +532,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         that.colorScale = (typeof(colors) === "function") ? colors : floe.d3.getColorScale(colors);
 
-        that.draw();
+        that.events.onDraw.fire();
 
         that.events.onChartCreated.fire();
 
