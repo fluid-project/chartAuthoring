@@ -93,7 +93,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             },
             "onDraw.drawPoints": {
                 func: "{that}.drawPoints",
-                priorty: "after.drawArea"
+                priority: "after:drawArea"
             }
         },
         modelListeners: {
