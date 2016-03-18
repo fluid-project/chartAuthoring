@@ -84,12 +84,21 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         },
         events: {
             onPieCreated: null,  // Fire when the pie is created. Ready to register D3 DOM event listeners,
-            onPieRedrawn: null // Fire when the pie is redrawn.
+            onDraw: null // Fire when the pie is redrawn.
         },
         listeners: {
             "onCreate.create": {
                 funcName: "floe.chartAuthoring.pieChart.pie.create",
                 args: ["{that}"]
+            },
+            "onDraw.addSlices": {
+                func: "{that}.addSlices"
+            },
+            "onDraw.updateSlices": {
+                func: "{that}.updateSlices"
+            },
+            "onDraw.removeSlices": {
+                func: "{that}.removeSlices"
             }
         },
         modelListeners: {
@@ -212,13 +221,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         that.texts = pieGroup.selectAll("text")
             .data(pie(dataSet));
 
-        that.addSlices();
-
-        that.updateSlices();
-
-        that.removeSlices();
-
-        that.events.onPieRedrawn.fire();
+        that.events.onDraw.fire();
     };
 
     floe.chartAuthoring.pieChart.pie.create = function (that) {

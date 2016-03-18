@@ -40,7 +40,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                     },
                     events: {
                         onPieCreated: "{pieChart}.events.onPieCreated",
-                        onPieRedrawn: "{pieChart}.events.onPieRedrawn"
+                        onDraw: "{pieChart}.events.onPieRedrawn"
                     }
                 }
             },
