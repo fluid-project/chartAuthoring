@@ -247,10 +247,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var line = floe.chartAuthoring.lineChart.chart.getLineGenerator(that),
             transitionLength = that.options.lineOptions.transitionLength;
 
-        // Transition lines where needed
-        var transitionPaths = that.chartLinePaths;
-
-        transitionPaths.transition().duration(transitionLength)
+        that.chartLinePaths.transition().duration(transitionLength)
             .attr({
                 "d": function (d) {
                     return line(d.data);
@@ -269,23 +266,32 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             return;
         }
 
-        var chartLineAreaClass = that.classes.chartLineArea,
-            color = that.colorScale;
-        // Append the area path for the line
-        var svg = that.svg,
-            dataSet = that.model.wrappedDataSet,
-            transitionLength = that.options.lineOptions.transitionLength,
-            area = floe.chartAuthoring.lineChart.chart.getAreaGenerator(that);
+        var chartLineAreaClass = that.classes.chartLineArea;
 
-        // Bind data
-        var chartLineAreaPaths = svg.selectAll("path." + chartLineAreaClass)
+        var svg = that.svg,
+            dataSet = that.model.wrappedDataSet;
+
+        // Bind data and keep a reference to the bound elements
+        that.chartLineAreaPaths = svg.selectAll("path." + chartLineAreaClass)
             .data(dataSet, function (d) {
                 return d.id;
             });
 
+        floe.chartAuthoring.lineChart.chart.addArea(that);
+
+        floe.chartAuthoring.lineChart.chart.removeArea(that);
+
+        floe.chartAuthoring.lineChart.chart.updateArea(that);
+
+    };
+
+    floe.chartAuthoring.lineChart.chart.addArea = function (that) {
+        var chartLineAreaClass = that.classes.chartLineArea,
+            color = that.colorScale,
+            area = floe.chartAuthoring.lineChart.chart.getAreaGenerator(that);
         // Append any needed area paths
 
-        chartLineAreaPaths.enter()
+        that.chartLineAreaPaths.enter()
             .append("path")
             .attr({
                 "class": chartLineAreaClass,
@@ -298,23 +304,28 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 }
             });
 
-        chartLineAreaPaths.each(function (d) {
+        that.chartLineAreaPaths.each(function (d) {
             that.trackD3BoundElement(d.id, this);
         });
+    };
 
-        // Remove areas for any removed data
-        var removedPaths = chartLineAreaPaths.exit();
-        that.exitD3Elements(removedPaths);
-
+    floe.chartAuthoring.lineChart.chart.updateArea = function (that) {
         // Transition lines where needed
-        var transitionPaths = svg.selectAll("." + chartLineAreaClass);
+        var transitionLength = that.options.lineOptions.transitionLength,
+            area = floe.chartAuthoring.lineChart.chart.getAreaGenerator(that);
 
-        transitionPaths.transition().duration(transitionLength)
+        that.chartLineAreaPaths.transition().duration(transitionLength)
             .attr({
                 "d": function (d) {
                     return area(d.data);
                 }
             });
+    };
+
+    floe.chartAuthoring.lineChart.chart.removeArea = function (that) {
+        // Remove areas for any removed data
+        var removedPaths = that.chartLineAreaPaths.exit();
+        that.exitD3Elements(removedPaths);
     };
 
     floe.chartAuthoring.lineChart.chart.drawPoints = function (that) {
