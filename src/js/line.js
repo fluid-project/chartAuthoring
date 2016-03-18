@@ -388,26 +388,29 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     };
 
+    // Accumulator function for consolidating multiple datasets together
+    // for purposes of determining max/min
+    floe.chartAuthoring.lineChart.chart.concatData = function (setItem, accumulationArray) {
+        return accumulationArray.concat(setItem.data);
+    };
+
     floe.chartAuthoring.lineChart.chart.getYScale = function (that) {
         var height = that.options.svgOptions.height;
         var padding = that.options.lineOptions.padding;
         var dataSet = that.model.wrappedDataSet;
 
-        var maxValues = [];
+        // Create an array consisting of all the values in every dataset array
+        var combinedData = fluid.accumulate(dataSet, floe.chartAuthoring.lineChart.chart.concatData, []);
 
-        fluid.each(dataSet, function (setItem) {
-            var maxValue = d3.max(setItem.data, function (d) {
-                return d.value;
-            });
-            maxValues.push(maxValue);
+        // Get the max value of that combined array
+        var maxValue = d3.max(combinedData, function (d) {
+            return d.value;
         });
 
-        var dataSetMax = d3.max(maxValues, function (d) {
-            return d;
-        });
+        // Scale based on that max
 
         return d3.scale.linear()
-            .domain([0, dataSetMax])
+            .domain([0, maxValue])
             .nice()
             .range([height - padding, padding]);
     };
@@ -417,28 +420,17 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var padding = that.options.lineOptions.padding;
         var dataSet = that.model.wrappedDataSet;
 
-        var minDates = [];
-        var maxDates = [];
+        // Create an array consisting of all the values in every dataset array
+        var combinedData = fluid.accumulate(dataSet, floe.chartAuthoring.lineChart.chart.concatData, []);
 
-        fluid.each(dataSet, function (setItem) {
-            var minDate = d3.min(setItem.data, function (d) {
-                return new Date(d.date);
-            });
-            minDates.push(minDate);
-
-            var maxDate = d3.max(setItem.data, function (d) {
-                return new Date(d.date);
-            });
-            maxDates.push(maxDate);
-
+        // Get the max date of that combined array
+        var maxDate = d3.max(combinedData, function (d) {
+            return new Date(d.date);
         });
 
-        var minDate = d3.min(minDates, function (d) {
-            return new Date(d);
-        });
-
-        var maxDate = d3.max(maxDates, function (d) {
-            return new Date(d);
+        // Get the min date of that combined array
+        var minDate = d3.min(combinedData, function (d) {
+            return new Date(d.date);
         });
 
         return d3.time.scale()
