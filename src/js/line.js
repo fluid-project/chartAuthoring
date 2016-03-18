@@ -200,44 +200,55 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.chartAuthoring.lineChart.chart.drawChartLine = function (that) {
         var dataSet = that.model.wrappedDataSet,
             chartLineClass = that.classes.chartLine,
-            svg = that.svg,
-            color = that.colorScale,
-            transitionLength = that.options.lineOptions.transitionLength,
-            line = floe.chartAuthoring.lineChart.chart.getLineGenerator(that);
+            svg = that.svg;
 
-        // Bind data
-        var chartLinePaths = svg.selectAll("path." + chartLineClass)
+        // Bind data and keep a reference to the bound elements
+        that.chartLinePaths = svg.selectAll("path." + chartLineClass)
             .data(dataSet, function (d) {
                 return d.id;
             });
 
-        // Append lines where needed
-        chartLinePaths.enter()
-            .append("path")
-            .attr({
-                "class": chartLineClass,
-                "fill": "none",
-                "stroke": function (d, idx) {
-                    return color(idx);
+        floe.chartAuthoring.lineChart.chart.addChartLine(that);
 
-                },
-                "d": function (d) {
-                    return line(d.data);
-                }
+        floe.chartAuthoring.lineChart.chart.removeChartLine(that);
 
+        floe.chartAuthoring.lineChart.chart.updateChartLine(that);
+    };
+
+    floe.chartAuthoring.lineChart.chart.addChartLine = function (that) {
+        var color = that.colorScale,
+            chartLineClass = that.classes.chartLine,
+            line = floe.chartAuthoring.lineChart.chart.getLineGenerator(that);
+
+            // Append lines where needed
+            that.chartLinePaths.enter()
+                .append("path")
+                .attr({
+                    "class": chartLineClass,
+                    "fill": "none",
+                    "stroke": function (d, idx) {
+                        return color(idx);
+
+                    },
+                    "d": function (d) {
+                        return line(d.data);
+                    }
+
+                });
+
+            // Track D3 bound elements in the component model
+
+            that.chartLinePaths.each(function (d) {
+                that.trackD3BoundElement(d.id, this);
             });
+    };
 
-
-        chartLinePaths.each(function (d) {
-            that.trackD3BoundElement(d.id, this);
-        });
-
-        // Remove any removed lines
-        var removedPaths = chartLinePaths.exit();
-        that.exitD3Elements(removedPaths);
+    floe.chartAuthoring.lineChart.chart.updateChartLine = function (that) {
+        var line = floe.chartAuthoring.lineChart.chart.getLineGenerator(that),
+            transitionLength = that.options.lineOptions.transitionLength;
 
         // Transition lines where needed
-        var transitionPaths = svg.selectAll("." + chartLineClass);
+        var transitionPaths = that.chartLinePaths;
 
         transitionPaths.transition().duration(transitionLength)
             .attr({
@@ -245,6 +256,12 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                     return line(d.data);
                 }
             });
+    };
+
+    floe.chartAuthoring.lineChart.chart.removeChartLine = function (that) {
+        // Remove any removed lines
+        var removedPaths = that.chartLinePaths.exit();
+        that.exitD3Elements(removedPaths);
     };
 
     floe.chartAuthoring.lineChart.chart.drawArea = function (that) {
