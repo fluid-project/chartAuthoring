@@ -59,7 +59,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                     },
                     events: {
                         onLegendCreated: "{pieChart}.events.onLegendCreated",
-                        onLegendRedrawn: "{pieChart}.events.onLegendRedrawn"
+                        onDraw: "{pieChart}.events.onLegendRedrawn"
                     }
                 }
             }

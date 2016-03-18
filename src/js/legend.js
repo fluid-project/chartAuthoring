@@ -84,12 +84,23 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         },
         events: {
             onLegendCreated: null,  // Fire when the legend is created. Ready to register D3 DOM event listeners,
-            onLegendRedrawn: null // Fire when the legend is redrawn.
+            onDraw: null // Fire when the legend is redrawn.
         },
         listeners: {
             "onCreate.create": {
                 funcName: "floe.chartAuthoring.pieChart.legend.create",
                 args: ["{that}"]
+            },
+            "onDraw.addRows": {
+                func: "{that}.addRows"
+            },
+            "onDraw.updateRows": {
+                func: "{that}.updateRows",
+                priority: "after:addRows"
+            },
+            "onDraw.removeRows": {
+                func: "{that}.removeRows",
+                priority: "after:updateRows"
             }
         },
         modelListeners: {
@@ -114,6 +125,21 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             getColorCellStyle: {
                 funcName: "floe.chartAuthoring.pieChart.legend.getColorCellStyle",
                 args: ["{arguments}.0"]
+            },
+            addRows: {
+                funcName:
+                "floe.chartAuthoring.pieChart.legend.addRows",
+                args: ["{that}"]
+            },
+            updateRows: {
+                funcName:
+                "floe.chartAuthoring.pieChart.legend.updateRows",
+                args: ["{that}"]
+            },
+            removeRows: {
+                funcName:
+                "floe.chartAuthoring.pieChart.legend.removeRows",
+                args: ["{that}"]
             }
         }
     });
@@ -206,17 +232,13 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                                 return d.id;
                             });
 
-        floe.chartAuthoring.pieChart.legend.addRows(that);
-
-        floe.chartAuthoring.pieChart.legend.updateRows(that);
-
-        floe.chartAuthoring.pieChart.legend.removeRows(that);
+        that.events.onDraw.fire();
 
         if (sort) {
             that.rows.sort(that.sort);
         }
 
-        that.events.onLegendRedrawn.fire();
+
     };
 
     floe.chartAuthoring.pieChart.legend.create = function (that) {
