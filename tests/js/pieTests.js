@@ -16,7 +16,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     fluid.registerNamespace("floe.tests.chartAuthoring");
 
     fluid.defaults("floe.tests.chartAuthoring.pieChart.pie", {
-        gradeNames: ["floe.chartAuthoring.pieChart.pie", "autoInit"],
+        gradeNames: ["floe.chartAuthoring.pieChart.pie"],
         svgOptions: {
             width: 300,
             height: 300

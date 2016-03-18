@@ -14,7 +14,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     "use strict";
 
     fluid.defaults("floe.chartAuthoring.totalRelaying", {
-        gradeNames: ["fluid.modelComponent", "autoInit"],
+        gradeNames: ["fluid.modelComponent"],
         model: {
             total: {
                 // value: number,

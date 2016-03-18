@@ -16,7 +16,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     fluid.registerNamespace("floe.tests");
 
     fluid.defaults("floe.tests.d3ViewComponent", {
-        gradeNames: ["floe.d3ViewComponent", "autoInit"],
+        gradeNames: ["floe.d3ViewComponent"],
         listeners: {
             "onCreate.addMouseoverListener": {
                 listener: "{that}.addD3Listeners",

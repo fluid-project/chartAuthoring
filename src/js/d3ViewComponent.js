@@ -19,7 +19,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // 3. Synthesize that.options.styles and that.options.selectors to combine elements with the same key into that.classes    
 
     fluid.defaults("floe.d3ViewComponent", {
-        gradeNames: ["fluid.viewComponent", "autoInit"],
+        gradeNames: ["fluid.viewComponent"],
         members: {
             classes: {
                 expander: {

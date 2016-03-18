@@ -18,7 +18,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // draw charts; includes hooks for accessible title and description in model
 
     fluid.defaults("floe.svgDrawingArea", {
-        gradeNames: ["floe.d3ViewComponent", "autoInit"],
+        gradeNames: ["floe.d3ViewComponent"],
         model: {
             svgTitle: "An SVG",
             svgDescription: "An SVG image"

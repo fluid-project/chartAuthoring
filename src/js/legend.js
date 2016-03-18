@@ -14,7 +14,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     "use strict";
 
     fluid.defaults("floe.chartAuthoring.pieChart.legend", {
-        gradeNames: ["floe.chartAuthoring.totalRelaying", "floe.d3ViewComponent", "autoInit"],
+        gradeNames: ["floe.chartAuthoring.totalRelaying", "floe.d3ViewComponent"],
         strings: {
             legendColHeading: "Legend",
             labelColHeading: "Label",

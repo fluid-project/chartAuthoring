@@ -18,7 +18,7 @@ var demo = demo || {};
     fluid.registerNamespace("demo.chartAuthoring");
 
     fluid.defaults("floe.chartAuthoring.demo.overview", {
-            gradeNames: ["fluid.viewComponent", "autoInit"],
+            gradeNames: ["fluid.viewComponent"],
             components: {
                 overviewPanel: {
                     type: "fluid.overviewPanel",

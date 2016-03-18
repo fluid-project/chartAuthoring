@@ -16,7 +16,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     fluid.registerNamespace("floe.tests.chartAuthoring");
 
     fluid.defaults("floe.tests.chartAuthoring.pieChart.legend", {
-        gradeNames: ["floe.chartAuthoring.pieChart.legend", "autoInit"],
+        gradeNames: ["floe.chartAuthoring.pieChart.legend"],
         legendOptions: {
             colors: ["#000000", "#ff0000", "#00ff00", "#0000ff", "#aabbcc", "#ccbbaa"]
         },

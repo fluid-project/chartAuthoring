@@ -15,7 +15,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     // Connects the drawing of the pie (floe.chartAuthoring.pieChart.pie) and the legend (floe.chartAuthoring.pieChart.legend)
     fluid.defaults("floe.chartAuthoring.pieChart", {
-        gradeNames: ["floe.chartAuthoring.templateInjection", "autoInit"],
+        gradeNames: ["floe.chartAuthoring.templateInjection"],
         members: {
             drawingOptions: {
                 expander: {

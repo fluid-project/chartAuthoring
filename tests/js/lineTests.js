@@ -16,7 +16,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     fluid.registerNamespace("floe.tests.chartAuthoring");
 
     fluid.defaults("floe.tests.chartAuthoring.lineChart.chart", {
-        gradeNames: ["floe.chartAuthoring.lineChart.chart", "autoInit"],
+        gradeNames: ["floe.chartAuthoring.lineChart.chart"],
         svgOptions: {
             height: 400,
             width: 800

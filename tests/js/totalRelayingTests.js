@@ -16,7 +16,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     fluid.registerNamespace("floe.tests.chartAuthoring");
 
     fluid.defaults("floe.tests.chartAuthoring.totalRelaying", {
-        gradeNames: ["floe.chartAuthoring.totalRelaying", "autoInit"]
+        gradeNames: ["floe.chartAuthoring.totalRelaying"]
     });
 
     floe.tests.chartAuthoring.totalRelaying.arrayDataSet =
