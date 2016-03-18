@@ -110,6 +110,18 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             textTransform: {
                 funcName: "floe.chartAuthoring.pieChart.textTransform",
                 args: ["{that}.arc", "{arguments}.0"]
+            },
+            addSlices: {
+                funcName: "floe.chartAuthoring.pieChart.pie.addSlices",
+                args: ["{that}"]
+            },
+            updateSlices: {
+                funcName: "floe.chartAuthoring.pieChart.pie.updateSlices",
+                args: ["{that}"]
+            },
+            removeSlices: {
+                funcName: "floe.chartAuthoring.pieChart.pie.removeSlices",
+                args: ["{that}"]
             }
         }
     });
@@ -200,11 +212,11 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         that.texts = pieGroup.selectAll("text")
             .data(pie(dataSet));
 
-        floe.chartAuthoring.pieChart.pie.addSlices(that);
+        that.addSlices();
 
-        floe.chartAuthoring.pieChart.pie.updateSlices(that);
+        that.updateSlices();
 
-        floe.chartAuthoring.pieChart.pie.removeSlices(that);
+        that.removeSlices();
 
         that.events.onPieRedrawn.fire();
     };
