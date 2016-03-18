@@ -220,27 +220,27 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             chartLineClass = that.classes.chartLine,
             line = floe.chartAuthoring.lineChart.chart.getLineGenerator(that);
 
-            // Append lines where needed
-            that.chartLinePaths.enter()
-                .append("path")
-                .attr({
-                    "class": chartLineClass,
-                    "fill": "none",
-                    "stroke": function (d, idx) {
-                        return color(idx);
+        // Append lines where needed
+        that.chartLinePaths.enter()
+            .append("path")
+            .attr({
+                "class": chartLineClass,
+                "fill": "none",
+                "stroke": function (d, idx) {
+                    return color(idx);
 
-                    },
-                    "d": function (d) {
-                        return line(d.data);
-                    }
+                },
+                "d": function (d) {
+                    return line(d.data);
+                }
 
-                });
-
-            // Track D3 bound elements in the component model
-
-            that.chartLinePaths.each(function (d) {
-                that.trackD3BoundElement(d.id, this);
             });
+
+        // Track D3 bound elements in the component model
+
+        that.chartLinePaths.each(function (d) {
+            that.trackD3BoundElement(d.id, this);
+        });
     };
 
     floe.chartAuthoring.lineChart.chart.updateChartLine = function (that) {
