@@ -15,7 +15,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     // Mix-in grade for y axis
 
-    fluid.defaults("floe.chartAuthoring.lineChart.yAxis", {
+    fluid.defaults("floe.chartAuthoring.yAxis", {
         model: {
             dataSet: []
         },
@@ -34,23 +34,23 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         },
         invokers: {
             drawYAxis: {
-                funcName: "floe.chartAuthoring.lineChart.yAxis.drawYAxis",
+                funcName: "floe.chartAuthoring.yAxis.drawYAxis",
                 args: ["{that}"]
             }
         }
     });
 
-    floe.chartAuthoring.lineChart.yAxis.drawYAxis = function (that) {
+    floe.chartAuthoring.yAxis.drawYAxis = function (that) {
         var yAxisClass = that.classes.yAxis,
             padding = that.options.lineOptions.padding,
             axisTransform = "translate(" + padding + ",0)",
-            yAxis = floe.chartAuthoring.lineChart.yAxis.getYAxis(that);
+            yAxis = floe.chartAuthoring.yAxis.getYAxis(that);
 
         floe.chartAuthoring.lineChart.timeSeries.manageAxis(that, "yAxis", yAxisClass, axisTransform, yAxis);
 
     };
 
-    floe.chartAuthoring.lineChart.yAxis.getYAxis = function (that) {
+    floe.chartAuthoring.yAxis.getYAxis = function (that) {
         var width = that.options.svgOptions.width;
         var padding = that.options.lineOptions.padding;
         var yScale = floe.chartAuthoring.lineChart.timeSeries.getYScale(that);

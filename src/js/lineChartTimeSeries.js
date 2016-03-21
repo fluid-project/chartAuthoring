@@ -16,7 +16,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // Draws simple time series line charts
 
     fluid.defaults("floe.chartAuthoring.lineChart.timeSeries", {
-        gradeNames: ["floe.chartAuthoring.lineChart.xAxisTimeSeries", "floe.chartAuthoring.lineChart.yAxis",  "floe.chartAuthoring.valueBinding", "floe.svgDrawingArea"],
+        gradeNames: ["floe.chartAuthoring.xAxisTimeSeries", "floe.chartAuthoring.yAxis",  "floe.chartAuthoring.valueBinding", "floe.svgDrawingArea"],
         model: {
             dataSet: [],
             // See lineTests.js for the style of the dataSets that are

@@ -15,7 +15,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     // Mix-in grade for time-series x axis
 
-    fluid.defaults("floe.chartAuthoring.lineChart.xAxisTimeSeries", {
+    fluid.defaults("floe.chartAuthoring.xAxisTimeSeries", {
         model: {
             dataSet: []
         },
@@ -45,28 +45,28 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         },
         invokers: {
             drawXAxis: {
-                funcName: "floe.chartAuthoring.lineChart.xAxisTimeSeries.drawXAxis",
+                funcName: "floe.chartAuthoring.xAxisTimeSeries.drawXAxis",
                 args: ["{that}"]
             }
         }
     });
 
-    floe.chartAuthoring.lineChart.xAxisTimeSeries.drawXAxis = function (that) {
+    floe.chartAuthoring.xAxisTimeSeries.drawXAxis = function (that) {
         var xAxisClass = that.classes.xAxis,
             padding = that.options.lineOptions.padding,
             height = that.options.svgOptions.height,
             axisTransform = "translate(0," + (height - padding) + ")",
-            xAxis = floe.chartAuthoring.lineChart.xAxisTimeSeries.getXAxis(that);
+            xAxis = floe.chartAuthoring.xAxisTimeSeries.getXAxis(that);
 
         floe.chartAuthoring.lineChart.timeSeries.manageAxis(that, "xAxis", xAxisClass, axisTransform, xAxis);
     };
 
-    floe.chartAuthoring.lineChart.xAxisTimeSeries.getXAxis = function (that) {
+    floe.chartAuthoring.xAxisTimeSeries.getXAxis = function (that) {
         var xScale = floe.chartAuthoring.lineChart.timeSeries.getXScale(that),
             numberOfXAxisTicks = that.options.lineOptions.numberOfXAxisTicks;
 
         var xAxis = d3.svg.axis()
-            .tickFormat(floe.chartAuthoring.lineChart.xAxisTimeSeries.getXAxisTickFormat())
+            .tickFormat(floe.chartAuthoring.xAxisTimeSeries.getXAxisTickFormat())
             .ticks(numberOfXAxisTicks)
             .orient("bottom")
             .scale(xScale);
@@ -75,7 +75,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     };
 
-    floe.chartAuthoring.lineChart.xAxisTimeSeries.getXAxisTickFormat = function () {
+    floe.chartAuthoring.xAxisTimeSeries.getXAxisTickFormat = function () {
         // See https://github.com/mbostock/d3/wiki/Time-Formatting for
         // explanation of how time formatting works in D3
         var customTickFormat = d3.time.format.multi([
