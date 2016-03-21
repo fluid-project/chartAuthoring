@@ -62,7 +62,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     };
 
     floe.chartAuthoring.xAxisTimeSeries.getXAxis = function (that) {
-        var xScale = floe.chartAuthoring.lineChart.timeSeries.getXScale(that),
+        var xScale = that.getXScale(),
             numberOfXAxisTicks = that.options.lineOptions.numberOfXAxisTicks;
 
         var xAxis = d3.svg.axis()

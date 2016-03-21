@@ -107,8 +107,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var interpolation = that.options.lineOptions.interpolation;
         var height = that.options.svgOptions.height,
             padding = that.options.lineOptions.padding,
-            yScale = floe.chartAuthoring.lineChart.timeSeries.getYScale(that),
-            xScale = floe.chartAuthoring.lineChart.timeSeries.getXScale(that);
+            yScale = that.getYScale(),
+            xScale = that.getXScale();
 
         var area = d3.svg.area()
             .interpolate(interpolation)

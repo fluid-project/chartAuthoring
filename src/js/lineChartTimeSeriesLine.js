@@ -110,8 +110,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     floe.chartAuthoring.lineChart.timeSeries.line.getLineGenerator = function (that) {
         var interpolation = that.options.lineOptions.interpolation,
-            yScale = floe.chartAuthoring.lineChart.timeSeries.getYScale(that),
-            xScale = floe.chartAuthoring.lineChart.timeSeries.getXScale(that);
+            yScale = that.getYScale(),
+            xScale = that.getXScale();
 
         var line = d3.svg.line()
             .interpolate(interpolation)

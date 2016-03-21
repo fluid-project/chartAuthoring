@@ -53,7 +53,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.chartAuthoring.yAxis.getYAxis = function (that) {
         var width = that.options.svgOptions.width;
         var padding = that.options.lineOptions.padding;
-        var yScale = floe.chartAuthoring.lineChart.timeSeries.getYScale(that);
+        var yScale = that.getYScale();
 
         var yAxis = d3.svg.axis()
             .orient("left")

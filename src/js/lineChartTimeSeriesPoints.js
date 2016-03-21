@@ -86,8 +86,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var chartLinePointClass = that.classes.chartLinePoint,
             pointRadius = that.options.lineOptions.pointRadius,
             color = that.colorScale,
-            yScale = floe.chartAuthoring.lineChart.timeSeries.getYScale(that),
-            xScale = floe.chartAuthoring.lineChart.timeSeries.getXScale(that);
+            yScale = that.getYScale(),
+            xScale = that.getXScale();
         // Append needed circles for each group
         that.chartLinePointGroups.each(function (d, idx) {
             var currentGroup = d3.select(this);
@@ -123,8 +123,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     floe.chartAuthoring.lineChart.timeSeries.points.updatePoints = function (that) {
         var transitionLength = that.options.lineOptions.transitionLength,
-            yScale = floe.chartAuthoring.lineChart.timeSeries.getYScale(that),
-            xScale = floe.chartAuthoring.lineChart.timeSeries.getXScale(that);
+            yScale = that.getYScale(),
+            xScale = that.getXScale();
             // Transition circles
         that.chartLinePointGroups.each(function () {
             var currentGroup = d3.select(this);

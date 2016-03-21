@@ -76,6 +76,16 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 args: ["{that}.model.dataSet"],
                 func: "floe.chartAuthoring.lineChart.timeSeries.wrapSingleDataSet"
             }
+        },
+        invokers: {
+            getXScale: {
+                funcName: "floe.chartAuthoring.lineChart.timeSeries.getXScaleTimeSeries",
+                args: ["{that}"]
+            },
+            getYScale: {
+                funcName: "floe.chartAuthoring.lineChart.timeSeries.getYScale",
+                args: ["{that}"]
+            }
         }
     });
 
@@ -148,7 +158,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             .range([height - padding, padding]);
     };
 
-    floe.chartAuthoring.lineChart.timeSeries.getXScale = function (that) {
+    floe.chartAuthoring.lineChart.timeSeries.getXScaleTimeSeries = function (that) {
         var width = that.options.svgOptions.width;
         var padding = that.options.lineOptions.padding;
         var dataSet = that.model.wrappedDataSet;
