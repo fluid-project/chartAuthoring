@@ -16,7 +16,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     fluid.registerNamespace("floe.tests.chartAuthoring");
 
     fluid.defaults("floe.tests.chartAuthoring.lineChart.chart", {
-        gradeNames: ["floe.chartAuthoring.lineChart.chart"],
+        gradeNames: ["floe.chartAuthoring.lineChart.timeSeries"],
         svgOptions: {
             height: 400,
             width: 800
@@ -461,7 +461,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     floe.tests.chartAuthoring.validateLine = function (that, expectedDataSet) {
 
-        expectedDataSet = floe.chartAuthoring.lineChart.chart.wrapSingleDataSet(expectedDataSet);
+        expectedDataSet = floe.chartAuthoring.lineChart.timeSeries.wrapSingleDataSet(expectedDataSet);
 
         // Test that the chart line is created
 

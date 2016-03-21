@@ -1,0 +1,119 @@
+/*
+Copyright 2016 OCAD University
+
+Licensed under the Educational Community License (ECL), Version 2.0 or the New
+BSD license. You may not use this file except in compliance with one these
+Licenses.
+
+You may obtain a copy of the ECL 2.0 License and BSD License at
+https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.txt
+*/
+
+(function ($, fluid) {
+
+    "use strict";
+
+    // Mix-in grade for time-series x axis
+
+    fluid.defaults("floe.chartAuthoring.lineChart.xAxisTimeSeries", {
+        model: {
+            dataSet: []
+        },
+        bindings: {
+            title: "svgTitle",
+            description: "svgDescription"
+        },
+        svgOptions: {
+            width: 700,
+            height: 500
+        },
+        lineOptions: {
+            numberOfXAxisTicks: 6
+        },
+        selectors: {
+            xAxis: ".floec-ca-lineChart-x-axis"
+        },
+        events: {
+            onChartCreated: null,  // Fire when the line is created. Ready to register D3 DOM event listeners,
+            onDraw: null
+        },
+        listeners: {
+            "onDraw.drawXAxis": {
+                func: "{that}.drawXAxis",
+                priority: "before:drawChartLine"
+            }
+        },
+        invokers: {
+            drawXAxis: {
+                funcName: "floe.chartAuthoring.lineChart.xAxisTimeSeries.drawXAxis",
+                args: ["{that}"]
+            }
+        }
+    });
+
+    floe.chartAuthoring.lineChart.xAxisTimeSeries.drawXAxis = function (that) {
+        var xAxisClass = that.classes.xAxis,
+            padding = that.options.lineOptions.padding,
+            height = that.options.svgOptions.height,
+            axisTransform = "translate(0," + (height - padding) + ")",
+            xAxis = floe.chartAuthoring.lineChart.xAxisTimeSeries.getXAxis(that);
+
+        floe.chartAuthoring.lineChart.timeSeries.manageAxis(that, "xAxis", xAxisClass, axisTransform, xAxis);
+    };
+
+    floe.chartAuthoring.lineChart.xAxisTimeSeries.getXScale = function (that) {
+        var width = that.options.svgOptions.width;
+        var padding = that.options.lineOptions.padding;
+        var dataSet = that.model.wrappedDataSet;
+
+        // Create an array consisting of all the values in every dataset array
+        var combinedData = fluid.accumulate(dataSet, floe.chartAuthoring.lineChart.timeSeries.concatData, []);
+
+        // Get the max date of that combined array
+        var maxDate = d3.max(combinedData, function (d) {
+            return new Date(d.date);
+        });
+
+        // Get the min date of that combined array
+        var minDate = d3.min(combinedData, function (d) {
+            return new Date(d.date);
+        });
+
+        return d3.time.scale()
+            .domain([minDate, maxDate])
+            .range([padding, width - padding * 2]);
+    };
+
+
+    floe.chartAuthoring.lineChart.xAxisTimeSeries.getXAxis = function (that) {
+        var xScale = floe.chartAuthoring.lineChart.xAxisTimeSeries.getXScale(that),
+            numberOfXAxisTicks = that.options.lineOptions.numberOfXAxisTicks;
+
+        var xAxis = d3.svg.axis()
+            .tickFormat(floe.chartAuthoring.lineChart.xAxisTimeSeries.getXAxisTickFormat())
+            .ticks(numberOfXAxisTicks)
+            .orient("bottom")
+            .scale(xScale);
+
+        return xAxis;
+
+    };
+
+    floe.chartAuthoring.lineChart.xAxisTimeSeries.getXAxisTickFormat = function () {
+        // See https://github.com/mbostock/d3/wiki/Time-Formatting for
+        // explanation of how time formatting works in D3
+        var customTickFormat = d3.time.format.multi([
+            [".%L", function (d) { return d.getMilliseconds(); }],
+            [":%S", function (d) { return d.getSeconds(); }],
+            ["%I:%M", function (d) { return d.getMinutes(); }],
+            ["%I %p", function (d) { return d.getHours(); }],
+            ["%a %d", function (d) { return d.getDay() && d.getDate() !== 1; }],
+            ["%b %d", function (d) { return d.getDate() !== 1; }],
+            ["%b", function (d) { return d.getMonth(); }],
+            ["%Y", function () { return true; }]
+        ]);
+
+        return customTickFormat;
+    };
+
+})(jQuery, fluid);

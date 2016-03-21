@@ -15,8 +15,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     // Draws simple time series line charts
 
-    fluid.defaults("floe.chartAuthoring.lineChart.chart", {
-        gradeNames: ["floe.chartAuthoring.valueBinding", "floe.svgDrawingArea"],
+    fluid.defaults("floe.chartAuthoring.lineChart.timeSeries", {
+        gradeNames: ["floe.chartAuthoring.lineChart.xAxisTimeSeries", "floe.chartAuthoring.lineChart.yAxis",  "floe.chartAuthoring.valueBinding", "floe.svgDrawingArea"],
         model: {
             dataSet: [],
             // See lineTests.js for the style of the dataSets that are
@@ -48,9 +48,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             drawPoints: false,
             pointRadius: 2,
             // In milliseconds
-            transitionLength: 2000,
-            // Number of X axis ticks
-            numberOfXAxisTicks: 6
+            transitionLength: 2000
         },
         styles: {
             svg: "floe-ca-lineChart-chart",
@@ -60,8 +58,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             title: ".floec-ca-lineChart-title",
             description: ".floec-ca-lineChart-description",
             svg: ".floec-ca-lineChart-line",
-            yAxis: ".floec-ca-lineChart-y-axis",
-            xAxis: ".floec-ca-lineChart-x-axis",
             chartLine: ".floec-ca-lineChart-chartLine",
             chartLinePointGroup: ".floec-ca-lineChart-chartLinePointGroup",
             chartLinePoint: ".floec-ca-lineChart-chartLinePoint",
@@ -73,16 +69,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         },
         listeners: {
             "onCreate.create": {
-                funcName: "floe.chartAuthoring.lineChart.chart.create",
+                funcName: "floe.chartAuthoring.lineChart.timeSeries.create",
                 args: ["{that}"]
-            },
-            "onDraw.drawYAxis": {
-                func: "{that}.drawYAxis",
-                priority: "before:drawChartLine"
-            },
-            "onDraw.drawXAxis": {
-                func: "{that}.drawXAxis",
-                priority: "before:drawChartLine"
             },
             "onDraw.drawChartLine": {
                 func: "{that}.drawChartLine"
@@ -108,43 +96,35 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             singleTransform: {
                 type: "fluid.transforms.free",
                 args: ["{that}.model.dataSet"],
-                func: "floe.chartAuthoring.lineChart.chart.wrapSingleDataSet"
+                func: "floe.chartAuthoring.lineChart.timeSeries.wrapSingleDataSet"
             }
         },
         invokers: {
-            drawXAxis: {
-                funcName: "floe.chartAuthoring.lineChart.chart.drawXAxis",
-                args: ["{that}"]
-            },
-            drawYAxis: {
-                funcName: "floe.chartAuthoring.lineChart.chart.drawYAxis",
-                args: ["{that}"]
-            },
             drawChartLine: {
-                funcName: "floe.chartAuthoring.lineChart.chart.drawChartLine",
+                funcName: "floe.chartAuthoring.lineChart.timeSeries.drawChartLine",
                 args: ["{that}"]
             },
             drawArea: {
-                funcName: "floe.chartAuthoring.lineChart.chart.drawArea",
+                funcName: "floe.chartAuthoring.lineChart.timeSeries.drawArea",
                 args: ["{that}"]
             },
             drawPoints: {
-                funcName: "floe.chartAuthoring.lineChart.chart.drawPoints",
+                funcName: "floe.chartAuthoring.lineChart.timeSeries.drawPoints",
                 args: ["{that}"]
             }
         }
     });
 
     // Test if a dataset is multi
-    floe.chartAuthoring.lineChart.chart.isMultiDataSet = function (dataSet) {
+    floe.chartAuthoring.lineChart.timeSeries.isMultiDataSet = function (dataSet) {
         return dataSet[0].id !== undefined && dataSet[0].data !== undefined;
     };
 
     // Wrap a non-multi dataset (a simple array without ID keys) so we can
     // process it with the same function used for multi datasets, and
     // create a default id for it for object constancy
-    floe.chartAuthoring.lineChart.chart.wrapSingleDataSet = function (dataSet) {
-        if (!floe.chartAuthoring.lineChart.chart.isMultiDataSet(dataSet)) {
+    floe.chartAuthoring.lineChart.timeSeries.wrapSingleDataSet = function (dataSet) {
+        if (!floe.chartAuthoring.lineChart.timeSeries.isMultiDataSet(dataSet)) {
             dataSet = [{
                 id: "dataSet",
                 data: dataSet
@@ -153,7 +133,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         return dataSet;
     };
 
-    floe.chartAuthoring.lineChart.chart.manageAxis = function (that, axisSelector, axisClass, axisTransform, axisFunction) {
+    floe.chartAuthoring.lineChart.timeSeries.manageAxis = function (that, axisSelector, axisClass, axisTransform, axisFunction) {
 
         var transitionLength = that.options.lineOptions.transitionLength;
 
@@ -177,27 +157,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     };
 
-    floe.chartAuthoring.lineChart.chart.drawYAxis = function (that) {
-        var yAxisClass = that.classes.yAxis,
-            padding = that.options.lineOptions.padding,
-            axisTransform = "translate(" + padding + ",0)",
-            yAxis = floe.chartAuthoring.lineChart.chart.getYAxis(that);
-
-        floe.chartAuthoring.lineChart.chart.manageAxis(that, "yAxis", yAxisClass, axisTransform, yAxis);
-
-    };
-
-    floe.chartAuthoring.lineChart.chart.drawXAxis = function (that) {
-        var xAxisClass = that.classes.xAxis,
-            padding = that.options.lineOptions.padding,
-            height = that.options.svgOptions.height,
-            axisTransform = "translate(0," + (height - padding) + ")",
-            xAxis = floe.chartAuthoring.lineChart.chart.getXAxis(that);
-
-        floe.chartAuthoring.lineChart.chart.manageAxis(that, "xAxis", xAxisClass, axisTransform, xAxis);
-    };
-
-    floe.chartAuthoring.lineChart.chart.drawChartLine = function (that) {
+    floe.chartAuthoring.lineChart.timeSeries.drawChartLine = function (that) {
         var dataSet = that.model.wrappedDataSet,
             chartLineClass = that.classes.chartLine,
             svg = that.svg;
@@ -208,17 +168,17 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 return d.id;
             });
 
-        floe.chartAuthoring.lineChart.chart.addChartLine(that);
+        floe.chartAuthoring.lineChart.timeSeries.addChartLine(that);
 
-        floe.chartAuthoring.lineChart.chart.removeChartLine(that);
+        floe.chartAuthoring.lineChart.timeSeries.removeChartLine(that);
 
-        floe.chartAuthoring.lineChart.chart.updateChartLine(that);
+        floe.chartAuthoring.lineChart.timeSeries.updateChartLine(that);
     };
 
-    floe.chartAuthoring.lineChart.chart.addChartLine = function (that) {
+    floe.chartAuthoring.lineChart.timeSeries.addChartLine = function (that) {
         var color = that.colorScale,
             chartLineClass = that.classes.chartLine,
-            line = floe.chartAuthoring.lineChart.chart.getLineGenerator(that);
+            line = floe.chartAuthoring.lineChart.timeSeries.getLineGenerator(that);
 
         // Append lines where needed
         that.chartLinePaths.enter()
@@ -243,8 +203,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         });
     };
 
-    floe.chartAuthoring.lineChart.chart.updateChartLine = function (that) {
-        var line = floe.chartAuthoring.lineChart.chart.getLineGenerator(that),
+    floe.chartAuthoring.lineChart.timeSeries.updateChartLine = function (that) {
+        var line = floe.chartAuthoring.lineChart.timeSeries.getLineGenerator(that),
             transitionLength = that.options.lineOptions.transitionLength;
 
         that.chartLinePaths.transition().duration(transitionLength)
@@ -255,13 +215,13 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             });
     };
 
-    floe.chartAuthoring.lineChart.chart.removeChartLine = function (that) {
+    floe.chartAuthoring.lineChart.timeSeries.removeChartLine = function (that) {
         // Remove any removed lines
         var removedPaths = that.chartLinePaths.exit();
         that.exitD3Elements(removedPaths);
     };
 
-    floe.chartAuthoring.lineChart.chart.drawArea = function (that) {
+    floe.chartAuthoring.lineChart.timeSeries.drawArea = function (that) {
         if (!that.options.lineOptions.drawArea) {
             return;
         }
@@ -277,18 +237,18 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 return d.id;
             });
 
-        floe.chartAuthoring.lineChart.chart.addArea(that);
+        floe.chartAuthoring.lineChart.timeSeries.addArea(that);
 
-        floe.chartAuthoring.lineChart.chart.removeArea(that);
+        floe.chartAuthoring.lineChart.timeSeries.removeArea(that);
 
-        floe.chartAuthoring.lineChart.chart.updateArea(that);
+        floe.chartAuthoring.lineChart.timeSeries.updateArea(that);
 
     };
 
-    floe.chartAuthoring.lineChart.chart.addArea = function (that) {
+    floe.chartAuthoring.lineChart.timeSeries.addArea = function (that) {
         var chartLineAreaClass = that.classes.chartLineArea,
             color = that.colorScale,
-            area = floe.chartAuthoring.lineChart.chart.getAreaGenerator(that);
+            area = floe.chartAuthoring.lineChart.timeSeries.getAreaGenerator(that);
         // Append any needed area paths
 
         that.chartLineAreaPaths.enter()
@@ -309,10 +269,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         });
     };
 
-    floe.chartAuthoring.lineChart.chart.updateArea = function (that) {
+    floe.chartAuthoring.lineChart.timeSeries.updateArea = function (that) {
         // Transition lines where needed
         var transitionLength = that.options.lineOptions.transitionLength,
-            area = floe.chartAuthoring.lineChart.chart.getAreaGenerator(that);
+            area = floe.chartAuthoring.lineChart.timeSeries.getAreaGenerator(that);
 
         that.chartLineAreaPaths.transition().duration(transitionLength)
             .attr({
@@ -322,13 +282,13 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             });
     };
 
-    floe.chartAuthoring.lineChart.chart.removeArea = function (that) {
+    floe.chartAuthoring.lineChart.timeSeries.removeArea = function (that) {
         // Remove areas for any removed data
         var removedPaths = that.chartLineAreaPaths.exit();
         that.exitD3Elements(removedPaths);
     };
 
-    floe.chartAuthoring.lineChart.chart.drawPoints = function (that) {
+    floe.chartAuthoring.lineChart.timeSeries.drawPoints = function (that) {
         if (!that.options.lineOptions.drawPoints) {
             return;
         }
@@ -343,16 +303,16 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             return d.id;
         });
 
-        floe.chartAuthoring.lineChart.chart.addPointGroups(that);
+        floe.chartAuthoring.lineChart.timeSeries.addPointGroups(that);
 
-        floe.chartAuthoring.lineChart.chart.deletePointGroups(that);
+        floe.chartAuthoring.lineChart.timeSeries.deletePointGroups(that);
 
-        floe.chartAuthoring.lineChart.chart.managePoints(that);
+        floe.chartAuthoring.lineChart.timeSeries.managePoints(that);
 
-        floe.chartAuthoring.lineChart.chart.updatePoints(that);
+        floe.chartAuthoring.lineChart.timeSeries.updatePoints(that);
     };
 
-    floe.chartAuthoring.lineChart.chart.addPointGroups = function (that) {
+    floe.chartAuthoring.lineChart.timeSeries.addPointGroups = function (that) {
         var chartLinePointGroupClass = that.classes.chartLinePointGroup;
         // Append any needed circle groups
 
@@ -365,18 +325,18 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         });
     };
 
-    floe.chartAuthoring.lineChart.chart.deletePointGroups = function (that) {
+    floe.chartAuthoring.lineChart.timeSeries.deletePointGroups = function (that) {
         // Exit any removed circle groups
         var removedPointGroups = that.chartLinePointGroups.exit();
         that.exitD3Elements(removedPointGroups);
     };
 
-    floe.chartAuthoring.lineChart.chart.managePoints = function (that) {
+    floe.chartAuthoring.lineChart.timeSeries.managePoints = function (that) {
         var chartLinePointClass = that.classes.chartLinePoint,
             pointRadius = that.options.lineOptions.pointRadius,
             color = that.colorScale,
-            yScale = floe.chartAuthoring.lineChart.chart.getYScale(that),
-            xScale = floe.chartAuthoring.lineChart.chart.getXScale(that);
+            yScale = floe.chartAuthoring.lineChart.timeSeries.getYScale(that),
+            xScale = floe.chartAuthoring.lineChart.timeSeries.getXScale(that);
         // Append needed circles for each group
         that.chartLinePointGroups.each(function (d, idx) {
             var currentGroup = d3.select(this);
@@ -410,10 +370,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         });
     };
 
-    floe.chartAuthoring.lineChart.chart.updatePoints = function (that) {
+    floe.chartAuthoring.lineChart.timeSeries.updatePoints = function (that) {
         var transitionLength = that.options.lineOptions.transitionLength,
-            yScale = floe.chartAuthoring.lineChart.chart.getYScale(that),
-            xScale = floe.chartAuthoring.lineChart.chart.getXScale(that);
+            yScale = floe.chartAuthoring.lineChart.timeSeries.getYScale(that),
+            xScale = floe.chartAuthoring.lineChart.timeSeries.getXScale(that);
             // Transition circles
         that.chartLinePointGroups.each(function () {
             var currentGroup = d3.select(this);
@@ -433,17 +393,17 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     // Accumulator function for consolidating multiple dataset items together
     // for purposes of determining max/min
-    floe.chartAuthoring.lineChart.chart.concatData = function (setItem, accumulationArray) {
+    floe.chartAuthoring.lineChart.timeSeries.concatData = function (setItem, accumulationArray) {
         return accumulationArray.concat(setItem.data);
     };
 
-    floe.chartAuthoring.lineChart.chart.getYScale = function (that) {
+    floe.chartAuthoring.lineChart.timeSeries.getYScale = function (that) {
         var height = that.options.svgOptions.height;
         var padding = that.options.lineOptions.padding;
         var dataSet = that.model.wrappedDataSet;
 
         // Create an array consisting of all the values in every dataset array
-        var combinedData = fluid.accumulate(dataSet, floe.chartAuthoring.lineChart.chart.concatData, []);
+        var combinedData = fluid.accumulate(dataSet, floe.chartAuthoring.lineChart.timeSeries.concatData, []);
 
         // Get the max value of that combined array
         var maxValue = d3.max(combinedData, function (d) {
@@ -458,13 +418,13 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             .range([height - padding, padding]);
     };
 
-    floe.chartAuthoring.lineChart.chart.getXScale = function (that) {
+    floe.chartAuthoring.lineChart.timeSeries.getXScale = function (that) {
         var width = that.options.svgOptions.width;
         var padding = that.options.lineOptions.padding;
         var dataSet = that.model.wrappedDataSet;
 
         // Create an array consisting of all the values in every dataset array
-        var combinedData = fluid.accumulate(dataSet, floe.chartAuthoring.lineChart.chart.concatData, []);
+        var combinedData = fluid.accumulate(dataSet, floe.chartAuthoring.lineChart.timeSeries.concatData, []);
 
         // Get the max date of that combined array
         var maxDate = d3.max(combinedData, function (d) {
@@ -481,57 +441,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             .range([padding, width - padding * 2]);
     };
 
-    floe.chartAuthoring.lineChart.chart.getYAxis = function (that) {
-        var width = that.options.svgOptions.width;
-        var padding = that.options.lineOptions.padding;
-        var yScale = floe.chartAuthoring.lineChart.chart.getYScale(that);
-
-        var yAxis = d3.svg.axis()
-            .orient("left")
-            .scale(yScale)
-            .innerTickSize(- width + padding * 3)
-            .outerTickSize(0)
-            .tickPadding(10);
-
-        return yAxis;
-    };
-
-    floe.chartAuthoring.lineChart.chart.getXAxis = function (that) {
-        var xScale = floe.chartAuthoring.lineChart.chart.getXScale(that),
-            numberOfXAxisTicks = that.options.lineOptions.numberOfXAxisTicks;
-
-        var xAxis = d3.svg.axis()
-            .tickFormat(floe.chartAuthoring.lineChart.chart.getXAxisTickFormat())
-            .ticks(numberOfXAxisTicks)
-            .orient("bottom")
-            .scale(xScale);
-
-        return xAxis;
-
-    };
-
-    floe.chartAuthoring.lineChart.chart.getXAxisTickFormat = function () {
-        // See https://github.com/mbostock/d3/wiki/Time-Formatting for
-        // explanation of how time formatting works in D3
-        var customTickFormat = d3.time.format.multi([
-            [".%L", function (d) { return d.getMilliseconds(); }],
-            [":%S", function (d) { return d.getSeconds(); }],
-            ["%I:%M", function (d) { return d.getMinutes(); }],
-            ["%I %p", function (d) { return d.getHours(); }],
-            ["%a %d", function (d) { return d.getDay() && d.getDate() !== 1; }],
-            ["%b %d", function (d) { return d.getDate() !== 1; }],
-            ["%b", function (d) { return d.getMonth(); }],
-            ["%Y", function () { return true; }]
-        ]);
-
-        return customTickFormat;
-    };
-
-
-    floe.chartAuthoring.lineChart.chart.getLineGenerator = function (that) {
+    floe.chartAuthoring.lineChart.timeSeries.getLineGenerator = function (that) {
         var interpolation = that.options.lineOptions.interpolation,
-            yScale = floe.chartAuthoring.lineChart.chart.getYScale(that),
-            xScale = floe.chartAuthoring.lineChart.chart.getXScale(that);
+            yScale = floe.chartAuthoring.lineChart.timeSeries.getYScale(that),
+            xScale = floe.chartAuthoring.lineChart.timeSeries.getXScale(that);
 
         var line = d3.svg.line()
             .interpolate(interpolation)
@@ -545,12 +458,12 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         return line;
     };
 
-    floe.chartAuthoring.lineChart.chart.getAreaGenerator = function (that) {
+    floe.chartAuthoring.lineChart.timeSeries.getAreaGenerator = function (that) {
         var interpolation = that.options.lineOptions.interpolation;
         var height = that.options.svgOptions.height,
             padding = that.options.lineOptions.padding,
-            yScale = floe.chartAuthoring.lineChart.chart.getYScale(that),
-            xScale = floe.chartAuthoring.lineChart.chart.getXScale(that);
+            yScale = floe.chartAuthoring.lineChart.timeSeries.getYScale(that),
+            xScale = floe.chartAuthoring.lineChart.timeSeries.getXScale(that);
 
         var area = d3.svg.area()
             .interpolate(interpolation)
@@ -565,7 +478,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         return area;
     };
 
-    floe.chartAuthoring.lineChart.chart.create = function (that) {
+    floe.chartAuthoring.lineChart.timeSeries.create = function (that) {
         var colors = that.options.lineOptions.colors;
 
         that.createBaseSVGDrawingArea();
