@@ -42,22 +42,13 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             // see line.interpolate at https://github.com/mbostock/d3/wiki/SVG-Shapes
             // generally, "linear" for sharp lines, "cardinal" for smooth
             interpolation: "linear",
-            // Whether or not to add an area fill under the chart line
-            drawArea: false,
-            // Whether or not to add a point to each datapoint forming the line
-            drawPoints: false,
-            pointRadius: 2,
             // In milliseconds
             transitionLength: 2000
         },
         styles: {
-            svg: "floe-ca-lineChart-chart",
             chartLinePoint: "floe-ca-lineChart-chartLinePoint"
         },
         selectors: {
-            title: ".floec-ca-lineChart-title",
-            description: ".floec-ca-lineChart-description",
-            svg: ".floec-ca-lineChart-line",
             chartLinePointGroup: ".floec-ca-lineChart-chartLinePointGroup",
             chartLinePoint: ".floec-ca-lineChart-chartLinePoint"
         },
@@ -69,10 +60,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             "onCreate.create": {
                 funcName: "floe.chartAuthoring.lineChart.timeSeries.create",
                 args: ["{that}"]
-            },
-            "onDraw.drawPoints": {
-                func: "{that}.drawPoints",
-                priority: "after:drawArea"
             }
         },
         modelListeners: {
@@ -88,12 +75,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 type: "fluid.transforms.free",
                 args: ["{that}.model.dataSet"],
                 func: "floe.chartAuthoring.lineChart.timeSeries.wrapSingleDataSet"
-            }
-        },
-        invokers: {
-            drawPoints: {
-                funcName: "floe.chartAuthoring.lineChart.timeSeries.drawPoints",
-                args: ["{that}"]
             }
         }
     });
@@ -138,109 +119,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 .call(axisFunction);
         }
 
-    };
-
-    floe.chartAuthoring.lineChart.timeSeries.drawPoints = function (that) {
-        if (!that.options.lineOptions.drawPoints) {
-            return;
-        }
-
-        var svg = that.svg,
-            dataSet = that.model.wrappedDataSet,
-            chartLinePointGroupClass = that.classes.chartLinePointGroup;
-
-        // Bind data for circle groups
-        that.chartLinePointGroups = svg.selectAll("g." + chartLinePointGroupClass)
-        .data(dataSet, function (d) {
-            return d.id;
-        });
-
-        floe.chartAuthoring.lineChart.timeSeries.addPointGroups(that);
-
-        floe.chartAuthoring.lineChart.timeSeries.deletePointGroups(that);
-
-        floe.chartAuthoring.lineChart.timeSeries.managePoints(that);
-
-        floe.chartAuthoring.lineChart.timeSeries.updatePoints(that);
-    };
-
-    floe.chartAuthoring.lineChart.timeSeries.addPointGroups = function (that) {
-        var chartLinePointGroupClass = that.classes.chartLinePointGroup;
-        // Append any needed circle groups
-
-        that.chartLinePointGroups.enter()
-            .append("g")
-            .attr("class", chartLinePointGroupClass);
-
-        that.chartLinePointGroups.each(function (d) {
-            that.trackD3BoundElement(d.id, this);
-        });
-    };
-
-    floe.chartAuthoring.lineChart.timeSeries.deletePointGroups = function (that) {
-        // Exit any removed circle groups
-        var removedPointGroups = that.chartLinePointGroups.exit();
-        that.exitD3Elements(removedPointGroups);
-    };
-
-    floe.chartAuthoring.lineChart.timeSeries.managePoints = function (that) {
-        var chartLinePointClass = that.classes.chartLinePoint,
-            pointRadius = that.options.lineOptions.pointRadius,
-            color = that.colorScale,
-            yScale = floe.chartAuthoring.lineChart.timeSeries.getYScale(that),
-            xScale = floe.chartAuthoring.lineChart.timeSeries.getXScale(that);
-        // Append needed circles for each group
-        that.chartLinePointGroups.each(function (d, idx) {
-            var currentGroup = d3.select(this);
-
-            var circles = currentGroup.selectAll("circle")
-                    .data(d.data, function (currentData, index) {
-                    return d.id + "-" + index;
-                });
-
-            // Create new circles
-            circles.enter()
-            .append("circle")
-            .attr({
-                "class": chartLinePointClass,
-                "fill": color(idx),
-                "r": pointRadius,
-                "cy": function (d) {
-                    return yScale(d.value);
-                },
-                "cx": function (d) {
-                    return xScale(new Date(d.date));
-                }
-            })
-            .each(function (currentData, index) {
-                that.trackD3BoundElement(d.id + "-" + index, this);
-            });
-
-            // Remove exited circles
-            var removedCircles = circles.exit();
-            that.exitD3Elements(removedCircles);
-        });
-    };
-
-    floe.chartAuthoring.lineChart.timeSeries.updatePoints = function (that) {
-        var transitionLength = that.options.lineOptions.transitionLength,
-            yScale = floe.chartAuthoring.lineChart.timeSeries.getYScale(that),
-            xScale = floe.chartAuthoring.lineChart.timeSeries.getXScale(that);
-            // Transition circles
-        that.chartLinePointGroups.each(function () {
-            var currentGroup = d3.select(this);
-
-            currentGroup.selectAll("circle")
-                .transition().duration(transitionLength)
-                .attr({
-                    "cy": function (d) {
-                        return yScale(d.value);
-                    },
-                    "cx": function (d) {
-                        return xScale(new Date(d.date));
-                    }
-                });
-        });
     };
 
     // Accumulator function for consolidating multiple dataset items together
