@@ -61,32 +61,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         floe.chartAuthoring.lineChart.timeSeries.manageAxis(that, "xAxis", xAxisClass, axisTransform, xAxis);
     };
 
-    floe.chartAuthoring.lineChart.xAxisTimeSeries.getXScale = function (that) {
-        var width = that.options.svgOptions.width;
-        var padding = that.options.lineOptions.padding;
-        var dataSet = that.model.wrappedDataSet;
-
-        // Create an array consisting of all the values in every dataset array
-        var combinedData = fluid.accumulate(dataSet, floe.chartAuthoring.lineChart.timeSeries.concatData, []);
-
-        // Get the max date of that combined array
-        var maxDate = d3.max(combinedData, function (d) {
-            return new Date(d.date);
-        });
-
-        // Get the min date of that combined array
-        var minDate = d3.min(combinedData, function (d) {
-            return new Date(d.date);
-        });
-
-        return d3.time.scale()
-            .domain([minDate, maxDate])
-            .range([padding, width - padding * 2]);
-    };
-
-
     floe.chartAuthoring.lineChart.xAxisTimeSeries.getXAxis = function (that) {
-        var xScale = floe.chartAuthoring.lineChart.xAxisTimeSeries.getXScale(that),
+        var xScale = floe.chartAuthoring.lineChart.timeSeries.getXScale(that),
             numberOfXAxisTicks = that.options.lineOptions.numberOfXAxisTicks;
 
         var xAxis = d3.svg.axis()

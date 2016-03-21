@@ -50,31 +50,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     };
 
-    floe.chartAuthoring.lineChart.yAxis.getYScale = function (that) {
-        var height = that.options.svgOptions.height;
-        var padding = that.options.lineOptions.padding;
-        var dataSet = that.model.wrappedDataSet;
-
-        // Create an array consisting of all the values in every dataset array
-        var combinedData = fluid.accumulate(dataSet, floe.chartAuthoring.lineChart.timeSeries.concatData, []);
-
-        // Get the max value of that combined array
-        var maxValue = d3.max(combinedData, function (d) {
-            return d.value;
-        });
-
-        // Scale based on that max
-
-        return d3.scale.linear()
-            .domain([0, maxValue])
-            .nice()
-            .range([height - padding, padding]);
-    };
-
     floe.chartAuthoring.lineChart.yAxis.getYAxis = function (that) {
         var width = that.options.svgOptions.width;
         var padding = that.options.lineOptions.padding;
-        var yScale = floe.chartAuthoring.lineChart.yAxis.getYScale(that);
+        var yScale = floe.chartAuthoring.lineChart.timeSeries.getYScale(that);
 
         var yAxis = d3.svg.axis()
             .orient("left")
