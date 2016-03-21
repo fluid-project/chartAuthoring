@@ -16,7 +16,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // Draws simple time series line charts
 
     fluid.defaults("floe.chartAuthoring.lineChart.timeSeries", {
-        gradeNames: ["floe.chartAuthoring.xAxisTimeSeries", "floe.chartAuthoring.yAxis",  "floe.chartAuthoring.valueBinding", "floe.svgDrawingArea"],
+        gradeNames: ["floe.chartAuthoring.xAxisTimeSeries", "floe.chartAuthoring.yAxis",  "floe.chartAuthoring.lineChart.timeSeries.line", "floe.chartAuthoring.valueBinding", "floe.svgDrawingArea"],
         model: {
             dataSet: [],
             // See lineTests.js for the style of the dataSets that are
@@ -38,7 +38,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             colors: null,
             // Padding of the chart elements inside the SVG container
             padding: 50,
-            // interpolation mode for chart line
+            // interpolation mode for chart lines and areas
             // see line.interpolate at https://github.com/mbostock/d3/wiki/SVG-Shapes
             // generally, "linear" for sharp lines, "cardinal" for smooth
             interpolation: "linear",
@@ -58,7 +58,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             title: ".floec-ca-lineChart-title",
             description: ".floec-ca-lineChart-description",
             svg: ".floec-ca-lineChart-line",
-            chartLine: ".floec-ca-lineChart-chartLine",
             chartLinePointGroup: ".floec-ca-lineChart-chartLinePointGroup",
             chartLinePoint: ".floec-ca-lineChart-chartLinePoint",
             chartLineArea: ".floec-ca-lineChart-chartLineArea"
@@ -71,9 +70,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             "onCreate.create": {
                 funcName: "floe.chartAuthoring.lineChart.timeSeries.create",
                 args: ["{that}"]
-            },
-            "onDraw.drawChartLine": {
-                func: "{that}.drawChartLine"
             },
             "onDraw.drawArea": {
                 func: "{that}.drawArea",
@@ -100,10 +96,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             }
         },
         invokers: {
-            drawChartLine: {
-                funcName: "floe.chartAuthoring.lineChart.timeSeries.drawChartLine",
-                args: ["{that}"]
-            },
             drawArea: {
                 funcName: "floe.chartAuthoring.lineChart.timeSeries.drawArea",
                 args: ["{that}"]
@@ -155,70 +147,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 .call(axisFunction);
         }
 
-    };
-
-    floe.chartAuthoring.lineChart.timeSeries.drawChartLine = function (that) {
-        var dataSet = that.model.wrappedDataSet,
-            chartLineClass = that.classes.chartLine,
-            svg = that.svg;
-
-        // Bind data and keep a reference to the bound elements
-        that.chartLinePaths = svg.selectAll("path." + chartLineClass)
-            .data(dataSet, function (d) {
-                return d.id;
-            });
-
-        floe.chartAuthoring.lineChart.timeSeries.addChartLine(that);
-
-        floe.chartAuthoring.lineChart.timeSeries.removeChartLine(that);
-
-        floe.chartAuthoring.lineChart.timeSeries.updateChartLine(that);
-    };
-
-    floe.chartAuthoring.lineChart.timeSeries.addChartLine = function (that) {
-        var color = that.colorScale,
-            chartLineClass = that.classes.chartLine,
-            line = floe.chartAuthoring.lineChart.timeSeries.getLineGenerator(that);
-
-        // Append lines where needed
-        that.chartLinePaths.enter()
-            .append("path")
-            .attr({
-                "class": chartLineClass,
-                "fill": "none",
-                "stroke": function (d, idx) {
-                    return color(idx);
-
-                },
-                "d": function (d) {
-                    return line(d.data);
-                }
-
-            });
-
-        // Track D3 bound elements in the component model
-
-        that.chartLinePaths.each(function (d) {
-            that.trackD3BoundElement(d.id, this);
-        });
-    };
-
-    floe.chartAuthoring.lineChart.timeSeries.updateChartLine = function (that) {
-        var line = floe.chartAuthoring.lineChart.timeSeries.getLineGenerator(that),
-            transitionLength = that.options.lineOptions.transitionLength;
-
-        that.chartLinePaths.transition().duration(transitionLength)
-            .attr({
-                "d": function (d) {
-                    return line(d.data);
-                }
-            });
-    };
-
-    floe.chartAuthoring.lineChart.timeSeries.removeChartLine = function (that) {
-        // Remove any removed lines
-        var removedPaths = that.chartLinePaths.exit();
-        that.exitD3Elements(removedPaths);
     };
 
     floe.chartAuthoring.lineChart.timeSeries.drawArea = function (that) {
@@ -439,23 +367,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         return d3.time.scale()
             .domain([minDate, maxDate])
             .range([padding, width - padding * 2]);
-    };
-
-    floe.chartAuthoring.lineChart.timeSeries.getLineGenerator = function (that) {
-        var interpolation = that.options.lineOptions.interpolation,
-            yScale = floe.chartAuthoring.lineChart.timeSeries.getYScale(that),
-            xScale = floe.chartAuthoring.lineChart.timeSeries.getXScale(that);
-
-        var line = d3.svg.line()
-            .interpolate(interpolation)
-            .x(function (d) {
-                return xScale(new Date(d.date));
-            })
-            .y(function (d) {
-                return yScale(d.value);
-            });
-
-        return line;
     };
 
     floe.chartAuthoring.lineChart.timeSeries.getAreaGenerator = function (that) {
