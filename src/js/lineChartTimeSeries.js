@@ -45,13 +45,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             // In milliseconds
             transitionLength: 2000
         },
-        styles: {
-            chartLinePoint: "floe-ca-lineChart-chartLinePoint"
-        },
-        selectors: {
-            chartLinePointGroup: ".floec-ca-lineChart-chartLinePointGroup",
-            chartLinePoint: ".floec-ca-lineChart-chartLinePoint"
-        },
         events: {
             onChartCreated: null,  // Fire when the line is created. Ready to register D3 DOM event listeners,
             onDraw: null
