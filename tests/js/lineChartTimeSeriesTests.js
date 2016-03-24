@@ -522,7 +522,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         jqUnit.assertNotEquals("The chart area element is created with the proper selector", 0, chartLineAreas.length);
 
         fluid.each(chartLineAreas, function (chartLineArea, idx) {
-            floe.tests.chartAuthoring.validateBoundData(chartLineArea, that.model.wrappedDataSet[idx].data);
+            floe.tests.chartAuthoring.validateBoundData(chartLineArea, that.model.dataSet[idx].data);
         });
     };
 
@@ -533,7 +533,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         fluid.each(chartLinePointGroups, function (chartLinePointGroup, idx) {
             var chartLinePointElements = $(chartLinePointGroup).children("circle");
-            fluid.each(that.model.wrappedDataSet[idx].data, function (dataPoint, idx) {
+            fluid.each(that.model.dataSet[idx].data, function (dataPoint, idx) {
                 jqUnit.assertDeepEq("dataPoint from dataSet at position " + idx + " has a matching object in the line's bound data", dataPoint, chartLinePointElements[idx].__data__);
             });
         });
@@ -547,11 +547,11 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             }
         });
 
-        floe.tests.chartAuthoring.validateLineChart(that, that.model.wrappedDataSet);
+        floe.tests.chartAuthoring.validateLineChart(that, that.model.dataSet);
 
         that.applier.change("dataSet", floe.tests.chartAuthoring.timeSeriesData2);
 
-        floe.tests.chartAuthoring.validateLineChart(that, that.model.wrappedDataSet);
+        floe.tests.chartAuthoring.validateLineChart(that, that.model.dataSet);
     });
 
     jqUnit.test("Test line chart creation with area and data points enabled", function () {
@@ -569,7 +569,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             }
         });
 
-        floe.tests.chartAuthoring.validateLineChart(that, that.model.wrappedDataSet);
+        floe.tests.chartAuthoring.validateLineChart(that, that.model.dataSet);
 
         floe.tests.chartAuthoring.validateLineChartArea(that);
 
@@ -577,7 +577,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         that.applier.change("dataSet", floe.tests.chartAuthoring.timeSeriesData2);
 
-        floe.tests.chartAuthoring.validateLineChart(that, that.model.wrappedDataSet);
+        floe.tests.chartAuthoring.validateLineChart(that, that.model.dataSet);
 
         floe.tests.chartAuthoring.validateLineChartArea(that);
 
@@ -600,7 +600,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             }
         });
 
-        floe.tests.chartAuthoring.validateLineChart(that, that.model.wrappedDataSet);
+        floe.tests.chartAuthoring.validateLineChart(that, that.model.dataSet);
 
         floe.tests.chartAuthoring.validateLineChartArea(that);
 

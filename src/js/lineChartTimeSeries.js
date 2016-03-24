@@ -63,7 +63,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         },
         modelRelay: {
             source: "{that}.model.dataSet",
-            target: "{that}.model.wrappedDataSet",
+            target: "{that}.model.dataSet",
             singleTransform: {
                 type: "fluid.transforms.free",
                 args: ["{that}.model.dataSet"],
@@ -133,7 +133,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.chartAuthoring.lineChart.timeSeries.getYScale = function (that) {
         var height = that.options.svgOptions.height;
         var padding = that.options.lineOptions.padding;
-        var dataSet = that.model.wrappedDataSet;
+        var dataSet = that.model.dataSet;
 
         // Create an array consisting of all the values in every dataset array
         var combinedData = fluid.accumulate(dataSet, floe.chartAuthoring.lineChart.timeSeries.concatData, []);
@@ -154,7 +154,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.chartAuthoring.lineChart.timeSeries.getXScaleTimeSeries = function (that) {
         var width = that.options.svgOptions.width;
         var padding = that.options.lineOptions.padding;
-        var dataSet = that.model.wrappedDataSet;
+        var dataSet = that.model.dataSet;
 
         // Create an array consisting of all the values in every dataset array
         var combinedData = fluid.accumulate(dataSet, floe.chartAuthoring.lineChart.timeSeries.concatData, []);

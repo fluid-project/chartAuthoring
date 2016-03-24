@@ -44,7 +44,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var chartLineAreaClass = that.classes.chartLineArea;
 
         var svg = that.svg,
-            dataSet = that.model.wrappedDataSet;
+            dataSet = that.model.dataSet;
 
         // Bind data and keep a reference to the bound elements
         that.chartLineAreaPaths = svg.selectAll("path." + chartLineAreaClass)

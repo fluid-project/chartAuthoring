@@ -45,7 +45,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     });
 
     floe.chartAuthoring.lineChart.timeSeries.line.drawChartLine = function (that) {
-        var dataSet = that.model.wrappedDataSet,
+        var dataSet = that.model.dataSet,
             chartLineClass = that.classes.chartLine,
             svg = that.svg;
 

@@ -45,7 +45,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     floe.chartAuthoring.lineChart.timeSeries.points.drawPoints = function (that) {
         var svg = that.svg,
-            dataSet = that.model.wrappedDataSet,
+            dataSet = that.model.dataSet,
             chartLinePointGroupClass = that.classes.chartLinePointGroup;
 
         // Bind data for circle groups
