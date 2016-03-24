@@ -46,7 +46,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             axisTransform = "translate(" + padding + ",0)",
             yAxis = floe.chartAuthoring.yAxis.getYAxis(that);
 
-        floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.manageAxis(that, "yAxis", yAxisClass, axisTransform, yAxis);
+        that.manageAxis("yAxis", yAxisClass, axisTransform, yAxis);
 
     };
 

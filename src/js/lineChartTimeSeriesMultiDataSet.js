@@ -16,7 +16,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // Draws time series line charts
 
     fluid.defaults("floe.chartAuthoring.lineChart.timeSeriesMultiDataSet", {
-        gradeNames: ["floe.chartAuthoring.xAxisTimeSeries", "floe.chartAuthoring.yAxis",  "floe.chartAuthoring.lineChart.timeSeries.line",  "floe.chartAuthoring.valueBinding", "floe.svgDrawingArea"],
+        gradeNames: ["floe.chartAuthoring.axis", "floe.chartAuthoring.xAxisTimeSeries", "floe.chartAuthoring.yAxis",  "floe.chartAuthoring.lineChart.timeSeries.line",  "floe.chartAuthoring.valueBinding", "floe.svgDrawingArea"],
         model: {
             dataSet: [],
             // See lineTests.js for the style of the dataSets that are
@@ -72,30 +72,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             }
         }
     });
-
-    floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.manageAxis = function (that, axisSelector, axisClass, axisTransform, axisFunction) {
-
-        var transitionLength = that.options.lineOptions.transitionLength;
-
-        var noAxisExists = (that.locate(axisSelector).length > 0) ? false : true;
-
-        if (noAxisExists) {
-            // Append the axis if it's not drawn yet
-            that.svg.append("g")
-                .attr({
-                    "transform": axisTransform,
-                    "class": axisClass
-                })
-                .call(axisFunction);
-        } else {
-            // Transition the axis if it's already drawn
-            that.svg.select("." + axisClass)
-                .transition()
-                .duration(transitionLength)
-                .call(axisFunction);
-        }
-
-    };
 
     // Accumulator function for consolidating multiple dataset items together
     // for purposes of determining max/min
