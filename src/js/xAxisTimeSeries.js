@@ -58,7 +58,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             axisTransform = "translate(0," + (height - padding) + ")",
             xAxis = floe.chartAuthoring.xAxisTimeSeries.getXAxis(that);
 
-        floe.chartAuthoring.lineChart.timeSeries.manageAxis(that, "xAxis", xAxisClass, axisTransform, xAxis);
+        floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.manageAxis(that, "xAxis", xAxisClass, axisTransform, xAxis);
     };
 
     floe.chartAuthoring.xAxisTimeSeries.getXAxis = function (that) {

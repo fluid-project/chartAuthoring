@@ -15,7 +15,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     // Mixin grade for time-series line
 
-    fluid.defaults("floe.chartAuthoring.lineChart.timeSeries.line", {
+    fluid.defaults("floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.line", {
         model: {
             dataSet: []
         },
@@ -38,13 +38,13 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         },
         invokers: {
             drawChartLine: {
-                funcName: "floe.chartAuthoring.lineChart.timeSeries.line.drawChartLine",
+                funcName: "floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.line.drawChartLine",
                 args: ["{that}"]
             }
         }
     });
 
-    floe.chartAuthoring.lineChart.timeSeries.line.drawChartLine = function (that) {
+    floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.line.drawChartLine = function (that) {
         var dataSet = that.model.dataSet,
             chartLineClass = that.classes.chartLine,
             svg = that.svg;
@@ -55,17 +55,17 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 return d.id;
             });
 
-        floe.chartAuthoring.lineChart.timeSeries.line.addChartLine(that);
+        floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.line.addChartLine(that);
 
-        floe.chartAuthoring.lineChart.timeSeries.line.removeChartLine(that);
+        floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.line.removeChartLine(that);
 
-        floe.chartAuthoring.lineChart.timeSeries.line.updateChartLine(that);
+        floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.line.updateChartLine(that);
     };
 
-    floe.chartAuthoring.lineChart.timeSeries.line.addChartLine = function (that) {
+    floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.line.addChartLine = function (that) {
         var color = that.colorScale,
             chartLineClass = that.classes.chartLine,
-            line = floe.chartAuthoring.lineChart.timeSeries.line.getLineGenerator(that);
+            line = floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.line.getLineGenerator(that);
 
         // Append lines where needed
         that.chartLinePaths.enter()
@@ -90,8 +90,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         });
     };
 
-    floe.chartAuthoring.lineChart.timeSeries.line.updateChartLine = function (that) {
-        var line = floe.chartAuthoring.lineChart.timeSeries.line.getLineGenerator(that),
+    floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.line.updateChartLine = function (that) {
+        var line = floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.line.getLineGenerator(that),
             transitionLength = that.options.lineOptions.transitionLength;
 
         that.chartLinePaths.transition().duration(transitionLength)
@@ -102,13 +102,13 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             });
     };
 
-    floe.chartAuthoring.lineChart.timeSeries.line.removeChartLine = function (that) {
+    floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.line.removeChartLine = function (that) {
         // Remove any removed lines
         var removedPaths = that.chartLinePaths.exit();
         that.exitD3Elements(removedPaths);
     };
 
-    floe.chartAuthoring.lineChart.timeSeries.line.getLineGenerator = function (that) {
+    floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.line.getLineGenerator = function (that) {
         var interpolation = that.options.lineOptions.interpolation,
             yScale = that.getYScale(),
             xScale = that.getXScale();

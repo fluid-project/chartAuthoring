@@ -15,8 +15,16 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     fluid.registerNamespace("floe.tests.chartAuthoring");
 
-    fluid.defaults("floe.tests.chartAuthoring.lineChart.timeSeries", {
-        gradeNames: ["floe.chartAuthoring.lineChart.timeSeries"],
+    fluid.defaults("floe.tests.chartAuthoring.lineChart.timeSeriesSingleDataSet", {
+        gradeNames: ["floe.chartAuthoring.lineChart.timeSeriesSingleDataSet"],
+        svgOptions: {
+            height: 400,
+            width: 800
+        }
+    });
+
+    fluid.defaults("floe.tests.chartAuthoring.lineChart.timeSeriesMultiDataSet", {
+        gradeNames: ["floe.chartAuthoring.lineChart.timeSeriesMultiDataSet"],
         svgOptions: {
             height: 400,
             width: 800
@@ -461,8 +469,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     floe.tests.chartAuthoring.validateLine = function (that, expectedDataSet) {
 
-        expectedDataSet = floe.chartAuthoring.lineChart.timeSeries.wrapSingleDataSet(expectedDataSet);
-
         // Test that the chart line is created
 
         var chartLines = that.locate("chartLine");
@@ -541,7 +547,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     jqUnit.test("Test line chart creation and response to changed data", function () {
         jqUnit.expect(68);
-        var that = floe.tests.chartAuthoring.lineChart.timeSeries(".floec-ca-lineChart", {
+        var that = floe.tests.chartAuthoring.lineChart.timeSeriesSingleDataSet(".floec-ca-lineChart", {
             model: {
                 dataSet: floe.tests.chartAuthoring.timeSeriesData1
             }
@@ -556,9 +562,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     jqUnit.test("Test line chart creation with area and data points enabled", function () {
         jqUnit.expect(178);
-        var that = floe.tests.chartAuthoring.lineChart.timeSeries(".floec-ca-lineChart-area", {
+        var that = floe.tests.chartAuthoring.lineChart.timeSeriesSingleDataSet(".floec-ca-lineChart-area", {
             gradeNames: [
-                "floe.chartAuthoring.lineChart.timeSeries.area", "floe.chartAuthoring.lineChart.timeSeries.points"
+                "floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.area", "floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.points"
             ],
             model: {
                 dataSet: floe.tests.chartAuthoring.timeSeriesData1
@@ -587,10 +593,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     jqUnit.test("Test line chart with multiple lines", function () {
         jqUnit.expect(170);
-        var that = floe.tests.chartAuthoring.lineChart.timeSeries(".floec-ca-lineChart-multi", {
+        var that = floe.tests.chartAuthoring.lineChart.timeSeriesMultiDataSet(".floec-ca-lineChart-multi", {
             gradeNames: [
-                "floe.chartAuthoring.lineChart.timeSeries.area",
-                "floe.chartAuthoring.lineChart.timeSeries.points"
+                "floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.area",
+                "floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.points"
             ],
             model: {
                 dataSet: floe.tests.chartAuthoring.timeSeriesDataMulti

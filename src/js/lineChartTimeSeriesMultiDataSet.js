@@ -15,8 +15,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     // Draws time series line charts
 
-    fluid.defaults("floe.chartAuthoring.lineChart.timeSeries", {
-        gradeNames: ["floe.chartAuthoring.xAxisTimeSeries", "floe.chartAuthoring.yAxis",  "floe.chartAuthoring.lineChart.timeSeries.line",  "floe.chartAuthoring.valueBinding", "floe.svgDrawingArea"],
+    fluid.defaults("floe.chartAuthoring.lineChart.timeSeriesMultiDataSet", {
+        gradeNames: ["floe.chartAuthoring.xAxisTimeSeries", "floe.chartAuthoring.yAxis",  "floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.line",  "floe.chartAuthoring.valueBinding", "floe.svgDrawingArea"],
         model: {
             dataSet: [],
             // See lineTests.js for the style of the dataSets that are
@@ -51,7 +51,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         },
         listeners: {
             "onCreate.create": {
-                funcName: "floe.chartAuthoring.lineChart.timeSeries.create",
+                funcName: "floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.create",
                 args: ["{that}"]
             }
         },
@@ -61,46 +61,19 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 excludeSource: "init"
             }]
         },
-        modelRelay: {
-            source: "{that}.model.dataSet",
-            target: "{that}.model.dataSet",
-            singleTransform: {
-                type: "fluid.transforms.free",
-                args: ["{that}.model.dataSet"],
-                func: "floe.chartAuthoring.lineChart.timeSeries.wrapSingleDataSet"
-            }
-        },
         invokers: {
             getXScale: {
-                funcName: "floe.chartAuthoring.lineChart.timeSeries.getXScaleTimeSeries",
+                funcName: "floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.getXScaleTimeSeries",
                 args: ["{that}"]
             },
             getYScale: {
-                funcName: "floe.chartAuthoring.lineChart.timeSeries.getYScale",
+                funcName: "floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.getYScale",
                 args: ["{that}"]
             }
         }
     });
 
-    // Test if a dataset is multi
-    floe.chartAuthoring.lineChart.timeSeries.isMultiDataSet = function (dataSet) {
-        return dataSet[0].id !== undefined && dataSet[0].data !== undefined;
-    };
-
-    // Wrap a non-multi dataset (a simple array without ID keys) so we can
-    // process it with the same function used for multi datasets, and
-    // create a default id for it for object constancy
-    floe.chartAuthoring.lineChart.timeSeries.wrapSingleDataSet = function (dataSet) {
-        if (!floe.chartAuthoring.lineChart.timeSeries.isMultiDataSet(dataSet)) {
-            dataSet = [{
-                id: "dataSet",
-                data: dataSet
-            }];
-        }
-        return dataSet;
-    };
-
-    floe.chartAuthoring.lineChart.timeSeries.manageAxis = function (that, axisSelector, axisClass, axisTransform, axisFunction) {
+    floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.manageAxis = function (that, axisSelector, axisClass, axisTransform, axisFunction) {
 
         var transitionLength = that.options.lineOptions.transitionLength;
 
@@ -126,17 +99,17 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     // Accumulator function for consolidating multiple dataset items together
     // for purposes of determining max/min
-    floe.chartAuthoring.lineChart.timeSeries.concatData = function (setItem, accumulationArray) {
+    floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.concatData = function (setItem, accumulationArray) {
         return accumulationArray.concat(setItem.data);
     };
 
-    floe.chartAuthoring.lineChart.timeSeries.getYScale = function (that) {
+    floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.getYScale = function (that) {
         var height = that.options.svgOptions.height;
         var padding = that.options.lineOptions.padding;
         var dataSet = that.model.dataSet;
 
         // Create an array consisting of all the values in every dataset array
-        var combinedData = fluid.accumulate(dataSet, floe.chartAuthoring.lineChart.timeSeries.concatData, []);
+        var combinedData = fluid.accumulate(dataSet, floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.concatData, []);
 
         // Get the max value of that combined array
         var maxValue = d3.max(combinedData, function (d) {
@@ -151,13 +124,13 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             .range([height - padding, padding]);
     };
 
-    floe.chartAuthoring.lineChart.timeSeries.getXScaleTimeSeries = function (that) {
+    floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.getXScaleTimeSeries = function (that) {
         var width = that.options.svgOptions.width;
         var padding = that.options.lineOptions.padding;
         var dataSet = that.model.dataSet;
 
         // Create an array consisting of all the values in every dataset array
-        var combinedData = fluid.accumulate(dataSet, floe.chartAuthoring.lineChart.timeSeries.concatData, []);
+        var combinedData = fluid.accumulate(dataSet, floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.concatData, []);
 
         // Get the max date of that combined array
         var maxDate = d3.max(combinedData, function (d) {
@@ -174,7 +147,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             .range([padding, width - padding * 2]);
     };
 
-    floe.chartAuthoring.lineChart.timeSeries.create = function (that) {
+    floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.create = function (that) {
         var colors = that.options.lineOptions.colors;
 
         that.createBaseSVGDrawingArea();

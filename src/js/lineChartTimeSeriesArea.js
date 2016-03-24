@@ -15,7 +15,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     // Mixin grade for time-series area
 
-    fluid.defaults("floe.chartAuthoring.lineChart.timeSeries.area", {
+    fluid.defaults("floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.area", {
         model: {
             dataSet: []
         },
@@ -34,13 +34,13 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         },
         invokers: {
             drawArea: {
-                funcName: "floe.chartAuthoring.lineChart.timeSeries.area.drawArea",
+                funcName: "floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.area.drawArea",
                 args: ["{that}"]
             }
         }
     });
 
-    floe.chartAuthoring.lineChart.timeSeries.area.drawArea = function (that) {
+    floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.area.drawArea = function (that) {
         var chartLineAreaClass = that.classes.chartLineArea;
 
         var svg = that.svg,
@@ -52,18 +52,18 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 return d.id;
             });
 
-        floe.chartAuthoring.lineChart.timeSeries.area.addArea(that);
+        floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.area.addArea(that);
 
-        floe.chartAuthoring.lineChart.timeSeries.area.removeArea(that);
+        floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.area.removeArea(that);
 
-        floe.chartAuthoring.lineChart.timeSeries.area.updateArea(that);
+        floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.area.updateArea(that);
 
     };
 
-    floe.chartAuthoring.lineChart.timeSeries.area.addArea = function (that) {
+    floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.area.addArea = function (that) {
         var chartLineAreaClass = that.classes.chartLineArea,
             color = that.colorScale,
-            area = floe.chartAuthoring.lineChart.timeSeries.area.getAreaGenerator(that);
+            area = floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.area.getAreaGenerator(that);
         // Append any needed area paths
 
         that.chartLineAreaPaths.enter()
@@ -84,10 +84,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         });
     };
 
-    floe.chartAuthoring.lineChart.timeSeries.area.updateArea = function (that) {
+    floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.area.updateArea = function (that) {
         // Transition lines where needed
         var transitionLength = that.options.lineOptions.transitionLength,
-            area = floe.chartAuthoring.lineChart.timeSeries.area.getAreaGenerator(that);
+            area = floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.area.getAreaGenerator(that);
 
         that.chartLineAreaPaths.transition().duration(transitionLength)
             .attr({
@@ -97,13 +97,13 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             });
     };
 
-    floe.chartAuthoring.lineChart.timeSeries.area.removeArea = function (that) {
+    floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.area.removeArea = function (that) {
         // Remove areas for any removed data
         var removedPaths = that.chartLineAreaPaths.exit();
         that.exitD3Elements(removedPaths);
     };
 
-    floe.chartAuthoring.lineChart.timeSeries.area.getAreaGenerator = function (that) {
+    floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.area.getAreaGenerator = function (that) {
         var interpolation = that.options.lineOptions.interpolation;
         var height = that.options.svgOptions.height,
             padding = that.options.lineOptions.padding,
