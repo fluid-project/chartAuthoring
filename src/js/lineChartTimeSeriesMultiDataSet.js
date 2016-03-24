@@ -74,7 +74,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     });
 
     // Accumulator function for consolidating multiple dataset items together
-    // for purposes of determining max/min
+    // for purposes of determining max/min out a group of datasets
     floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.concatData = function (setItem, accumulationArray) {
         return accumulationArray.concat(setItem.data);
     };
