@@ -15,7 +15,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     // Mixin grade for line chart points
 
-    fluid.defaults("floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.points", {
+    fluid.defaults("floe.chartAuthoring.lineChart.timeSeries.points", {
         model: {
             dataSet: []
         },
@@ -37,13 +37,13 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         },
         invokers: {
             drawPoints: {
-                funcName: "floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.points.drawPoints",
+                funcName: "floe.chartAuthoring.lineChart.timeSeries.points.drawPoints",
                 args: ["{that}"]
             }
         }
     });
 
-    floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.points.drawPoints = function (that) {
+    floe.chartAuthoring.lineChart.timeSeries.points.drawPoints = function (that) {
         var svg = that.svg,
             dataSet = that.model.dataSet,
             chartLinePointGroupClass = that.classes.chartLinePointGroup;
@@ -54,16 +54,16 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             return d.id;
         });
 
-        floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.points.addPointGroups(that);
+        floe.chartAuthoring.lineChart.timeSeries.points.addPointGroups(that);
 
-        floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.points.deletePointGroups(that);
+        floe.chartAuthoring.lineChart.timeSeries.points.deletePointGroups(that);
 
-        floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.points.managePoints(that);
+        floe.chartAuthoring.lineChart.timeSeries.points.managePoints(that);
 
-        floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.points.updatePoints(that);
+        floe.chartAuthoring.lineChart.timeSeries.points.updatePoints(that);
     };
 
-    floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.points.addPointGroups = function (that) {
+    floe.chartAuthoring.lineChart.timeSeries.points.addPointGroups = function (that) {
         var chartLinePointGroupClass = that.classes.chartLinePointGroup;
         // Append any needed circle groups
 
@@ -76,13 +76,13 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         });
     };
 
-    floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.points.deletePointGroups = function (that) {
+    floe.chartAuthoring.lineChart.timeSeries.points.deletePointGroups = function (that) {
         // Exit any removed circle groups
         var removedPointGroups = that.chartLinePointGroups.exit();
         that.exitD3Elements(removedPointGroups);
     };
 
-    floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.points.managePoints = function (that) {
+    floe.chartAuthoring.lineChart.timeSeries.points.managePoints = function (that) {
         var chartLinePointClass = that.classes.chartLinePoint,
             pointRadius = that.options.lineOptions.pointRadius,
             color = that.colorScale,
@@ -121,7 +121,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         });
     };
 
-    floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.points.updatePoints = function (that) {
+    floe.chartAuthoring.lineChart.timeSeries.points.updatePoints = function (that) {
         var transitionLength = that.options.lineOptions.transitionLength,
             yScale = that.getYScale(),
             xScale = that.getXScale();

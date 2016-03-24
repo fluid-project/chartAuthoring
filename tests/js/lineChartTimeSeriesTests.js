@@ -564,7 +564,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         jqUnit.expect(178);
         var that = floe.tests.chartAuthoring.lineChart.timeSeriesSingleDataSet(".floec-ca-lineChart-area", {
             gradeNames: [
-                "floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.area", "floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.points"
+                "floe.chartAuthoring.lineChart.timeSeries.area", "floe.chartAuthoring.lineChart.timeSeries.points"
             ],
             model: {
                 dataSet: floe.tests.chartAuthoring.timeSeriesData1
@@ -595,8 +595,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         jqUnit.expect(170);
         var that = floe.tests.chartAuthoring.lineChart.timeSeriesMultiDataSet(".floec-ca-lineChart-multi", {
             gradeNames: [
-                "floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.area",
-                "floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.points"
+                "floe.chartAuthoring.lineChart.timeSeries.area",
+                "floe.chartAuthoring.lineChart.timeSeries.points"
             ],
             model: {
                 dataSet: floe.tests.chartAuthoring.timeSeriesDataMulti
