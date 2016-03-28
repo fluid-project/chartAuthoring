@@ -19,14 +19,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         model: {
             dataSet: []
         },
-        bindings: {
-            title: "svgTitle",
-            description: "svgDescription"
-        },
-        svgOptions: {
-            width: 700,
-            height: 500
-        },
         lineOptions: {
             numberOfXAxisTicks: 6
         },
