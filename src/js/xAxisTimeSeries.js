@@ -39,6 +39,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             drawXAxis: {
                 funcName: "floe.chartAuthoring.xAxisTimeSeries.drawXAxis",
                 args: ["{that}"]
+            },
+            getXAxisTickFormat: {
+                funcName: "floe.chartAuthoring.xAxisTimeSeries.getXAxisTickFormat"
             }
         }
     });
@@ -58,7 +61,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             numberOfXAxisTicks = that.options.lineOptions.numberOfXAxisTicks;
 
         var xAxis = d3.svg.axis()
-            .tickFormat(floe.chartAuthoring.xAxisTimeSeries.getXAxisTickFormat())
+            .tickFormat(that.getXAxisTickFormat())
             .ticks(numberOfXAxisTicks)
             .orient("bottom")
             .scale(xScale);
