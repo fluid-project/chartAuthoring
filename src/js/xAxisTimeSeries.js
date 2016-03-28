@@ -19,7 +19,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         model: {
             dataSet: []
         },
-        lineOptions: {
+        axisOptions: {
             numberOfXAxisTicks: 6
         },
         selectors: {
@@ -58,7 +58,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     floe.chartAuthoring.xAxisTimeSeries.getXAxis = function (that) {
         var xScale = that.getXScale(),
-            numberOfXAxisTicks = that.options.lineOptions.numberOfXAxisTicks;
+            numberOfXAxisTicks = that.options.axisOptions.numberOfXAxisTicks;
 
         var xAxis = d3.svg.axis()
             .tickFormat(that.getXAxisTickFormat())

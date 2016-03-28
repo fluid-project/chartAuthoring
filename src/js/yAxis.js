@@ -22,6 +22,13 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         selectors: {
             yAxis: ".floec-ca-lineChart-y-axis"
         },
+        axisOptions: {
+            numberOfYAxisTicks: 10,
+            // See https://github.com/mbostock/d3/wiki/Formatting#d3_format for
+            // number formatting in D3
+            // This default formats to whole integers only
+            yAxisTickFormat: "d"
+        },
         events: {
             onChartCreated: null,  // Fire when the line is created. Ready to register D3 DOM event listeners,
             onDraw: null
@@ -35,6 +42,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         invokers: {
             drawYAxis: {
                 funcName: "floe.chartAuthoring.yAxis.drawYAxis",
+                args: ["{that}"]
+            },
+            getYAxisTickFormat: {
+                funcName: "floe.chartAuthoring.yAxis.getYAxisTickFormat",
                 args: ["{that}"]
             }
         }
@@ -50,14 +61,22 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     };
 
+    floe.chartAuthoring.yAxis.getYAxisTickFormat = function (that) {
+        var yAxisTickFormat = that.options.axisOptions.yAxisTickFormat;
+        return d3.format(yAxisTickFormat);
+    };
+
     floe.chartAuthoring.yAxis.getYAxis = function (that) {
         var width = that.options.svgOptions.width;
         var padding = that.options.lineOptions.padding;
         var yScale = that.getYScale();
+        var numberOfYAxisTicks = that.options.axisOptions.numberOfYAxisTicks;
 
         var yAxis = d3.svg.axis()
             .orient("left")
             .scale(yScale)
+            .tickFormat(that.getYAxisTickFormat())
+            .ticks(numberOfYAxisTicks)
             .innerTickSize(- width + padding * 3)
             .outerTickSize(0)
             .tickPadding(10);
