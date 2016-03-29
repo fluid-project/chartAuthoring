@@ -75,7 +75,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         },
         svgOptions: {
             // width: number,
-            // height: number
+            // height: number,
+            // preserveAspectRatio: svg preserveAspectRatio attribute value        
         },
         pieChartOptions: {
             // colors: array, // An array of colors to fill slices generated for corresponding values of model.dataSet
