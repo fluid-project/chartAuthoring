@@ -14,6 +14,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     "use strict";
 
     // Mix-in grade for axis management
+    // should be added to any chart that wishes
+    // to include one or more axis elements
 
     fluid.defaults("floe.chartAuthoring.axis", {
         invokers: {

@@ -14,61 +14,21 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     "use strict";
 
     // Mix-in grade for time-series x axis
+    // should be used alongside the floe.chartAuthoring.axis
+    // and floe.chartAuthoring.xAxis grades
+    // in charts that require a time-based x axis
 
     fluid.defaults("floe.chartAuthoring.xAxisTimeSeries", {
+        gradeNames: ["floe.chartAuthoring.xAxis"],
         model: {
             dataSet: []
         },
-        axisOptions: {
-            numberOfXAxisTicks: 6
-        },
-        selectors: {
-            xAxis: ".floec-ca-lineChart-x-axis"
-        },
-        events: {
-            onChartCreated: null,  // Fire when the line is created. Ready to register D3 DOM event listeners,
-            onDraw: null
-        },
-        listeners: {
-            "onDraw.drawXAxis": {
-                func: "{that}.drawXAxis",
-                priority: "before:drawChartLine"
-            }
-        },
         invokers: {
-            drawXAxis: {
-                funcName: "floe.chartAuthoring.xAxisTimeSeries.drawXAxis",
-                args: ["{that}"]
-            },
             getXAxisTickFormat: {
                 funcName: "floe.chartAuthoring.xAxisTimeSeries.getXAxisTickFormat"
             }
         }
     });
-
-    floe.chartAuthoring.xAxisTimeSeries.drawXAxis = function (that) {
-        var xAxisClass = that.classes.xAxis,
-            padding = that.options.lineOptions.padding,
-            height = that.options.svgOptions.height,
-            axisTransform = "translate(0," + (height - padding) + ")",
-            xAxis = floe.chartAuthoring.xAxisTimeSeries.getXAxis(that);
-
-        that.manageAxis("xAxis", xAxisClass, axisTransform, xAxis);
-    };
-
-    floe.chartAuthoring.xAxisTimeSeries.getXAxis = function (that) {
-        var xScale = that.getXScale(),
-            numberOfXAxisTicks = that.options.axisOptions.numberOfXAxisTicks;
-
-        var xAxis = d3.svg.axis()
-            .tickFormat(that.getXAxisTickFormat())
-            .ticks(numberOfXAxisTicks)
-            .orient("bottom")
-            .scale(xScale);
-
-        return xAxis;
-
-    };
 
     floe.chartAuthoring.xAxisTimeSeries.getXAxisTickFormat = function () {
         // See https://github.com/mbostock/d3/wiki/Time-Formatting for

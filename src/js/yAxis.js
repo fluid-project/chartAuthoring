@@ -13,7 +13,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     "use strict";
 
-    // Mix-in grade for y axis
+    // Mix-in grade for value-based y axis
+    // should be used alongside the floe.chartAuthoring.axis
+    // grade in charts that require a value-based y axis
 
     fluid.defaults("floe.chartAuthoring.yAxis", {
         model: {
@@ -61,11 +63,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     };
 
-    floe.chartAuthoring.yAxis.getYAxisTickFormat = function (that) {
-        var yAxisTickFormat = that.options.axisOptions.yAxisTickFormat;
-        return d3.format(yAxisTickFormat);
-    };
-
     floe.chartAuthoring.yAxis.getYAxis = function (that) {
         var width = that.options.svgOptions.width;
         var padding = that.options.lineOptions.padding;
@@ -82,6 +79,11 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             .tickPadding(10);
 
         return yAxis;
+    };
+
+    floe.chartAuthoring.yAxis.getYAxisTickFormat = function (that) {
+        var yAxisTickFormat = that.options.axisOptions.yAxisTickFormat;
+        return d3.format(yAxisTickFormat);
     };
 
 })(jQuery, fluid);
