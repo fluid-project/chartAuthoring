@@ -23,25 +23,45 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         model: {
             dataSet: []
         },
+        axisOptions: {
+            // Configures the time formatting of the axis ticks
+            // in the getXAxisTickFormat function
+            // See https://github.com/mbostock/d3/wiki/Time-Formatting for
+            // explanation of how time formatting works in D3
+            // and https://github.com/mbostock/d3/wiki/Time-Scales#tickFormat
+            // for how it works in the context of a time-based scale
+            timeSeriesTickFormats: {
+                milliseconds: "%.L",
+                seconds: ":%S",
+                minute: "%I:%M",
+                hour: "%I %p",
+                day: "%a %d",
+                firstDayOfMonth: "%b %d",
+                month: "%b",
+                year: "%Y"
+            }
+        },
         invokers: {
             getXAxisTickFormat: {
-                funcName: "floe.chartAuthoring.xAxisTimeSeries.getXAxisTickFormat"
+                funcName: "floe.chartAuthoring.xAxisTimeSeries.getXAxisTickFormat",
+                args: ["{that}"]
             }
         }
     });
 
-    floe.chartAuthoring.xAxisTimeSeries.getXAxisTickFormat = function () {
-        // See https://github.com/mbostock/d3/wiki/Time-Formatting for
-        // explanation of how time formatting works in D3
+    floe.chartAuthoring.xAxisTimeSeries.getXAxisTickFormat = function (that) {
+
+        var tickFormats = that.options.axisOptions.timeSeriesTickFormats;
+
         var customTickFormat = d3.time.format.multi([
-            [".%L", function (d) { return d.getMilliseconds(); }],
-            [":%S", function (d) { return d.getSeconds(); }],
-            ["%I:%M", function (d) { return d.getMinutes(); }],
-            ["%I %p", function (d) { return d.getHours(); }],
-            ["%a %d", function (d) { return d.getDay() && d.getDate() !== 1; }],
-            ["%b %d", function (d) { return d.getDate() !== 1; }],
-            ["%b", function (d) { return d.getMonth(); }],
-            ["%Y", function () { return true; }]
+            [tickFormats.milliseconds, function (d) { return d.getMilliseconds(); }],
+            [tickFormats.seconds, function (d) { return d.getSeconds(); }],
+            [tickFormats.minute, function (d) { return d.getMinutes(); }],
+            [tickFormats.hour, function (d) { return d.getHours(); }],
+            [tickFormats.day, function (d) { return d.getDay() && d.getDate() !== 1; }],
+            [tickFormats.firstDayOfMonth, function (d) { return d.getDate() !== 1; }],
+            [tickFormats.month, function (d) { return d.getMonth(); }],
+            [tickFormats.year, function () { return true; }]
         ]);
 
         return customTickFormat;
