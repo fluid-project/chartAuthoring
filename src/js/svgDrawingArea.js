@@ -26,7 +26,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         // Options controlling the behaviour of the base SVG drawing area
         svgOptions: {
             width: 500,
-            height: 500
+            height: 500,
+            // Value of the SVG preserveAspectRatio attribute
+            // See https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/preserveAspectRatio
+            preserveAspectRatio: "none"
         },
         selectors: {
             title: ".floec-ca-svgDrawingArea-title",
@@ -57,6 +60,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var container = that.container,
             width = that.options.svgOptions.width,
             height = that.options.svgOptions.height,
+            preserveAspectRatio = that.options.svgOptions.preserveAspectRatio,
             titleClass = that.classes.title,
             descriptionClass = that.classes.description,
             svgClass = that.classes.svg;
@@ -68,6 +72,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 "height": height,
                 "class": svgClass,
                 "viewBox": floe.svgDrawingArea.getViewBoxConfiguration(0, 0, width, height),
+                "preserveAspectRatio": preserveAspectRatio,
                 // Set aria role to image - this causes the chart to appear as a
                 // static image to AT rather than as a number of separate
                 // images
