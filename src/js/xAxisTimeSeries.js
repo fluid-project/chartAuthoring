@@ -30,7 +30,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             // explanation of how time formatting works in D3
             // and https://github.com/mbostock/d3/wiki/Time-Scales#tickFormat
             // for how it works in the context of a time-based scale
-            timeSeriesTickFormats: {
+            XAxisTimeSeriesTickFormats: {
                 milliseconds: "%.L",
                 seconds: ":%S",
                 minute: "%I:%M",
@@ -51,7 +51,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     floe.chartAuthoring.xAxisTimeSeries.getXAxisTickFormat = function (that) {
 
-        var tickFormats = that.options.axisOptions.timeSeriesTickFormats;
+        var tickFormats = that.options.axisOptions.XAxisTimeSeriesTickFormats;
 
         var customTickFormat = d3.time.format.multi([
             [tickFormats.milliseconds, function (d) { return d.getMilliseconds(); }],
