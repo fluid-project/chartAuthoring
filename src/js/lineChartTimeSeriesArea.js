@@ -22,6 +22,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         selectors: {
             chartLineArea: ".floec-ca-lineChart-chartLineArea"
         },
+        styles: {
+            chartLineArea: "floe-ca-lineChart-chartLineArea"
+        },
         events: {
             onChartCreated: null,  // Fire when the line is created. Ready to register D3 DOM event listeners,
             onDraw: null
@@ -41,13 +44,13 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     });
 
     floe.chartAuthoring.lineChart.timeSeries.area.drawArea = function (that) {
-        var chartLineAreaClass = that.classes.chartLineArea;
+        var chartLineAreaSelector = that.options.selectors.chartLineArea;
 
         var svg = that.svg,
             dataSet = that.model.dataSet;
 
         // Bind data and keep a reference to the bound elements
-        that.chartLineAreaPaths = svg.selectAll("path." + chartLineAreaClass)
+        that.chartLineAreaPaths = svg.selectAll("path" + chartLineAreaSelector)
             .data(dataSet, function (d) {
                 return d.id;
             });
