@@ -42,7 +42,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 .call(axisFunction);
         } else {
             // Transition the axis if it's already drawn
-            that.svg.select("." + axisClass)
+            floe.d3.jQueryToD3(that.locate(axisSelector))
                 .transition()
                 .duration(transitionLength)
                 .call(axisFunction);
