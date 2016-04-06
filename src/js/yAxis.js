@@ -24,6 +24,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         selectors: {
             yAxis: ".floec-ca-lineChart-y-axis"
         },
+        styles: {
+            yAxis: "floe-ca-lineChart-y-axis"
+        },
         axisOptions: {
             numberOfYAxisTicks: 10,
             // See https://github.com/mbostock/d3/wiki/Formatting#d3_format for

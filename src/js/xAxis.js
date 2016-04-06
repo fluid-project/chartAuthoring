@@ -31,6 +31,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         selectors: {
             xAxis: ".floec-ca-lineChart-x-axis"
         },
+        styles: {
+            xAxis: "floe-ca-lineChart-x-axis"
+        },
         events: {
             onChartCreated: null,  // Fire when the line is created. Ready to register D3 DOM event listeners,
             onDraw: null
