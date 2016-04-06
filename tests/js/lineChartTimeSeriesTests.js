@@ -248,7 +248,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.tests.chartAuthoring.timeSeriesDataMulti =
     [
         {
-            id: "commits",
+            id: "failed",
             data: [
                 {
                     "date": "2014-12-31",
@@ -357,7 +357,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             ]
         },
         {
-            id: "contributions",
+            id: "passed",
             data: [
                 {
                     "date": "2014-12-31",
@@ -462,6 +462,115 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 {
                     "date": "2015-06-24",
                     "value": 166
+                }
+            ]
+        },
+        {
+            id: "null",
+            data: [
+                {
+                    "date": "2014-12-31",
+                    "value": 3
+                },
+                {
+                    "date": "2015-01-07",
+                    "value": 7
+                },
+                {
+                    "date": "2015-01-14",
+                    "value": 11
+                },
+                {
+                    "date": "2015-01-21",
+                    "value": 8
+                },
+                {
+                    "date": "2015-01-28",
+                    "value": 12
+                },
+                {
+                    "date": "2015-02-04",
+                    "value": 5
+                },
+                {
+                    "date": "2015-02-11",
+                    "value": 8
+                },
+                {
+                    "date": "2015-02-18",
+                    "value": 8
+                },
+                {
+                    "date": "2015-02-25",
+                    "value": 9
+                },
+                {
+                    "date": "2015-03-04",
+                    "value": 10
+                },
+                {
+                    "date": "2015-03-11",
+                    "value": 6
+                },
+                {
+                    "date": "2015-03-18",
+                    "value": 1
+                },
+                {
+                    "date": "2015-03-25",
+                    "value": 3
+                },
+                {
+                    "date": "2015-04-01",
+                    "value": 2
+                },
+                {
+                    "date": "2015-04-08",
+                    "value": 5
+                },
+                {
+                    "date": "2015-04-15",
+                    "value": 4
+                },
+                {
+                    "date": "2015-04-22",
+                    "value": 8
+                },
+                {
+                    "date": "2015-04-29",
+                    "value": 11
+                },
+                {
+                    "date": "2015-05-06",
+                    "value": 9
+                },
+                {
+                    "date": "2015-05-13",
+                    "value": 6
+                },
+                {
+                    "date": "2015-05-20",
+                    "value": 6
+                },
+                {
+                    "date": "2015-05-27",
+                    "value": 7
+                },
+                {
+                    "date": "2015-06-03",
+                    "value": 12
+                },
+                {
+                    "date": "2015-06-10",
+                    "value": 10
+                },
+                {
+                    "date": "2015-06-17",
+                    "value": 14
+                },
+                {
+                    "date": "2015-06-24",
+                    "value": 3
                 }
             ]
         }
@@ -570,7 +679,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 dataSet: floe.tests.chartAuthoring.timeSeriesData1
             },
             lineOptions: {
-                drawPoints: true,
                 interpolation: "cardinal"
             }
         });
@@ -592,25 +700,22 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     });
 
     jqUnit.test("Test line chart with multiple lines", function () {
-        jqUnit.expect(170);
+        jqUnit.expect(172);
         var that = floe.tests.chartAuthoring.lineChart.timeSeriesMultiDataSet(".floec-ca-lineChart-multi", {
             gradeNames: [
-                "floe.chartAuthoring.lineChart.timeSeries.area",
-                "floe.chartAuthoring.lineChart.timeSeries.points"
+                "floe.chartAuthoring.lineChart.timeSeries.area"
             ],
             model: {
                 dataSet: floe.tests.chartAuthoring.timeSeriesDataMulti
             },
             lineOptions: {
-                drawPoints: true
+                interpolation: "step"
             }
         });
 
         floe.tests.chartAuthoring.validateLineChart(that, that.model.dataSet);
 
         floe.tests.chartAuthoring.validateLineChartArea(that);
-
-        floe.tests.chartAuthoring.validateLineChartPoints(that);
 
     });
 

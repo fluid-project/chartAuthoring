@@ -40,10 +40,25 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             padding: 50,
             // interpolation mode for chart lines and areas
             // see line.interpolate at https://github.com/mbostock/d3/wiki/SVG-Shapes
-            // generally, "linear" for sharp lines, "cardinal" for smooth
+            // generally, "linear" for sharp lines, "cardinal" for smooth, or "step" for a step chart
             interpolation: "linear",
             // In milliseconds
             transitionLength: 2000
+        },
+        scaleOptions: {
+            // transform rules to apply to yScale min
+            yScaleMinTransform: {
+                "literalValue": 0
+            },
+            // transform rules to apply to yScale max
+            yScaleMaxTransform: {
+                "transform": {
+                    "type": "fluid.transforms.binaryOp",
+                    "leftPath": "max",
+                    "right": 1.25,
+                    operator: "*"
+                }
+            }
         },
         events: {
             onChartCreated: null,  // Fire when the line is created. Ready to register D3 DOM event listeners,
@@ -73,6 +88,14 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         }
     });
 
+    floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.fixedValue = function (fixedValue) {
+        return fixedValue;
+    };
+
+    floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.multiplyValue = function (value, multiplier) {
+        return value * multiplier;
+    };
+
     // Accumulator function for consolidating multiple dataset items together
     // for purposes of determining max/min out a group of datasets
     floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.concatData = function (setItem, accumulationArray) {
@@ -87,15 +110,37 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         // Create an array consisting of all the values in every dataset array
         var combinedData = fluid.accumulate(dataSet, floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.concatData, []);
 
+        // Get the min value of that combined array
+        var minValue = d3.min(combinedData, function (d) {
+            return d.value;
+        });
+
         // Get the max value of that combined array
         var maxValue = d3.max(combinedData, function (d) {
             return d.value;
         });
 
-        // Scale based on that max
+        var rawYScale = {
+                min: minValue,
+                max: maxValue
+            };
+
+        var yScaleTransform = {
+                min: that.options.scaleOptions.yScaleMinTransform,
+                max: that.options.scaleOptions.yScaleMaxTransform
+            };
+
+        var transformedYScale = fluid.model.transformWithRules(rawYScale, yScaleTransform);
+
+        // Transform the min and max as per invoker functions
+        var transformedMinValue = transformedYScale.min;
+
+        var transformedMaxValue = transformedYScale.max;
+
+        // Scale based on transformed min and max
 
         return d3.scale.linear()
-            .domain([0, maxValue])
+            .domain([transformedMinValue, transformedMaxValue])
             .nice()
             .range([height - padding, padding]);
     };
