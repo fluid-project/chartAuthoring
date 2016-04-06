@@ -23,7 +23,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             pointRadius: 2
         },
         styles: {
-            chartLinePoint: "floe-ca-lineChart-chartLinePoint"
+            chartLinePoint: "floe-ca-lineChart-chartLinePoint",
+            chartLinePointGroup: "floe-ca-lineChart-chartLinePointGroup"
         },
         selectors: {
             chartLinePointGroup: ".floec-ca-lineChart-chartLinePointGroup",
@@ -46,10 +47,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.chartAuthoring.lineChart.timeSeries.points.drawPoints = function (that) {
         var svg = that.svg,
             dataSet = that.model.dataSet,
-            chartLinePointGroupClass = that.classes.chartLinePointGroup;
+            chartLinePointGroupSelector = that.options.selectors.chartLinePointGroup;
 
         // Bind data for circle groups
-        that.chartLinePointGroups = svg.selectAll("g." + chartLinePointGroupClass)
+        that.chartLinePointGroups = svg.selectAll("g" + chartLinePointGroupSelector)
         .data(dataSet, function (d) {
             return d.id;
         });
