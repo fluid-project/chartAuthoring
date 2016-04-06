@@ -25,6 +25,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         selectors: {
             chartLine: ".floec-ca-lineChart-chartLine"
         },
+        styles: {
+            chartLine: "floe-ca-lineChart-chartLine"
+        },
         listeners: {
             "onDraw.drawChartLine": {
                 func: "{that}.drawChartLine"
@@ -46,11 +49,11 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     floe.chartAuthoring.lineChart.timeSeries.line.drawChartLine = function (that) {
         var dataSet = that.model.dataSet,
-            chartLineClass = that.classes.chartLine,
+            chartLineSelector = that.options.selectors.chartLine,
             svg = that.svg;
 
         // Bind data and keep a reference to the bound elements
-        that.chartLinePaths = svg.selectAll("path." + chartLineClass)
+        that.chartLinePaths = svg.selectAll("path" + chartLineSelector)
             .data(dataSet, function (d) {
                 return d.id;
             });
