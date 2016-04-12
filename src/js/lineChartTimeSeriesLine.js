@@ -58,11 +58,12 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 return d.id;
             });
 
+        floe.chartAuthoring.lineChart.timeSeries.line.updateChartLine(that);
+
         floe.chartAuthoring.lineChart.timeSeries.line.addChartLine(that);
 
         floe.chartAuthoring.lineChart.timeSeries.line.removeChartLine(that);
 
-        floe.chartAuthoring.lineChart.timeSeries.line.updateChartLine(that);
     };
 
     floe.chartAuthoring.lineChart.timeSeries.line.addChartLine = function (that) {
@@ -95,14 +96,28 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     floe.chartAuthoring.lineChart.timeSeries.line.updateChartLine = function (that) {
         var line = floe.chartAuthoring.lineChart.timeSeries.line.getLineGenerator(that),
-            transitionLength = that.options.lineOptions.transitionLength;
+            transitionLength = that.options.lineOptions.transitionLength,
+            width = that.options.svgOptions.width;
 
-        that.chartLinePaths.transition().duration(transitionLength)
+        that.chartLinePaths
+        .transition()
+        .duration(transitionLength / 2)
+        .attr({
+            "transform": "translate(-" + width + ")"
+        })
+        .each("end", function () {
+            d3.select(this)
             .attr({
                 "d": function (d) {
                     return line(d.data);
-                }
+                },
+                "transform": "translate(" + width + ")"
+            })
+            .transition()
+            .attr({
+                "transform": "translate(0)"
             });
+        });
     };
 
     floe.chartAuthoring.lineChart.timeSeries.line.removeChartLine = function (that) {
