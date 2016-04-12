@@ -55,12 +55,11 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 return d.id;
             });
 
+        floe.chartAuthoring.lineChart.timeSeries.area.updateArea(that);
+
         floe.chartAuthoring.lineChart.timeSeries.area.addArea(that);
 
         floe.chartAuthoring.lineChart.timeSeries.area.removeArea(that);
-
-        floe.chartAuthoring.lineChart.timeSeries.area.updateArea(that);
-
     };
 
     floe.chartAuthoring.lineChart.timeSeries.area.addArea = function (that) {
@@ -90,14 +89,30 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.chartAuthoring.lineChart.timeSeries.area.updateArea = function (that) {
         // Transition lines where needed
         var transitionLength = that.options.lineOptions.transitionLength,
-            area = floe.chartAuthoring.lineChart.timeSeries.area.getAreaGenerator(that);
+            area = floe.chartAuthoring.lineChart.timeSeries.area.getAreaGenerator(that
+            ),
+            width = that.options.svgOptions.width;
 
-        that.chartLineAreaPaths.transition().duration(transitionLength)
+        that.chartLineAreaPaths
+        .transition()
+        .duration(transitionLength / 2)
+        .attr({
+            "transform": "translate(-" + width + ")"
+        })
+        .each("end", function () {
+            d3.select(this)
             .attr({
                 "d": function (d) {
                     return area(d.data);
-                }
+                },
+                "transform": "translate(" + width + ")"
+            })
+            .transition()
+            .attr({
+                "transform": "translate(0)"
             });
+        });
+
     };
 
     floe.chartAuthoring.lineChart.timeSeries.area.removeArea = function (that) {

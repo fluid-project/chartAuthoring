@@ -125,21 +125,48 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.chartAuthoring.lineChart.timeSeries.points.updatePoints = function (that) {
         var transitionLength = that.options.lineOptions.transitionLength,
             yScale = that.getYScale(),
-            xScale = that.getXScale();
+            xScale = that.getXScale(),
+            width = that.options.svgOptions.width;
             // Transition circles
         that.chartLinePointGroups.each(function () {
             var currentGroup = d3.select(this);
 
+            // currentGroup.selectAll("circle")
+            //     .transition().duration(transitionLength)
+            //     .attr({
+            //         "cy": function (d) {
+            //             return yScale(d.value);
+            //         },
+            //         "cx": function (d) {
+            //             return xScale(new Date(d.date));
+            //         }
+            //     });
+
             currentGroup.selectAll("circle")
-                .transition().duration(transitionLength)
+            .transition()
+            .duration(transitionLength / 2)
+            .attr({
+                "transform": "translate(-" + width + ")"
+            })
+            .each("end", function () {
+                d3.select(this)
                 .attr({
                     "cy": function (d) {
                         return yScale(d.value);
                     },
                     "cx": function (d) {
                         return xScale(new Date(d.date));
-                    }
+                    },
+                    "transform": "translate(" + width + ")"
+                })
+                .transition()
+                .attr({
+                    "transform": "translate(0)"
                 });
+            });
+
+
         });
+
     };
 })(jQuery, fluid);
