@@ -26,18 +26,40 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             chartLineArea: "floe-ca-lineChart-chartLineArea"
         },
         events: {
-            onChartCreated: null,  // Fire when the line is created. Ready to register D3 DOM event listeners,
-            onDraw: null
+            onDrawArea: null
         },
         listeners: {
             "onDraw.drawArea": {
                 func: "{that}.drawArea",
                 priority: "after:drawChartLine"
+            },
+            "onDrawArea.updateArea": {
+                func: "{that}.updateArea"
+            },
+            "onDrawArea.addArea": {
+                func: "{that}.addArea",
+                priority: "after:updateArea"
+            },
+            "onDrawArea.removeArea": {
+                func: "{that}.removeArea",
+                priority: "after:addArea"
             }
         },
         invokers: {
             drawArea: {
                 funcName: "floe.chartAuthoring.lineChart.timeSeries.area.drawArea",
+                args: ["{that}"]
+            },
+            updateArea: {
+                funcName: "floe.chartAuthoring.lineChart.timeSeries.area.updateArea",
+                args: ["{that}"]
+            },
+            addArea: {
+                funcName: "floe.chartAuthoring.lineChart.timeSeries.area.addArea",
+                args: ["{that}"]
+            },
+            removeArea: {
+                funcName: "floe.chartAuthoring.lineChart.timeSeries.area.removeArea",
                 args: ["{that}"]
             }
         }
@@ -55,11 +77,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 return d.id;
             });
 
-        floe.chartAuthoring.lineChart.timeSeries.area.updateArea(that);
-
-        floe.chartAuthoring.lineChart.timeSeries.area.addArea(that);
-
-        floe.chartAuthoring.lineChart.timeSeries.area.removeArea(that);
+        that.events.onDrawArea.fire();
     };
 
     floe.chartAuthoring.lineChart.timeSeries.area.addArea = function (that) {

@@ -28,9 +28,23 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         styles: {
             chartLine: "floe-ca-lineChart-chartLine"
         },
+        events: {
+            "onDrawChartLine": null
+        },
         listeners: {
             "onDraw.drawChartLine": {
                 func: "{that}.drawChartLine"
+            },
+            "onDrawChartLine.updateChartLine": {
+                func: "{that}.updateChartLine"
+            },
+            "onDrawChartLine.addChartLine": {
+                func: "{that}.addChartLine",
+                priority: "after:updateChartLine"
+            },
+            "onDrawChartLine.removeChartLine": {
+                func: "{that}.removeChartLine",
+                priority: "after:addChartLine"
             }
         },
         modelListeners: {
@@ -42,6 +56,18 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         invokers: {
             drawChartLine: {
                 funcName: "floe.chartAuthoring.lineChart.timeSeries.line.drawChartLine",
+                args: ["{that}"]
+            },
+            updateChartLine: {
+                funcName: "floe.chartAuthoring.lineChart.timeSeries.line.updateChartLine",
+                args: ["{that}"]
+            },
+            addChartLine: {
+                funcName: "floe.chartAuthoring.lineChart.timeSeries.line.addChartLine",
+                args: ["{that}"]
+            },
+            removeChartLine: {
+                funcName: "floe.chartAuthoring.lineChart.timeSeries.line.removeChartLine",
                 args: ["{that}"]
             }
         }
@@ -58,12 +84,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 return d.id;
             });
 
-        floe.chartAuthoring.lineChart.timeSeries.line.updateChartLine(that);
-
-        floe.chartAuthoring.lineChart.timeSeries.line.addChartLine(that);
-
-        floe.chartAuthoring.lineChart.timeSeries.line.removeChartLine(that);
-
+        that.events.onDrawChartLine.fire();
     };
 
     floe.chartAuthoring.lineChart.timeSeries.line.addChartLine = function (that) {
