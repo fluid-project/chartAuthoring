@@ -30,15 +30,50 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             chartLinePointGroup: ".floec-ca-lineChart-chartLinePointGroup",
             chartLinePoint: ".floec-ca-lineChart-chartLinePoint"
         },
+        events: {
+            "onDrawPoints": null
+        },
         listeners: {
             "onDraw.drawPoints": {
                 func: "{that}.drawPoints",
                 priority: "after:drawArea"
+            },
+            "onDrawPoints.addPointGroups": {
+                func: "{that}.addPointGroups"
+            },
+            "onDrawPoints.deletePointGroups": {
+                func: "{that}.deletePointGroups",
+                priority: "after:addPointGroups"
+            },
+            "onDrawPoints.managePoints": {
+                func: "{that}.managePoints",
+                priority: "after:deletePointGroups"
+            },
+            "onDrawPoints.updatePoints": {
+                func: "{that}.updatePoints",
+                priority: "after:managePoints"
             }
         },
         invokers: {
             drawPoints: {
                 funcName: "floe.chartAuthoring.lineChart.timeSeries.points.drawPoints",
+                args: ["{that}"]
+            },
+            addPointGroups: {
+                funcName: "floe.chartAuthoring.lineChart.timeSeries.points.addPointGroups",
+                args: ["{that}"]
+
+            },
+            deletePointGroups: {
+                funcName: "floe.chartAuthoring.lineChart.timeSeries.points.deletePointGroups",
+                args: ["{that}"]
+            },
+            managePoints: {
+                funcName: "floe.chartAuthoring.lineChart.timeSeries.points.managePoints",
+                args: ["{that}"]
+            },
+            updatePoints: {
+                funcName: "floe.chartAuthoring.lineChart.timeSeries.points.updatePoints",
                 args: ["{that}"]
             }
         }
@@ -55,13 +90,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             return d.id;
         });
 
-        floe.chartAuthoring.lineChart.timeSeries.points.addPointGroups(that);
-
-        floe.chartAuthoring.lineChart.timeSeries.points.deletePointGroups(that);
-
-        floe.chartAuthoring.lineChart.timeSeries.points.managePoints(that);
-
-        floe.chartAuthoring.lineChart.timeSeries.points.updatePoints(that);
+        that.events.onDrawPoints.fire();
     };
 
     floe.chartAuthoring.lineChart.timeSeries.points.addPointGroups = function (that) {
