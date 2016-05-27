@@ -6,8 +6,8 @@
   "bugs": "https://issues.fluidproject.org/browse/FLOE/component/11615",
   "homepage": "http://www.fluidproject.org/",
   "dependencies": {
-      "d3":"latest",
-      "flocking":"https://github.com/colinbdclark/Flocking"      
+      "d3":"3.5.17",
+      "flocking":"https://github.com/colinbdclark/Flocking#543b339f8aac1c10bffc5e70344f56bc63cc25b1"
   },
   "licenses": [
     {
