@@ -131,17 +131,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         that.chartLinePointGroups.each(function () {
             var currentGroup = d3.select(this);
 
-            // currentGroup.selectAll("circle")
-            //     .transition().duration(transitionLength)
-            //     .attr({
-            //         "cy": function (d) {
-            //             return yScale(d.value);
-            //         },
-            //         "cx": function (d) {
-            //             return xScale(new Date(d.date));
-            //         }
-            //     });
-
             currentGroup.selectAll("circle")
             .transition()
             .duration(transitionLength / 2)
