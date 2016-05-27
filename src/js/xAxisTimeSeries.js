@@ -30,6 +30,11 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             // explanation of how time formatting works in D3
             // and https://github.com/mbostock/d3/wiki/Time-Scales#tickFormat
             // for how it works in the context of a time-based scale
+            //
+            // This formatting is identical to the default described at
+            // https://github.com/d3/d3/wiki/Time-Formatting#format_multi
+            // with the exception that 'month' uses the 3-character
+            // month name shorthand rather than the full name
             XAxisTimeSeriesTickFormats: {
                 milliseconds: "%.L",
                 seconds: ":%S",
@@ -53,6 +58,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         var tickFormats = that.options.axisOptions.XAxisTimeSeriesTickFormats;
 
+        // See https://github.com/d3/d3/wiki/Time-Formatting#format_multi
+        // Tick formats are configured in axisOptions.XAxisTimeSeriesTickFormats
         var customTickFormat = d3.time.format.multi([
             [tickFormats.milliseconds, function (d) { return d.getMilliseconds(); }],
             [tickFormats.seconds, function (d) { return d.getSeconds(); }],
