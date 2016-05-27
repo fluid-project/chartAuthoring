@@ -9,16 +9,7 @@
       "d3":"3.5.17",
       "flocking":"https://github.com/colinbdclark/Flocking#543b339f8aac1c10bffc5e70344f56bc63cc25b1"
   },
-  "licenses": [
-    {
-      "type": "BSD-3-Clause",
-      "url": "http://www.opensource.org/licenses/BSD-3-Clause"
-    },
-    {
-      "type": "ECL-2.0",
-      "url": "http://www.opensource.org/licenses/ECL-2.0"
-    }
-  ],
+  "license": "(BSD-3-Clause OR ECL-2.0)",
   "keywords": [
     "chart",
     "authoring",
@@ -27,7 +18,7 @@
     "infusion",
     "sonfication"
   ],
-  "repository": "git://github.com/fluid-project/chartAuthoring.git",
+  "repository": "https://github.com/fluid-project/chartAuthoring.git",
   "main": "",
   "engines": {
     "node": ">=0.10.0"
@@ -36,6 +27,6 @@
     "grunt": "~0.4.5",
     "grunt-contrib-jshint": "~0.9.0",
     "grunt-jsonlint": "1.0.4",
-    "grunt-contrib-copy": "latest"
+    "grunt-contrib-copy": "1.0.0"
   }
 }
