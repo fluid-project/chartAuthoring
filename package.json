@@ -3,7 +3,7 @@
   "description": "A tool for authoring accessible charts for the web.",
   "version": "0.1.0-SNAPSHOT",
   "author": "Fluid Project",
-  "bugs": "https://issues.fluidproject.org/browse/FLOE/component/11615",
+  "bugs": "https://issues.fluidproject.org/issues/?jql=project+%3D+FLOE+AND+component+%3D+%22Chart+Authoring+Tool%22",
   "homepage": "http://www.fluidproject.org/",
   "dependencies": {
       "d3":"3.5.17",
