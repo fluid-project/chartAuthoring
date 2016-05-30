@@ -31,550 +31,23 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         }
     });
 
-    floe.tests.chartAuthoring.timeSeriesData1 = [
-        {
-            "date": "2014-12-31",
-            "value": 45
+    fluid.defaults("floe.tests.chartAuthoring.lineChart.fixtureDataTester", {
+        gradeNames: "floe.tests.utils.JSONFixtureTester",
+        testOptions: {
+            fixtureFiles: {
+                timeSeriesData1: "../json/timeSeriesData1.json",
+                timeSeriesData2: "../json/timeSeriesData2.json",
+                timeSeriesDataMulti: "../json/timeSeriesDataMulti.json"
+            }
         },
-        {
-            "date": "2015-01-07",
-            "value": 24
-        },
-        {
-            "date": "2015-01-14",
-            "value": 31
-        },
-        {
-            "date": "2015-01-21",
-            "value": 36
-        },
-        {
-            "date": "2015-01-28",
-            "value": 40
-        },
-        {
-            "date": "2015-02-04",
-            "value": 14
-        },
-        {
-            "date": "2015-02-11",
-            "value": 12
-        },
-        {
-            "date": "2015-02-18",
-            "value": 8
-        },
-        {
-            "date": "2015-02-25",
-            "value": 49
-        },
-        {
-            "date": "2015-03-04",
-            "value": 6
-        },
-        {
-            "date": "2015-03-11",
-            "value": 31
-        },
-        {
-            "date": "2015-03-18",
-            "value": 11
-        },
-        {
-            "date": "2015-03-25",
-            "value": 46
-        },
-        {
-            "date": "2015-04-01",
-            "value": 7
-        },
-        {
-            "date": "2015-04-08",
-            "value": 5
-        },
-        {
-            "date": "2015-04-15",
-            "value": 33
-        },
-        {
-            "date": "2015-04-22",
-            "value": 12
-        },
-        {
-            "date": "2015-04-29",
-            "value": 35
-        },
-        {
-            "date": "2015-05-06",
-            "value": 17
-        },
-        {
-            "date": "2015-05-13",
-            "value": 23
-        },
-        {
-            "date": "2015-05-20",
-            "value": 45
-        },
-        {
-            "date": "2015-05-27",
-            "value": 7
-        },
-        {
-            "date": "2015-06-03",
-            "value": 25
-        },
-        {
-            "date": "2015-06-10",
-            "value": 18
-        },
-        {
-            "date": "2015-06-17",
-            "value": 19
-        },
-        {
-            "date": "2015-06-24",
-            "value": 45
-        }
-    ];
+        listeners: {
+            "onAllFixturesLoaded.runLineChartFixtureTests": {
+                func: "floe.tests.chartAuthoring.lineChart.runLineChartFixtureTests",
+                args: "{that}"
+            }
 
-    floe.tests.chartAuthoring.timeSeriesData2 = [
-        {
-            "date": "2015-05-31",
-            "value": 33
-        },
-        {
-            "date": "2015-06-07",
-            "value": 28
-        },
-        {
-            "date": "2015-06-14",
-            "value": 58
-        },
-        {
-            "date": "2015-06-21",
-            "value": 56
-        },
-        {
-            "date": "2015-06-28",
-            "value": 69
-        },
-        {
-            "date": "2015-07-05",
-            "value": 53
-        },
-        {
-            "date": "2015-07-12",
-            "value": 63
-        },
-        {
-            "date": "2015-07-19",
-            "value": 60
-        },
-        {
-            "date": "2015-07-26",
-            "value": 51
-        },
-        {
-            "date": "2015-08-02",
-            "value": 72
-        },
-        {
-            "date": "2015-08-09",
-            "value": 72
-        },
-        {
-            "date": "2015-08-16",
-            "value": 53
-        },
-        {
-            "date": "2015-08-23",
-            "value": 65
-        },
-        {
-            "date": "2015-08-30",
-            "value": 89
-        },
-        {
-            "date": "2015-09-06",
-            "value": 65
-        },
-        {
-            "date": "2015-09-13",
-            "value": 54
-        },
-        {
-            "date": "2015-09-20",
-            "value": 77
-        },
-        {
-            "date": "2015-09-27",
-            "value": 49
-        },
-        {
-            "date": "2015-10-04",
-            "value": 91
-        },
-        {
-            "date": "2015-10-11",
-            "value": 75
-        },
-        {
-            "date": "2015-10-18",
-            "value": 90
-        },
-        {
-            "date": "2015-10-25",
-            "value": 68
-        },
-        {
-            "date": "2015-11-01",
-            "value": 105
-        },
-        {
-            "date": "2015-11-08",
-            "value": 61
-        },
-        {
-            "date": "2015-11-15",
-            "value": 111
-        },
-        {
-            "date": "2015-11-22",
-            "value": 92
         }
-    ];
-
-    floe.tests.chartAuthoring.timeSeriesDataMulti =
-    [
-        {
-            id: "failed",
-            data: [
-                {
-                    "date": "2014-12-31",
-                    "value": 22
-                },
-                {
-                    "date": "2015-01-07",
-                    "value": 24
-                },
-                {
-                    "date": "2015-01-14",
-                    "value": 31
-                },
-                {
-                    "date": "2015-01-21",
-                    "value": 36
-                },
-                {
-                    "date": "2015-01-28",
-                    "value": 40
-                },
-                {
-                    "date": "2015-02-04",
-                    "value": 14
-                },
-                {
-                    "date": "2015-02-11",
-                    "value": 12
-                },
-                {
-                    "date": "2015-02-18",
-                    "value": 8
-                },
-                {
-                    "date": "2015-02-25",
-                    "value": 49
-                },
-                {
-                    "date": "2015-03-04",
-                    "value": 6
-                },
-                {
-                    "date": "2015-03-11",
-                    "value": 31
-                },
-                {
-                    "date": "2015-03-18",
-                    "value": 11
-                },
-                {
-                    "date": "2015-03-25",
-                    "value": 46
-                },
-                {
-                    "date": "2015-04-01",
-                    "value": 7
-                },
-                {
-                    "date": "2015-04-08",
-                    "value": 5
-                },
-                {
-                    "date": "2015-04-15",
-                    "value": 33
-                },
-                {
-                    "date": "2015-04-22",
-                    "value": 12
-                },
-                {
-                    "date": "2015-04-29",
-                    "value": 35
-                },
-                {
-                    "date": "2015-05-06",
-                    "value": 17
-                },
-                {
-                    "date": "2015-05-13",
-                    "value": 23
-                },
-                {
-                    "date": "2015-05-20",
-                    "value": 45
-                },
-                {
-                    "date": "2015-05-27",
-                    "value": 7
-                },
-                {
-                    "date": "2015-06-03",
-                    "value": 25
-                },
-                {
-                    "date": "2015-06-10",
-                    "value": 18
-                },
-                {
-                    "date": "2015-06-17",
-                    "value": 19
-                },
-                {
-                    "date": "2015-06-24",
-                    "value": 45
-                }
-            ]
-        },
-        {
-            id: "passed",
-            data: [
-                {
-                    "date": "2014-12-31",
-                    "value": 160
-                },
-                {
-                    "date": "2015-01-07",
-                    "value": 120
-                },
-                {
-                    "date": "2015-01-14",
-                    "value": 140
-                },
-                {
-                    "date": "2015-01-21",
-                    "value": 143
-                },
-                {
-                    "date": "2015-01-28",
-                    "value": 156
-                },
-                {
-                    "date": "2015-02-04",
-                    "value": 173
-                },
-                {
-                    "date": "2015-02-11",
-                    "value": 75
-                },
-                {
-                    "date": "2015-02-18",
-                    "value": 85
-                },
-                {
-                    "date": "2015-02-25",
-                    "value": 116
-                },
-                {
-                    "date": "2015-03-04",
-                    "value": 118
-                },
-                {
-                    "date": "2015-03-11",
-                    "value": 201
-                },
-                {
-                    "date": "2015-03-18",
-                    "value": 77
-                },
-                {
-                    "date": "2015-03-25",
-                    "value": 66
-                },
-                {
-                    "date": "2015-04-01",
-                    "value": 121
-                },
-                {
-                    "date": "2015-04-08",
-                    "value": 111
-                },
-                {
-                    "date": "2015-04-15",
-                    "value": 190
-                },
-                {
-                    "date": "2015-04-22",
-                    "value": 156
-                },
-                {
-                    "date": "2015-04-29",
-                    "value": 177
-                },
-                {
-                    "date": "2015-05-06",
-                    "value": 105
-                },
-                {
-                    "date": "2015-05-13",
-                    "value": 111
-                },
-                {
-                    "date": "2015-05-20",
-                    "value": 122
-                },
-                {
-                    "date": "2015-05-27",
-                    "value": 147
-                },
-                {
-                    "date": "2015-06-03",
-                    "value": 152
-                },
-                {
-                    "date": "2015-06-10",
-                    "value": 212
-                },
-                {
-                    "date": "2015-06-17",
-                    "value": 144
-                },
-                {
-                    "date": "2015-06-24",
-                    "value": 166
-                }
-            ]
-        },
-        {
-            id: "null",
-            data: [
-                {
-                    "date": "2014-12-31",
-                    "value": 3
-                },
-                {
-                    "date": "2015-01-07",
-                    "value": 7
-                },
-                {
-                    "date": "2015-01-14",
-                    "value": 11
-                },
-                {
-                    "date": "2015-01-21",
-                    "value": 8
-                },
-                {
-                    "date": "2015-01-28",
-                    "value": 12
-                },
-                {
-                    "date": "2015-02-04",
-                    "value": 5
-                },
-                {
-                    "date": "2015-02-11",
-                    "value": 8
-                },
-                {
-                    "date": "2015-02-18",
-                    "value": 8
-                },
-                {
-                    "date": "2015-02-25",
-                    "value": 9
-                },
-                {
-                    "date": "2015-03-04",
-                    "value": 10
-                },
-                {
-                    "date": "2015-03-11",
-                    "value": 6
-                },
-                {
-                    "date": "2015-03-18",
-                    "value": 1
-                },
-                {
-                    "date": "2015-03-25",
-                    "value": 3
-                },
-                {
-                    "date": "2015-04-01",
-                    "value": 2
-                },
-                {
-                    "date": "2015-04-08",
-                    "value": 5
-                },
-                {
-                    "date": "2015-04-15",
-                    "value": 4
-                },
-                {
-                    "date": "2015-04-22",
-                    "value": 8
-                },
-                {
-                    "date": "2015-04-29",
-                    "value": 11
-                },
-                {
-                    "date": "2015-05-06",
-                    "value": 9
-                },
-                {
-                    "date": "2015-05-13",
-                    "value": 6
-                },
-                {
-                    "date": "2015-05-20",
-                    "value": 6
-                },
-                {
-                    "date": "2015-05-27",
-                    "value": 7
-                },
-                {
-                    "date": "2015-06-03",
-                    "value": 12
-                },
-                {
-                    "date": "2015-06-10",
-                    "value": 10
-                },
-                {
-                    "date": "2015-06-17",
-                    "value": 14
-                },
-                {
-                    "date": "2015-06-24",
-                    "value": 3
-                }
-            ]
-        }
-    ];
+    });
 
     floe.tests.chartAuthoring.validateLine = function (that, expectedDataSet) {
 
@@ -654,70 +127,75 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         });
     };
 
-    jqUnit.test("Test line chart creation and response to changed data", function () {
-        jqUnit.expect(68);
-        var that = floe.tests.chartAuthoring.lineChart.timeSeriesSingleDataSet(".floec-ca-lineChart", {
-            model: {
-                dataSet: floe.tests.chartAuthoring.timeSeriesData1
-            }
+    // Test wrapper function, runs after fixtures are loaded from file
+    floe.tests.chartAuthoring.lineChart.runLineChartFixtureTests = function (fixtureTester) {
+        jqUnit.test("Test line chart creation and response to changed data", function () {
+            jqUnit.expect(68);
+            var that = floe.tests.chartAuthoring.lineChart.timeSeriesSingleDataSet(".floec-ca-lineChart", {
+                model: {
+                    dataSet: fixtureTester.fixtureData.timeSeriesData1
+                }
+            });
+
+            floe.tests.chartAuthoring.validateLineChart(that, that.model.dataSet);
+
+            that.applier.change("dataSet", fixtureTester.fixtureData.timeSeriesData2);
+
+            floe.tests.chartAuthoring.validateLineChart(that, that.model.dataSet);
         });
 
-        floe.tests.chartAuthoring.validateLineChart(that, that.model.dataSet);
+        jqUnit.test("Test line chart creation with area and data points enabled", function () {
+            jqUnit.expect(178);
+            var that = floe.tests.chartAuthoring.lineChart.timeSeriesSingleDataSet(".floec-ca-lineChart-area", {
+                gradeNames: [
+                    "floe.chartAuthoring.lineChart.timeSeries.area", "floe.chartAuthoring.lineChart.timeSeries.points"
+                ],
+                model: {
+                    dataSet: fixtureTester.fixtureData.timeSeriesData1
+                },
+                lineOptions: {
+                    interpolation: "cardinal"
+                }
+            });
 
-        that.applier.change("dataSet", floe.tests.chartAuthoring.timeSeriesData2);
+            floe.tests.chartAuthoring.validateLineChart(that, that.model.dataSet);
 
-        floe.tests.chartAuthoring.validateLineChart(that, that.model.dataSet);
-    });
+            floe.tests.chartAuthoring.validateLineChartArea(that);
 
-    jqUnit.test("Test line chart creation with area and data points enabled", function () {
-        jqUnit.expect(178);
-        var that = floe.tests.chartAuthoring.lineChart.timeSeriesSingleDataSet(".floec-ca-lineChart-area", {
-            gradeNames: [
-                "floe.chartAuthoring.lineChart.timeSeries.area", "floe.chartAuthoring.lineChart.timeSeries.points"
-            ],
-            model: {
-                dataSet: floe.tests.chartAuthoring.timeSeriesData1
-            },
-            lineOptions: {
-                interpolation: "cardinal"
-            }
+            floe.tests.chartAuthoring.validateLineChartPoints(that);
+
+            that.applier.change("dataSet", fixtureTester.fixtureData.timeSeriesData2);
+
+            floe.tests.chartAuthoring.validateLineChart(that, that.model.dataSet);
+
+            floe.tests.chartAuthoring.validateLineChartArea(that);
+
+            floe.tests.chartAuthoring.validateLineChartPoints(that);
+
         });
 
-        floe.tests.chartAuthoring.validateLineChart(that, that.model.dataSet);
+        jqUnit.test("Test line chart with multiple lines", function () {
+            jqUnit.expect(172);
+            var that = floe.tests.chartAuthoring.lineChart.timeSeriesMultiDataSet(".floec-ca-lineChart-multi", {
+                gradeNames: [
+                    "floe.chartAuthoring.lineChart.timeSeries.area"
+                ],
+                model: {
+                    dataSet: fixtureTester.fixtureData.timeSeriesDataMulti
+                },
+                lineOptions: {
+                    interpolation: "step"
+                }
+            });
 
-        floe.tests.chartAuthoring.validateLineChartArea(that);
+            floe.tests.chartAuthoring.validateLineChart(that, that.model.dataSet);
 
-        floe.tests.chartAuthoring.validateLineChartPoints(that);
+            floe.tests.chartAuthoring.validateLineChartArea(that);
 
-        that.applier.change("dataSet", floe.tests.chartAuthoring.timeSeriesData2);
-
-        floe.tests.chartAuthoring.validateLineChart(that, that.model.dataSet);
-
-        floe.tests.chartAuthoring.validateLineChartArea(that);
-
-        floe.tests.chartAuthoring.validateLineChartPoints(that);
-
-    });
-
-    jqUnit.test("Test line chart with multiple lines", function () {
-        jqUnit.expect(172);
-        var that = floe.tests.chartAuthoring.lineChart.timeSeriesMultiDataSet(".floec-ca-lineChart-multi", {
-            gradeNames: [
-                "floe.chartAuthoring.lineChart.timeSeries.area"
-            ],
-            model: {
-                dataSet: floe.tests.chartAuthoring.timeSeriesDataMulti
-            },
-            lineOptions: {
-                interpolation: "step"
-            }
         });
+    };
 
-        floe.tests.chartAuthoring.validateLineChart(that, that.model.dataSet);
-
-        floe.tests.chartAuthoring.validateLineChartArea(that);
-
-    });
+    floe.tests.chartAuthoring.lineChart.fixtureDataTester();
 
 
 })(jQuery, fluid);
