@@ -35,7 +35,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             chartAuthoringInterface: {
                 type: "floe.chartAuthoring.templateInjection",
                 createOnEvent: "onTemplatesLoaded",
-                container: "{that}.dom.container",
+                container: "{chartAuthoring}.container",
                 options: {
                     selectors: {
                         reset: ".floec-ca-dataEntryPanel-reset"
