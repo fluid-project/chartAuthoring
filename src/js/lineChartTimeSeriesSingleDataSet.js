@@ -21,9 +21,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             dataSet: []
         },
         modelRelay: {
-            source: "{that}.model.dataSet",
             target: "{that}.model.dataSet",
             singleTransform: {
+                source: "{that}.model.dataSet",
                 type: "fluid.transforms.free",
                 args: ["{that}.model.dataSet"],
                 func: "floe.chartAuthoring.lineChart.timeSeriesSingleDataSet.wrapSingleDataSet"
