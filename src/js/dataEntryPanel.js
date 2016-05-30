@@ -22,7 +22,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             dataEntry: ".floec-ca-dataEntryPanel-dataEntry",
             totalValue: ".floec-ca-dataEntryPanel-totalValue",
             totalPercentage: ".floec-ca-dataEntryPanel-totalPercentage",
-            totalLabel: ".floec-ca-dataEntryPanel-totalLabel"
+            totalLabel: ".floec-ca-dataEntryPanel-totalLabel",
+            resetButton: ".floec-ca-dataEntryPanel-resetButton"
         },
         strings: {
             dataEntryLabel: "Enter your labels and values",
