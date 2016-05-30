@@ -31,9 +31,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             }
         },
         modelRelay: [{
-            source: "dataSet",
             target: "total.value",
             singleTransform: {
+                input: "dataSet",
                 type: "floe.chartAuthoring.transforms.reduce",
                 value: "{that}.model.dataSet",
                 initialValue: null,
@@ -41,9 +41,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 func: "floe.chartAuthoring.transforms.reduce.add"
             }
         }, {
-            source: "total.value",
             target: "total.percentage",
             singleTransform: {
+                input: "total.value",
                 type: "floe.chartAuthoring.transforms.percentage",
                 value: "{that}.model.total.value",
                 total: "{that}.model.total.value"
