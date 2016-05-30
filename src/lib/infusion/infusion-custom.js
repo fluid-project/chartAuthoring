@@ -1,4 +1,4 @@
-/*! infusion - v2.0.0 Monday, February 1st, 2016, 10:22:40 AM*/
+/*! infusion - v2.0.0 Monday, May 30th, 2016, 9:33:11 AM*/
 /*!
  * jQuery JavaScript Library v1.11.0
  * http://jquery.com/
@@ -12177,11 +12177,14 @@ var fluid = fluid || fluid_2_0_0;
     };
 
     /** Determines whether the supplied object is a plain JSON-forming container - that is, it is either a plain Object
-     * or a plain Array */
-    fluid.isPlainObject = function (totest) {
+     * or a plain Array. Note that this differs from jQuery's isPlainObject which does not pass Arrays.
+     * @param totest {Any} The object to be tested
+     * @param strict {Boolean} (optional) If `true`, plain Arrays will fail the test rather than passing. 
+     */
+    fluid.isPlainObject = function (totest, strict) {
         var string = Object.prototype.toString.call(totest);
         if (string === "[object Array]") {
-            return true;
+            return !strict;
         } else if (string !== "[object Object]") {
             return false;
         } // FLUID-5226: This inventive strategy taken from jQuery detects whether the object's prototype is directly Object.prototype by virtue of having an "isPrototypeOf" direct member
@@ -12194,6 +12197,10 @@ var fluid = fluid || fluid_2_0_0;
     fluid.typeCode = function (totest) {
         return fluid.isPrimitive(totest) || !fluid.isPlainObject(totest) ? "primitive" :
             fluid.isArrayable(totest) ? "array" : "object";
+    };
+
+    fluid.isIoCReference = function (ref) {
+        return typeof(ref) === "string" && ref.charAt(0) === "{" && ref.indexOf("}") > 0;
     };
 
     fluid.isDOMNode = function (obj) {
@@ -12229,6 +12236,10 @@ var fluid = fluid || fluid_2_0_0;
         return fluid.isPrimitive(totest) || !fluid.isPlainObject(totest);
     };
 
+    fluid.isApplicable = function (totest) {
+        return totest.apply && typeof(totest.apply) === "function";
+    };
+
     fluid.copyRecurse = function (tocopy, segs) {
         if (segs.length > fluid.strategyRecursionBailout) {
             fluid.fail("Runaway recursion encountered in fluid.copy - reached path depth of " + fluid.strategyRecursionBailout + " via path of " + segs.join(".") +
@@ -12254,6 +12265,9 @@ var fluid = fluid || fluid_2_0_0;
         return fluid.copyRecurse(tocopy, []);
     };
 
+    // TODO: Coming soon - reimplementation of $.extend using strategyRecursionBailout
+    fluid.extend = $.extend;
+
     /** Corrected version of jQuery makeArray that returns an empty array on undefined rather than crashing.
       * We don't deal with as many pathological cases as jQuery **/
     fluid.makeArray = function (arg) {
@@ -12269,6 +12283,21 @@ var fluid = fluid || fluid_2_0_0;
             }
         }
         return togo;
+    };
+
+    /** Pushes an element or elements onto an array, initialising the array as a member of a holding object if it is
+     * not already allocated.
+     * @param holder {Array or Object} The holding object whose member is to receive the pushed element(s).
+     * @param member {String} The member of the <code>holder</code> onto which the element(s) are to be pushed
+     * @param topush {Array or Object} If an array, these elements will be added to the end of the array using Array.push.apply. If an object, it will be pushed to the end of the array using Array.push.
+     */
+    fluid.pushArray = function (holder, member, topush) {
+        var array = holder[member] ? holder[member] : (holder[member] = []);
+        if (fluid.isArrayable(topush)) {
+            array.push.apply(array, topush);
+        } else {
+            array.push(topush);
+        }
     };
 
     function transformInternal(source, togo, key, args) {
@@ -12383,6 +12412,15 @@ var fluid = fluid || fluid_2_0_0;
         return arg;
     };
 
+    /** Returns the sum of its two arguments. A useful utility to combine with fluid.accumulate to compute totals
+     * @param a {Number|Boolean} The first operand to be added
+     * @param b {Number|Boolean} The second operand to be added
+     * @return {Number} The sum of the two operands
+     **/
+    fluid.add = function (a, b) {
+        return a + b;
+    };
+
     /** Scan through an array or hash of objects, removing those which match a predicate. Similar to
      * jQuery.grep, only acts on the list in-place by removal, rather than by creating
      * a new list by inclusion.
@@ -12454,7 +12492,7 @@ var fluid = fluid || fluid_2_0_0;
      */
 
     fluid.getMembers = function (holder, name) {
-        return fluid.transform(holder, function(member) {
+        return fluid.transform(holder, function (member) {
             return fluid.get(member, name);
         });
     };
@@ -12557,8 +12595,8 @@ var fluid = fluid || fluid_2_0_0;
 
     /** Converts a hash into an object by hoisting out the object's keys into an array element via the supplied String "key", and then transforming via an optional further function, which receives the signature
      * (newElement, oldElement, key) where newElement is the freshly cloned element, oldElement is the original hash's element, and key is the key of the element.
-     * If the function is not supplied, the old element is simply deep-cloned onto the new element (same effect
-     * as transform fluid.transforms.objectToArray)
+     * If the function is not supplied, the old element is simply deep-cloned onto the new element (same effect as transform fluid.transforms.deindexIntoArrayByKey).
+     * The supplied hash will not be modified, unless the supplied function explicitly does so by modifying its 2nd argument.
      */
     fluid.hashToArray = function (hash, keyName, func) {
         var togo = [];
@@ -12623,6 +12661,20 @@ var fluid = fluid || fluid_2_0_0;
      */
     fluid.parseInteger = function (string) {
         return isFinite(string) && ((string % 1) === 0) ? Number(string) : NaN;
+    };
+
+    /** Calls Object.freeze at each level of containment of the supplied object
+     * @return The supplied argument, recursively frozen
+     */
+    fluid.freezeRecursive = function (tofreeze) {
+        if (fluid.isPlainObject(tofreeze)) {
+            fluid.each(tofreeze, function (value) {
+                fluid.freezeRecursive(value);
+            });
+            return Object.freeze(tofreeze);
+        } else {
+            return tofreeze;
+        }
     };
 
     /** A set of special "marker values" used in signalling in function arguments and return values,
@@ -12968,6 +13020,7 @@ var fluid = fluid || fluid_2_0_0;
     };
 
     // unsupported, NON-API function
+    // TODO: Note - no "fixedOnly = true" sites remain in the framework
     fluid.parsePriorityConstraint = function (constraint, fixedOnly, site) {
         var segs = constraint.split(":");
         var type = segs[0];
@@ -13077,6 +13130,21 @@ var fluid = fluid || fluid_2_0_0;
         }
     };
 
+    /** Parse a hash containing prioritised records (for example, as found in a ContextAwareness record) and return a sorted array of these records in priority order.
+     * @param records {Object} A hash of key names to prioritised records. Each record may contain an member `namespace` - if it does not, the namespace will be taken from the
+     * record's key. It may also contain a `String` member `priority` encoding a priority with respect to these namespaces as document at http://docs.fluidproject.org/infusion/development/Priorities.html .
+     * @param name {String} A human-readable name describing the supplied records, which will be incorporated into the message of any error encountered when resolving the priorities
+     * @return [Array] An array of the same elements supplied to `records`, sorted into priority order. The supplied argument `records` will not be modified.
+     */
+    fluid.parsePriorityRecords = function (records, name) {
+        var array = fluid.hashToArray(records, "namespace", function (newElement, oldElement, index) {
+            $.extend(newElement, oldElement);
+            newElement.priority = fluid.parsePriority(oldElement.priority, index, false, name);
+        });
+        fluid.sortByPriority(array);
+        return array;
+    };
+
     fluid.event.identifyListener = function (listener, soft) {
         if (typeof(listener) !== "string" && !listener.$$fluid_guid && !soft) {
             listener.$$fluid_guid = fluid.allocateGuid();
@@ -13111,14 +13179,6 @@ var fluid = fluid || fluid_2_0_0;
         return fluid.sortByPriority(togo);
     };
 
-    // unsupported, non-API function
-    fluid.event.invokeListener = function (listener, args) {
-        if (typeof(listener) === "string") {
-            listener = fluid.event.resolveListener(listener); // just resolves globals
-        }
-        return listener.apply(null, args);
-    };
-
     // unsupported, NON-API function
     fluid.event.resolveListener = function (listener) {
         var listenerName = listener.globalName || (typeof(listener) === "string" ? listener : null);
@@ -13145,9 +13205,9 @@ var fluid = fluid || fluid_2_0_0;
     /** Construct an "event firer" object which can be used to register and deregister
      * listeners, to which "events" can be fired. These events consist of an arbitrary
      * function signature. General documentation on the Fluid events system is at
-     * http://wiki.fluidproject.org/display/fluid/The+Fluid+Event+System .
+     * http://docs.fluidproject.org/infusion/development/InfusionEventSystem.html .
      * @param {Object} options - A structure to configure this event firer. Supported fields:
-     *     {String} name - a name for this firer
+     *     {String} name - a readable name for this firer to be used in diagnostics and debugging
      *     {Boolean} preventable - If <code>true</code> the return value of each handler will
      * be checked for <code>false</code> in which case further listeners will be shortcircuited, and this
      * will be the return value of fire()
@@ -13161,24 +13221,43 @@ var fluid = fluid || fluid_2_0_0;
             that.listeners = {};
             that.byId = {};
             that.sortedListeners = [];
+            // arguments after 3rd are not part of public API
+            // listener as Object is used only by ChangeApplier to tunnel path, segs, etc as part of its "spec"
+            /** Adds a listener to this event.
+              * @param listener {Function|String} The listener function to be added, or a global name resolving to a function. The signature of the function is arbitrary and matches that sent to event.fire()
+              * @param namespace {String} (Optional) A namespace for this listener. At most one listener with a particular namespace can be active on an event at one time. Removing successively added listeners with a particular
+              * namespace will expose previously added ones in a stack idiom
+              * @param priority {String|Number} A priority for the listener relative to others, perhaps expressed with a constraint relative to the namespace of another - see
+              * http://docs.fluidproject.org/infusion/development/Priorities.html
+              */
             that.addListener = function (listener, namespace, priority, softNamespace, listenerId) {
+                var record;
                 if (that.destroyed) {
                     fluid.fail("Cannot add listener to destroyed event firer " + that.name);
                 }
                 if (!listener) {
                     return;
                 }
+                if (fluid.isPlainObject(listener, true) && !fluid.isApplicable(listener)) {
+                    record = listener;
+                    listener = record.listener;
+                    namespace = record.namespace;
+                    priority = record.priority;
+                    softNamespace = record.softNamespace;
+                    listenerId = record.listenerId;
+                }
                 if (typeof(listener) === "string") {
                     listener = {globalName: listener};
                 }
                 var id = listenerId || fluid.event.identifyListener(listener);
                 namespace = namespace || id;
-                var record = {listener: listener,
+                record = $.extend(record || {}, {
                     namespace: namespace,
+                    listener: listener,
                     softNamespace: softNamespace,
                     listenerId: listenerId,
                     priority: fluid.parsePriority(priority, that.sortedListeners.length, false, "listeners")
-                };
+                });
                 that.byId[id] = record;
 
                 var thisListeners = (that.listeners[namespace] = fluid.makeArray(that.listeners[namespace]));
@@ -13199,7 +13278,11 @@ var fluid = fluid || fluid_2_0_0;
             addListener: function () {
                 lazyInit.apply(null, arguments);
             },
-
+            /** Removes a listener previously registered with this event.
+              * @param toremove {Function|String} Either the listener function, the namespace of a listener (in which case a previous listener with that namespace may be uncovered) or an id sent to the undocumented
+              * `listenerId` argument of `addListener
+              */
+            // Can be supplied either listener, namespace, or id (which may match either listener function's guid or original listenerId argument)
             removeListener: function (listener) {
                 if (!that.listeners) { return; }
                 var namespace, id, record;
@@ -13236,6 +13319,7 @@ var fluid = fluid || fluid_2_0_0;
                 }
                 that.sortedListeners = fluid.event.sortListeners(that.listeners);
             },
+            /** Fires this event to all listeners which are active. They will be notified in order of priority. The signature of this method is free **/
             fire: function () {
                 var listeners = that.sortedListeners;
                 if (!listeners || that.destroyed) { return; }
@@ -13256,6 +13340,15 @@ var fluid = fluid || fluid_2_0_0;
             }
         };
         return that;
+    };
+
+    // unsupported, NON-API function
+    // Fires to an event which may not be instantiated (in which case no-op) - primary modern usage is to resolve FLUID-5904
+    fluid.fireEvent = function (component, eventName, args) {
+        var firer = component.events[eventName];
+        if (firer) {
+            firer.fire.apply(null, fluid.makeArray(args));
+        }
     };
 
     // unsupported, NON-API function
@@ -13285,7 +13378,7 @@ var fluid = fluid || fluid_2_0_0;
     fluid.mergeListeners = function (that, events, listeners) {
         fluid.each(listeners, function (value, key) {
             var firer, namespace;
-            if (key.charAt(0) === "{") {
+            if (fluid.isIoCReference(key)) {
                 firer = fluid.expandImmediate(key, that);
                 if (!firer) {
                     fluid.fail("Error in listener record: key " + key + " could not be looked up to an event firer - did you miss out \"events.\" when referring to an event firer?");
@@ -13309,7 +13402,7 @@ var fluid = fluid || fluid_2_0_0;
 
     // unsupported, NON-API function
     fluid.eventFromRecord = function (eventSpec, eventKey, that) {
-        var isIoCEvent = eventSpec && (typeof (eventSpec) !== "string" || eventSpec.charAt(0) === "{");
+        var isIoCEvent = eventSpec && (typeof (eventSpec) !== "string" || fluid.isIoCReference(eventSpec));
         var event;
         if (isIoCEvent) {
             if (!fluid.event.resolveEvent) {
@@ -13341,17 +13434,21 @@ var fluid = fluid || fluid_2_0_0;
             fluid.fail("Error in listeners declaration - the keys in this structure must resolve to event names - got " + key + " from ", source);
         }
         // cf. triage in mergeListeners
-        var hasNamespace = key.charAt(0) !== "{" && key.indexOf(".") !== -1;
+        var hasNamespace = !fluid.isIoCReference(key) && key.indexOf(".") !== -1;
         return hasNamespace ? (source || target) : fluid.arrayConcatPolicy(target, source);
     };
 
     // unsupported, NON-API function
-    fluid.makeMergeListenersPolicy = function (merger) {
+    fluid.makeMergeListenersPolicy = function (merger, modelRelay) {
         return function (target, source) {
             target = target || {};
-            fluid.each(source, function (listeners, key) {
-                target[key] = merger(target[key], listeners, key);
-            });
+            if (modelRelay && (fluid.isArrayable(source) || typeof(source.target) === "string")) { // This form allowed for modelRelay
+                target[""] = merger(target[""], source, "");
+            } else {
+                fluid.each(source, function (listeners, key) {
+                    target[key] = merger(target[key], listeners, key);
+                });
+            }
             return target;
         };
     };
@@ -13426,35 +13523,24 @@ var fluid = fluid || fluid_2_0_0;
 
     fluid.defaultsStore = {};
 
-    var resolveGradesImpl = function (gs, gradeNames, base) {
-        var raw = true;
-        if (base) {
-            raw = gradeNames.length === 1; // We are just resolving a single grade and populating the cache
-        }
-        else {
-            gradeNames = fluid.makeArray(gradeNames);
-        }
-        for (var i = gradeNames.length - 1; i >= 0; -- i) {
+    // unsupported, NON-API function
+    // Recursively builds up "gradeStructure" in first argument. 2nd arg receives gradeNames to be resolved, with stronger grades at right (defaults order)
+    // builds up gradeStructure.gradeChain pushed from strongest to weakest (reverse defaults order)
+    fluid.resolveGradesImpl = function (gs, gradeNames) {
+        gradeNames = fluid.makeArray(gradeNames);
+        for (var i = gradeNames.length - 1; i >= 0; -- i) { // from stronger to weaker
             var gradeName = gradeNames[i];
             if (gradeName && !gs.gradeHash[gradeName]) {
-                var isDynamic = gradeName.charAt(0) === "{";
-                var options = (isDynamic ? null : (raw ? fluid.rawDefaults(gradeName) : fluid.getGradedDefaults(gradeName))) || {};
-                var thisTick = gradeTickStore[gradeName] || (gradeTick - 1); // a nonexistent grade is recorded as previous to current
+                var isDynamic = fluid.isIoCReference(gradeName);
+                var options = (isDynamic ? null : fluid.rawDefaults(gradeName)) || {};
+                var thisTick = gradeTickStore[gradeName] || (gradeTick - 1); // a nonexistent grade is recorded as just previous to current
                 gs.lastTick = Math.max(gs.lastTick, thisTick);
                 gs.gradeHash[gradeName] = true;
                 gs.gradeChain.push(gradeName);
-                gs.optionsChain.push(options);
                 var oGradeNames = fluid.makeArray(options.gradeNames);
                 for (var j = oGradeNames.length - 1; j >= 0; -- j) { // from stronger to weaker grades
-                    var oGradeName = oGradeNames[j];
-                    if (raw) {
-                        resolveGradesImpl(gs, oGradeName);
-                    } else {
-                        if (!gs.gradeHash[oGradeName]) {
-                            gs.gradeHash[oGradeName] = true; // these have already been resolved
-                            gs.gradeChain.push(oGradeName);
-                        }
-                    }
+                    // TODO: in future, perhaps restore mergedDefaultsCache function of storing resolved gradeNames for bare grades
+                    fluid.resolveGradesImpl(gs, oGradeNames[j]);
                 }
             }
         }
@@ -13466,19 +13552,13 @@ var fluid = fluid || fluid_2_0_0;
         var gradeStruct = {
             lastTick: 0,
             gradeChain: [],
-            gradeHash: {},
-            optionsChain: []
+            gradeHash: {}
         };
         // stronger grades appear to the right in defaults - dynamic grades are stronger still - FLUID-5085
-        // we supply these in reverse order to resolveGradesImpl with weak grades at the right
-        return resolveGradesImpl(gradeStruct, [defaultName].concat(fluid.makeArray(gradeNames)), true);
-    };
-
-    var mergedDefaultsCache = {};
-
-    // unsupported, NON-API function
-    fluid.gradeNamesToKey = function (defaultName, gradeNames) {
-        return defaultName + "|" + gradeNames.join("|");
+        // we supply these to resolveGradesImpl with strong grades at the right
+        fluid.resolveGradesImpl(gradeStruct, [defaultName].concat(fluid.makeArray(gradeNames)));
+        gradeStruct.gradeChain.reverse(); // reverse into defaults order
+        return gradeStruct;
     };
 
     fluid.hasGrade = function (options, gradeName) {
@@ -13488,7 +13568,10 @@ var fluid = fluid || fluid_2_0_0;
     // unsupported, NON-API function
     fluid.resolveGrade = function (defaults, defaultName, gradeNames) {
         var gradeStruct = fluid.resolveGradeStructure(defaultName, gradeNames);
-        var mergeArgs = gradeStruct.optionsChain.reverse();
+        var mergeArgs = fluid.transform(gradeStruct.gradeChain, fluid.rawDefaults);
+        fluid.remove_if(mergeArgs, function (options) {
+            return !options;
+        });
         var mergePolicy = {};
         for (var i = 0; i < mergeArgs.length; ++ i) {
             if (mergeArgs[i] && mergeArgs[i].mergePolicy) {
@@ -13497,15 +13580,24 @@ var fluid = fluid || fluid_2_0_0;
         }
         mergeArgs = [mergePolicy, {}].concat(mergeArgs);
         var mergedDefaults = fluid.merge.apply(null, mergeArgs);
-        mergedDefaults.gradeNames = gradeStruct.gradeChain.reverse();
-        return {defaults: mergedDefaults, lastTick: gradeStruct && gradeStruct.lastTick};
+        mergedDefaults.gradeNames = gradeStruct.gradeChain; // replace these since mergePolicy version is inadequate
+        fluid.freezeRecursive(mergedDefaults);
+        return {defaults: mergedDefaults, lastTick: gradeStruct.lastTick};
+    };
+
+    fluid.mergedDefaultsCache = {};
+
+    // unsupported, NON-API function
+    fluid.gradeNamesToKey = function (defaultName, gradeNames) {
+        return defaultName + "|" + gradeNames.join("|");
     };
 
     // unsupported, NON-API function
-    fluid.getGradedDefaults = function (defaultName, gradeNames) {
+    // The main entry point to acquire the fully merged defaults for a combination of defaults plus mixin grades - from FluidIoC.js as well as recursively within itself
+    fluid.getMergedDefaults = function (defaultName, gradeNames) {
         gradeNames = fluid.makeArray(gradeNames);
         var key = fluid.gradeNamesToKey(defaultName, gradeNames);
-        var mergedDefaults = mergedDefaultsCache[key];
+        var mergedDefaults = fluid.mergedDefaultsCache[key];
         if (mergedDefaults) {
             var lastTick = 0; // check if cache should be invalidated through real latest tick being later than the one stored
             var searchGrades = mergedDefaults.defaults.gradeNames || [];
@@ -13522,7 +13614,7 @@ var fluid = fluid || fluid_2_0_0;
             if (!defaults) {
                 return defaults;
             }
-            mergedDefaults = mergedDefaultsCache[key] = fluid.resolveGrade(defaults, defaultName, gradeNames);
+            mergedDefaults = fluid.mergedDefaultsCache[key] = fluid.resolveGrade(defaults, defaultName, gradeNames);
         }
         return mergedDefaults.defaults;
     };
@@ -13561,23 +13653,24 @@ var fluid = fluid || fluid_2_0_0;
     };
 
     // unsupported, NON-API function
-    fluid.rawDefaults = function (componentName, options) {
-        if (options === undefined) {
-            var entry = fluid.defaultsStore[componentName];
-            return entry && entry.options;
-        } else {
-            fluid.pushActivity("registerDefaults", "registering defaults for grade %componentName with options %options",
-                {componentName: componentName, options: options});
-            var optionsCopy = fluid.expandCompact ? fluid.expandCompact(options) : fluid.copy(options);
-            fluid.annotateListeners(componentName, optionsCopy);
-            var callerInfo = fluid.getCallerInfo && fluid.getCallerInfo(6);
-            fluid.defaultsStore[componentName] = {
-                options: optionsCopy,
-                callerInfo: callerInfo
-            };
-            gradeTickStore[componentName] = gradeTick++;
-            fluid.popActivity();
-        }
+    fluid.rawDefaults = function (componentName) {
+        var entry = fluid.defaultsStore[componentName];
+        return entry && entry.options;
+    };
+
+    // unsupported, NON-API function
+    fluid.registerRawDefaults = function (componentName, options) {
+        fluid.pushActivity("registerRawDefaults", "registering defaults for grade %componentName with options %options",
+            {componentName: componentName, options: options});
+        var optionsCopy = fluid.expandCompact ? fluid.expandCompact(options) : fluid.copy(options);
+        fluid.annotateListeners(componentName, optionsCopy);
+        var callerInfo = fluid.getCallerInfo && fluid.getCallerInfo(6);
+        fluid.defaultsStore[componentName] = {
+            options: optionsCopy,
+            callerInfo: callerInfo
+        };
+        gradeTickStore[componentName] = gradeTick++;
+        fluid.popActivity();
     };
 
     // unsupported, NON-API function
@@ -13589,7 +13682,7 @@ var fluid = fluid || fluid_2_0_0;
         var indexFunc = typeof(indexSpec.indexFunc) === "function" ? indexSpec.indexFunc : fluid.getGlobalValue(indexSpec.indexFunc);
         var keys = indexFunc(defaults) || [];
         for (var j = 0; j < keys.length; ++ j) {
-            (index[keys[j]] = index[keys[j]] || []).push(defaultName);
+            fluid.pushArray(index, keys[j], defaultName);
         }
     };
 
@@ -13606,7 +13699,7 @@ var fluid = fluid || fluid_2_0_0;
     fluid.indexDefaults = function (indexName, indexSpec) {
         var index = {};
         for (var defaultName in fluid.defaultsStore) {
-            var defaults = fluid.getGradedDefaults(defaultName);
+            var defaults = fluid.getMergedDefaults(defaultName);
             fluid.doIndexDefaults(defaultName, defaults, index, indexSpec);
         }
         return index;
@@ -13620,15 +13713,15 @@ var fluid = fluid || fluid_2_0_0;
 
     fluid.defaults = function (componentName, options) {
         if (options === undefined) {
-            return fluid.getGradedDefaults(componentName);
+            return fluid.getMergedDefaults(componentName);
         }
         else {
             if (options && options.options) {
                 fluid.fail("Probable error in options structure for " + componentName +
                     " with option named \"options\" - perhaps you meant to write these options at top level in fluid.defaults? - ", options);
             }
-            fluid.rawDefaults(componentName, options);
-            var gradedDefaults = fluid.getGradedDefaults(componentName);
+            fluid.registerRawDefaults(componentName, options);
+            var gradedDefaults = fluid.getMergedDefaults(componentName);
             if (!fluid.hasGrade(gradedDefaults, "fluid.function")) {
                 fluid.makeComponentCreator(componentName);
             }
@@ -13637,7 +13730,7 @@ var fluid = fluid || fluid_2_0_0;
 
     fluid.makeComponentCreator = function (componentName) {
         var creator = function () {
-            var defaults = fluid.getGradedDefaults(componentName);
+            var defaults = fluid.getMergedDefaults(componentName);
             if (!defaults.gradeNames || defaults.gradeNames.length === 0) {
                 fluid.fail("Cannot make component creator for type " + componentName + " which does not have any gradeNames defined");
             } else if (!defaults.initFunction) {
@@ -14063,7 +14156,7 @@ var fluid = fluid || fluid_2_0_0;
     // unsupported, NON-API function
     fluid.mergeComponentOptions = function (that, componentName, userOptions, localOptions) {
         var rawDefaults = fluid.rawDefaults(componentName);
-        var defaults = fluid.getGradedDefaults(componentName, rawDefaults && rawDefaults.gradeNames ? null : localOptions.gradeNames);
+        var defaults = fluid.getMergedDefaults(componentName, rawDefaults && rawDefaults.gradeNames ? null : localOptions.gradeNames);
         var sharedMergePolicy = {};
 
         var mergeBlocks = [];
@@ -14350,7 +14443,7 @@ var fluid = fluid || fluid_2_0_0;
     fluid.makeRootDestroy = function (that) {
         return function () {
             fluid.doDestroy(that);
-            that.events.afterDestroy.fire(that, "", null);
+            fluid.fireEvent(that, "afterDestroy", [that, "", null]);
         };
     };
 
@@ -14362,7 +14455,7 @@ var fluid = fluid || fluid_2_0_0;
 
     // unsupported, NON-API function
     fluid.doDestroy = function (that, name, parent) {
-        that.events.onDestroy.fire(that, name || "", parent);
+        fluid.fireEvent(that, "onDestroy", [that, name || "", parent]);
         that.lifecycleStatus = "destroyed";
         for (var key in that.events) {
             if (key !== "afterDestroy" && typeof(that.events[key].destroy) === "function") {
@@ -15907,7 +16000,6 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     fluid.pushDistributions = function (targetHead, selector, target, blocks) {
         var targetShadow = fluid.shadowForComponent(targetHead);
         var id = fluid.allocateGuid();
-        var distributions = (targetShadow.distributions = targetShadow.distributions || []);
         var distribution = {
             id: id, // This id is used in clearDistributions
             target: target, // Here for improved debuggability - info is duplicated in "selector"
@@ -15916,7 +16008,7 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
         };
         Object.freeze(distribution);
         Object.freeze(distribution.blocks);
-        distributions.push(distribution);
+        fluid.pushArray(targetShadow, "distributions", distribution);
         return id;
     };
 
@@ -16076,13 +16168,13 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     // Apply a batch of freshly acquired plain dynamic grades to the target component and recompute its options
     fluid.applyDynamicGrades = function (rec) {
         rec.oldGradeNames = fluid.makeArray(rec.gradeNames);
-        // Note that this crude algorithm doesn't allow us to determine which grades are "new" and which not (requires C3-like approach overall)
-        var newDefaults = fluid.copy(fluid.getGradedDefaults(rec.that.typeName, rec.gradeNames));
+        // Note that this crude algorithm doesn't allow us to determine which grades are "new" and which not // TODO: can no longer interpret comment
+        var newDefaults = fluid.copy(fluid.getMergedDefaults(rec.that.typeName, rec.gradeNames));
         rec.gradeNames.length = 0; // acquire derivatives of dynamic grades (FLUID-5054)
         rec.gradeNames.push.apply(rec.gradeNames, newDefaults.gradeNames);
         
         fluid.each(rec.gradeNames, function (gradeName) {
-            if (gradeName.charAt(0) !== "{") {
+            if (!fluid.isIoCReference(gradeName)) {
                 rec.seenGrades[gradeName] = true;
             }
         });
@@ -16106,7 +16198,7 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     fluid.accumulateDynamicGrades = function (rec, newGradeNames) {
         fluid.each(newGradeNames, function (gradeName) {
             if (!rec.seenGrades[gradeName]) {
-                if (gradeName.charAt(0) === "{") {
+                if (fluid.isIoCReference(gradeName)) {
                     rec.rawDynamic.push(gradeName);
                     rec.seenGrades[gradeName] = true;
                 } else if (!fluid.contains(rec.oldGradeNames, gradeName)) {
@@ -16118,7 +16210,7 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
 
     fluid.computeDynamicGrades = function (that, shadow, strategy) {
         delete that.options.gradeNames; // Recompute gradeNames for FLUID-5012 and others
-        var gradeNames = fluid.driveStrategy(that.options, "gradeNames", strategy); // Just acquire the reference, contents are wrong
+        var gradeNames = fluid.driveStrategy(that.options, "gradeNames", strategy); // Just acquire the reference and force eval of mergeBlocks "target", contents are wrong
         gradeNames.length = 0;
         // TODO: In complex distribution cases, a component might end up with multiple default blocks
         var defaultsBlock = fluid.findMergeBlocks(shadow.mergeOptions.mergeBlocks, "defaults")[0];
@@ -16133,7 +16225,7 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
             rawDynamic: []
         };
         fluid.each(shadow.mergeOptions.mergeBlocks, function (block) { // acquire parents of earlier blocks before applying later ones
-            gradeNames.push.apply(gradeNames, fluid.makeArray(block.source && block.source.gradeNames));
+            gradeNames.push.apply(gradeNames, fluid.makeArray(block.target && block.target.gradeNames));
             fluid.applyDynamicGrades(rec);
         });
         fluid.collectDistributedGrades(rec);
@@ -16369,6 +16461,12 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
             return foundComponent;
         }
     };
+    
+    fluid.triggerMismatchedPathError = function (parsed, parentThat) {
+        var ref = fluid.renderContextReference(parsed);
+        fluid.fail("Failed to resolve reference " + ref + " - could not match context with name " +
+            parsed.context + " from component " + fluid.dumpThat(parentThat) + " at path " + fluid.pathForComponent(parentThat).join(".") + " component: " , parentThat);
+    };
 
     fluid.makeStackFetcher = function (parentThat, localRecord, fast) {
         var fetcher = function (parsed) {
@@ -16381,9 +16479,7 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
             }
             var foundComponent = fluid.resolveContext(context, parentThat, fast);
             if (!foundComponent && parsed.path !== "") {
-                var ref = fluid.renderContextReference(parsed);
-                fluid.fail("Failed to resolve reference " + ref + " - could not match context with name " +
-                    context + " from component " + fluid.dumpThat(parentThat) + " at path " + fluid.pathForComponent(parentThat).join(".") + " component: " , parentThat);
+                fluid.triggerMismatchedPathError(parsed, parentThat);
             }
             return fluid.getForComponent(foundComponent, parsed.path);
         };
@@ -16409,11 +16505,7 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
 
     fluid.recordListener = function (event, listener, shadow, listenerId) {
         if (event.ownerId !== shadow.that.id) { // don't bother recording listeners registered from this component itself
-            var listeners = shadow.listeners;
-            if (!listeners) {
-                listeners = shadow.listeners = [];
-            }
-            listeners.push({event: event, listener: listener, listenerId: listenerId});
+            fluid.pushArray(shadow, "listeners", {event: event, listener: listener, listenerId: listenerId});
         }
     };
 
@@ -16557,7 +16649,7 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
                 fluid.doDestroy(child, name, component);
                 fluid.clearDistributions(childShadow);
                 fluid.clearListeners(childShadow);
-                child.events.afterDestroy.fire(child, name, component);
+                fluid.fireEvent(child, "afterDestroy", [child, name, component]);
                 delete that.idToShadow[child.id];
             } else {
                 fluid.remove_if(childShadow.injectedPaths, function (troo, path) {
@@ -16578,6 +16670,7 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
 
     // Look up the globally registered instantiator for a particular component - we now only really support a
     // single, global instantiator, but this method is left as a notation point in case this ever reverts
+    // Returns null if argument is a noncomponent or has no shadow
     fluid.getInstantiator = function (component) {
         var instantiator = fluid.globalInstantiator;
         return component && instantiator.idToShadow[component.id] ? instantiator : null;
@@ -16671,7 +16764,7 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     // TODO: overall efficiency could huge be improved by resorting to the hated PROTOTYPALISM as an optimisation
     // for this mergePolicy which occurs in every component. Although it is a deep structure, the root keys are all we need
     var addPolicyBuiltins = function (policy) {
-        fluid.each(["gradeNames", "mergePolicy", "argumentMap", "components", "dynamicComponents", "events", "listeners", "modelListeners", "distributeOptions", "transformOptions"], function (key) {
+        fluid.each(["gradeNames", "mergePolicy", "argumentMap", "components", "dynamicComponents", "events", "listeners", "modelListeners", "modelRelay", "distributeOptions", "transformOptions"], function (key) {
             fluid.set(policy, [key, "*", "noexpand"], true);
         });
         return policy;
@@ -16732,6 +16825,8 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     fluid.expandComponentOptions = function (mergePolicy, defaults, userOptions, that) {
         var initRecord = userOptions; // might have been tunnelled through "userOptions" from "assembleCreatorArguments"
         var instantiator = userOptions && userOptions.marker === fluid.EXPAND ? userOptions.instantiator : null;
+        fluid.pushActivity("expandComponentOptions", "expanding component options %options with record %record for component %that",
+            {options: instantiator ? userOptions.mergeRecords.user : userOptions, record: initRecord, that: that});
         if (!instantiator) { // it is a top-level component which needs to be attached to the global root
             instantiator = fluid.globalInstantiator;
             initRecord = { // upgrade "userOptions" to the same format produced by fluid.assembleCreatorArguments via the subcomponent route
@@ -16742,8 +16837,6 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
             };
         }
         that.destroy = fluid.fabricateDestroyMethod(initRecord.parentThat, initRecord.memberName, instantiator, that);
-        fluid.pushActivity("expandComponentOptions", "expanding component options %options with record %record for component %that",
-            {options: fluid.get(initRecord.mergeRecords, "user.options"), record: initRecord, that: that});
 
         instantiator.recordKnownComponent(initRecord.parentThat, that, initRecord.memberName, true);
         var togo = expandComponentOptionsImpl(mergePolicy, defaults, initRecord, that);
@@ -16867,7 +16960,7 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     fluid.bindDeferredComponent = function (that, componentName, component) {
         var events = fluid.makeArray(component.createOnEvent);
         fluid.each(events, function(eventName) {
-            var event = eventName.charAt(0) === "{" ? fluid.expandOptions(eventName, that) : that.events[eventName];
+            var event = fluid.isIoCReference(eventName) ? fluid.expandOptions(eventName, that) : that.events[eventName];
             if (!event || !event.addListener) {
                 fluid.fail("Error instantiating createOnEvent component with name " + componentName + " of parent ", that, " since event specification " +
                     eventName + " could not be expanded to an event - got ", event);
@@ -16898,6 +16991,9 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
 
         fluid.getForComponent(that, "modelRelay");
         fluid.getForComponent(that, "model"); // trigger this as late as possible - but must be before components so that child component has model on its onCreate
+        if (fluid.isDestroyed(that)) {
+            return; // Further fix for FLUID-5869 - if we managed to destroy ourselves through some bizarre model self-reaction, bail out here
+        }
 
         var options = that.options;
         var components = options.components || {};
@@ -17139,18 +17235,19 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
 
     fluid.changeToApplicable = function (record, that) {
         return {
-            apply: function (noThis, args) {
+            apply: function (noThis, args, localRecord, mergeRecord) {
                 var parsed = fluid.parseValidModelReference(that, "changePath listener record", record.changePath);
-                var value = fluid.expandOptions(record.value, that, {}, {"arguments": args});
-                fluid.fireSourcedChange(parsed.applier, parsed.path, value, record.source);
+                var value = fluid.expandOptions(record.value, that, {}, fluid.extend(localRecord, {"arguments": args}));
+                var sources = mergeRecord && mergeRecord.source && mergeRecord.source.length ? fluid.makeArray(record.source).concat(mergeRecord.source) : record.source;
+                parsed.applier.change(parsed.modelSegs, value, record.type, sources); // FLUID-5586 now resolved
             }
         };
     };
 
     // Convert "exotic records" into an applicable form ("this/method" for FLUID-4878 or "changePath" for FLUID-3674)
-    fluid.recordToApplicable = function (record, that) {
-        if (record.changePath) {
-            return fluid.changeToApplicable(record, that);
+    fluid.recordToApplicable = function (record, that, standard) {
+        if (record.changePath !== undefined) { // Allow falsy paths for FLUID-5586
+            return fluid.changeToApplicable(record, that, standard);
         }
         var recthis = record["this"];
         if (record.method ^ recthis) {
@@ -17288,8 +17385,9 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
         var transRecs = fluid.transform(records, function (record) {
             // TODO: FLUID-5242 fix - we copy here since distributeOptions does not copy options blocks that it distributes and we can hence corrupt them.
             // need to clarify policy on options sharing - for slightly better efficiency, copy should happen during distribution and not here
+            // Note that fluid.mergeModelListeners expects to write to these too
             var expanded = fluid.isPrimitive(record) || record.expander ? {listener: record} : fluid.copy(record);
-            var methodist = fluid.recordToApplicable(record, that);
+            var methodist = fluid.recordToApplicable(record, that, standard);
             if (methodist) {
                 expanded.listener = methodist;
             }
@@ -17455,12 +17553,12 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
         var openPos = string.indexOf("(");
         var closePos = string.indexOf(")");
         if (openPos === -1 ^ closePos === -1 || openPos > closePos) {
-            fluid.fail("Badly-formed compact " + type + " record without matching parentheses: ", string);
+            fluid.fail("Badly-formed compact " + type + " record without matching parentheses: " + string);
         }
         if (openPos !== -1 && closePos !== -1) {
             var trail = string.substring(closePos + 1);
             if ($.trim(trail) !== "") {
-                fluid.fail("Badly-formed compact " + type + " - unexpected material following close parenthesis: " + trail);
+                fluid.fail("Badly-formed compact " + type + " record " + string + " - unexpected material following close parenthesis: " + trail);
             }
             var prefix = string.substring(0, openPos);
             var body = string.substring(openPos + 1, closePos);
@@ -17470,7 +17568,7 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
             return togo;
         }
         else if (type === "expander") {
-            fluid.fail("Badly-formed compact expander record without parentheses: ", string);
+            fluid.fail("Badly-formed compact expander record without parentheses: " + string);
         }
         return string;
     };
@@ -17529,10 +17627,6 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     };
 
     /** End compact record expansion machinery **/
-
-    fluid.isIoCReference = function (ref) {
-        return typeof(ref) === "string" && ref.charAt(0) === "{" && ref.indexOf("}") > 0;
-    };
 
     fluid.extractEL = function (string, options) {
         if (options.ELstyle === "ALL") {
@@ -17864,6 +17958,8 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
                 root = fluid.getForComponent(component, segs);
             }
             return root;
+        } else if (segs.length > 0) {
+            fluid.triggerMismatchedPathError(source.expander, options.contextThat);
         }
     };
 
@@ -17885,10 +17981,13 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
         }
         var funcEntry = expander.func || expander.funcName;
         var func = (options.expandSource ? options.expandSource(funcEntry) : funcEntry) || fluid.recordToApplicable(expander, options.contextThat);
-        if (!func) {
-            fluid.fail("Error in expander record - " + funcEntry + " could not be resolved to a function for component ", options.contextThat);
+        if (typeof(func) === "string") {
+            func = fluid.getGlobalValue(func);
         }
-        return func.apply ? func.apply(null, args) : fluid.invokeGlobalFunction(func, args);
+        if (!func) {
+            fluid.fail("Error in expander record ", expander, ": " + funcEntry + " could not be resolved to a function for component ", options.contextThat);
+        }
+        return func.apply(null, args);
     };
 
     // The "noexpand" expander which simply unwraps one level of expansion and ceases.
@@ -18216,6 +18315,7 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     // changes are arising in the system with each new enlisted model. TODO: if we ever get users operating their own
     // transactions, think of a way to incorporate this into that workflow
     fluid.clearLinkCounts = function (transRec, relaysAlso) {
+        // TODO: Separate this record out into different types of records (relays are already in their own area)
         fluid.each(transRec, function (value, key) {
             if (typeof(value) === "number") {
                 transRec[key] = 0;
@@ -18230,12 +18330,12 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     };
 
     // Operate all coordinated transactions by bringing models to their respective initial values, and then commit them all
-    fluid.operateInitialTransaction = function (instantiator, mrec) {
+    fluid.operateInitialTransaction = function (that, mrec) {
         var transId = fluid.allocateGuid();
-        var transRec = fluid.getModelTransactionRec(instantiator, transId);
+        var transRec = fluid.getModelTransactionRec(that, transId);
         var transac;
         var transacs = fluid.transform(mrec, function (recel) {
-            transac = recel.that.applier.initiate("init", transId);
+            transac = recel.that.applier.initiate(null, "init", transId);
             transRec[recel.that.applier.applierId] = {transaction: transac};
             return transac;
         });
@@ -18246,7 +18346,7 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
             var that = recel.that;
             var transac = transacs[that.id];
             if (recel.completeOnInit) {
-                fluid.initModelEvent(that, that.applier, transac, that.applier.changeListeners.listeners);
+                fluid.initModelEvent(that, that.applier, transac, that.applier.listeners.sortedListeners);
             } else {
                 fluid.each(recel.initModels, function (initModel) {
                     transac.fireChangeRequest({type: "ADD", segs: [], value: initModel});
@@ -18254,7 +18354,9 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
                 });
             }
             var shadow = fluid.shadowForComponent(that);
-            shadow.modelComplete = true; // technically this is a little early, but this flag is only read in fluid.connectModelRelay
+            if (shadow) { // Fix for FLUID-5869 - the component may have been destroyed during its own init transaction
+                shadow.modelComplete = true; // technically this is a little early, but this flag is only read in fluid.connectModelRelay
+            }
         });
 
         transac.commit(); // committing one representative transaction will commit them all
@@ -18273,19 +18375,10 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
             return recel.complete !== true;
         });
         if (!incomplete) {
-            fluid.operateInitialTransaction(instantiator, mrec);
+            fluid.operateInitialTransaction(that, mrec);
             // NB: Don't call fluid.concludeTransaction since "init" is not a standard record - this occurs in commitRelays for the corresponding genuine record as usual
             instantiator.modelTransactions.init = {};
         }
-    };
-
-    fluid.transformToAdapter = function (transform, targetPath) {
-        var basedTransform = {};
-        basedTransform[targetPath] = transform;
-        return function (trans, newValue /*, sourceSegs, targetSegs */) {
-            // TODO: More efficient model that can only run invalidated portion of transform (need to access changeMap of source transaction)
-            fluid.model.transformWithRules(newValue, basedTransform, {finalApplier: trans});
-        };
     };
 
     fluid.parseModelReference = function (that, ref) {
@@ -18294,35 +18387,82 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
         return parsed;
     };
 
-    fluid.parseValidModelReference = function (that, name, ref) {
+    /** Given a string which may represent a reference into a model, parses it into a structure holding the coordinates for resolving the reference. It specially
+     * detects "references into model material" by looking for the first path segment in the path reference which holds the value "model". Some of its workflow is bypassed
+     * in the special case of a reference representing an implicit model relay. In this case, ref will definitely be a String, and if it does not refer to model material, rather than
+     * raising an error, the return structure will include a field <code>nonModel: true</code>
+     * @param that {Component} The component holding the reference
+     * @param name {String} A human-readable string representing the type of block holding the reference - e.g. "modelListeners"
+     * @param ref {String|ModelReference} The model reference to be parsed. This may have already been partially parsed at the original site - that is, a ModelReference is a
+     * structure containing
+     *     segs: {Array of String} An array of model path segments to be dereferenced in the target component (will become `modelSegs` in the final return)
+     *     context: {String} An IoC reference to the component holding the model
+     * @param implicitRelay {Boolean} <code>true</code> if the reference was being resolved for an implicit model relay - that is,
+     * whether it occured within the `model` block itself. In this case, references to non-model material are not a failure and will simply be resolved
+     * (by the caller) onto their targets (as constants). Otherwise, this function will issue a failure on discovering a reference to non-model material.
+     * @return A structure holding:
+     *    that {Component} The component whose model is the target of the reference. This may end up being constructed as part of the act of resolving the reference
+     *    applier {Component} The changeApplier for the component <code>that</code>. This may end up being constructed as part of the act of resolving the reference
+     *    modelSegs {Array of String} An array of path segments into the model of the component
+     *    path {String} the value of <code>modelSegs</code> encoded as an EL path (remove client uses of this in time)
+     *    nonModel {Boolean} Set if <code>implicitRelay</code> was true and the reference was not into a model (modelSegs/path will not be set in this case)
+     *    segs {Array of String} Holds the full array of path segments found by parsing the original reference - only useful in <code>nonModel</code> case
+     */
+    fluid.parseValidModelReference = function (that, name, ref, implicitRelay) {
         var reject = function (message) {
-            fluid.fail("Error in " + name + ": " + ref + message);
+            fluid.fail("Error in " + name + ": ", ref, message);
         };
-        var parsed, target;
-        if (ref.charAt(0) === "{") {
-            parsed = fluid.parseModelReference(that, ref);
-            if (parsed.segs[0] !== "model") {
-                reject(" must be a reference into a component model beginning with \"model\"");
+        var parsed; // resolve ref into context and modelSegs
+        if (typeof(ref) === "string") {
+            if (fluid.isIoCReference(ref)) {
+                parsed = fluid.parseModelReference(that, ref);
+                var modelPoint = parsed.segs.indexOf("model");
+                if (modelPoint === -1) {
+                    if (implicitRelay) {
+                        parsed.nonModel = true;
+                    } else {
+                        reject(" must be a reference into a component model via a path including the segment \"model\"");
+                    }
+                } else {
+                    parsed.modelSegs = parsed.segs.slice(modelPoint + 1);
+                    parsed.contextSegs = parsed.segs.slice(0, modelPoint);
+                    delete parsed.path;
+                }
+
             } else {
-                parsed.modelSegs = parsed.segs.slice(1);
-                delete parsed.path;
+                parsed = {
+                    path: ref,
+                    modelSegs: that.applier.parseEL(ref)
+                };
             }
+        } else {
+            if (!fluid.isArrayable(ref.segs)) {
+                reject(" must contain an entry \"segs\" holding path segments referring a model path within a component");
+            }
+            parsed = {
+                context: ref.context,
+                modelSegs: fluid.expandOptions(ref.segs, that)
+            };
+        }
+        var target; // resolve target component, which defaults to "that"
+        if (parsed.context) {
             target = fluid.resolveContext(parsed.context, that);
             if (!target) {
                 reject(" must be a reference to an existing component");
             }
+            if (parsed.contextSegs) {
+                target = fluid.getForComponent(target, parsed.contextSegs);
+            }
         } else {
             target = that;
-            parsed = {
-                path: ref,
-                modelSegs: that.applier.parseEL(ref)
-            };
         }
-        if (!target.applier) {
-            fluid.getForComponent(target, ["applier"]);
-        }
-        if (!target.applier) {
-            reject(" must be a reference to a component with a ChangeApplier (descended from fluid.modelComponent)");
+        if (!parsed.nonModel) {
+            if (!target.applier) {
+                fluid.getForComponent(target, ["applier"]);
+            }
+            if (!target.applier) {
+                reject(" must be a reference to a component with a ChangeApplier (descended from fluid.modelComponent)");
+            }
         }
         parsed.that = target;
         parsed.applier = target.applier;
@@ -18332,9 +18472,11 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
         return parsed;
     };
 
-    // Gets global record for a particular transaction id - looks up applier id to transaction,
+    // Gets global record for a particular transaction id, allocating if necessary - looks up applier id to transaction,
     // as well as looking up source id (linkId in below) to count/true
-    fluid.getModelTransactionRec = function (instantiator, transId) {
+    // Through poor implementation quality, not every access passes through this function - some look up instantiator.modelTransactions directly
+    fluid.getModelTransactionRec = function (that, transId) {
+        var instantiator = fluid.getInstantiator(that);
         if (!transId) {
             fluid.fail("Cannot get transaction record without transaction id");
         }
@@ -18344,15 +18486,25 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
         var transRec = instantiator.modelTransactions[transId];
         if (!transRec) {
             transRec = instantiator.modelTransactions[transId] = {
+                relays: [], // sorted array of relay elements (also appear at top level index by transaction id)
+                sources: {}, // hash of the global transaction sources (includes "init" but excludes "relay" and "local")
                 externalChanges: {} // index by applierId to changePath to listener record
             };
         }
         return transRec;
     };
 
-    fluid.recordChangeListener = function (component, applier, sourceListener) {
+    fluid.recordChangeListener = function (component, applier, sourceListener, listenerId) {
         var shadow = fluid.shadowForComponent(component);
-        fluid.recordListener(applier.modelChanged, sourceListener, shadow);
+        fluid.recordListener(applier.modelChanged, sourceListener, shadow, listenerId);
+    };
+
+    fluid.registerRelayTransaction = function (transRec, targetApplier, transId, options, npOptions) {
+        var newTrans = targetApplier.initiate("relay", null, transId); // non-top-level transaction will defeat postCommit
+        var transEl = transRec[targetApplier.applierId] = {transaction: newTrans, relayCount: 0, namespace: npOptions.namespace, priority: npOptions.priority, options: options};
+        transEl.priority = fluid.parsePriority(transEl.priority, transRec.relays.length, false, "model relay");
+        transRec.relays.push(transEl);
+        return transEl;
     };
 
     // Configure this parameter to tweak the number of relays the model will attempt per transaction before bailing out with an error
@@ -18375,8 +18527,8 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     // is transactional but it does not require the transaction to conclude in order to fire - it may be reused as many times as
     // required within the "overall" transaction whilst genuine (external) changes continue to arrive.
 
-    fluid.registerDirectChangeRelay = function (target, targetSegs, source, sourceSegs, linkId, transducer, options) {
-        var instantiator = fluid.getInstantiator(target);
+    // TODO: Vast overcomplication and generation of closure garbage. SURELY we should be able to convert this into an externalised, arg-ist form
+    fluid.registerDirectChangeRelay = function (target, targetSegs, source, sourceSegs, linkId, transducer, options, npOptions) {
         var targetApplier = options.targetApplier || target.applier; // implies the target is a relay document
         var sourceApplier = options.sourceApplier || source.applier; // implies the source is a relay document - listener will be transactional
         var applierId = targetApplier.applierId;
@@ -18384,7 +18536,7 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
         sourceSegs = sourceSegs ? fluid.makeArray(sourceSegs) : sourceSegs; // take copies since originals will be trashed
         var sourceListener = function (newValue, oldValue, path, changeRequest, trans, applier) {
             var transId = trans.id;
-            var transRec = fluid.getModelTransactionRec(instantiator, transId);
+            var transRec = fluid.getModelTransactionRec(target, transId);
             if (applier && trans && !transRec[applier.applierId]) { // don't trash existing record which may contain "options" (FLUID-5397)
                 transRec[applier.applierId] = {transaction: trans}; // enlist the outer user's original transaction
             }
@@ -18398,8 +18550,7 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
                     fluid.fail("Error in model relay specification at component ", target, " - operated more than " + fluid.relayRecursionBailout + " relays without model value settling - current model contents are ", trans.newHolder.model);
                 }
                 if (!existing) {
-                    var newTrans = targetApplier.initiate("relay", transId); // non-top-level transaction will defeat postCommit
-                    existing = transRec[applierId] = {transaction: newTrans, relayCount: 0, options: options};
+                    existing = fluid.registerRelayTransaction(transRec, targetApplier, transId, options, npOptions);
                 }
                 if (transducer && !options.targetApplier) {
                     // TODO: This is just for safety but is still unusual and now abused. The transducer doesn't need the "newValue" since all the transform information
@@ -18411,22 +18562,22 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
                 }
             }
         };
-        sourceListener.relayListenerId = fluid.allocateGuid();
+        var spec;
         if (sourceSegs) {
-            fluid.log(fluid.logLevel.TRACE, "Adding relay listener with id " + sourceListener.relayListenerId + " to source applier with id " +
-                sourceApplier.applierId + " from target applier with id " + applierId + " for target component with id " + target.id);
-            sourceApplier.modelChanged.addListener({
+            spec = sourceApplier.modelChanged.addListener({
                 isRelay: true,
                 segs: sourceSegs,
                 transactional: options.transactional
             }, sourceListener);
+            fluid.log(fluid.logLevel.TRACE, "Adding relay listener with listenerId " + spec.listenerId + " to source applier with id " +
+                sourceApplier.applierId + " from target applier with id " + applierId + " for target component with id " + target.id);
         }
         if (source) { // TODO - we actually may require to register on THREE sources in the case modelRelay is attached to a
             // component which is neither source nor target. Note there will be problems if source, say, is destroyed and recreated,
             // and holder is not - relay will in that case be lost. Need to integrate relay expressions with IoCSS.
-            fluid.recordChangeListener(source, sourceApplier, sourceListener);
+            fluid.recordChangeListener(source, sourceApplier, sourceListener, spec.listenerId);
             if (target !== source) {
-                fluid.recordChangeListener(target, sourceApplier, sourceListener);
+                fluid.recordChangeListener(target, sourceApplier, sourceListener, spec.listenerId);
             }
         }
     };
@@ -18448,6 +18599,7 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
         }
         enlistComponent(target);
         enlistComponent(source); // role of "source" and "target" may have been swapped in a modelRelay document
+        var npOptions = fluid.filterKeys(options, ["namespace", "priority"]);
 
         if (options.update) { // it is a call via parseImplicitRelay for a relay document
             if (options.targetApplier) {
@@ -18456,31 +18608,61 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
                     transactional: false,
                     targetApplier: options.targetApplier,
                     update: options.update
-                });
+                }, npOptions);
             } else {
-                // if parsing a contextualised MR, skip the "orthogonal" registration - instead
-                // register the "half-transactional" listener which binds changes from the relay itself onto the target
-                fluid.registerDirectChangeRelay(target, targetSegs, source, [], linkId+"-transform", options.forwardAdapter, {transactional: true, sourceApplier: options.forwardApplier});
+                // We are in the middle of parsing a contextualised relay, and this call has arrived via its parseImplicitRelay.
+                // Rather than bind source-source, instead register the "half-transactional" listener which binds changes
+                // from the relay itself onto the target
+                fluid.registerDirectChangeRelay(target, targetSegs, source, [], linkId+"-transform", options.forwardAdapter, {transactional: true, sourceApplier: options.forwardApplier}, npOptions);
             }
         } else { // more efficient branch where relay is uncontextualised
-            fluid.registerDirectChangeRelay(target, targetSegs, source, sourceSegs, linkId, options.forwardAdapter, {transactional: false});
+            fluid.registerDirectChangeRelay(target, targetSegs, source, sourceSegs, linkId, options.forwardAdapter, {transactional: false}, npOptions);
             if (sourceSegs) {
-                fluid.registerDirectChangeRelay(source, sourceSegs, target, targetSegs, linkId, options.backwardAdapter, {transactional: false});
+                fluid.registerDirectChangeRelay(source, sourceSegs, target, targetSegs, linkId, options.backwardAdapter, {transactional: false}, npOptions);
             }
         }
     };
 
-    fluid.model.guardedAdapter = function (componentThat, cond, func, args) {
-        // TODO: We can't use fluid.isModelComplete here because of the broken half-transactional system - it may appear that model has arrived halfway through init transaction
-        var instantiator = fluid.getInstantiator(componentThat);
-        var enlist = instantiator.modelTransactions.init[componentThat.id];
-        var condValue = cond[enlist ? "init" : "live"];
-        if (condValue) {
+    fluid.parseSourceExclusionSpec = function (targetSpec, sourceSpec) {
+        targetSpec.excludeSource = fluid.arrayToHash(fluid.makeArray(sourceSpec.excludeSource || (sourceSpec.includeSource ? "*" : undefined)));
+        targetSpec.includeSource = fluid.arrayToHash(fluid.makeArray(sourceSpec.includeSource));
+        return targetSpec;
+    };
+
+    fluid.isExcludedChangeSource = function (transaction, spec) {
+        if (!spec || !spec.excludeSource) { // mergeModelListeners initModelEvent fabricates a fake spec that bypasses processing
+            return false;
+        }
+        var excluded = spec.excludeSource["*"];
+        for (var source in transaction.fullSources) {
+            if (spec.excludeSource[source]) {
+                excluded = true;
+            }
+            if (spec.includeSource[source]) {
+                excluded = false;
+            }
+        }
+        return excluded;
+    };
+
+    fluid.model.guardedAdapter = function (transaction, cond, func, args) {
+        if (!fluid.isExcludedChangeSource(transaction, cond)) {
             func.apply(null, args);
         }
     };
 
-    fluid.makeTransformPackage = function (componentThat, transform, sourcePath, targetPath, forwardCond, backwardCond) {
+    // TODO: This rather crummy function is the only site with a hard use of "path" as String
+    fluid.transformToAdapter = function (transform, targetPath) {
+        var basedTransform = {};
+        basedTransform[targetPath] = transform;
+        return function (trans, newValue /*, sourceSegs, targetSegs */) {
+            // TODO: More efficient model that can only run invalidated portion of transform (need to access changeMap of source transaction)
+            fluid.model.transformWithRules(newValue, basedTransform, {finalApplier: trans});
+        };
+    };
+
+    // TODO: sourcePath and targetPath should really be converted to segs to avoid excess work in parseValidModelReference
+    fluid.makeTransformPackage = function (componentThat, transform, sourcePath, targetPath, forwardCond, backwardCond, namespace, priority) {
         var that = {
             forwardHolder: {model: transform},
             backwardHolder: {model: null}
@@ -18498,7 +18680,7 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
                 that.generateAdapters(); // TODO: Quick fix for incorrect scheduling of invalidation/transducing
                 // "it so happens" that fluid.registerDirectChangeRelay invokes us with empty newValue in the case of invalidation -> transduction
             }
-            fluid.model.guardedAdapter(componentThat, forwardCond, that.forwardAdapterImpl, arguments);
+            fluid.model.guardedAdapter(transaction, forwardCond, that.forwardAdapterImpl, arguments);
         };
         // fired from fluid.model.updateRelays via invalidator event
         that.runTransform = function (trans) {
@@ -18512,18 +18694,22 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
         that.invalidator = fluid.makeEventFirer({name: "Invalidator for model relay with applier " + that.forwardApplier.applierId});
         if (sourcePath !== null) {
             that.backwardApplier = fluid.makeHolderChangeApplier(that.backwardHolder);
-            that.backwardAdapter = function () {
-                fluid.model.guardedAdapter(componentThat, backwardCond, that.backwardAdapterImpl, arguments);
+            that.backwardAdapter = function (transaction) {
+                fluid.model.guardedAdapter(transaction, backwardCond, that.backwardAdapterImpl, arguments);
             };
         }
         that.update = that.invalidator.fire; // necessary so that both routes to fluid.connectModelRelay from here hit the first branch
         var implicitOptions = {
             targetApplier: that.forwardApplier, // this special field identifies us to fluid.connectModelRelay
             update: that.update,
+            namespace: namespace,
+            priority: priority,
             refCount: 0
         };
         that.forwardHolder.model = fluid.parseImplicitRelay(componentThat, transform, [], implicitOptions);
         that.refCount = implicitOptions.refCount;
+        that.namespace = namespace;
+        that.priority = priority;
         that.generateAdapters();
         that.invalidator.addListener(that.generateAdapters);
         that.invalidator.addListener(that.runTransform);
@@ -18531,7 +18717,7 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     };
 
     fluid.singleTransformToFull = function (singleTransform) {
-        var withPath = $.extend(true, {valuePath: ""}, singleTransform);
+        var withPath = $.extend(true, {inputPath: ""}, singleTransform);
         return {
             "": {
                 transform: withPath
@@ -18539,35 +18725,55 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
         };
     };
 
+    // Convert old-style "relay conditions" to source includes/excludes as used in model listeners
     fluid.model.relayConditions = {
-        initOnly: {init: true,  live: false},
-        liveOnly: {init: false, live: true},
-        never:    {init: false, live: false},
-        always:   {init: true,  live: true}
+        initOnly: {includeSource: "init"},
+        liveOnly: {excludeSource: "init"},
+        never:    {includeSource: []},
+        always:   {}
     };
 
     fluid.model.parseRelayCondition = function (condition) {
-        return fluid.model.relayConditions[condition || "always"];
+        if (condition === "initOnly") {
+            fluid.log(fluid.logLevel.WARN, "The relay condition \"initOnly\" is deprecated: Please use the form 'includeSource: \"init\"' instead");
+        } else if (condition === "liveOnly") {
+            fluid.log(fluid.logLevel.WARN, "The relay condition \"initOnly\" is deprecated: Please use the form 'excludeSource: \"init\"' instead");
+        }
+        var exclusionRec;
+        if (!condition) {
+            exclusionRec = {};
+        } else if (typeof(condition) === "string") {
+            exclusionRec = fluid.model.relayConditions[condition];
+            if (!exclusionRec) {
+                fluid.fail("Unrecognised model relay condition string \"" + condition + "\": the supported values are \"never\" or a record with members \"includeSource\" and/or \"excludeSource\"");
+            }
+        } else {
+            exclusionRec = condition;
+        }
+        return fluid.parseSourceExclusionSpec({}, exclusionRec);
     };
 
-    fluid.parseModelRelay = function (that, mrrec) {
+    fluid.parseModelRelay = function (that, mrrec, key) {
         var parsedSource = mrrec.source ? fluid.parseValidModelReference(that, "modelRelay record member \"source\"", mrrec.source) :
             {path: null, modelSegs: null};
         var parsedTarget = fluid.parseValidModelReference(that, "modelRelay record member \"target\"", mrrec.target);
+        var namespace = mrrec.namespace || key;
 
         var transform = mrrec.singleTransform ? fluid.singleTransformToFull(mrrec.singleTransform) : mrrec.transform;
         if (!transform) {
             fluid.fail("Cannot parse modelRelay record without element \"singleTransform\" or \"transform\":", mrrec);
         }
         var forwardCond = fluid.model.parseRelayCondition(mrrec.forward), backwardCond = fluid.model.parseRelayCondition(mrrec.backward);
-        var transformPackage = fluid.makeTransformPackage(that, transform, parsedSource.path, parsedTarget.path, forwardCond, backwardCond);
-        if (transformPackage.refCount === 0) {
+        var transformPackage = fluid.makeTransformPackage(that, transform, parsedSource.path, parsedTarget.path, forwardCond, backwardCond, namespace, mrrec.priority);
+        if (transformPackage.refCount === 0) { // There were no implicit relay elements found in the relay document - it can be relayed directly
             // This first call binds changes emitted from the relay ends to each other, synchronously
-            fluid.connectModelRelay(parsedSource.that || that, parsedSource.modelSegs, parsedTarget.that, parsedTarget.modelSegs, {
-                forwardAdapter: transformPackage.forwardAdapter,
-                backwardAdapter: transformPackage.backwardAdapter
-            });
+            fluid.connectModelRelay(parsedSource.that || that, parsedSource.modelSegs, parsedTarget.that, parsedTarget.modelSegs,
+                fluid.filterKeys(transformPackage, ["forwardAdapter", "backwardAdapter", "namespace", "priority"]));
+            // Primarily, here, we want to get rid of "update" which is what signals to connectModelRelay that this is a invalidatable relay
         } else {
+            if (parsedSource.modelSegs) {
+                fluid.fail("Error in model relay definition: If a relay transform has a model dependency, you can not specify a \"source\" entry - please instead enter this as \"input\" in the transform specification. Definition was ", mrrec, " for component ", that);
+            }
             // This second call binds changes emitted from the relay document itself onto the relay ends (using the "half-transactional system")
             fluid.connectModelRelay(parsedSource.that || that, parsedSource.modelSegs, parsedTarget.that, parsedTarget.modelSegs, transformPackage);
         }
@@ -18575,15 +18781,13 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
 
     fluid.parseImplicitRelay = function (that, modelRec, segs, options) {
         var value;
-        if (typeof(modelRec) === "string" && modelRec.charAt(0) === "{") {
-            var parsed = fluid.parseModelReference(that, modelRec);
-            var target = fluid.resolveContext(parsed.context, that);
-            if (parsed.segs[0] === "model") {
-                var modelSegs = parsed.segs.slice(1);
-                ++options.refCount;
-                fluid.connectModelRelay(that, segs, target, modelSegs, options);
+        if (fluid.isIoCReference(modelRec)) {
+            var parsed = fluid.parseValidModelReference(that, "model reference from model (implicit relay)", modelRec, true);
+            if (parsed.nonModel) {
+                value = fluid.getForComponent(parsed.that, parsed.segs);
             } else {
-                value = fluid.getForComponent(target, parsed.segs);
+                ++options.refCount; // This count is used from within fluid.makeTransformPackage
+                fluid.connectModelRelay(that, segs, parsed.that, parsed.modelSegs, options);
             }
         } else if (fluid.isPrimitive(modelRec) || !fluid.isPlainObject(modelRec)) {
             value = modelRec;
@@ -18629,13 +18833,14 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
         });
     };
 
+    // Listens to all invalidation to relays, and reruns/applies them if they have been invalidated
     fluid.model.updateRelays = function (instantiator, transactionId) {
         var transRec = instantiator.modelTransactions[transactionId];
         var updates = 0;
-        fluid.each(transRec, function (transEl) {
-            // TODO: integrate the "source" if any into this computation, and fire the relay if it has changed - perhaps by adding a listener
-            // to it that updates changeRecord.changes (assuming we can find it)
-            if (transEl.options && transEl.transaction && transEl.transaction.changeRecord.changes > 0 && transEl.relayCount < 2 && transEl.options.update) {
+        fluid.sortByPriority(transRec.relays);
+        fluid.each(transRec.relays, function (transEl) {
+            // TODO: We have a bit of a problem here in that we only process updatable relays by priority - plain relays get to act non-transactionally
+            if (transEl.transaction.changeRecord.changes > 0 && transEl.relayCount < 2 && transEl.options.update) {
                 transEl.relayCount++;
                 fluid.clearLinkCounts(transRec);
                 transEl.options.update(transEl.transaction, transRec);
@@ -18646,15 +18851,24 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     };
 
     fluid.establishModelRelay = function (that, optionsModel, optionsML, optionsMR, applier) {
+        var shadow = fluid.shadowForComponent(that);
+        if (!shadow.modelRelayEstablished) {
+            shadow.modelRelayEstablished = true;
+        } else {
+            fluid.fail("FLUID-5887 failure: Model relay initialised twice on component", that);
+        }
         fluid.mergeModelListeners(that, optionsML);
 
         var enlist = fluid.enlistModelComponent(that);
-        fluid.each(optionsMR, function (mrrec) {
-            fluid.parseModelRelay(that, mrrec);
+        fluid.each(optionsMR, function (mrrec, key) {
+            for (var i = 0; i < mrrec.length; ++ i) {
+                fluid.parseModelRelay(that, mrrec[i], key);
+            }
         });
 
+        // Note: this particular instance of "refCount" is disused. We only use the count made within fluid.makeTransformPackge
         var initModels = fluid.transform(optionsModel, function (modelRec) {
-            return fluid.parseImplicitRelay(that, modelRec, [], {refCount: 0});
+            return fluid.parseImplicitRelay(that, modelRec, [], {refCount: 0, priority: "first"});
         });
         enlist.initModels = initModels;
 
@@ -18702,10 +18916,7 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
                 func: fluid.arrayConcatPolicy // TODO: bug here in case a model consists of an array
             },
             modelListeners: fluid.makeMergeListenersPolicy(fluid.arrayConcatPolicy),
-            modelRelay: {
-                noexpand: true,
-                func: fluid.arrayConcatPolicy
-            }
+            modelRelay: fluid.makeMergeListenersPolicy(fluid.arrayConcatPolicy, true)
         }
     });
 
@@ -18713,8 +18924,17 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
         return {
             value: args[0],
             oldValue: args[1],
-            path: args[2]
+            path: args[2],
+            transaction: args[4]
         };
+    };
+
+    // Note - has only one call, from resolveModelListener
+    fluid.event.invokeListener = function (listener, args, localRecord, mergeRecord) {
+        if (typeof(listener) === "string") {
+            listener = fluid.event.resolveListener(listener); // just resolves globals
+        }
+        return listener.apply(null, args, localRecord, mergeRecord); // can be "false apply" that requires extra context for expansion
     };
 
     fluid.resolveModelListener = function (that, record) {
@@ -18723,61 +18943,76 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
                 return;
             }
             var change = fluid.modelChangedToChange(arguments);
-            var args = [change];
+            var args = arguments;
             var localRecord = {change: change, "arguments": args};
+            var mergeRecord = {source: Object.keys(change.transaction.sources)}; // cascade for FLUID-5490
             if (record.args) {
                 args = fluid.expandOptions(record.args, that, {}, localRecord);
             }
-            fluid.event.invokeListener(record.listener, fluid.makeArray(args));
+            fluid.event.invokeListener(record.listener, fluid.makeArray(args), localRecord, mergeRecord);
         };
         fluid.event.impersonateListener(record.listener, togo);
         return togo;
     };
 
+    fluid.registerModelListeners = function (that, record, paths, namespace) {
+        var func = fluid.resolveModelListener(that, record);
+        fluid.each(record.byTarget, function (parsedArray) {
+            var parsed = parsedArray[0]; // that, applier are common across all these elements
+            var spec = {
+                listener: func, // for initModelEvent
+                listenerId: fluid.allocateGuid(), // external declarative listeners may often share listener handle, identify here
+                segsArray: fluid.getMembers(parsedArray, "modelSegs"),
+                pathArray: fluid.getMembers(parsedArray, "path"),
+                includeSource: record.includeSource,
+                excludeSource: record.excludeSource,
+                priority: fluid.expandOptions(record.priority, that),
+                transactional: true
+            };
+            // update "spec" so that we parse priority information just once
+            spec = parsed.applier.modelChanged.addListener(spec, func, namespace, record.softNamespace);
+
+            fluid.recordChangeListener(that, parsed.applier, func, spec.listenerId);
+            function initModelEvent() {
+                if (fluid.isModelComplete(parsed.that)) {
+                    var trans = parsed.applier.initiate(null, "init");
+                    fluid.initModelEvent(that, parsed.applier, trans, [spec]);
+                    trans.commit();
+                }
+            }
+            if (that !== parsed.that && !fluid.isModelComplete(that)) { // TODO: Use FLUID-4883 "latched events" when available
+                // Don't confuse the end user by firing their listener before the component is constructed
+                // TODO: Better detection than this is requred - we assume that the target component will not be discovered as part
+                // of the initial transaction wave, but if it is, it will get a double notification - we really need "wave of explosions"
+                // since we are currently too early in initialisation of THIS component in order to tell if other will be found
+                // independently.
+                var onCreate = fluid.getForComponent(that, ["events", "onCreate"]);
+                onCreate.addListener(initModelEvent);
+            }
+        });
+    };
+
     fluid.mergeModelListeners = function (that, listeners) {
-        var listenerCount = 0;
-        fluid.each(listeners, function (value, path) {
+        fluid.each(listeners, function (value, key) {
             if (typeof(value) === "string") {
                 value = {
                     funcName: value
                 };
             }
-            var records = fluid.event.resolveListenerRecord(value, that, "modelListeners", null, false);
-            var parsed = fluid.parseValidModelReference(that, "modelListeners entry", path);
             // Bypass fluid.event.dispatchListener by means of "standard = false" and enter our custom workflow including expanding "change":
-            fluid.each(records.records, function (record) {
-                var func = fluid.resolveModelListener(that, record);
-                var spec = {
-                    listener: func, // for initModelEvent
-                    listenerIndex: listenerCount,
-                    segs: parsed.modelSegs,
-                    path: parsed.path,
-                    includeSource: record.includeSource,
-                    excludeSource: record.excludeSource,
-                    priority: record.priority,
-                    transactional: true
-                };
-                ++listenerCount;
-                 // update "spec" so that we parse priority information just once
-                spec = parsed.applier.modelChanged.addListener(spec, func, record.namespace, record.softNamespace);
-
-                fluid.recordChangeListener(that, parsed.applier, func);
-                function initModelEvent() {
-                    if (fluid.isModelComplete(parsed.that)) {
-                        var trans = parsed.applier.initiate("init");
-                        fluid.initModelEvent(that, parsed.applier, trans, [spec]);
-                        trans.commit();
-                    }
-                }
-                if (that !== parsed.that && !fluid.isModelComplete(that)) { // TODO: Use FLUID-4883 "latched events" when available
-                    // Don't confuse the end user by firing their listener before the component is constructed
-                    // TODO: Better detection than this is requred - we assume that the target component will not be discovered as part
-                    // of the initial transaction wave, but if it is, it will get a double notification - we really need "wave of explosions"
-                    // since we are currently too early in initialisation of THIS component in order to tell if other will be found
-                    // independently.
-                    var onCreate = fluid.getForComponent(that, ["events", "onCreate"]);
-                    onCreate.addListener(initModelEvent);
-                }
+            var records = fluid.event.resolveListenerRecord(value, that, "modelListeners", null, false).records;
+            fluid.each(records, function (record) {
+                // Aggregate model listeners into groups referring to the same component target.
+                // We do this so that a single entry will appear in its modelListeners so that they may
+                // be notified just once per transaction, and also displaced by namespace
+                record.byTarget = {};
+                var paths = fluid.makeArray(record.path === undefined ? key : record.path);
+                fluid.each(paths, function (path) {
+                    var parsed = fluid.parseValidModelReference(that, "modelListeners entry", path);
+                    fluid.pushArray(record.byTarget, parsed.that.id, parsed);
+                });
+                var namespace = (record.namespace && !record.softNamespace ? record.namespace : null) || (record.path !== undefined ? key : null);
+                fluid.registerModelListeners(that, record, paths, namespace);
             });
         });
     };
@@ -18794,54 +19029,13 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
      * @param [eventName] - optional - the event name to be listened to - defaults to "modelChanged"
      * @param [namespace] - optional - the event namespace
      */
-     // TODO: Source guarding is not supported by the current ChangeApplier, these methods are no-ops
-    fluid.addSourceGuardedListener = function(applier, path, source, func, eventName, namespace, softNamespace) {
-        eventName = eventName || "modelChanged";
-        var wrapped = function (newValue, oldValue, path, changes) { // TODO: adapt signature
-            if (!applier.hasChangeSource(source, changes)) {
-                return func.apply(null, arguments);
-            }
-        };
-        fluid.event.impersonateListener(func, wrapped);
-        return applier[eventName].addListener(path, wrapped, namespace, softNamespace);
-    };
-
-    /** Convenience method to fire a change event to a specified applier, including
-     * a supplied "source" identified (perhaps for use with addSourceGuardedListener)
-     */
-    fluid.fireSourcedChange = function (applier, path, value, source) {
-        applier.fireChangeRequest({
-            path: path,
-            value: value,
-            source: source
-        });
-    };
 
     /** Dispatches a list of changes to the supplied applier */
-    fluid.requestChanges = function (applier, changes) {
+    fluid.fireChanges = function (applier, changes) {
         for (var i = 0; i < changes.length; ++i) {
             applier.fireChangeRequest(changes[i]);
         }
     };
-
-
-    // Automatically adapts requestChange onto fireChangeRequest
-    fluid.bindRequestChange = function (that) {
-        // The name "requestChange" will be deprecated in 1.5, removed in 2.0
-        that.requestChange = that.change = function (path, value, type) {
-            var changeRequest = {
-                path: path,
-                value: value,
-                type: type
-            };
-            that.fireChangeRequest(changeRequest);
-        };
-    };
-
-    fluid.identifyChangeListener = function (listener) {
-        return fluid.event.identifyListener(listener) || listener;
-    };
-
 
     fluid.model.isChangedPath = function (changeMap, segs) {
         for (var i = 0; i <= segs.length; ++ i) {
@@ -19061,61 +19255,53 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
 
     fluid.storeExternalChange = function (transRec, applier, invalidPath, spec, args) {
         var pathString = applier.composeSegments.apply(null, invalidPath);
-        var keySegs = [applier.applierId, fluid.event.identifyListener(spec.listener), spec.listenerIndex, pathString];
+        var keySegs = [applier.holder.id, spec.listenerId, (spec.wildcard ? pathString : "")];
         var keyString = keySegs.join("|");
+        // TODO: We think we probably have a bug in that notifications destined for end of transaction are actually continuously emitted during the transaction
         // These are unbottled in fluid.concludeTransaction
-        transRec.externalChanges[keyString] = {listener: spec.listener, priority: spec.priority, args: args};
-    };
-
-    fluid.isExcludedChangeSource = function (transaction, spec) {
-        if (!spec.excludeSource) { // mergeModelListeners initModelEvent fabricates a fake spec that bypasses processing
-            return false;
-        }
-        var excluded = spec.excludeSource["*"];
-        for (var source in transaction.sources) {
-            if (spec.excludeSource[source]) {
-                excluded = true;
-            }
-            if (spec.includeSource[source]) {
-                excluded = false;
-            }
-        }
-        return excluded;
+        transRec.externalChanges[keyString] = {listener: spec.listener, namespace: spec.namespace, priority: spec.priority, args: args};
     };
 
     fluid.notifyModelChanges = function (listeners, changeMap, newHolder, oldHolder, changeRequest, transaction, applier, that) {
-        var instantiator = fluid.getInstantiator && fluid.getInstantiator(that); // may return nothing for non-component holder
-        var transRec = transaction && fluid.getModelTransactionRec(instantiator, transaction.id);
+        if (!listeners) {
+            return;
+        }
+        var transRec = transaction && fluid.getModelTransactionRec(that, transaction.id);
         for (var i = 0; i < listeners.length; ++ i) {
             var spec = listeners[i];
-            var invalidPaths = fluid.matchChanges(changeMap, spec.segs, newHolder);
-            for (var j = 0; j < invalidPaths.length; ++ j) {
-                if (applier.destroyed) { // 2nd guarding point for FLUID-5592
-                    return;
-                }
-                var invalidPath = invalidPaths[j];
-                spec.listener = fluid.event.resolveListener(spec.listener);
-                // TODO: process namespace and softNamespace rules, and propagate "sources" in 4th argument
-                var args = [fluid.model.getSimple(newHolder, invalidPath), fluid.model.getSimple(oldHolder, invalidPath), invalidPath.slice(1), changeRequest, transaction, applier];
-                // FLUID-5489: Do not notify of null changes which were reported as a result of invalidating a higher path
-                // TODO: We can improve greatly on efficiency by i) reporting a special code from fluid.matchChanges which signals the difference between invalidating a higher and lower path,
-                // ii) improving fluid.model.diff to create fewer intermediate structures and no copies
-                // TODO: The relay invalidation system is broken and must always be notified (branch 1) - since our old/new value detection is based on the wrong (global) timepoints in the transaction here,
-                // rather than the "last received model" by the holder of the transform document
-                if (!spec.isRelay) {
-                    var isNull = fluid.model.diff(args[0], args[1]);
-                    if (isNull) {
-                        continue;
+            var multiplePaths = spec.segsArray.length > 1; // does this spec listen on multiple paths? If so, don't rebase arguments and just report once per transaction
+            for (var j = 0; j < spec.segsArray.length; ++ j) {
+                var invalidPaths = fluid.matchChanges(changeMap, spec.segsArray[j], newHolder);
+                // We only have multiple invalidPaths here if there is a wildcard
+                for (var k = 0; k < invalidPaths.length; ++ k) {
+                    if (applier.destroyed) { // 2nd guarding point for FLUID-5592
+                        return;
                     }
-                    var sourceExcluded = fluid.isExcludedChangeSource(transaction, spec);
-                    if (sourceExcluded) {
-                        continue;
+                    var invalidPath = invalidPaths[k];
+                    spec.listener = fluid.event.resolveListener(spec.listener);
+                    var args = [multiplePaths ? newHolder.model : fluid.model.getSimple(newHolder, invalidPath),
+                                multiplePaths ? oldHolder.model : fluid.model.getSimple(oldHolder, invalidPath),
+                                multiplePaths ? [] : invalidPath.slice(1), changeRequest, transaction, applier];
+                    // FLUID-5489: Do not notify of null changes which were reported as a result of invalidating a higher path
+                    // TODO: We can improve greatly on efficiency by i) reporting a special code from fluid.matchChanges which signals the difference between invalidating a higher and lower path,
+                    // ii) improving fluid.model.diff to create fewer intermediate structures and no copies
+                    // TODO: The relay invalidation system is broken and must always be notified (branch 1) - since our old/new value detection is based on the wrong (global) timepoints in the transaction here,
+                    // rather than the "last received model" by the holder of the transform document
+                    if (!spec.isRelay) {
+                        var isNull = fluid.model.diff(args[0], args[1]);
+                        if (isNull) {
+                            continue;
+                        }
+                        var sourceExcluded = fluid.isExcludedChangeSource(transaction, spec);
+                        if (sourceExcluded) {
+                            continue;
+                        }
                     }
-                }
-                if (transRec && !spec.isRelay && spec.transactional) { // bottle up genuine external changes so we can sort and dedupe them later
-                    fluid.storeExternalChange(transRec, applier, invalidPath, spec, args);
-                } else {
-                    spec.listener.apply(null, args);
+                    if (transRec && !spec.isRelay && spec.transactional) { // bottle up genuine external changes so we can sort and dedupe them later
+                        fluid.storeExternalChange(transRec, applier, invalidPath, spec, args);
+                    } else {
+                        spec.listener.apply(null, args);
+                    }
                 }
             }
         }
@@ -19134,7 +19320,8 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
         fluid.notifyModelChanges(listeners, "ADD", trans.oldHolder, fluid.emptyHolder, null, trans, applier, that);
     };
 
-    fluid.emptyHolder = { model: undefined };
+    // A standard "empty model" for the purposes of comparing initial state during the primordial transaction
+    fluid.emptyHolder = fluid.freezeRecursive({ model: undefined });
 
     fluid.preFireChangeRequest = function (applier, changeRequest) {
         if (!changeRequest.type) {
@@ -19143,23 +19330,50 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
         changeRequest.segs = changeRequest.segs || applier.parseEL(changeRequest.path);
     };
 
+    // Automatically adapts change onto fireChangeRequest
+    fluid.bindRequestChange = function (that) {
+        that.change = function (path, value, type, source) {
+            var changeRequest = {
+                path: path,
+                value: value,
+                type: type,
+                source: source
+            };
+            that.fireChangeRequest(changeRequest);
+        };
+    };
+
+    // Quick n dirty test to cheaply detect Object versus other JSON types
+    fluid.isObjectSimple = function (totest) {
+        return Object.prototype.toString.call(totest) === "[object Object]";
+    };
+
+    fluid.mergeChangeSources = function (target, globalSources) {
+        if (fluid.isObjectSimple(globalSources)) { // TODO: No test for this branch!
+            fluid.extend(target, globalSources);
+        } else {
+            fluid.each(fluid.makeArray(globalSources), function (globalSource) {
+                target[globalSource] = true;
+            });
+        }
+    };
+
     fluid.ChangeApplier = function () {};
 
     fluid.makeHolderChangeApplier = function (holder, options) {
         options = fluid.model.defaultAccessorConfig(options);
         var applierId = fluid.allocateGuid();
         var that = new fluid.ChangeApplier();
+        var name = fluid.isComponent(holder) ? "ChangeApplier for component " + fluid.dumpThat(holder) : "ChangeApplier with id " + applierId;
         $.extend(that, {
             applierId: applierId,
             holder: holder,
-            changeListeners: {
-                listeners: [],
-                transListeners: []
-            },
+            listeners: fluid.makeEventFirer({name: "Internal change listeners for " + name}),
+            transListeners: fluid.makeEventFirer({name: "External change listeners for " + name}),
             options: options,
             modelChanged: {},
-            preCommit: fluid.makeEventFirer({name: "preCommit event for ChangeApplier " }),
-            postCommit: fluid.makeEventFirer({name: "postCommit event for ChangeApplier "})
+            preCommit: fluid.makeEventFirer({name: "preCommit event for " + name}),
+            postCommit: fluid.makeEventFirer({name: "postCommit event for " + name})
         });
         that.destroy = function () {
             that.preCommit.destroy();
@@ -19168,11 +19382,13 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
         };
         that.modelChanged.addListener = function (spec, listener, namespace, softNamespace) {
             if (typeof(spec) === "string") {
-                spec = {path: spec};
+                spec = {
+                    path: spec
+                };
             } else {
                 spec = fluid.copy(spec);
             }
-            spec.id = fluid.event.identifyListener(listener);
+            spec.listenerId = spec.listenerId || fluid.allocateGuid(); // FLUID-5151: don't use identifyListener since event.addListener will use this as a namespace
             spec.namespace = namespace;
             spec.softNamespace = softNamespace;
             if (typeof(listener) === "string") { // The reason for "globalName" is so that listener names can be resolved on first use and not on registration
@@ -19182,36 +19398,47 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
             if (spec.transactional !== false) {
                 spec.transactional = true;
             }
-            spec.segs = spec.segs || that.parseEL(spec.path);
-            var collection = that.changeListeners[spec.transactional ? "transListeners" : "listeners"];
-            spec.excludeSource = fluid.arrayToHash(fluid.makeArray(spec.excludeSource || (spec.includeSource ? "*" : undefined)));
-            spec.includeSource = fluid.arrayToHash(fluid.makeArray(spec.includeSource));
-            spec.priority = fluid.parsePriority(spec.priority, collection.length, true, "model listener");
-            collection.push(spec);
-            return spec;
+            if (!spec.segsArray) { // It's a manual registration
+                if (spec.path !== undefined) {
+                    spec.segs = spec.segs || that.parseEL(spec.path);
+                }
+                if (!spec.segsArray) {
+                    spec.segsArray = [spec.segs];
+                }
+            }
+            fluid.parseSourceExclusionSpec(spec, spec);
+            spec.wildcard = fluid.accumulate(fluid.transform(spec.segsArray, function (segs) {
+                return fluid.contains(segs, "*");
+            }), fluid.add, 0);
+            if (spec.wildcard && spec.segsArray.length > 1) {
+                fluid.fail("Error in model listener specification ", spec, " - you may not supply a wildcard pattern as one of a set of multiple paths to be matched");
+            }
+            var firer = that[spec.transactional ? "transListeners" : "listeners"];
+            firer.addListener(spec);
+            return spec; // return is used in registerModelListeners
         };
         that.modelChanged.removeListener = function (listener) {
-            var id = fluid.event.identifyListener(listener);
-            var namespace = typeof(listener) === "string" ? listener: null;
-            var removePred = function (record) {
-                return record.id === id || record.namespace === namespace;
-            };
-            fluid.remove_if(that.changeListeners.listeners, removePred);
-            fluid.remove_if(that.changeListeners.transListeners, removePred);
+            that.listeners.removeListener(listener);
+            that.transListeners.removeListener(listener);
         };
         that.fireChangeRequest = function (changeRequest) {
-            var ation = that.initiate();
+            var ation = that.initiate("local", changeRequest.source);
             ation.fireChangeRequest(changeRequest);
             ation.commit();
         };
-
-        that.initiate = function (source, transactionId) {
-            source = source || "local";
-            var defeatPost = source === "relay"; // defeatPost is supplied for all non-top-level transactions
+        /**
+         * Initiate a fresh transaction on this applier, perhaps coordinated with other transactions sharing the same id across the component tree
+         * Arguments all optional
+         * localSource {String}: "local", "relay" or null Local source identifiers only good for transaction's representative on this applier
+         *  globalSources: {String|Array of String|Object String->true} Global source identifiers common across this transaction
+         *  transactionId: {String} Global transaction id to enlist with
+         */
+        that.initiate = function (localSource, globalSources, transactionId) {
+            localSource = globalSources === "init" ? null : (localSource || "local"); // supported values for localSource are "local" and "relay" - globalSource of "init" defeats defaulting of localSource to "local"
+            var defeatPost = localSource === "relay"; // defeatPost is supplied for all non-top-level transactions
             var trans = {
-                instanceId: fluid.allocateGuid(), // for debugging only
-                id: transactionId || fluid.allocateGuid(),
-                sources: {},
+                instanceId: fluid.allocateGuid(), // for debugging only - the representative of this transction on this applier
+                id: transactionId || fluid.allocateGuid(), // The global transaction id across all appliers - allocate here if this is the starting point
                 changeRecord: {
                     resolverSetConfig: options.resolverSetConfig, // here to act as "options" in applyHolderChangeRequest
                     resolverGetConfig: options.resolverGetConfig
@@ -19228,7 +19455,7 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
                     if (trans.changeRecord.changes > 0) {
                         var oldHolder = {model: holder.model};
                         holder.model = trans.newHolder.model;
-                        fluid.notifyModelChanges(that.changeListeners.transListeners, trans.changeRecord.changeMap, holder, oldHolder, null, trans, that, holder);
+                        fluid.notifyModelChanges(that.transListeners.sortedListeners, trans.changeRecord.changeMap, holder, oldHolder, null, trans, that, holder);
                     }
                     if (!defeatPost) {
                         that.postCommit.fire(trans, that, code);
@@ -19238,16 +19465,22 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
                     fluid.preFireChangeRequest(that, changeRequest);
                     changeRequest.transactionId = trans.id;
                     var deltaMap = fluid.model.applyHolderChangeRequest(trans.newHolder, changeRequest, trans.changeRecord);
-                    fluid.notifyModelChanges(that.changeListeners.listeners, deltaMap, trans.newHolder, holder, changeRequest, trans, that, holder);
+                    fluid.notifyModelChanges(that.listeners.sortedListeners, deltaMap, trans.newHolder, holder, changeRequest, trans, that, holder);
+                },
+                hasChangeSource: function (source) {
+                    return trans.fullSources[source];
                 }
             };
-            trans.sources[source] = true;
+            var transRec = fluid.getModelTransactionRec(holder, trans.id);
+            if (transRec) {
+                fluid.mergeChangeSources(transRec.sources, globalSources);
+                trans.sources = transRec.sources;
+                trans.fullSources = Object.create(transRec.sources);
+                trans.fullSources[localSource] = true;
+            }
             trans.reset();
             fluid.bindRequestChange(trans);
             return trans;
-        };
-        that.hasChangeSource = function (source, changes) { // compatibility for old API
-            return changes ? changes[source] : false;
         };
 
         fluid.bindRequestChange(that);
@@ -19325,11 +19558,11 @@ var fluid = fluid || fluid_2_0_0;
     };
 
     // unsupported, NON-API function
-    fluid.model.transform.literalValueToRule = function (value) {
+    fluid.model.transform.literalValueToRule = function (input) {
         return {
             transform: {
                 type: "fluid.transforms.literalValue",
-                value: value
+                input: input
             }
         };
     };
@@ -19341,30 +19574,33 @@ var fluid = fluid || fluid_2_0_0;
         return !prefix ? suffix : (!suffix ? prefix : prefix + "." + suffix);
     };
 
-    fluid.model.transform.accumulateInputPath = function (inputPath, transform, paths) {
+    fluid.model.transform.accumulateInputPath = function (inputPath, transformer, paths) {
         if (inputPath !== undefined) {
-            paths.push(fluid.model.composePaths(transform.inputPrefix, inputPath));
+            paths.push(fluid.model.composePaths(transformer.inputPrefix, inputPath));
         }
     };
 
-    fluid.model.transform.accumulateStandardInputPath = function (input, transformSpec, transform, paths) {
-        fluid.model.transform.getValue(undefined, transformSpec[input], transform);
-        fluid.model.transform.accumulateInputPath(transformSpec[input + "Path"], transform, paths);
+    fluid.model.transform.accumulateStandardInputPath = function (input, transformSpec, transformer, paths) {
+        fluid.model.transform.getValue(undefined, transformSpec[input], transformer);
+        fluid.model.transform.accumulateInputPath(transformSpec[input + "Path"], transformer, paths);
     };
 
-    fluid.model.transform.accumulateMultiInputPaths = function (inputVariables, transformSpec, transform, paths) {
+    fluid.model.transform.accumulateMultiInputPaths = function (inputVariables, transformSpec, transformer, paths) {
         fluid.each(inputVariables, function (v, k) {
-            fluid.model.transform.accumulateStandardInputPath(k, transformSpec, transform, paths);
+            fluid.model.transform.accumulateStandardInputPath(k, transformSpec, transformer, paths);
         });
     };
 
-    fluid.model.transform.getValue = function (inputPath, value, transform) {
+    fluid.model.transform.getValue = function (inputPath, value, transformer) {
         var togo;
         if (inputPath !== undefined) { // NB: We may one day want to reverse the crazy jQuery-like convention that "no path means root path"
-            togo = fluid.get(transform.source, fluid.model.composePaths(transform.inputPrefix, inputPath), transform.resolverGetConfig);
+            togo = fluid.get(transformer.source, fluid.model.composePaths(transformer.inputPrefix, inputPath), transformer.resolverGetConfig);
         }
         if (togo === undefined) {
-            togo = fluid.isPrimitive(value) ? value : transform.expand(value);
+            // FLUID-5867 - actually helpful behaviour here rather than the insane original default of expecting a short-form value document
+            togo = fluid.isPrimitive(value) ? value :
+                ("literalValue" in value ? value.literalValue :
+                (value.transform === undefined ? value : transformer.expand(value)));
         }
         return togo;
     };
@@ -19374,13 +19610,13 @@ var fluid = fluid || fluid_2_0_0;
     // in a compound transform definition
     fluid.model.transform.NONDEFAULT_OUTPUT_PATH_RETURN = {};
 
-    fluid.model.transform.setValue = function (userOutputPath, value, transform) {
+    fluid.model.transform.setValue = function (userOutputPath, value, transformer) {
         // avoid crosslinking to input object - this might be controlled by a "nocopy" option in future
         var toset = fluid.copy(value);
-        var outputPath = fluid.model.composePaths(transform.outputPrefix, userOutputPath);
+        var outputPath = fluid.model.composePaths(transformer.outputPrefix, userOutputPath);
         // TODO: custom resolver config here to create non-hash output model structure
         if (toset !== undefined) {
-            transform.applier.requestChange(outputPath, toset);
+            transformer.applier.change(outputPath, toset);
         }
         return userOutputPath ? fluid.model.transform.NONDEFAULT_OUTPUT_PATH_RETURN : toset;
     };
@@ -19390,8 +19626,8 @@ var fluid = fluid || fluid_2_0_0;
      * or expanding otherwise. <def> defines the default value if unableto resolve the key. If no
      * default value is given undefined is returned
      */
-    fluid.model.transform.resolveParam = function (transformSpec, transform, key, def) {
-        var val = fluid.model.transform.getValue(transformSpec[key + "Path"], transformSpec[key], transform);
+    fluid.model.transform.resolveParam = function (transformSpec, transformer, key, def) {
+        var val = fluid.model.transform.getValue(transformSpec[key + "Path"], transformSpec[key], transformer);
         return (val !== undefined) ? val : def;
     };
 
@@ -19413,21 +19649,30 @@ var fluid = fluid || fluid_2_0_0;
         return a === undefined ? b : a;
     };
 
+    fluid.model.transform.invertPaths = function (transformSpec, transformer) {
+        // TODO: this will not behave correctly in the face of compound "input" which contains
+        // further transforms
+        var oldOutput = fluid.model.composePaths(transformer.outputPrefix, transformSpec.outputPath);
+        transformSpec.outputPath = fluid.model.composePaths(transformer.inputPrefix, transformSpec.inputPath);
+        transformSpec.inputPath = oldOutput;
+        return transformSpec;
+    };
+
 
     // TODO: prefixApplier is a transform which is currently unused and untested
-    fluid.model.transform.prefixApplier = function (transformSpec, transform) {
+    fluid.model.transform.prefixApplier = function (transformSpec, transformer) {
         if (transformSpec.inputPrefix) {
-            transform.inputPrefixOp.push(transformSpec.inputPrefix);
+            transformer.inputPrefixOp.push(transformSpec.inputPrefix);
         }
         if (transformSpec.outputPrefix) {
-            transform.outputPrefixOp.push(transformSpec.outputPrefix);
+            transformer.outputPrefixOp.push(transformSpec.outputPrefix);
         }
-        transform.expand(transformSpec.value);
+        transformer.expand(transformSpec.input);
         if (transformSpec.inputPrefix) {
-            transform.inputPrefixOp.pop();
+            transformer.inputPrefixOp.pop();
         }
         if (transformSpec.outputPrefix) {
-            transform.outputPrefixOp.pop();
+            transformer.outputPrefixOp.pop();
         }
     };
 
@@ -19451,15 +19696,8 @@ var fluid = fluid || fluid_2_0_0;
         };
     };
 
-    fluid.model.transform.aliasStandardInput = function (transformSpec) {
-        return { // alias input and value, and their paths
-            value: transformSpec.value === undefined ? transformSpec.input : transformSpec.value,
-            valuePath: transformSpec.valuePath === undefined ? transformSpec.inputPath : transformSpec.valuePath
-        };
-    };
-
     // unsupported, NON-API function
-    fluid.model.transform.doTransform = function (transformSpec, transform, transformOpts) {
+    fluid.model.transform.doTransform = function (transformSpec, transformer, transformOpts) {
         var expdef = transformOpts.defaults;
         var transformFn = fluid.getGlobalValue(transformOpts.typeName);
         if (typeof(transformFn) !== "function") {
@@ -19470,27 +19708,31 @@ var fluid = fluid || fluid_2_0_0;
             // If no suitable grade is set up, assume that it is intended to be used as a standardTransformFunction
             expdef = fluid.defaults("fluid.standardTransformFunction");
         }
-        var transformArgs = [transformSpec, transform];
-        if (fluid.hasGrade(expdef, "fluid.standardInputTransformFunction")) {
-            var valueHolder = fluid.model.transform.aliasStandardInput(transformSpec);
-            var expanded = fluid.model.transform.getValue(valueHolder.valuePath, valueHolder.value, transform);
-
-            transformArgs.unshift(expanded);
-            // if the function has no input, the result is considered undefined, and this is returned
-            if (expanded === undefined) {
-                return undefined;
-            }
-        } else if (fluid.hasGrade(expdef, "fluid.multiInputTransformFunction")) {
+        var transformArgs = [transformSpec, transformer];
+        if (fluid.hasGrade(expdef, "fluid.multiInputTransformFunction")) {
             var inputs = {};
             fluid.each(expdef.inputVariables, function (v, k) {
                 inputs[k] = function () {
-                    var input = fluid.model.transform.getValue(transformSpec[k + "Path"], transformSpec[k], transform);
+                    var input = fluid.model.transform.getValue(transformSpec[k + "Path"], transformSpec[k], transformer);
+                    // TODO: This is a mess, null might perfectly well be a possible default
                     // if no match, assign default if one exists (v != null)
                     input = (input === undefined && v !== null) ? v : input;
                     return input;
                 };
             });
             transformArgs.unshift(inputs);
+        }
+        if (fluid.hasGrade(expdef, "fluid.standardInputTransformFunction")) {
+            if (!("input" in transformSpec) && !("inputPath" in transformSpec)) {
+                fluid.fail("Error in transform specification. Either \"input\" or \"inputPath\" must be specified for a standardInputTransformFunction: received ", transformSpec);
+            }
+            var expanded = fluid.model.transform.getValue(transformSpec.inputPath, transformSpec.input, transformer);
+
+            transformArgs.unshift(expanded);
+            // if the function has no input, the result is considered undefined, and this is returned
+            if (expanded === undefined) {
+                return undefined;
+            }
         }
         var transformed = transformFn.apply(null, transformArgs);
         if (fluid.hasGrade(expdef, "fluid.standardOutputTransformFunction")) {
@@ -19500,7 +19742,7 @@ var fluid = fluid || fluid_2_0_0;
                 //If outputPath is given in the expander we want to:
                 // (1) output to the document
                 // (2) return undefined, to ensure that expanders higher up in the hierarchy doesn't attempt to output it again
-                fluid.model.transform.setValue(transformSpec.outputPath, transformed, transform);
+                fluid.model.transform.setValue(transformSpec.outputPath, transformed, transformer);
                 transformed = undefined;
             }
         }
@@ -19563,33 +19805,33 @@ var fluid = fluid || fluid_2_0_0;
     };
 
     // unsupported, NON-API function
-    fluid.model.transform.expandWildcards = function (transform, source) {
+    fluid.model.transform.expandWildcards = function (transformer, source) {
         fluid.each(source, function (value, key) {
-            var q = transform.queuedTransforms;
-            transform.pathOp.push(fluid.pathUtil.escapeSegment(key.toString()));
+            var q = transformer.queuedTransforms;
+            transformer.pathOp.push(fluid.pathUtil.escapeSegment(key.toString()));
             for (var i = 0; i < q.length; ++i) {
-                if (fluid.pathUtil.matchPath(q[i].matchPath, transform.path, true)) {
+                if (fluid.pathUtil.matchPath(q[i].matchPath, transformer.path, true)) {
                     var esCopy = fluid.copy(q[i].transformSpec);
                     if (esCopy.inputPath === undefined || fluid.model.transform.hasWildcard(esCopy.inputPath)) {
                         esCopy.inputPath = "";
                     }
                     // TODO: allow some kind of interpolation for output path
                     // TODO: Also, we now require outputPath to be specified in these cases for output to be produced as well.. Is that something we want to continue with?
-                    transform.inputPrefixOp.push(transform.path);
-                    transform.outputPrefixOp.push(transform.path);
+                    transformer.inputPrefixOp.push(transformer.path);
+                    transformer.outputPrefixOp.push(transformer.path);
                     var transformOpts = fluid.model.transform.lookupType(esCopy.type);
-                    var result = fluid.model.transform.doTransform(esCopy, transform, transformOpts);
+                    var result = fluid.model.transform.doTransform(esCopy, transformer, transformOpts);
                     if (result !== undefined) {
-                        fluid.model.transform.setValue(null, result, transform);
+                        fluid.model.transform.setValue(null, result, transformer);
                     }
-                    transform.outputPrefixOp.pop();
-                    transform.inputPrefixOp.pop();
+                    transformer.outputPrefixOp.pop();
+                    transformer.inputPrefixOp.pop();
                 }
             }
             if (!fluid.isPrimitive(value)) {
-                fluid.model.transform.expandWildcards(transform, value);
+                fluid.model.transform.expandWildcards(transformer, value);
             }
-            transform.pathOp.pop();
+            transformer.pathOp.pop();
         });
     };
 
@@ -19599,18 +19841,18 @@ var fluid = fluid || fluid_2_0_0;
     };
 
     // unsupported, NON-API function
-    fluid.model.transform.maybePushWildcard = function (transformSpec, transform) {
+    fluid.model.transform.maybePushWildcard = function (transformSpec, transformer) {
         var hw = fluid.model.transform.hasWildcard;
         var matchPath;
         if (hw(transformSpec.inputPath)) {
-            matchPath = fluid.model.composePaths(transform.inputPrefix, transformSpec.inputPath);
+            matchPath = fluid.model.composePaths(transformer.inputPrefix, transformSpec.inputPath);
         }
-        else if (hw(transform.outputPrefix) || hw(transformSpec.outputPath)) {
-            matchPath = fluid.model.composePaths(transform.outputPrefix, transformSpec.outputPath);
+        else if (hw(transformer.outputPrefix) || hw(transformSpec.outputPath)) {
+            matchPath = fluid.model.composePaths(transformer.outputPrefix, transformSpec.outputPath);
         }
 
         if (matchPath) {
-            transform.queuedTransforms.push({transformSpec: transformSpec, outputPrefix: transform.outputPrefix, inputPrefix: transform.inputPrefix, matchPath: matchPath});
+            transformer.queuedTransforms.push({transformSpec: transformSpec, outputPrefix: transformer.outputPrefix, inputPrefix: transformer.inputPrefix, matchPath: matchPath});
             return true;
         }
         return false;
@@ -19623,38 +19865,45 @@ var fluid = fluid || fluid_2_0_0;
 
     // Three handler functions operating the (currently) three different processing modes
     // unsupported, NON-API function
-    fluid.model.transform.handleTransformStrategy = function (transformSpec, transform, transformOpts) {
-        if (fluid.model.transform.maybePushWildcard(transformSpec, transform)) {
+    fluid.model.transform.handleTransformStrategy = function (transformSpec, transformer, transformOpts) {
+        if (fluid.model.transform.maybePushWildcard(transformSpec, transformer)) {
             return;
         }
         else {
-            return fluid.model.transform.doTransform(transformSpec, transform, transformOpts);
+            return fluid.model.transform.doTransform(transformSpec, transformer, transformOpts);
         }
     };
     // unsupported, NON-API function
-    fluid.model.transform.handleInvertStrategy = function (transformSpec, transform, transformOpts) {
+    fluid.model.transform.handleInvertStrategy = function (transformSpec, transformer, transformOpts) {
+        transformSpec = fluid.copy(transformSpec);
+        // if we have a standardTransformFunction we can switch input and output arguments:
+        if (fluid.hasGrade(transformOpts.defaults, "fluid.standardTransformFunction")) {
+            transformSpec = fluid.model.transform.invertPaths(transformSpec, transformer);
+        }
         var invertor = transformOpts.defaults && transformOpts.defaults.invertConfiguration;
         if (invertor) {
-            var inverted = fluid.invokeGlobalFunction(invertor, [transformSpec, transform]);
-            transform.inverted.push(inverted);
+            var inverted = fluid.invokeGlobalFunction(invertor, [transformSpec, transformer]);
+            transformer.inverted.push(inverted);
         }
     };
 
     // unsupported, NON-API function
-    fluid.model.transform.handleCollectStrategy = function (transformSpec, transform, transformOpts) {
+    fluid.model.transform.handleCollectStrategy = function (transformSpec, transformer, transformOpts) {
         var defaults = transformOpts.defaults;
         var standardInput = fluid.hasGrade(defaults, "fluid.standardInputTransformFunction");
         var multiInput = fluid.hasGrade(defaults, "fluid.multiInputTransformFunction");
 
         if (standardInput) {
-            fluid.model.transform.accumulateStandardInputPath("input", transformSpec, transform, transform.inputPaths);
-        } else if (multiInput) {
-            fluid.model.transform.accumulateMultiInputPaths(defaults.inputVariables, transformSpec, transform, transform.inputPaths);
-        } else {
+            fluid.model.transform.accumulateStandardInputPath("input", transformSpec, transformer, transformer.inputPaths);
+        }
+        if (multiInput) {
+            fluid.model.transform.accumulateMultiInputPaths(defaults.inputVariables, transformSpec, transformer, transformer.inputPaths);
+        }
+        if (!multiInput && !standardInput) {
             var collector = defaults.collectInputPaths;
             if (collector) {
-                var collected = fluid.makeArray(fluid.invokeGlobalFunction(collector, [transformSpec, transform]));
-                transform.inputPaths = transform.inputPaths.concat(collected);
+                var collected = fluid.makeArray(fluid.invokeGlobalFunction(collector, [transformSpec, transformer]));
+                transformer.inputPaths = transformer.inputPaths.concat(collected);
             }
         }
     };
@@ -19680,7 +19929,7 @@ var fluid = fluid || fluid_2_0_0;
     };
 
     // unsupported, NON-API function
-    fluid.model.transform.processRule = function (rule, transform) {
+    fluid.model.transform.processRule = function (rule, transformer) {
         if (typeof(rule) === "string") {
             rule = fluid.model.transform.pathToRule(rule);
         }
@@ -19691,7 +19940,6 @@ var fluid = fluid || fluid_2_0_0;
         var togo;
         if (rule.transform) {
             var transformSpec, transformOpts;
-
             if (fluid.isArrayable(rule.transform)) {
                 // if the transform holds an array, each transformer within that is responsible for its own output
                 var transforms = rule.transform;
@@ -19699,31 +19947,31 @@ var fluid = fluid || fluid_2_0_0;
                 for (var i = 0; i < transforms.length; ++i) {
                     transformSpec = transforms[i];
                     transformOpts = fluid.model.transform.lookupType(transformSpec.type);
-                    transform.transformHandler(transformSpec, transform, transformOpts);
+                    transformer.transformHandler(transformSpec, transformer, transformOpts);
                 }
             } else {
                 // else we just have a normal single transform which will return 'undefined' as a flag to defeat cascading output
                 transformSpec = rule.transform;
                 transformOpts = fluid.model.transform.lookupType(transformSpec.type);
-                togo = transform.transformHandler(transformSpec, transform, transformOpts);
+                togo = transformer.transformHandler(transformSpec, transformer, transformOpts);
             }
         }
         // if rule is an array, save path for later use in schema strategy on final applier (so output will be interpreted as array)
         if (fluid.isArrayable(rule)) {
-            transform.collectedFlatSchemaOpts = transform.collectedFlatSchemaOpts || {};
-            transform.collectedFlatSchemaOpts[transform.outputPrefix] = "array";
+            transformer.collectedFlatSchemaOpts = transformer.collectedFlatSchemaOpts || {};
+            transformer.collectedFlatSchemaOpts[transformer.outputPrefix] = "array";
         }
         fluid.each(rule, function (value, key) {
             if (key !== "transform") {
-                transform.outputPrefixOp.push(key);
-                var togo = transform.expand(value, transform);
+                transformer.outputPrefixOp.push(key);
+                var togo = transformer.expand(value, transformer);
                 // Value expanders and arrays as rules implicitly outputs, unless they have nothing (undefined) to output
                 if (togo !== undefined) {
-                    fluid.model.transform.setValue(null, togo, transform);
+                    fluid.model.transform.setValue(null, togo, transformer);
                     // ensure that expanders further up does not try to output this value as well.
                     togo = undefined;
                 }
-                transform.outputPrefixOp.pop();
+                transformer.outputPrefixOp.pop();
             }
         });
         return togo;
@@ -19731,34 +19979,34 @@ var fluid = fluid || fluid_2_0_0;
 
     // unsupported, NON-API function
     // 3rd arg is disused by the framework and always defaults to fluid.model.transform.processRule
-    fluid.model.transform.makeStrategy = function (transform, handleFn, transformFn) {
+    fluid.model.transform.makeStrategy = function (transformer, handleFn, transformFn) {
         transformFn = transformFn || fluid.model.transform.processRule;
-        transform.expand = function (rules) {
-            return transformFn(rules, transform);
+        transformer.expand = function (rules) {
+            return transformFn(rules, transformer);
         };
-        transform.outputPrefixOp = fluid.model.makePathStack(transform, "outputPrefix");
-        transform.inputPrefixOp = fluid.model.makePathStack(transform, "inputPrefix");
-        transform.transformHandler = handleFn;
+        transformer.outputPrefixOp = fluid.model.makePathStack(transformer, "outputPrefix");
+        transformer.inputPrefixOp = fluid.model.makePathStack(transformer, "inputPrefix");
+        transformer.transformHandler = handleFn;
     };
 
     fluid.model.transform.invertConfiguration = function (rules) {
-        var transform = {
+        var transformer = {
             inverted: []
         };
-        fluid.model.transform.makeStrategy(transform, fluid.model.transform.handleInvertStrategy);
-        transform.expand(rules);
+        fluid.model.transform.makeStrategy(transformer, fluid.model.transform.handleInvertStrategy);
+        transformer.expand(rules);
         return {
-            transform: transform.inverted
+            transform: transformer.inverted
         };
     };
 
     fluid.model.transform.collectInputPaths = function (rules) {
-        var transform = {
+        var transformer = {
             inputPaths: []
         };
-        fluid.model.transform.makeStrategy(transform, fluid.model.transform.handleCollectStrategy);
-        transform.expand(rules);
-        return transform.inputPaths;
+        fluid.model.transform.makeStrategy(transformer, fluid.model.transform.handleCollectStrategy);
+        transformer.expand(rules);
+        return transformer.inputPaths;
     };
 
     // unsupported, NON-API function
@@ -19830,7 +20078,7 @@ var fluid = fluid || fluid_2_0_0;
      */
     fluid.model.fireSortedChanges = function (changes, applier) {
         changes.sort(fluid.model.compareByPathLength);
-        fluid.requestChanges(applier, changes);
+        fluid.fireChanges(applier, changes);
     };
 
     /**
@@ -19857,47 +20105,50 @@ var fluid = fluid || fluid_2_0_0;
         options = options || {};
 
         var getConfig = fluid.model.escapedGetConfig;
+        var setConfig = fluid.model.escapedSetConfig;
 
         var schemaStrategy = fluid.model.transform.decodeStrategy(source, options, getConfig);
 
-        var transform = {
+        var transformer = {
             source: source,
             target: {
+                // TODO: This should default to undefined to allow return of primitives, etc.
                 model: schemaStrategy ? fluid.model.transform.defaultSchemaValue(schemaStrategy(null, "", 0, [""])) : {}
             },
             resolverGetConfig: getConfig,
+            resolverSetConfig: setConfig,
             collectedFlatSchemaOpts: undefined, // to hold options for flat schema collected during transforms
             queuedChanges: [],
             queuedTransforms: [] // TODO: This is used only by wildcard applier - explain its operation
         };
-        fluid.model.transform.makeStrategy(transform, fluid.model.transform.handleTransformStrategy);
-        transform.applier = {
+        fluid.model.transform.makeStrategy(transformer, fluid.model.transform.handleTransformStrategy);
+        transformer.applier = {
             fireChangeRequest: function (changeRequest) {
-                changeRequest.sequence = transform.queuedChanges.length;
-                transform.queuedChanges.push(changeRequest);
+                changeRequest.sequence = transformer.queuedChanges.length;
+                transformer.queuedChanges.push(changeRequest);
             }
         };
-        fluid.bindRequestChange(transform.applier);
+        fluid.bindRequestChange(transformer.applier);
 
-        transform.expand(rules);
+        transformer.expand(rules);
 
-        var setConfig = fluid.copy(fluid.model.escapedSetConfig);
+        var rootSetConfig = fluid.copy(setConfig);
         // Modify schemaStrategy if we collected flat schema options for the setConfig of finalApplier
-        if (transform.collectedFlatSchemaOpts !== undefined) {
-            $.extend(transform.collectedFlatSchemaOpts, options.flatSchema);
-            schemaStrategy = fluid.model.transform.flatSchemaStrategy(transform.collectedFlatSchemaOpts, getConfig);
+        if (transformer.collectedFlatSchemaOpts !== undefined) {
+            $.extend(transformer.collectedFlatSchemaOpts, options.flatSchema);
+            schemaStrategy = fluid.model.transform.flatSchemaStrategy(transformer.collectedFlatSchemaOpts, getConfig);
         }
-        setConfig.strategies = [fluid.model.defaultFetchStrategy, schemaStrategy ? fluid.model.transform.schemaToCreatorStrategy(schemaStrategy)
+        rootSetConfig.strategies = [fluid.model.defaultFetchStrategy, schemaStrategy ? fluid.model.transform.schemaToCreatorStrategy(schemaStrategy)
                 : fluid.model.defaultCreatorStrategy];
-        transform.finalApplier = options.finalApplier || fluid.makeHolderChangeApplier(transform.target, {resolverSetConfig: setConfig});
+        transformer.finalApplier = options.finalApplier || fluid.makeHolderChangeApplier(transformer.target, {resolverSetConfig: rootSetConfig});
 
-        if (transform.queuedTransforms.length > 0) {
-            transform.typeStack = [];
-            transform.pathOp = fluid.model.makePathStack(transform, "path");
-            fluid.model.transform.expandWildcards(transform, source);
+        if (transformer.queuedTransforms.length > 0) {
+            transformer.typeStack = [];
+            transformer.pathOp = fluid.model.makePathStack(transformer, "path");
+            fluid.model.transform.expandWildcards(transformer, source);
         }
-        fluid.model.fireSortedChanges(transform.queuedChanges, transform.finalApplier);
-        return transform.target.model;
+        fluid.model.fireSortedChanges(transformer.queuedChanges, transformer.finalApplier);
+        return transformer.target.model;
     };
 
     $.extend(fluid.model.transformWithRules, fluid.model.transform);
@@ -19927,7 +20178,7 @@ var fluid = fluid || fluid_2_0_0;
 ;/*
 Copyright 2010 University of Toronto
 Copyright 2010-2011 OCAD University
-Copyright 2013 Raising the Floor - International
+Copyright 2013, 2016 Raising the Floor - International
 
 Licensed under the Educational Community License (ECL), Version 2.0 or the New
 BSD license. You may not use this file except in compliance with one these
@@ -19952,19 +20203,10 @@ var fluid = fluid || fluid_2_0_0;
 
     fluid.defaults("fluid.transforms.value", {
         gradeNames: "fluid.standardTransformFunction",
-        invertConfiguration: "fluid.transforms.value.invert"
+        invertConfiguration: "fluid.identity"
     });
 
     fluid.transforms.value = fluid.identity;
-
-    fluid.transforms.value.invert = function (transformSpec, transformer) {
-        var togo = fluid.copy(transformSpec);
-        // TODO: this will not behave correctly in the face of compound "value" which contains
-        // further transforms
-        togo.inputPath = fluid.model.composePaths(transformer.outputPrefix, transformSpec.outputPath);
-        togo.outputPath = fluid.model.composePaths(transformer.inputPrefix, transformSpec.inputPath);
-        return togo;
-    };
 
     // Export the use of the "value" transform under the "identity" name for FLUID-5293
     fluid.transforms.identity = fluid.transforms.value;
@@ -19972,29 +20214,47 @@ var fluid = fluid || fluid_2_0_0;
         gradeNames: "fluid.transforms.value"
     });
 
+    // A helpful utility function to be used when a transform's inverse is the identity
+    fluid.transforms.invertToIdentity = function (transformSpec) {
+        transformSpec.type = "fluid.transforms.identity";
+        return transformSpec;
+    };
+
     fluid.defaults("fluid.transforms.literalValue", {
         gradeNames: "fluid.standardOutputTransformFunction"
     });
 
     fluid.transforms.literalValue = function (transformSpec) {
-        return transformSpec.value;
+        return transformSpec.input;
     };
 
-
-    fluid.defaults("fluid.transforms.arrayValue", {
-        gradeNames: "fluid.standardTransformFunction"
-    });
-
-    fluid.transforms.arrayValue = fluid.makeArray;
-
-
     fluid.defaults("fluid.transforms.stringToNumber", {
-        gradeNames: ["fluid.standardTransformFunction"]
+        gradeNames: ["fluid.standardTransformFunction", "fluid.lens"],
+        invertConfiguration: "fluid.transforms.stringToNumber.invert"
     });
 
     fluid.transforms.stringToNumber = function (value) {
         var newValue = Number(value);
         return isNaN(newValue) ? undefined : newValue;
+    };
+
+    fluid.transforms.stringToNumber.invert = function (transformSpec) {
+        transformSpec.type = "fluid.transforms.numberToString";
+        return transformSpec;
+    };
+
+    fluid.defaults("fluid.transforms.numberToString", {
+        gradeNames: ["fluid.standardTransformFunction", "fluid.lens"],
+        invertConfiguration: "fluid.transforms.numberToString.invert"
+    });
+
+    fluid.transforms.numberToString = function (value) {
+        return (typeof value !== "number") ? undefined : "" + value;
+    };
+
+    fluid.transforms.numberToString.invert = function (transformSpec) {
+        transformSpec.type = "fluid.transforms.stringToNumber";
+        return transformSpec;
     };
 
     fluid.defaults("fluid.transforms.count", {
@@ -20007,7 +20267,8 @@ var fluid = fluid || fluid_2_0_0;
 
 
     fluid.defaults("fluid.transforms.round", {
-        gradeNames: "fluid.standardTransformFunction"
+        gradeNames: ["fluid.standardTransformFunction", "fluid.lens"],
+        invertConfiguration: "fluid.transforms.invertToIdentity"
     });
 
     fluid.transforms.round = function (value) {
@@ -20021,12 +20282,12 @@ var fluid = fluid || fluid_2_0_0;
 
     fluid.transforms["delete"] = function (transformSpec, transformer) {
         var outputPath = fluid.model.composePaths(transformer.outputPrefix, transformSpec.outputPath);
-        transformer.applier.requestChange(outputPath, null, "DELETE");
+        transformer.applier.change(outputPath, null, "DELETE");
     };
 
 
     fluid.defaults("fluid.transforms.firstValue", {
-        gradeNames: "fluid.transformFunction"
+        gradeNames: "fluid.standardOutputTransformFunction"
     });
 
     fluid.transforms.firstValue = function (transformSpec, transformer) {
@@ -20044,42 +20305,40 @@ var fluid = fluid || fluid_2_0_0;
     };
 
     fluid.defaults("fluid.transforms.linearScale", {
-        gradeNames: [ "fluid.multiInputTransformFunction", "fluid.standardOutputTransformFunction", "fluid.lens" ],
+        gradeNames: ["fluid.multiInputTransformFunction",
+                     "fluid.standardTransformFunction",
+                     "fluid.lens" ],
         invertConfiguration: "fluid.transforms.linearScale.invert",
         inputVariables: {
-            value: null,
             factor: 1,
             offset: 0
         }
     });
 
     /* simple linear transformation */
-    fluid.transforms.linearScale = function (inputs) {
-        var value = inputs.value();
-        var factor = inputs.factor();
-        var offset = inputs.offset();
+    fluid.transforms.linearScale = function (input, extraInputs) {
+        var factor = extraInputs.factor();
+        var offset = extraInputs.offset();
 
-        if (typeof(value) !== "number" || typeof(factor) !== "number" || typeof(offset) !== "number") {
+        if (typeof(input) !== "number" || typeof(factor) !== "number" || typeof(offset) !== "number") {
             return undefined;
         }
-        return value * factor + offset;
+        return input * factor + offset;
     };
 
     /* TODO: This inversion doesn't work if the value and factors are given as paths in the source model */
-    fluid.transforms.linearScale.invert = function  (transformSpec, transformer) {
-        var togo = fluid.copy(transformSpec);
+    fluid.transforms.linearScale.invert = function (transformSpec) {
+        // delete the factor and offset paths if present
+        delete transformSpec.factorPath;
+        delete transformSpec.offsetPath;
 
-        if (togo.factor) {
-            togo.factor = (togo.factor === 0) ? 0 : 1 / togo.factor;
+        if (transformSpec.factor !== undefined) {
+            transformSpec.factor = (transformSpec.factor === 0) ? 0 : 1 / transformSpec.factor;
         }
-        if (togo.offset) {
-            togo.offset = - togo.offset * (togo.factor !== undefined ? togo.factor : 1);
+        if (transformSpec.offset !== undefined) {
+            transformSpec.offset = - transformSpec.offset * (transformSpec.factor !== undefined ? transformSpec.factor : 1);
         }
-        // TODO: This rubbish should be done by the inversion machinery by itself. We shouldn't have to repeat it in every
-        // inversion rule
-        togo.valuePath = fluid.model.composePaths(transformer.outputPrefix, transformSpec.outputPath);
-        togo.outputPath = fluid.model.composePaths(transformer.inputPrefix, transformSpec.valuePath);
-        return togo;
+        return transformSpec;
     };
 
     fluid.defaults("fluid.transforms.binaryOp", {
@@ -20091,8 +20350,8 @@ var fluid = fluid || fluid_2_0_0;
     });
 
     fluid.transforms.binaryLookup = {
-        "===": function (a, b) { return a === b; },
-        "!==": function (a, b) { return a !== b; },
+        "===": function (a, b) { return fluid.model.isSameValue(a, b); },
+        "!==": function (a, b) { return !fluid.model.isSameValue(a, b); },
         "<=": function (a, b) { return a <= b; },
         "<": function (a, b) { return a < b; },
         ">=": function (a, b) { return a >= b; },
@@ -20271,12 +20530,13 @@ var fluid = fluid || fluid_2_0_0;
     /* -------- arrayToSetMembership and setMembershipToArray ---------------- */
 
     fluid.defaults("fluid.transforms.arrayToSetMembership", {
-        gradeNames: ["fluid.standardInputTransformFunction", "fluid.lens"],
+        gradeNames: ["fluid.standardTransformFunction", "fluid.lens"],
         invertConfiguration: "fluid.transforms.arrayToSetMembership.invert"
     });
 
 
     fluid.transforms.arrayToSetMembership = function (value, transformSpec, transformer) {
+        var output = {};
         var options = transformSpec.options;
 
         if (!value || !fluid.isArrayable(value)) {
@@ -20295,32 +20555,39 @@ var fluid = fluid || fluid_2_0_0;
         }
 
         fluid.each(options, function (outPath, key) {
-            // write to output path given in options the value <presentValue> or <missingValue> depending on whether key is found in user input
+            // write to output object the value <presentValue> or <missingValue> depending on whether key is found in user input
             var outVal = (value.indexOf(key) !== -1) ? transformSpec.presentValue : transformSpec.missingValue;
-            fluid.model.transform.setValue(outPath, outVal, transformer);
+            fluid.set(output, outPath, outVal, transformer.resolverSetConfig);
         });
-        // TODO: Why does this transform make no return?
+        return output;
+    };
+
+    /**
+     * NON-API function; Copies the entire transformSpec with the following modifications:
+     * * A new type is set (from argument)
+     * * each [key]=value entry in the options is swapped to be: [value]=key
+     */
+    fluid.transforms.arrayToSetMembership.invertWithType = function (transformSpec, transformer, newType) {
+        transformSpec.type = newType;
+        var newOptions = {};
+        fluid.each(transformSpec.options, function (path, oldKey) {
+            newOptions[path] = oldKey;
+        });
+        transformSpec.options = newOptions;
+        return transformSpec;
     };
 
     fluid.transforms.arrayToSetMembership.invert = function (transformSpec, transformer) {
-        var togo = fluid.copy(transformSpec);
-        delete togo.inputPath;
-        togo.type = "fluid.transforms.setMembershipToArray";
-        togo.outputPath = fluid.model.composePaths(transformer.inputPrefix, transformSpec.inputPath);
-        var newOptions = {};
-        fluid.each(transformSpec.options, function (path, oldKey) {
-            var newKey = fluid.model.composePaths(transformer.outputPrefix, path);
-            newOptions[newKey] = oldKey;
-        });
-        togo.options = newOptions;
-        return togo;
+        return fluid.transforms.arrayToSetMembership.invertWithType(transformSpec, transformer,
+            "fluid.transforms.setMembershipToArray");
     };
 
     fluid.defaults("fluid.transforms.setMembershipToArray", {
-        gradeNames: ["fluid.standardOutputTransformFunction"]
+        gradeNames: ["fluid.standardTransformFunction", "fluid.lens"],
+        invertConfiguration: "fluid.transforms.setMembershipToArray.invert"
     });
 
-    fluid.transforms.setMembershipToArray = function (transformSpec, transformer) {
+    fluid.transforms.setMembershipToArray = function (input, transformSpec, transformer) {
         var options = transformSpec.options;
 
         if (!options) {
@@ -20336,16 +20603,21 @@ var fluid = fluid || fluid_2_0_0;
         }
 
         var outputArr = [];
-        fluid.each(options, function (arrVal, inPath) {
-            var val = fluid.model.transform.getValue(inPath, undefined, transformer);
-            if (val === transformSpec.presentValue) {
-                outputArr.push(arrVal);
+        fluid.each(options, function (outputVal, key) {
+            var value = fluid.get(input, key, transformer.resolverGetConfig);
+            if (value === transformSpec.presentValue) {
+                outputArr.push(outputVal);
             }
         });
         return outputArr;
     };
 
-    /* -------- objectToArray and arrayToObject -------------------- */
+    fluid.transforms.setMembershipToArray.invert = function (transformSpec, transformer) {
+        return fluid.transforms.arrayToSetMembership.invertWithType(transformSpec, transformer,
+            "fluid.transforms.arrayToSetMembership");
+    };
+
+    /* -------- deindexIntoArrayByKey and indexArrayByKey -------------------- */
 
     /**
      * Transforms the given array to an object.
@@ -20407,9 +20679,9 @@ var fluid = fluid || fluid_2_0_0;
     };
 
 
-    fluid.defaults("fluid.transforms.arrayToObject", {
+    fluid.defaults("fluid.transforms.indexArrayByKey", {
         gradeNames: ["fluid.standardTransformFunction", "fluid.lens" ],
-        invertConfiguration: "fluid.transforms.arrayToObject.invert"
+        invertConfiguration: "fluid.transforms.indexArrayByKey.invert"
     });
 
     /** Transforms an array of objects into an object of objects, by indexing using the option "key" which must be supplied within the transform specification.
@@ -20417,18 +20689,17 @@ var fluid = fluid || fluid_2_0_0;
     * exist in each array element. The member with name agreeing with "key" and its value will be removed from each original object before inserting into the returned
     * object.
     * For example,
-    * <code>fluid.transforms.arrayToObject([{k: "e1", b: 1, c: 2}, {k: "e2", b: 2: c: 3}], {key: "k"})</code> will output the object
+    * <code>fluid.transforms.indexArrayByKey([{k: "e1", b: 1, c: 2}, {k: "e2", b: 2: c: 3}], {key: "k"})</code> will output the object
     * <code>{e1: {b: 1, c: 2}, e2: {b: 2: c, 3}</code>
     * Note: This transform frequently arises in the context of data which arose in XML form, which often represents "morally indexed" data in repeating array-like
     * constructs where the indexing key is held, for example, in an attribute.
     */
-
-    fluid.transforms.arrayToObject = function (arr, transformSpec, transformer) {
+    fluid.transforms.indexArrayByKey = function (arr, transformSpec, transformer) {
         if (transformSpec.key === undefined) {
-            fluid.fail("arrayToObject requires a 'key' option.", transformSpec);
+            fluid.fail("indexArrayByKey requires a 'key' option.", transformSpec);
         }
         if (!fluid.isArrayable(arr)) {
-            fluid.fail("arrayToObject didn't find array at inputPath.", transformSpec);
+            fluid.fail("indexArrayByKey didn't find array at inputPath.", transformSpec);
         }
         var newHash = {};
         var pivot = transformSpec.key;
@@ -20438,7 +20709,7 @@ var fluid = fluid || fluid_2_0_0;
             var newKey = v[pivot];
             var keyType = typeof(newKey);
             if (keyType !== "string" && keyType !== "boolean" && keyType !== "number") {
-                fluid.fail("arrayToObject encountered untransformable array due to missing or invalid key", v);
+                fluid.fail("indexArrayByKey encountered untransformable array due to missing or invalid key", v);
             }
             // use the value of the key element as key and use the remaining content as value
             var content = fluid.copy(v);
@@ -20446,48 +20717,46 @@ var fluid = fluid || fluid_2_0_0;
             // fix sub Arrays if needed:
             if (transformSpec.innerValue) {
                 content = fluid.model.transform.expandInnerValues([transformer.inputPrefix, transformSpec.inputPath, k.toString()],
-                    [newKey], transformer, transformSpec.innerValue);
+                    [transformSpec.outputPath, newKey], transformer, transformSpec.innerValue);
             }
             newHash[newKey] = content;
         });
         return newHash;
     };
 
-    fluid.transforms.arrayToObject.invert = function (transformSpec, transformer) {
-        var togo = fluid.copy(transformSpec);
-        togo.type = "fluid.transforms.objectToArray";
-        togo.inputPath = fluid.model.composePaths(transformer.outputPrefix, transformSpec.outputPath);
-        togo.outputPath = fluid.model.composePaths(transformer.inputPrefix, transformSpec.inputPath);
+    fluid.transforms.indexArrayByKey.invert = function (transformSpec) {
+        transformSpec.type = "fluid.transforms.deindexIntoArrayByKey";
         // invert transforms from innerValue as well:
         // TODO: The Model Transformations framework should be capable of this, but right now the
         // issue is that we use a "private contract" to operate the "innerValue" slot. We need to
         // spend time thinking of how this should be formalised
-        if (togo.innerValue) {
-            var innerValue = togo.innerValue;
+        if (transformSpec.innerValue) {
+            var innerValue = transformSpec.innerValue;
             for (var i = 0; i < innerValue.length; ++i) {
                 innerValue[i] = fluid.model.transform.invertConfiguration(innerValue[i]);
             }
         }
-        return togo;
+        return transformSpec;
     };
 
 
-    fluid.defaults("fluid.transforms.objectToArray", {
-        gradeNames: "fluid.standardTransformFunction"
+    fluid.defaults("fluid.transforms.deindexIntoArrayByKey", {
+        gradeNames: [ "fluid.standardTransformFunction", "fluid.lens" ],
+        invertConfiguration: "fluid.transforms.deindexIntoArrayByKey.invert"
     });
 
     /**
      * Transforms an object of objects into an array of objects, by deindexing by the option "key" which must be supplied within the transform specification.
      * The key of each object will become split out into a fresh value in each array element which will be given the key held in the transformSpec option "key".
      * For example:
-     * <code>fluid.transforms.objectToArray({e1: {b: 1, c: 2}, e2: {b: 2: c, 3}, {key: "k"})</code> will output the array
+     * <code>fluid.transforms.deindexIntoArrayByKey({e1: {b: 1, c: 2}, e2: {b: 2: c, 3}, {key: "k"})</code> will output the array
      * <code>[{k: "e1", b: 1, c: 2}, {k: "e2", b: 2: c: 3}]</code>
      *
-     * This performs the inverse transform of fluid.transforms.arrayToObject.
+     * This performs the inverse transform of fluid.transforms.indexArrayByKey.
      */
-    fluid.transforms.objectToArray = function (hash, transformSpec, transformer) {
+    fluid.transforms.deindexIntoArrayByKey = function (hash, transformSpec, transformer) {
         if (transformSpec.key === undefined) {
-            fluid.fail("objectToArray requires a \"key\" option.", transformSpec);
+            fluid.fail("deindexIntoArrayByKey requires a \"key\" option.", transformSpec);
         }
 
         var newArray = [];
@@ -20504,6 +20773,21 @@ var fluid = fluid || fluid_2_0_0;
             newArray.push(content);
         });
         return newArray;
+    };
+
+    fluid.transforms.deindexIntoArrayByKey.invert = function (transformSpec) {
+        transformSpec.type = "fluid.transforms.indexArrayByKey";
+        // invert transforms from innerValue as well:
+        // TODO: The Model Transformations framework should be capable of this, but right now the
+        // issue is that we use a "private contract" to operate the "innerValue" slot. We need to
+        // spend time thinking of how this should be formalised
+        if (transformSpec.innerValue) {
+            var innerValue = transformSpec.innerValue;
+            for (var i = 0; i < innerValue.length; ++i) {
+                innerValue[i] = fluid.model.transform.invertConfiguration(innerValue[i]);
+            }
+        }
+        return transformSpec;
     };
 
     fluid.defaults("fluid.transforms.limitRange", {
@@ -20536,6 +20820,10 @@ var fluid = fluid || fluid_2_0_0;
     });
 
     fluid.transforms.indexOf = function (value, transformSpec) {
+        // We do not allow a positive number as 'notFound' value, as it threatens invertibility
+        if (typeof (transformSpec.notFound) === "number" && transformSpec.notFound >= 0) {
+            fluid.fail("A positive number is not allowed as 'notFound' value for indexOf");
+        }
         var offset = fluid.transforms.parseIndexationOffset(transformSpec.offset, "indexOf");
         var array = fluid.makeArray(transformSpec.array);
         var originalIndex = array.indexOf(value);
@@ -20555,12 +20843,12 @@ var fluid = fluid || fluid_2_0_0;
 
     fluid.transforms.dereference = function (value, transformSpec) {
         if (typeof (value) !== "number") {
-            fluid.fail("dereference requires \"value\" to be a number. " + value + " is invalid.");
+            return undefined;
         }
         var offset = fluid.transforms.parseIndexationOffset(transformSpec.offset, "dereference");
         var array = fluid.makeArray(transformSpec.array);
         var index = value + offset;
-        return index === -1 && transformSpec.notFound ? transformSpec.notFound : array[index];
+        return array[index];
     };
 
     fluid.transforms.dereference.invert = function (transformSpec, transformer) {
@@ -20580,14 +20868,11 @@ var fluid = fluid || fluid_2_0_0;
         return parsedOffset;
     };
 
-    fluid.transforms.invertArrayIndexation = function (transformSpec, transformer) {
-        var togo = fluid.copy(transformSpec);
-        togo.inputPath = fluid.model.composePaths(transformer.outputPrefix, transformSpec.outputPath);
-        togo.outputPath = fluid.model.composePaths(transformer.inputPrefix, transformSpec.inputPath);
-        if (!isNaN(Number(togo.offset))) {
-            togo.offset = Number(togo.offset) * (-1);
+    fluid.transforms.invertArrayIndexation = function (transformSpec) {
+        if (!isNaN(Number(transformSpec.offset))) {
+            transformSpec.offset = Number(transformSpec.offset) * (-1);
         }
-        return togo;
+        return transformSpec;
     };
 
     fluid.defaults("fluid.transforms.stringTemplate", {
@@ -20605,6 +20890,44 @@ var fluid = fluid || fluid_2_0_0;
     fluid.transforms.free = function (transformSpec) {
         var args = fluid.makeArray(transformSpec.args);
         return fluid.invokeGlobalFunction(transformSpec.func, args);
+    };
+
+    fluid.defaults("fluid.transforms.quantize", {
+        gradeNames: "fluid.standardTransformFunction"
+    });
+
+    /**
+     * Quantize function maps a continuous range into discrete values. Given an input, it will
+     * be matched into a discrete bucket and the corresponding output will be done.
+     */
+    fluid.transforms.quantize = function (value, transformSpec, transform) {
+        if (!transformSpec.ranges || !transformSpec.ranges.length) {
+            fluid.fail("fluid.transforms.quantize should have a key called ranges containing an array defining ranges to quantize");
+        }
+        // TODO: error checking that upper bounds are all numbers and increasing
+        for (var i = 0; i < transformSpec.ranges.length; i++) {
+            var rangeSpec = transformSpec.ranges[i];
+            if (value <= rangeSpec.upperBound || rangeSpec.upperBound === undefined && value >= Number.NEGATIVE_INFINITY) {
+                return fluid.isPrimitive(rangeSpec.output) ? rangeSpec.output : transform.expand(rangeSpec.output);
+            }
+        }
+    };
+
+    /**
+     * inRange transformer checks whether a value is within a given range and returns true if it is,
+     * and false if it's not.
+     *
+     * The range is defined by the two inputs: "min" and "max" (both inclusive). If one of these inputs
+     * is not present it is considered -infinite and +infinite, respectively - In other words, if no
+     * `min` value is defined, any value below or equal to the given "max" value will result in true.
+     */
+    fluid.defaults("fluid.transforms.inRange", {
+        gradeNames: "fluid.standardTransformFunction"
+    });
+
+    fluid.transforms.inRange = function (value, transformSpec) {
+        return (transformSpec.min === undefined || transformSpec.min <= value) &&
+            (transformSpec.max === undefined ||  transformSpec.max >= value) ? true : false;
     };
 
 })(jQuery, fluid_2_0_0);
@@ -21381,23 +21704,24 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
             var selector, thisContainer, togo;
 
             selector = selectors[name];
-            thisContainer = localContainer ? localContainer : container;
+            thisContainer = localContainer ? $(localContainer) : container;
             if (!thisContainer) {
                 fluid.fail("DOM binder invoked for selector " + name + " without container");
             }
-
-            if (!selector) {
-                return thisContainer;
+            if (selector === "") {
+                togo = thisContainer;
+            }
+            else if (!selector) {
+                togo = userJQuery();
+            }
+            else {
+                if (typeof (selector) === "function") {
+                    togo = userJQuery(selector.call(null, fluid.unwrap(thisContainer)));
+                } else {
+                    togo = userJQuery(selector, thisContainer);
+                }
             }
 
-            if (typeof (selector) === "function") {
-                togo = userJQuery(selector.call(null, fluid.unwrap(thisContainer)));
-            } else {
-                togo = userJQuery(selector, thisContainer);
-            }
-            if (togo.get(0) === document) {
-                togo = [];
-            }
             if (!togo.selector) {
                 togo.selector = selector;
                 togo.context = thisContainer;
@@ -21705,6 +22029,18 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
             element.id = simpleId;
         }
         return element.id;
+    };
+
+    /**
+     * Returns the document to which an element belongs, or the element itself if it is already a document
+     *
+     * @param {jQuery||Element} element The element to return the document for
+     * @return {Document} dokkument The document in which it is to be found
+     */
+    fluid.getDocument = function (element) {
+        var node = fluid.unwrap(element);
+        // DOCUMENT_NODE - guide to node types at https://developer.mozilla.org/en/docs/Web/API/Node/nodeType
+        return node.nodeType === 9 ? node : node.ownerDocument;
     };
 
     fluid.defaults("fluid.ariaLabeller", {
@@ -22483,11 +22819,7 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
         if (contextAwareRecord.checks && contextAwareRecord.checks.contextValue) {
             fluid.fail("Nesting error in contextAwareness record ", contextAwareRecord, " - the \"checks\" entry must contain a hash and not a contextValue/gradeNames record at top level");
         }
-        var checkList = fluid.hashToArray(contextAwareRecord.checks, "namespace", function (newElement, oldElement, index) {
-            $.extend(newElement, oldElement);
-            newElement.priority = fluid.parsePriority(oldElement.priority, index);
-        });
-        fluid.sortByPriority(checkList);
+        var checkList = fluid.parsePriorityRecords(contextAwareRecord.checks, "contextAwareness checkRecord");
         return fluid.find(checkList, function (check) {
             if (!check.contextValue) {
                 fluid.fail("Cannot perform check for contextAwareness record ", check, " without a valid field named \"contextValue\"");
@@ -22502,11 +22834,7 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     // unsupported, NON-API function
     fluid.contextAware.check = function (that, contextAwarenessOptions) {
         var gradeNames = [];
-        var contextAwareList = fluid.hashToArray(contextAwarenessOptions, "namespace", function (newElement, oldElement, index) {
-            $.extend(newElement, oldElement);
-            newElement.priority = fluid.parsePriority(oldElement.priority, index, false, "context awareness records");
-        });
-        fluid.sortByPriority(contextAwareList);
+        var contextAwareList = fluid.parsePriorityRecords(contextAwarenessOptions, "contextAwareness adaptationRecord");
         fluid.each(contextAwareList, function (record) {
             var matched = fluid.contextAware.checkOne(that, record);
             gradeNames = gradeNames.concat(fluid.makeArray(matched));
@@ -25311,6 +25639,7 @@ fluid_2_0_0 = fluid_2_0_0 || {};
             autoBind: true
         },
         events: {
+            onResourcesFetched: null,
             prepareModelForRender: null,
             onRenderTree: null,
             afterRender: null
@@ -25373,7 +25702,7 @@ fluid_2_0_0 = fluid_2_0_0 || {};
         fluid.getForComponent(that, "applier");
         fluid.diagnoseFailedView(componentName, that, fluid.defaults(componentName), arguments);
 
-        fluid.fetchResources(that.options.resources); // TODO: deal with asynchrony
+        fluid.fetchResources(that.options.resources, that.events.onResourcesFetched.fire); // TODO: deal with asynchrony
 
         var rendererOptions = fluid.renderer.modeliseOptions(that.options.rendererOptions, null, that);
 
@@ -25841,7 +26170,7 @@ fluid_2_0_0 = fluid_2_0_0 || {};
 
 })(jQuery, fluid_2_0_0);
 ;/*
-Copyright 2011 OCAD University
+Copyright 2011-2015 OCAD University
 Copyright 2011 Lucendo Development Ltd.
 
 Licensed under the Educational Community License (ECL), Version 2.0 or the New
@@ -25869,7 +26198,8 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
         },
         strings: {
             showText: "show",
-            hideText: "hide"
+            hideText: "hide",
+            panelLabel: "panel"
         },
         events: {
             onPanelHide: null,
@@ -25887,6 +26217,7 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
                 listener: "{that}.applier.modelChanged.addListener",
                 args: ["isShowing", "{that}.refreshView"]
             },
+            "onCreate.setAriaProps": "{that}.setAriaProps",
             "onCreate.setInitialState": {
                 listener: "{that}.refreshView"
             },
@@ -25896,17 +26227,47 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
                 "args": ["{that}.options.strings.showText"],
                 "priority": "first"
             },
+            "onPanelHide.setAriaLabel": {
+                "this": "{that}.dom.toggleButtonLabel",
+                "method": "attr",
+                "args": ["aria-label", "{that}.options.strings.showTextAriaLabel"]
+            },
             "onPanelShow.setText": {
                 "this": "{that}.dom.toggleButtonLabel",
                 "method": "text",
                 "args": ["{that}.options.strings.hideText"],
                 "priority": "first"
             },
+            "onPanelShow.setAriaLabel": {
+                "this": "{that}.dom.toggleButtonLabel",
+                "method": "attr",
+                "args": ["aria-label", "{that}.options.strings.hideTextAriaLabel"]
+            },
             "onPanelHide.operate": {
                 listener: "{that}.operateHide"
             },
             "onPanelShow.operate": {
                 listener: "{that}.operateShow"
+            },
+            "onCreate.setAriaStates": "{that}.setAriaStates"
+        },
+        members: {
+            panelId: {
+                expander: {
+                    // create an id for panel
+                    // and set that.panelId to the id value
+                    funcName: "fluid.allocateSimpleId",
+                    args: "{that}.dom.panel"
+                }
+            }
+        },
+        model: {
+            isShowing: false
+        },
+        modelListeners: {
+            "isShowing": {
+                funcName: "{that}.setAriaStates",
+                excludeSource: "init"
             }
         },
         invokers: {
@@ -25921,12 +26282,20 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
                 "args": ["{that}.options.animationDurations.show", "{that}.events.afterPanelShow.fire"]
             },
             hidePanel: {
-                func: "{that}.applier.requestChange",
+                func: "{that}.applier.change",
                 args: ["isShowing", false]
             },
             showPanel: {
-                func: "{that}.applier.requestChange",
+                func: "{that}.applier.change",
                 args: ["isShowing", true]
+            },
+            setAriaStates: {
+                funcName: "fluid.slidingPanel.setAriaStates",
+                args: ["{that}", "{that}.model.isShowing"]
+            },
+            setAriaProps: {
+                funcName: "fluid.slidingPanel.setAriaProperties",
+                args: ["{that}", "{that}.panelId"]
             },
             togglePanel: {
                 funcName: "fluid.slidingPanel.togglePanel",
@@ -25937,9 +26306,6 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
                 args: ["{that}"]
             }
         },
-        model: {
-            isShowing: false
-        },
         animationDurations: {
             hide: 400,
             show: 400
@@ -25947,11 +26313,29 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     });
 
     fluid.slidingPanel.togglePanel = function (that) {
-        that.applier.requestChange("isShowing", !that.model.isShowing);
+        that.applier.change("isShowing", !that.model.isShowing);
     };
 
     fluid.slidingPanel.refreshView = function (that) {
         that.events[that.model.isShowing ? "onPanelShow" : "onPanelHide"].fire();
+    };
+
+    // panelId is passed in to ensure that it is evaluated before this
+    // function is called.
+    fluid.slidingPanel.setAriaProperties = function (that, panelId) {
+        that.locate("toggleButton").attr({
+            "role": "button",
+            "aria-controls": panelId
+        });
+        that.locate("panel").attr({
+            "aria-label": that.options.strings.panelLabel,
+            "role": "group"
+        });
+    };
+
+    fluid.slidingPanel.setAriaStates = function (that, isShowing) {
+        that.locate("toggleButton").attr("aria-pressed", isShowing);
+        that.locate("panel").attr("aria-expanded", isShowing);
     };
 
 })(jQuery, fluid_2_0_0);
@@ -31447,7 +31831,7 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
         });
 
         var headingsModel = that.modelBuilder.assembleModel(headings, that.anchorInfo);
-        that.applier.requestChange("", headingsModel);
+        that.applier.change("", headingsModel);
 
         that.events.onRefresh.fire();
     };
@@ -33240,8 +33624,9 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
      * Only use in cases where the instatiated component cannot be used.
      */
     fluid.prefs.compositePanel.prefetchComponentOptions = function (type, options) {
-        var baseOptions = fluid.getGradedDefaults(type, fluid.get(options, "gradeNames"));
-        return fluid.merge(baseOptions.mergePolicy, baseOptions, options);
+        var baseOptions = fluid.getMergedDefaults(type, fluid.get(options, "gradeNames"));
+        // TODO: awkwardly, fluid.merge is destructive on each argument!
+        return fluid.merge(baseOptions.mergePolicy, fluid.copy(baseOptions), options);
     };
     /*
      * Should only be used when fluid.prefs.compositePanel.isActivatePanel cannot.
@@ -34997,6 +35382,10 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
                 }
             }
         },
+        selectors: {
+            reset: ".flc-prefsEditor-reset",
+            iframe: ".flc-prefsEditor-iframe"
+        },
         listeners: {
             onReady: {
                 listener: "fluid.prefs.separatedPanel.bindEvents",
@@ -35006,10 +35395,6 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
                 listener: "fluid.prefs.separatedPanel.hideReset",
                 args: ["{separatedPanel}"]
             }
-        },
-        selectors: {
-            reset: ".flc-prefsEditor-reset",
-            iframe: ".flc-prefsEditor-iframe"
         },
         invokers: {
             bindReset: {
@@ -35026,7 +35411,10 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
                     gradeNames: ["fluid.prefs.msgLookup"],
                     strings: {
                         showText: "{that}.msgLookup.slidingPanelShowText",
-                        hideText: "{that}.msgLookup.slidingPanelHideText"
+                        hideText: "{that}.msgLookup.slidingPanelHideText",
+                        showTextAriaLabel: "{that}.msgLookup.showTextAriaLabel",
+                        hideTextAriaLabel: "{that}.msgLookup.hideTextAriaLabel",
+                        panelLabel: "{that}.msgLookup.slidingPanelPanelLabel"
                     },
                     invokers: {
                         operateShow: {
@@ -35183,9 +35571,17 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
         prefsEditor.events.onSignificantDOMChange.fire();
     };
 
+
     fluid.prefs.separatedPanel.bindEvents = function (prefsEditor, iframeEnhancer, separatedPanel) {
-        // TODO: This binding should be done declaratively - needs ginger world in order to bind onto slidingPanel
+        // FLUID-5740: This binding should be done declaratively - needs ginger world in order to bind onto slidingPanel
         // which is a child of this component
+
+        var separatedPanelId = separatedPanel.slidingPanel.panelId;
+        separatedPanel.locate("reset").attr({
+            "aria-controls": separatedPanelId,
+            "role": "button"
+        });
+
         separatedPanel.slidingPanel.events.afterPanelShow.addListener(function () {
             fluid.prefs.separatedPanel.updateView(prefsEditor);
         });
@@ -36993,8 +37389,9 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     };
 
     fluid.tooltip.closeAll = function (that) {
+        var dokkument = fluid.getDocument(that.container);
         fluid.each(that.openIdMap, function (value, key) {
-            var target = fluid.byId(key);
+            var target = fluid.byId(key, dokkument);
             // "white-box" behaviour - fabricating this fake event shell triggers the standard "close" sequence including notifying
             // our own handler. This will be very fragile to changes in jQuery UI and the underlying widget code
             that.container.tooltip("close", {
@@ -37021,10 +37418,12 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
 
     fluid.tooltip.doDestroy = function (that) {
         if (that.initialised) {
-            fluid.tooltip.closeAll(that);
+            fluid.tooltip.closeAll(that, true);
+            var dokkument = fluid.getDocument(that.container),
+                container = that.container[0];
             // jQuery UI framework will throw a fit if we have instantiated a widget on a DOM element and then
             // removed it from the DOM. This apparently can't be detected via the jQuery UI API itself.
-            if ($.contains(document, that.container[0])) {
+            if ($.contains(dokkument, container) || dokkument === container) {
                 that.container.tooltip("destroy");
             }
             that.initialised = false; // TODO: proper framework facility for this coming with FLUID-4890
@@ -38068,7 +38467,11 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
         gradeNames: ["fluid.viewComponent"],
         distributeOptions: {
             source: "{that}.options",
-            exclusions: ["members.inlineEdits", "selectors.editables", "events"],
+            // TODO: Appalling requirement to evade FLUID-5887 check - otherwise all of this fluid.modelComponent material is broadcast down to each component.
+            // "source" distributions are silly and dangerous in any case, but they have become fairly widely used, together with the expectation that the 
+            // material from "defaults" can be broadcast too. But clearly material that is from base grade defaults is unwelcome to be distributed.
+            // This seems to imply that we've got no option but to start supporting "provenance" in options and defaults - highly expensive.
+            exclusions: ["members.inlineEdits", "members.modelRelay", "members.applier", "members.model", "selectors.editables", "events"],
             removeSource: true,
             target: "{that > fluid.inlineEdit}.options"
         },

@@ -22,9 +22,10 @@
   border-bottom: 1px solid #ccc;
 }
 .fl-prefsEditor-separatedPanel .fl-panelBar .fl-prefsEditor-buttons {
-  box-shadow: 2px 2px 3px 0px #6f6f6f;
+  box-shadow: 2px 2px 3px 0 #6f6f6f;
   border-bottom: 1px solid #ccc;
   border-left: 1px solid #ccc;
+  border-right: 1px solid #ccc;
   border-bottom-left-radius: 8px;
   border-bottom-right-radius: 8px;
   background-color: #fff;
@@ -92,6 +93,9 @@
   border-color: #000;
   color: #000;
 }
+.fl-theme-bw .fl-prefsEditor-separatedPanel .fl-prefsEditor-buttons {
+  box-shadow: none;
+}
 .fl-theme-wb {
   background-image: none !important;
   background-color: #000;
@@ -104,6 +108,9 @@
   background-color: #000;
   border-color: #fff;
   color: #fff;
+}
+.fl-theme-wb .fl-prefsEditor-separatedPanel .fl-prefsEditor-buttons {
+  box-shadow: none;
 }
 .fl-theme-yb {
   background-image: none !important;
@@ -118,6 +125,9 @@
   border-color: #ff0;
   color: #ff0;
 }
+.fl-theme-yb .fl-prefsEditor-separatedPanel .fl-prefsEditor-buttons {
+  box-shadow: none;
+}
 .fl-theme-by {
   background-image: none !important;
   background-color: #ff0;
@@ -131,6 +141,9 @@
   border-color: #000;
   color: #000;
 }
+.fl-theme-by .fl-prefsEditor-separatedPanel .fl-prefsEditor-buttons {
+  box-shadow: none;
+}
 .fl-theme-lgdg {
   background-image: none !important;
   background-color: #555;
@@ -143,4 +156,7 @@
   background-color: #555;
   border-color: #bdbdbb;
   color: #bdbdbb;
+}
+.fl-theme-lgdg .fl-prefsEditor-separatedPanel .fl-prefsEditor-buttons {
+  box-shadow: none;
 }
