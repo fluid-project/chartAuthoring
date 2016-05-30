@@ -98,9 +98,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                                     dataEntry: "{templateLoader}.resources.dataEntry"
                                 },
                                 modelRelay: {
-                                    source: "{that}.model.dataSet",
                                     target: "{pieChart}.model.dataSet",
                                     singleTransform: {
+                                        input: "{that}.model.dataSet",
                                         type: "fluid.transforms.free",
                                         args: ["{that}.model.dataSet"],
                                         func: "floe.chartAuthoring.dataEntriesToPieChartData"
@@ -140,9 +140,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                                     }
                                 },
                                 modelRelay: {
-                                    source: "{that}.model.currentlyPlayingData",
                                     target: "{floe.chartAuthoring.pieChart}.model.activeDataId",
                                     singleTransform: {
+                                        input: "{that}.model.currentlyPlayingData",
                                         type: "fluid.transforms.free",
                                         args: "{that}.model.currentlyPlayingData",
                                         func: "floe.d3.idExtractor"
