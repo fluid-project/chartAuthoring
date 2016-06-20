@@ -264,7 +264,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // - an aria-controls attribute for the reset button referencing the dataEntryPanel form
     floe.chartAuthoring.addAriaConnections = function (that) {
         var legendId = fluid.allocateSimpleId(that.chartAuthoringInterface.pieChart.legend.locate("table")),
-            pieId = fluid.allocateSimpleId(that.chartAuthoringInterface.pieChart.pie.locate("pie")),
+            pieId = fluid.allocateSimpleId(that.chartAuthoringInterface.pieChart.pie.locate("svg")),
             totalId = fluid.allocateSimpleId(that.chartAuthoringInterface.dataEntryPanel.locate("totalValue")),
             dataEntryFormId = fluid.allocateSimpleId(that.chartAuthoringInterface.dataEntryPanel.locate("dataEntryForm"));
 

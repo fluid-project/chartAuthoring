@@ -202,14 +202,14 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     floe.tests.chartAuthoringTester.verifyAriaConnections = function (that) {
         var legendTableId = that.chartAuthoringInterface.pieChart.legend.locate("table").attr("id"),
-        pieChartPieId = that.chartAuthoringInterface.pieChart.pie.locate("pie").attr("id"),
+        pieChartPieId = that.chartAuthoringInterface.pieChart.pie.locate("svg").attr("id"),
         dataEntryFormTotalId = that.chartAuthoringInterface.dataEntryPanel.locate("totalValue").attr("id"),
         dataEntryFormAriaControlsAttr = that.chartAuthoringInterface.dataEntryPanel.locate("dataEntryForm").attr("aria-controls"),
-        dataEntryFormlId = that.chartAuthoringInterface.dataEntryPanel.locate("dataEntryForm").attr("id"),
+        dataEntryFormId = that.chartAuthoringInterface.dataEntryPanel.locate("dataEntryForm").attr("id"),
         resetAriaControlsAttr = that.chartAuthoringInterface.locate("reset").attr("aria-controls");
 
         jqUnit.assertDeepEq("The data entry form has an aria-controls attribute properly referencing the pie, legend and total", dataEntryFormAriaControlsAttr, legendTableId + " " + pieChartPieId + " " + dataEntryFormTotalId);
-        jqUnit.assertDeepEq("The reset has an aria-controls attribute properly referencing the form, pie, legend and total", resetAriaControlsAttr, dataEntryFormlId + " " + legendTableId + " " + pieChartPieId + " " + dataEntryFormTotalId);
+        jqUnit.assertDeepEq("The reset has an aria-controls attribute properly referencing the form, pie, legend and total", resetAriaControlsAttr, dataEntryFormId + " " + legendTableId + " " + pieChartPieId + " " + dataEntryFormTotalId);
     };
 
     // Verify that the updateDataEntryPanel function updates the UI
