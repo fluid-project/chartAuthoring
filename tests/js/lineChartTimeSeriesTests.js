@@ -32,20 +32,17 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     });
 
     fluid.defaults("floe.tests.chartAuthoring.lineChart.fixtureDataTester", {
-        gradeNames: "floe.tests.utils.JSONFixtureTester",
-        testOptions: {
-            fixtureFiles: {
-                timeSeriesData1: "../json/timeSeriesData1.json",
-                timeSeriesData2: "../json/timeSeriesData2.json",
-                timeSeriesDataMulti: "../json/timeSeriesDataMulti.json"
-            }
+        gradeNames: "fluid.prefs.resourceLoader",
+        resources: {
+            timeSeriesData1: "../json/timeSeriesData1.json",
+            timeSeriesData2: "../json/timeSeriesData2.json",
+            timeSeriesDataMulti: "../json/timeSeriesDataMulti.json"
         },
         listeners: {
-            "onAllFixturesLoaded.runLineChartFixtureTests": {
+            "onResourcesLoaded.runLineChartFixtureTests": {
                 func: "floe.tests.chartAuthoring.lineChart.runLineChartFixtureTests",
                 args: "{that}"
             }
-
         }
     });
 
@@ -129,17 +126,24 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     // Test wrapper function, runs after fixtures are loaded from file
     floe.tests.chartAuthoring.lineChart.runLineChartFixtureTests = function (fixtureTester) {
+
+        var timeSeriesData1 = JSON.parse(fixtureTester.resources.timeSeriesData1.resourceText);
+
+        var timeSeriesData2 = JSON.parse(fixtureTester.resources.timeSeriesData2.resourceText);
+
+        var timeSeriesDataMulti = JSON.parse(fixtureTester.resources.timeSeriesDataMulti.resourceText);
+
         jqUnit.test("Test line chart creation and response to changed data", function () {
             jqUnit.expect(68);
             var that = floe.tests.chartAuthoring.lineChart.timeSeriesSingleDataSet(".floec-ca-lineChart", {
                 model: {
-                    dataSet: fixtureTester.fixtureData.timeSeriesData1
+                    dataSet: timeSeriesData1
                 }
             });
 
             floe.tests.chartAuthoring.validateLineChart(that, that.model.dataSet);
 
-            that.applier.change("dataSet", fixtureTester.fixtureData.timeSeriesData2);
+            that.applier.change("dataSet", timeSeriesData2);
 
             floe.tests.chartAuthoring.validateLineChart(that, that.model.dataSet);
         });
@@ -151,7 +155,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                     "floe.chartAuthoring.lineChart.timeSeries.area", "floe.chartAuthoring.lineChart.timeSeries.points"
                 ],
                 model: {
-                    dataSet: fixtureTester.fixtureData.timeSeriesData1
+                    dataSet: timeSeriesData1
                 },
                 lineOptions: {
                     interpolation: "cardinal"
@@ -164,7 +168,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
             floe.tests.chartAuthoring.validateLineChartPoints(that);
 
-            that.applier.change("dataSet", fixtureTester.fixtureData.timeSeriesData2);
+            that.applier.change("dataSet", timeSeriesData2);
 
             floe.tests.chartAuthoring.validateLineChart(that, that.model.dataSet);
 
@@ -181,7 +185,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                     "floe.chartAuthoring.lineChart.timeSeries.area"
                 ],
                 model: {
-                    dataSet: fixtureTester.fixtureData.timeSeriesDataMulti
+                    dataSet: timeSeriesDataMulti
                 },
                 lineOptions: {
                     interpolation: "step"
