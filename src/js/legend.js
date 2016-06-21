@@ -127,18 +127,15 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 args: ["{arguments}.0"]
             },
             addRows: {
-                funcName:
-                "floe.chartAuthoring.pieChart.legend.addRows",
+                funcName: "floe.chartAuthoring.pieChart.legend.addRows",
                 args: ["{that}"]
             },
             updateRows: {
-                funcName:
-                "floe.chartAuthoring.pieChart.legend.updateRows",
+                funcName: "floe.chartAuthoring.pieChart.legend.updateRows",
                 args: ["{that}"]
             },
             removeRows: {
-                funcName:
-                "floe.chartAuthoring.pieChart.legend.removeRows",
+                funcName: "floe.chartAuthoring.pieChart.legend.removeRows",
                 args: ["{that}"]
             }
         }
