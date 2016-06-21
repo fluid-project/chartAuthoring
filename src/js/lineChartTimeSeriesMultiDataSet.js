@@ -121,14 +121,14 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         });
 
         var rawYScale = {
-                min: minValue,
-                max: maxValue
-            };
+            min: minValue,
+            max: maxValue
+        };
 
         var yScaleTransform = {
-                min: that.options.scaleOptions.yScaleMinTransform,
-                max: that.options.scaleOptions.yScaleMaxTransform
-            };
+            min: that.options.scaleOptions.yScaleMinTransform,
+            max: that.options.scaleOptions.yScaleMaxTransform
+        };
 
         var transformedYScale = fluid.model.transformWithRules(rawYScale, yScaleTransform);
 
