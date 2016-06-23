@@ -6,8 +6,8 @@
   "bugs": "https://issues.fluidproject.org/issues/?jql=project+%3D+FLOE+AND+component+%3D+%22Chart+Authoring+Tool%22",
   "homepage": "http://www.fluidproject.org/",
   "dependencies": {
-      "d3":"3.5.17",
-      "flocking":"https://github.com/colinbdclark/Flocking#6749bee2b7041b76f494bd188b755d568332eda0"
+      "d3": "3.5.17",
+      "flocking": "colinbdclark/Flocking#6749bee2b7041b76f494bd188b755d568332eda0"
   },
   "license": "(BSD-3-Clause OR ECL-2.0)",
   "keywords": [

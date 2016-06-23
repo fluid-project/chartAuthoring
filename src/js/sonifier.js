@@ -27,9 +27,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 }
 
             },
-            enviro: {
-                type: "flock.enviro"
-            },
+
+            enviro: "{flock.enviro}",
+
             synth: {
                 type: "floe.chartAuthoring.electricPianoBand",
                 options: {

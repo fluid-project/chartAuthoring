@@ -15,10 +15,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     fluid.registerNamespace("floe.tests.chartAuthoring");
 
-    fluid.defaults("floe.tests.chartAuthoring.sonifier", {
-        gradeNames: ["floe.chartAuthoring.sonifier"]
-    });
-
     floe.tests.chartAuthoring.shorterArray = [1, 2];
 
     floe.tests.chartAuthoring.longerArray = [3, 5, 7, 9];
