@@ -7,7 +7,7 @@
   "homepage": "http://www.fluidproject.org/",
   "dependencies": {
       "d3":"3.5.17",
-      "flocking":"https://github.com/colinbdclark/Flocking#543b339f8aac1c10bffc5e70344f56bc63cc25b1"
+      "flocking":"https://github.com/colinbdclark/Flocking#6749bee2b7041b76f494bd188b755d568332eda0"
   },
   "license": "(BSD-3-Clause OR ECL-2.0)",
   "keywords": [
@@ -21,15 +21,15 @@
   "repository": "https://github.com/fluid-project/chartAuthoring.git",
   "main": "",
   "engines": {
-    "node": ">=0.10.0"
+    "node": ">=4.2.1"
   },
   "scripts": {
     "postinstall": "grunt copy:frontEndDependencies"
   },
   "devDependencies": {
-    "grunt": "~0.4.5",
-    "grunt-contrib-jshint": "~0.9.0",
-    "grunt-jsonlint": "1.0.4",
+    "grunt": "1.0.1",
+    "grunt-contrib-jshint": "1.0.0",
+    "grunt-jsonlint": "1.1.0",
     "grunt-contrib-copy": "1.0.0"
   }
 }

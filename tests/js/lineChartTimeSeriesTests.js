@@ -32,7 +32,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     });
 
     fluid.defaults("floe.tests.chartAuthoring.lineChart.fixtureDataTester", {
-        gradeNames: "fluid.prefs.resourceLoader",
+        gradeNames: "fluid.resourceLoader",
         resources: {
             timeSeriesData1: "../json/timeSeriesData1.json",
             timeSeriesData2: "../json/timeSeriesData2.json",

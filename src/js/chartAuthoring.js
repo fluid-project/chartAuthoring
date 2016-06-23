@@ -25,7 +25,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         },
         components: {
             templateLoader: {
-                type: "fluid.prefs.resourceLoader",
+                type: "fluid.resourceLoader",
                 options: {
                     events: {
                         onResourcesLoaded: "{chartAuthoring}.events.onTemplatesLoaded"
