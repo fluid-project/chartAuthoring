@@ -7,7 +7,11 @@
   "homepage": "http://www.fluidproject.org/",
   "dependencies": {
       "d3": "3.5.17",
-      "flocking": "colinbdclark/Flocking#6749bee2b7041b76f494bd188b755d568332eda0"
+      "flocking": "colinbdclark/Flocking#6749bee2b7041b76f494bd188b755d568332eda0",
+      "grunt": "1.0.1",
+      "grunt-contrib-jshint": "1.0.0",
+      "grunt-jsonlint": "1.1.0",
+      "grunt-contrib-copy": "1.0.0"
   },
   "license": "(BSD-3-Clause OR ECL-2.0)",
   "keywords": [
@@ -25,11 +29,5 @@
   },
   "scripts": {
     "postinstall": "grunt copy:frontEndDependencies"
-  },
-  "devDependencies": {
-    "grunt": "1.0.1",
-    "grunt-contrib-jshint": "1.0.0",
-    "grunt-jsonlint": "1.1.0",
-    "grunt-contrib-copy": "1.0.0"
   }
 }
