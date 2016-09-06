@@ -88,14 +88,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         }
     });
 
-    floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.fixedValue = function (fixedValue) {
-        return fixedValue;
-    };
-
-    floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.multiplyValue = function (value, multiplier) {
-        return value * multiplier;
-    };
-
     // Accumulator function for consolidating multiple dataset items together
     // for purposes of determining max/min out a group of datasets
     floe.chartAuthoring.lineChart.timeSeriesMultiDataSet.concatData = function (setItem, accumulationArray) {
@@ -120,6 +112,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             return d.value;
         });
 
+        // Apply transformations from component configuration to the
+        // mix and max
+
         var rawYScale = {
             min: minValue,
             max: maxValue
@@ -132,15 +127,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         var transformedYScale = fluid.model.transformWithRules(rawYScale, yScaleTransform);
 
-        // Transform the min and max as per invoker functions
-        var transformedMinValue = transformedYScale.min;
-
-        var transformedMaxValue = transformedYScale.max;
-
         // Scale based on transformed min and max
-
         return d3.scale.linear()
-            .domain([transformedMinValue, transformedMaxValue])
+            .domain([transformedYScale.min, transformedYScale.max])
             .nice()
             .range([height - padding, padding]);
     };
