@@ -52,11 +52,22 @@ body {
     display: inline-block;
 }
 
-.floe-sonifierPlay img, .floe-sonifierStop img {    
-    max-width: 2em;
+.floe-sonifierControl {
+    text-indent: -9999px;
+    background-size: 2em;
+    width: 2em;
+    height: 2em;
 }
 
-.floe-sonifierPlay:hover img, .floe-sonifierStop:hover img, .floe-sonifierPlay:focus img, .floe-sonifierStop:focus img {
+.floe-sonifierControlPlay {
+    background-image: url("/src/images/Play-Transparent.png");
+}
+
+.floe-sonifierControlStop {
+    background-image: url("/src/images/Stop-Transparent.png");
+}
+
+.floe-sonifierControl:hover {
     background-color:#BBB;
 }
 
