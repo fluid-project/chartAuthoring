@@ -337,9 +337,15 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     };
 
     $(document).ready(function () {
-        fluid.test.runTests([
-            "floe.tests.chartAuthoringTest"
-        ]);
+        if(fluid.textToSpeech.isSupported()) {
+            fluid.test.runTests([
+                "floe.tests.chartAuthoringTest"
+            ]);
+        } else {
+            jqUnit.test("Further chart authoring tests skipped; browser does not support TTS", function () {
+                jqUnit.expect(0);
+            });
+        }
     });
 
 })(jQuery, fluid);
