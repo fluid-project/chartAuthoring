@@ -24,9 +24,6 @@
   list-style: none;
   width: 100%;
 }
-.fl-prefsEditor-fullPreview .fl-prefsEditor-option-description {
-  clear: both;
-}
 .fl-prefsEditor-fullPreview .fl-slider {
   float: left;
 }

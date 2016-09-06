@@ -71,15 +71,6 @@ html {
   font-size: 1em;
   display: block;
 }
-.fl-prefsEditor-separatedPanel .fl-prefsEditor-separatedPanel-toc {
-  width: 6em;
-  height: 2em;
-  margin-right: 10px;
-  float: left;
-}
-.fl-prefsEditor-separatedPanel .fl-prefsEditor-separatedPanel-toc label {
-  line-height: 1.7em !important;
-}
 .fl-prefsEditor-separatedPanel .fl-links-buttons-options label {
   width: 21em;
   display: inline-block;
@@ -88,30 +79,11 @@ html {
   margin-bottom: 0.4em;
 }
 .fl-prefsEditor-separatedPanel h2 label,
-.fl-prefsEditor-separatedPanel h2 .heading-text {
+.fl-prefsEditor-separatedPanel h2 .fl-heading-text {
   float: left;
   padding-top: 0.2em;
   font-size: 1.3em;
   font-weight: 600;
-}
-.fl-prefsEditor-separatedPanel .fl-icon-next,
-.fl-prefsEditor-separatedPanel .fl-icon-prev {
-  font-family: 'InfusionIcons' !important;
-  speak: none;
-  font-style: normal;
-  font-weight: normal;
-  font-variant: normal;
-  text-transform: none;
-  -webkit-font-smoothing: antialiased;
-  float: left;
-  margin: 0.2em 0.3em 0 0;
-  font-size: 1.5em;
-}
-.fl-prefsEditor-separatedPanel .fl-icon-next:before {
-  content: "\e001";
-}
-.fl-prefsEditor-separatedPanel .fl-icon-prev:before {
-  content: "\e002";
 }
 .fl-prefsEditor-separatedPanel.fl-theme-bw {
   background-image: none;

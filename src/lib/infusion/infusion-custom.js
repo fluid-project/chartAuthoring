@@ -1,4 +1,9 @@
-/*! infusion - v2.0.0 Thursday, June 23rd, 2016, 4:00:01 PM*/
+/*!
+ infusion - v2.0.0
+ Tuesday, September 6th, 2016, 9:39:17 AM
+ branch: master
+ revision: b963420
+*/
 /*!
  * jQuery JavaScript Library v1.11.0
  * http://jquery.com/
@@ -10335,7 +10340,8 @@ if ( typeof noGlobal === strundefined ) {
 
 return jQuery;
 
-}));;/*!
+}));;
+/*!
  * jQuery UI Core 1.10.4
  * http://jqueryui.com
  *
@@ -10655,7 +10661,8 @@ $.extend( $.ui, {
 });
 
 })( jQuery );
-;/*!
+;
+/*!
  * jQuery UI Widget 1.10.4
  * http://jqueryui.com
  *
@@ -11176,7 +11183,8 @@ $.each( { show: "fadeIn", hide: "fadeOut" }, function( method, defaultEffect ) {
 });
 
 })( jQuery );
-;/*!
+;
+/*!
  * jQuery UI Mouse 1.10.4
  * http://jqueryui.com
  *
@@ -11345,7 +11353,8 @@ $.widget("ui.mouse", {
 });
 
 })(jQuery);
-;/*!
+;
+/*!
  * jQuery UI Position 1.10.4
  * http://jqueryui.com
  *
@@ -11846,7 +11855,8 @@ $.ui.position = {
 })();
 
 }( jQuery ) );
-;/*!
+;
+/*!
  * Fluid Infusion v2.0
  *
  * Infusion is distributed under the Educational Community License 2.0 and new BSD licenses:
@@ -14628,7 +14638,8 @@ var fluid = fluid || fluid_2_0_0;
     };
 
 })(jQuery, fluid_2_0_0);
-;/*!
+;
+/*!
  Copyright unscriptable.com / John Hann 2011
  Copyright Lucendo Development Ltd. 2014
 
@@ -14888,7 +14899,8 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
 
 
 })(jQuery, fluid_2_0_0);
-;/*
+;
+/*
 Copyright 2007-2010 University of Cambridge
 Copyright 2007-2009 University of Toronto
 Copyright 2010-2011 Lucendo Development Ltd.
@@ -15078,7 +15090,8 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     };
 
 })(jQuery, fluid_2_0_0);
-;/*
+;
+/*
 Copyright 2008-2010 University of Cambridge
 Copyright 2008-2009 University of Toronto
 
@@ -15194,7 +15207,8 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     };
 
 })(jQuery, fluid_2_0_0);
-;/*
+;
+/*
 Copyright 2008-2010 University of Cambridge
 Copyright 2008-2009 University of Toronto
 Copyright 2010 Lucendo Development Ltd.
@@ -15311,7 +15325,8 @@ fluid_2_0_0 = fluid_2_0_0 || {};
     };
 
 })(jQuery, fluid_2_0_0);
-;/*
+;
+/*
 Copyright 2007-2010 University of Cambridge
 Copyright 2007-2009 University of Toronto
 Copyright 2007-2009 University of California, Berkeley
@@ -15609,7 +15624,8 @@ var fluid = fluid || fluid_2_0_0;
     };
 
 })(jQuery, fluid_2_0_0);
-;/*
+;
+/*
 Copyright 2011-2013 OCAD University
 Copyright 2010-2015 Lucendo Development Ltd.
 
@@ -17994,7 +18010,8 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     };
 
 })(jQuery, fluid_2_0_0);
-;/*
+;
+/*
 Copyright 2008-2010 University of Cambridge
 Copyright 2008-2009 University of Toronto
 Copyright 2010-2011 Lucendo Development Ltd.
@@ -19487,7 +19504,8 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     };
 
 })(jQuery, fluid_2_0_0);
-;/*
+;
+/*
 Copyright 2010 University of Toronto
 Copyright 2010-2011 OCAD University
 
@@ -19917,15 +19935,6 @@ var fluid = fluid || fluid_2_0_0;
         return { defaults: defaults, typeName: typeName};
     };
 
-    // A utility which is helpful in computing inverses involving compound values.
-    // For example, with the valueMapper, compound input values are accepted as literals implicitly,
-    // whereas as output values they must be escaped. This utility escapes a value if it is not primitive.
-    fluid.model.transform.literaliseValue = function (value) {
-        return fluid.isPrimitive(value) ? value : {
-            literalValue: value
-        };
-    };
-
     // unsupported, NON-API function
     fluid.model.transform.processRule = function (rule, transformer) {
         if (typeof(rule) === "string") {
@@ -19963,7 +19972,7 @@ var fluid = fluid || fluid_2_0_0;
             if (key !== "transform") {
                 transformer.outputPrefixOp.push(key);
                 var togo = transformer.expand(value, transformer);
-                // Value expanders and arrays as rules implicitly outputs, unless they have nothing (undefined) to output
+                // Value expanders and arrays as rules implicitly output, unless they have nothing (undefined) to output
                 if (togo !== undefined) {
                     fluid.model.transform.setValue(null, togo, transformer);
                     // ensure that expanders further up does not try to output this value as well.
@@ -20173,7 +20182,8 @@ var fluid = fluid || fluid_2_0_0;
     };
 
 })(jQuery, fluid_2_0_0);
-;/*
+;
+/*
 Copyright 2010 University of Toronto
 Copyright 2010-2011 OCAD University
 Copyright 2013, 2016 Raising the Floor - International
@@ -20398,128 +20408,114 @@ var fluid = fluid || fluid_2_0_0;
         collectInputPaths: "fluid.transforms.valueMapper.collect"
     });
 
-    // unsupported, NON-API function
+    /* unsupported, NON-API function
+     * sorts by the object's 'matchValue' property, where higher is better.
+     * Tiebreaking is done via the `index` property, where a lower index takes priority
+     */
     fluid.model.transform.compareMatches = function (speca, specb) {
-        return specb.matchValue - speca.matchValue;
-    };
-
-    // unsupported, NON-API function
-    fluid.model.transform.matchValueMapperFull = function (outerValue, transformSpec, transformer) {
-        var o = transformSpec.options;
-        if (o.length === 0) {
-            fluid.fail("valueMapper supplied empty list of options: ", transformSpec);
-        }
-        var matchPower = [];
-        for (var i = 0; i < o.length; ++i) {
-            var option = o[i];
-            var value = fluid.firstDefined(fluid.model.transform.getValue(option.inputPath, undefined, transformer),
-                outerValue);
-            var matchValue = fluid.model.transform.matchValue(option.undefinedInputValue ? undefined :
-                (option.inputValue === undefined ? transformSpec.defaultInputValue : option.inputValue), value, transformSpec.partialMatches || option.partialMatches);
-            matchPower[i] = {index: i, matchValue: matchValue};
-        }
-        matchPower.sort(fluid.model.transform.compareMatches);
-        return (matchPower[0].matchValue <= 0 || o.length > 1 && matchPower[0].matchValue === matchPower[1].matchValue) ? -1 : matchPower[0].index;
+        var matchDiff = specb.matchValue - speca.matchValue;
+        return matchDiff === 0 ? speca.index - specb.index : matchDiff; // tiebreak using 'index'
     };
 
     fluid.transforms.valueMapper = function (transformSpec, transformer) {
-        if (!transformSpec.options) {
-            fluid.fail("valueMapper requires a list or hash of options at path named \"options\", supplied ", transformSpec);
+        if (!transformSpec.match) {
+            fluid.fail("valueMapper requires an array or hash of matches at path named \"matches\", supplied ", transformSpec);
         }
-        var value = fluid.model.transform.getValue(transformSpec.inputPath, undefined, transformer);
-        var deref = fluid.isArrayable(transformSpec.options) ? // long form with list of records
-            function (testVal) {
-                var index = fluid.model.transform.matchValueMapperFull(testVal, transformSpec, transformer);
-                return index === -1 ? null : transformSpec.options[index];
-            } :
-            function (testVal) {
-                return transformSpec.options[testVal];
-            };
+        var value = fluid.model.transform.getValue(transformSpec.defaultInputPath, undefined, transformer);
 
-        var indexed = deref(value);
-        if (!indexed) {
-            // if no branch matches, try again using this value - WARNING, this seriously
-            // threatens invertibility
-            indexed = deref(transformSpec.defaultInputValue);
+        var matchedEntry = (fluid.isArrayable(transformSpec.match)) ? // long form with array of records?
+            fluid.transforms.valueMapper.longFormMatch(value, transformSpec, transformer) :
+            transformSpec.match[value];
+
+        if (matchedEntry === undefined) { // if no matches found, default to noMatch
+            matchedEntry = transformSpec.noMatch;
         }
-        if (!indexed) {
+
+        if (matchedEntry === undefined) { // if there was no noMatch directive, return undefined
             return;
         }
 
-        var outputPath = indexed.outputPath === undefined ? transformSpec.defaultOutputPath : indexed.outputPath;
+        var outputPath = matchedEntry.outputPath === undefined ? transformSpec.defaultOutputPath : matchedEntry.outputPath;
         transformer.outputPrefixOp.push(outputPath);
+
         var outputValue;
-        if (fluid.isPrimitive(indexed)) {
-            outputValue = indexed;
+        if (fluid.isPrimitive(matchedEntry)) {
+            outputValue = matchedEntry;
+        } else if (matchedEntry.outputUndefinedValue) { // if outputUndefinedValue is set, outputValue `undefined`
+            outputValue = undefined;
         } else {
-            // if undefinedOutputValue is set, outputValue should be undefined
-            if (indexed.undefinedOutputValue) {
-                outputValue = undefined;
-            } else {
-                // get value from outputValue or outputValuePath. If none is found set the outputValue to be that of defaultOutputValue (or undefined)
-                outputValue = fluid.model.transform.resolveParam(indexed, transformer, "outputValue", undefined);
-                outputValue = (outputValue === undefined) ? transformSpec.defaultOutputValue : outputValue;
-            }
+            // get value from outputValue. If none is found set the outputValue to be that of defaultOutputValue (or undefined)
+            outputValue = fluid.model.transform.resolveParam(matchedEntry, transformer, "outputValue", undefined);
+            outputValue = (outputValue === undefined) ? transformSpec.defaultOutputValue : outputValue;
         }
-        // output if outputPath or defaultOutputPath have been specified and the relevant child hasn't done the outputting
+        // output if we have a path and something to output
         if (typeof(outputPath) === "string" && outputValue !== undefined) {
             fluid.model.transform.setValue(undefined, outputValue, transformer, transformSpec.merge);
-            outputValue = undefined;
+            outputValue = undefined; // make sure we don't also return value
         }
         transformer.outputPrefixOp.pop();
         return outputValue;
     };
 
+    // unsupported, NON-API function
+    fluid.transforms.valueMapper.longFormMatch = function (valueFromDefaultPath, transformSpec, transformer) {
+        var o = transformSpec.match;
+        if (o.length === 0) {
+            fluid.fail("valueMapper supplied empty list of matches: ", transformSpec);
+        }
+        var matchPower = [];
+        for (var i = 0; i < o.length; ++i) {
+            var option = o[i];
+            var value = option.inputPath ?
+                fluid.model.transform.getValue(option.inputPath, undefined, transformer) : valueFromDefaultPath;
+
+            var matchValue = fluid.model.transform.matchValue(option.inputValue, value, option.partialMatches);
+            matchPower[i] = {index: i, matchValue: matchValue};
+        }
+        matchPower.sort(fluid.model.transform.compareMatches);
+        return matchPower[0].matchValue <= 0 ? undefined : o[matchPower[0].index];
+    };
+
     fluid.transforms.valueMapper.invert = function (transformSpec, transformer) {
-        var options = [];
+        var match = [];
         var togo = {
             type: "fluid.transforms.valueMapper",
-            options: options
+            match: match
         };
-        var isArray = fluid.isArrayable(transformSpec.options);
-        var findCustom = function (name) {
-            return fluid.find(transformSpec.options, function (option) {
-                if (option[name]) {
-                    return true;
-                }
-            });
-        };
-        var anyCustomOutput = findCustom("outputPath");
-        var anyCustomInput = findCustom("inputPath");
-        if (!anyCustomOutput) {
-            togo.inputPath = fluid.model.composePaths(transformer.outputPrefix, transformSpec.defaultOutputPath);
-        }
-        if (!anyCustomInput) {
-            togo.defaultOutputPath = fluid.model.composePaths(transformer.inputPrefix, transformSpec.inputPath);
-        }
+        var isArray = fluid.isArrayable(transformSpec.match);
+
+        togo.defaultInputPath = fluid.model.composePaths(transformer.outputPrefix, transformSpec.defaultOutputPath);
+        togo.defaultOutputPath = fluid.model.composePaths(transformer.inputPrefix, transformSpec.defaultInputPath);
+
         var def = fluid.firstDefined;
-        fluid.each(transformSpec.options, function (option, key) {
+        fluid.each(transformSpec.match, function (option, key) {
+            if (option.outputUndefinedValue === true) {
+                return; // don't attempt to invert undefined output value entries
+            }
             var outOption = {};
             var origInputValue = def(isArray ? option.inputValue : key, transformSpec.defaultInputValue);
             if (origInputValue === undefined) {
                 fluid.fail("Failure inverting configuration for valueMapper - inputValue could not be resolved for record " + key + ": ", transformSpec);
             }
-            outOption.outputValue = fluid.model.transform.literaliseValue(origInputValue);
-            var origOutputValue = def(option.outputValue, transformSpec.defaultOutputValue);
-            outOption.inputValue = fluid.model.transform.getValue(option.outputValuePath, origOutputValue, transformer);
-            if (anyCustomOutput) {
+            outOption.outputValue = origInputValue;
+            outOption.inputValue = !isArray && fluid.isPrimitive(option) ?
+                option : def(option.outputValue, transformSpec.defaultOutputValue);
+
+            if (option.outputPath) {
                 outOption.inputPath = fluid.model.composePaths(transformer.outputPrefix, def(option.outputPath, transformSpec.outputPath));
             }
-            if (anyCustomInput) {
+            if (option.inputPath) {
                 outOption.outputPath = fluid.model.composePaths(transformer.inputPrefix, def(option.inputPath, transformSpec.inputPath));
             }
-            if (option.outputValuePath) {
-                outOption.inputValuePath = option.outputValuePath;
-            }
-            options.push(outOption);
+            match.push(outOption);
         });
         return togo;
     };
 
     fluid.transforms.valueMapper.collect = function (transformSpec, transformer) {
         var togo = [];
-        fluid.model.transform.accumulateInputPath(transformSpec.inputPath, transformer, togo);
-        fluid.each(transformSpec.options, function (option) {
+        fluid.model.transform.accumulateInputPath(transformSpec.defaultInputPath, transformer, togo);
+        fluid.each(transformSpec.match, function (option) {
             fluid.model.transform.accumulateInputPath(option.inputPath, transformer, togo);
         });
         return togo;
@@ -20929,7 +20925,8 @@ var fluid = fluid || fluid_2_0_0;
     };
 
 })(jQuery, fluid_2_0_0);
-;/*
+;
+/*
 Copyright 2008-2010 University of Cambridge
 Copyright 2008-2010 University of Toronto
 Copyright 2010-2011 Lucendo Development Ltd.
@@ -21552,7 +21549,8 @@ var fluid = fluid || fluid_2_0_0;
 
 
 })(jQuery, fluid_2_0_0);
-;/*
+;
+/*
 Copyright 2010-2011 Lucendo Development Ltd.
 Copyright 2010-2011 OCAD University
 
@@ -22233,7 +22231,8 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     });
 
 })(jQuery, fluid_2_0_0);
-;/*
+;
+/*
 Copyright 2010-2011 OCAD University
 Copyright 2010-2011 Lucendo Development Ltd.
 
@@ -22670,7 +22669,8 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
 
 
 })(jQuery, fluid_2_0_0);
-;/*
+;
+/*
 Copyright 2016 OCAD University
 
 Licensed under the Educational Community License (ECL), Version 2.0 or the New
@@ -22742,7 +22742,8 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     };
 
 })(jQuery, fluid_2_0_0);
-;/*
+;
+/*
 Copyright 2008-2009 University of Toronto
 Copyright 2010-2011 OCAD University
 Copyright 2015 Raising the Floor (International)
@@ -22949,7 +22950,8 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     });
 
 })(jQuery, fluid_2_0_0);
-;/*
+;
+/*
 Copyright 2008-2009 University of Toronto
 Copyright 2010-2011 OCAD University
 Copyright 2015 Raising the Floor (International)
@@ -22982,7 +22984,8 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     }
 
 })(jQuery, fluid_2_0_0);
-;// =========================================================================
+;
+// =========================================================================
 //
 // tinyxmlsax.js - an XML SAX parser in JavaScript compressed for downloading
 //
@@ -23459,7 +23462,8 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     };
 
 })(jQuery, fluid_2_0_0);
-;/*
+;
+/*
 Copyright 2008-2010 University of Cambridge
 Copyright 2008-2009 University of Toronto
 Copyright 2010-2011 Lucendo Development Ltd.
@@ -23932,7 +23936,8 @@ parseloop: // eslint-disable-line indent
     };
 
 })(jQuery, fluid_2_0_0);
-;/*
+;
+/*
 Copyright 2008-2010 University of Cambridge
 Copyright 2008-2009 University of Toronto
 Copyright 2010-2011 Lucendo Development Ltd.
@@ -25580,7 +25585,8 @@ fluid_2_0_0 = fluid_2_0_0 || {};
     };
 
 })(jQuery, fluid_2_0_0);
-;/*
+;
+/*
 Copyright 2008-2010 University of Cambridge
 Copyright 2008-2009 University of Toronto
 Copyright 2010-2011 Lucendo Development Ltd.
@@ -26240,7 +26246,8 @@ fluid_2_0_0 = fluid_2_0_0 || {};
     };
 
 })(jQuery, fluid_2_0_0);
-;/*
+;
+/*
 Copyright 2011-2015 OCAD University
 Copyright 2011 Lucendo Development Ltd.
 
@@ -26410,7 +26417,8 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     };
 
 })(jQuery, fluid_2_0_0);
-;/*!
+;
+/*!
  * jQuery UI Draggable 1.10.4
  * http://jqueryui.com
  *
@@ -27368,7 +27376,8 @@ $.ui.plugin.add("draggable", "zIndex", {
 });
 
 })(jQuery);
-;/*!
+;
+/*!
  * jQuery UI Resizable 1.10.4
  * http://jqueryui.com
  *
@@ -28346,7 +28355,8 @@ $.ui.plugin.add("resizable", "grid", {
 });
 
 })(jQuery);
-;/*!
+;
+/*!
  * jQuery UI Button 1.10.4
  * http://jqueryui.com
  *
@@ -28741,7 +28751,8 @@ $.widget( "ui.buttonset", {
 });
 
 }( jQuery ) );
-;/*!
+;
+/*!
  * jQuery UI Dialog 1.10.4
  * http://jqueryui.com
  *
@@ -29564,7 +29575,8 @@ if ( $.uiBackCompat !== false ) {
 }
 
 }( jQuery ) );
-;/*!
+;
+/*!
  * jQuery UI Slider 1.10.4
  * http://jqueryui.com
  *
@@ -30240,7 +30252,8 @@ $.widget( "ui.slider", $.ui.mouse, {
 });
 
 }(jQuery));
-;/*!
+;
+/*!
  * jQuery UI Tabs 1.10.4
  * http://jqueryui.com
  *
@@ -31089,7 +31102,8 @@ $.widget( "ui.tabs", {
 });
 
 })( jQuery );
-;/*!
+;
+/*!
  * jQuery UI Tooltip 1.10.4
  * http://jqueryui.com
  *
@@ -31491,7 +31505,8 @@ $.widget( "ui.tooltip", {
 });
 
 }( jQuery ) );
-;/*!
+;
+/*!
  * jQuery UI Touch Punch 0.2.2
  *
  * Copyright 2011, Dave Furfero
@@ -31650,8 +31665,9 @@ $.widget( "ui.tooltip", {
     _mouseInit.call(self);
   };
 
-})(jQuery);;/*
-Copyright 2013 OCAD University
+})(jQuery);;
+/*
+Copyright 2013-2016 OCAD University
 
 Licensed under the Educational Community License (ECL), Version 2.0 or the New
 BSD license. You may not use this file except in compliance with one these
@@ -31671,7 +31687,7 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
      ********************/
 
     fluid.defaults("fluid.textfieldSlider", {
-        gradeNames: ["fluid.viewComponent"],
+        gradeNames: ["fluid.viewComponent", "fluid.contextAware"],
         components: {
             textfield: {
                 type: "fluid.textfieldSlider.textfield",
@@ -31682,13 +31698,24 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
                 }
             },
             slider: {
-                type: "fluid.slider",
                 container: "{textfieldSlider}.dom.slider",
                 options: {
                     model: "{fluid.textfieldSlider}.model",
                     range: "{fluid.textfieldSlider}.options.range",
                     sliderOptions: "{fluid.textfieldSlider}.options.sliderOptions"
                 }
+            }
+        },
+        contextAwareness: {
+            sliderVariety: {
+                checks: {
+                    jQueryUI: {
+                        contextValue: "{fluid.prefsWidgetType}",
+                        equals: "jQueryUI",
+                        gradeNames: "fluid.textfieldSlider.jQueryUI"
+                    }
+                },
+                defaultGradeNames: "fluid.textfieldSlider.nativeHTML"
             }
         },
         selectors: {
@@ -31714,6 +31741,22 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
         sliderOptions: {
             orientation: "horizontal",
             step: 1.0
+        }
+    });
+
+    fluid.defaults("fluid.textfieldSlider.nativeHTML", {
+        components: {
+            slider: {
+                type: "fluid.slider.native"
+            }
+        }
+    });
+
+    fluid.defaults("fluid.textfieldSlider.jQueryUI", {
+        components: {
+            slider: {
+                type: "fluid.slider.jQuery"
+            }
         }
     });
 
@@ -31762,24 +31805,86 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
         }
     });
 
+    // Base slider grade
     fluid.defaults("fluid.slider", {
         gradeNames: ["fluid.viewComponent"],
-        range: {}, // should be used to specify the min, max range e.g. {min: 0, max: 100}
+        range: {} // should be used to specify the min, max range e.g. {min: 0, max: 100}
+    });
+
+    fluid.defaults("fluid.slider.native", {
+        gradeNames: ["fluid.slider"],
+        modelRelay: {
+            target: "value",
+            singleTransform: {
+                type: "fluid.transforms.stringToNumber",
+                input: "{that}.model.stringValue"
+            }
+        },
+        invokers: {
+            setModel: {
+                changePath: "stringValue",
+                value: {
+                    expander: {
+                        "this": "{that}.container",
+                        "method": "val"
+                    }
+                }
+            }
+        },
+        listeners: {
+            "onCreate.initSliderAttributes": {
+                "this": "{that}.container",
+                method: "attr",
+                args: [{
+                    "min": "{that}.options.range.min",
+                    "max": "{that}.options.range.max",
+                    "step": "{that}.options.sliderOptions.step",
+                    "type": "range",
+                    "value": "{that}.model.value"
+                }]
+            },
+            "onCreate.bindSlideEvt": {
+                "this": "{that}.container",
+                "method": "on",
+                "args": ["input", "{that}.setModel"]
+            },
+            "onCreate.bindRangeChangeEvt": {
+                "this": "{that}.container",
+                "method": "on",
+                "args": ["change", "{that}.setModel"]
+            }
+        },
+        modelListeners: {
+            "value": [{
+                "this": "{that}.container",
+                "method": "val",
+                args: ["{change}.value"],
+                // If we don't exclude init, the value can get
+                // set before onCreate.initSliderAttributes
+                // sets min / max / step, which messes up the
+                // initial slider rendering
+                excludeSource: "init"
+            }]
+        }
+    });
+
+    fluid.defaults("fluid.slider.jQuery", {
+        gradeNames: ["fluid.slider"],
         selectors: {
             thumb: ".ui-slider-handle"
         },
         members: {
-            combinedSliderOptions: {
-                expander: {
-                    funcName: "fluid.slider.combineSliderOptions",
-                    args: ["{that}.options.sliderOptions", "{that}.options.range"]
-                }
-            },
             slider: {
                 expander: {
                     "this": "{that}.container",
                     method: "slider",
                     args: ["{that}.combinedSliderOptions"]
+                }
+            },
+            combinedSliderOptions: {
+                expander: {
+                    funcName: "fluid.slider.combineSliderOptions",
+                    args: ["{that}.options.sliderOptions", "{that}.options.range"]
                 }
             }
         },
@@ -31789,7 +31894,7 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
                 "method": "slider",
                 args: ["value", "{arguments}.0"]
             },
-            setSliderAria: {
+            setSliderAriaValueNow: {
                 "this": "{that}.dom.thumb",
                 "method": "attr",
                 args: ["aria-valuenow", "{arguments}.0"]
@@ -31822,7 +31927,7 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
                 listener: "{that}.setSliderValue",
                 args: ["{change}.value"]
             }, {
-                listener: "{that}.setSliderAria",
+                listener: "{that}.setSliderAriaValueNow",
                 args: ["{change}.value"]
             }]
         }
@@ -31833,7 +31938,8 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     };
 
 })(jQuery, fluid_2_0_0);
-;/*
+;
+/*
 Copyright 2011-2015 OCAD University
 Copyright 2011 Lucendo Development Ltd.
 
@@ -32233,7 +32339,8 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     });
 
 })(jQuery, fluid_2_0_0);
-;/*
+;
+/*
 Copyright 2015 OCAD University
 
 Licensed under the Educational Community License (ECL), Version 2.0 or the New
@@ -32242,6 +32349,12 @@ Licenses.
 
 You may obtain a copy of the ECL 2.0 License and BSD License at
 https://github.com/fluid-project/infusion/raw/master/Infusion-LICENSE.txt
+
+Includes code from Underscore.js 1.8.3
+http://underscorejs.org
+(c) 2009-2016 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
+Underscore may be freely distributed under the MIT license.
+
 */
 
 /* global speechSynthesis, SpeechSynthesisUtterance*/
@@ -32280,15 +32393,15 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
             var toSpeak = new SpeechSynthesisUtterance(" "); // short text to attempt to speak
             toSpeak.volume = 0; // mutes the Speech Synthesizer
             var timeout = setTimeout(function () {
-                speechSynthesis.cancel();
+                fluid.textToSpeech.deferredSpeechSynthesisControl("cancel");
                 promise.reject();
             }, delay || 1000);
-            toSpeak.onstop = function () {
+            toSpeak.onend = function () {
                 clearTimeout(timeout);
-                speechSynthesis.cancel();
+                fluid.textToSpeech.deferredSpeechSynthesisControl("cancel");
                 promise.resolve();
             };
-            speechSynthesis.speak(toSpeak);
+            fluid.textToSpeech.deferredSpeechSynthesisControl("speak", toSpeak);
         } else {
             setTimeout(promise.reject, 0);
         }
@@ -32301,15 +32414,13 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
         events: {
             onStart: null,
             onStop: null,
-            onPause: null,
-            onResume: null,
             onError: null,
             onSpeechQueued: null
         },
         members: {
             queue: []
         },
-        // Model paths: speaking, pending, paused, utteranceOpts
+        // Model paths: speaking, pending, paused, utteranceOpts, pauseRequested, resumeRequested
         model: {
             // Changes to the utteranceOpts will only text that is queued after the change.
             // All of these options can be overriden in the queueSpeech method by passing in
@@ -32318,7 +32429,7 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
             utteranceOpts: {
                 // text: "", // text to synthesize. avoid as it will override any other text passed in
                 // lang: "", // the language of the synthesized text
-                // voiceURI: "" // a uri pointing at a voice synthesizer to use. If not set, will use the default one provided by the browser
+                // voice: {} // a WebSpeechSynthesis object; if not set, will use the default one provided by the browser
                 // volume: 1, // a value between 0 and 1
                 // rate: 1, // a value from 0.1 to 10 although different synthesizers may have a smaller range
                 // pitch: 1, // a value from 0 to 2
@@ -32329,9 +32440,13 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
                 listener: "fluid.textToSpeech.speak",
                 args: ["{that}", "{change}.value"]
             },
-            "paused": {
-                listener: "fluid.textToSpeech.pause",
-                args: ["{that}", "{change}.value"]
+            "pauseRequested": {
+                listener: "fluid.textToSpeech.requestControl",
+                args: ["{that}", "pause", "{change}"]
+            },
+            "resumeRequested": {
+                listener: "fluid.textToSpeech.requestControl",
+                args: ["{that}", "resume", "{change}"]
             }
         },
         invokers: {
@@ -32344,20 +32459,20 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
                 args: ["{that}"]
             },
             pause: {
-                "this": "speechSynthesis",
-                "method": "pause"
+                changePath: "pauseRequested",
+                value: true
             },
             resume: {
-                "this": "speechSynthesis",
-                "method": "resume"
+                changePath: "resumeRequested",
+                value: true
             },
             getVoices: {
                 "this": "speechSynthesis",
                 "method": "getVoices"
             },
             handleStart: {
-                funcName: "fluid.textToSpeech.handleStart",
-                args: ["{that}"]
+                changePath: "speaking",
+                value: true
             },
             // The handleEnd method is assumed to be triggered asynchronously
             // as it is processed/triggered by the mechanism voicing the utterance.
@@ -32377,35 +32492,97 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
         }
     });
 
+    // Issue commands to the speechSynthesis interface with deferral (1 ms timeout);
+    // this makes the wrapper behave better when issuing commands, especially
+    // play and pause
+    fluid.textToSpeech.deferredSpeechSynthesisControl = function (control, args) {
+        setTimeout(function () {
+            speechSynthesis[control](args);
+        }, 1);
+    };
+
+    // Throttle implementation adapted from underscore.js 1.8.3; see
+    // file header for license details
+    // Returns a version of a function that will only be called max once
+    // every "wait" MS
+    fluid.textToSpeech.throttle = function (func, wait, options) {
+        var timeout, context, args, result;
+        var previous = 0;
+        if (!options) {
+            options = {};
+        }
+
+        var later = function () {
+            previous = options.leading === false ? 0 : new Date().getTime();
+            timeout = null;
+            result = func.apply(context, args);
+            if (!timeout) {
+                context = args = null;
+            }
+        };
+
+        var throttled = function () {
+            var now = new Date().getTime();
+            if (!previous && options.leading === false) {
+                previous = now;
+            }
+            var remaining = wait - (now - previous);
+            context = this;
+            args = arguments;
+            if (remaining <= 0 || remaining > wait) {
+                if (timeout) {
+                    clearTimeout(timeout);
+                    timeout = null;
+                }
+                previous = now;
+
+                result = func.apply(context, args);
+                if (!timeout) {
+                    context = args = null;
+                }
+            } else if (!timeout && options.trailing !== false) {
+                timeout = setTimeout(later, remaining);
+            }
+            return result;
+        };
+
+        throttled.cancel = function () {
+            clearTimeout(timeout);
+            previous = 0;
+            timeout = context = args = null;
+        };
+        return throttled;
+    };
+
+    // Throttled version of deferred speech synthesis control
+    fluid.textToSpeech.throttleControl = fluid.textToSpeech.throttle(fluid.textToSpeech.deferredSpeechSynthesisControl, 100, {leading: false});
+
     fluid.textToSpeech.speak = function (that, speaking) {
         that.events[speaking ? "onStart" : "onStop"].fire();
     };
 
-    fluid.textToSpeech.pause = function (that, paused) {
-        if (paused) {
-            that.events.onPause.fire();
-        } else if (that.model.speaking) {
-            that.events.onResume.fire();
-        }
-    };
-
-    fluid.textToSpeech.handleStart = function (that) {
-        that.queue.shift();
-        that.applier.change("speaking", true);
-
-        if (that.queue.length) {
-            that.applier.change("pending", true);
+    fluid.textToSpeech.requestControl = function (that, control, change) {
+        // If there's a control request (value change to true), clear and
+        // execute it
+        if (change.value) {
+            that.applier.change(change.path, false);
+            fluid.textToSpeech.throttleControl(control);
         }
     };
 
     fluid.textToSpeech.handleEnd = function (that) {
+
+        that.queue.shift();
+
         var resetValues = {
             speaking: false,
             pending: false,
             paused: false
         };
 
-        if (!that.queue.length) {
+        if (that.queue.length) {
+            that.applier.change("pending", true);
+        } else if (!that.queue.length) {
             var newModel = $.extend({}, that.model, resetValues);
             that.applier.change("", newModel);
         }
@@ -32421,6 +32598,8 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
         };
 
         var toSpeak = new SpeechSynthesisUtterance(text);
+
+
         var eventBinding = {
             onstart: that.handleStart,
             onend: that.handleEnd,
@@ -32430,18 +32609,24 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
         };
         $.extend(toSpeak, that.model.utteranceOpts, options, eventBinding);
 
-        that.queue.push(text);
+        // Store toSpeak additionally on the queue to help deal
+        // with premature garbage collection described at https://bugs.chromium.org/p/chromium/issues/detail?id=509488#c11
+        // this makes the speech synthesis behave much better in Safari in
+        // particular
+        that.queue.push({text: text, utterance: toSpeak});
+
         that.events.onSpeechQueued.fire(text);
-        speechSynthesis.speak(toSpeak);
+        fluid.textToSpeech.deferredSpeechSynthesisControl("speak", toSpeak);
     };
 
     fluid.textToSpeech.cancel = function (that) {
         that.queue = [];
-        speechSynthesis.cancel();
+        fluid.textToSpeech.deferredSpeechSynthesisControl("cancel");
     };
 
 })(jQuery, fluid_2_0_0);
-;/*
+;
+/*
 Copyright 2009-2010 University of Cambridge
 Copyright 2011 Lucendo Development Ltd.
 
@@ -32600,7 +32785,8 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     };
 
 })(jQuery, fluid_2_0_0);
-;/*
+;
+/*
 Copyright 2009 University of Toronto
 Copyright 2011-2013 OCAD University
 
@@ -32767,7 +32953,8 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     });
 
 })(jQuery, fluid_2_0_0);
-;/*
+;
+/*
 Copyright 2009 University of Toronto
 Copyright 2010-2011 OCAD University
 Copyright 2011 Lucendo Development Ltd.
@@ -32884,7 +33071,8 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     };
 
 })(jQuery, fluid_2_0_0);
-;/*
+;
+/*
 Copyright 2009 University of Toronto
 Copyright 2010-2015 OCAD University
 Copyright 2011 Lucendo Development Ltd.
@@ -33355,7 +33543,8 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     };
 
 })(jQuery, fluid_2_0_0);
-;/*
+;
+/*
 Copyright 2013-2015 OCAD University
 
 Licensed under the Educational Community License (ECL), Version 2.0 or the New
@@ -33507,7 +33696,11 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
         // in order to reset the dom binder when panels are in an iframe.
         // It can be be eliminated once we have the new renderer.
         var userJQuery = that.container.constructor;
-        that.container = userJQuery(that.container.selector);
+        var oldContainer = that.container;
+        that.container = userJQuery(that.container.selector, oldContainer[0].ownerDocument);
+        if (that.container.length === 0) {
+            fluid.fail("resetDomBinder got no elements in DOM for container searching for selector " + that.container.selector);
+        }
         fluid.initDomBinder(that, that.options.selectors);
         that.events.onDomBind.fire(that);
     };
@@ -33793,7 +33986,7 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
      */
     fluid.prefs.compositePanel.hideInactive = function (that) {
         fluid.each(that.options.components, function (componentOpts, componentName) {
-            if(fluid.prefs.compositePanel.isPanel(componentOpts.type, componentOpts.options) && !fluid.prefs.compositePanel.isActivePanel(that[componentName])) {
+            if (fluid.prefs.compositePanel.isPanel(componentOpts.type, componentOpts.options) && !fluid.prefs.compositePanel.isActivePanel(that[componentName])) {
                 that.locate(componentName).hide();
             }
         });
@@ -34016,8 +34209,6 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
         selectors: {
             textSize: ".flc-prefsEditor-min-text-size",
             label: ".flc-prefsEditor-min-text-size-label",
-            smallIcon: ".flc-prefsEditor-min-text-size-smallIcon",
-            largeIcon: ".flc-prefsEditor-min-text-size-largeIcon",
             multiplier: ".flc-prefsEditor-multiplier",
             textSizeDescr: ".flc-prefsEditor-text-size-descr"
         },
@@ -34038,8 +34229,6 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
         },
         protoTree: {
             label: {messagekey: "textSizeLabel"},
-            smallIcon: {messagekey: "textSizeSmallIcon"},
-            largeIcon: {messagekey: "textSizeLargeIcon"},
             multiplier: {messagekey: "multiplier"},
             textSizeDescr: {messagekey: "textSizeDescr"}
         },
@@ -34121,8 +34310,6 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
         selectors: {
             lineSpace: ".flc-prefsEditor-line-space",
             label: ".flc-prefsEditor-line-space-label",
-            narrowIcon: ".flc-prefsEditor-line-space-narrowIcon",
-            wideIcon: ".flc-prefsEditor-line-space-wideIcon",
             multiplier: ".flc-prefsEditor-multiplier",
             lineSpaceDescr: ".flc-prefsEditor-line-space-descr"
         },
@@ -34143,8 +34330,6 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
         },
         protoTree: {
             label: {messagekey: "lineSpaceLabel"},
-            narrowIcon: {messagekey: "lineSpaceNarrowIcon"},
-            wideIcon: {messagekey: "lineSpaceWideIcon"},
             multiplier: {messagekey: "multiplier"},
             lineSpaceDescr: {messagekey: "lineSpaceDescr"}
         },
@@ -34171,7 +34356,7 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
             }
         },
         listeners: {
-            afterRender: "{that}.style"
+            "afterRender.style": "{that}.style"
         },
         selectors: {
             themeRow: ".flc-prefsEditor-themeRow",
@@ -34345,7 +34530,7 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     fluid.defaults("fluid.prefs.selectDecorator", {
         gradeNames: ["fluid.viewComponent"],
         listeners: {
-            onCreate: "fluid.prefs.selectDecorator.decorateOptions"
+            "onCreate.decorateOptions": "fluid.prefs.selectDecorator.decorateOptions"
         },
         styles: {
             preview: "fl-preview-theme"
@@ -34360,7 +34545,8 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     };
 
 })(jQuery, fluid_2_0_0);
-;/*
+;
+/*
 Copyright 2014-2015 OCAD University
 
 Licensed under the Educational Community License (ECL), Version 2.0 or the New
@@ -34399,7 +34585,8 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     });
 
 })(jQuery, fluid_2_0_0);
-;/*
+;
+/*
 Copyright 2013 OCAD University
 
 Licensed under the Educational Community License (ECL), Version 2.0 or the New
@@ -34788,7 +34975,7 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
                         }
                     },
                     listeners: {
-                        afterRender: "{fluid.prefs.enactor.tableOfContents}.events.afterTocRender"
+                        "afterRender.boilAfterTocRender": "{fluid.prefs.enactor.tableOfContents}.events.afterTocRender"
                     }
                 }
             }
@@ -34829,7 +35016,8 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     };
 
 })(jQuery, fluid_2_0_0);
-;/*
+;
+/*
 Copyright 2013-2015 OCAD University
 
 Licensed under the Educational Community License (ECL), Version 2.0 or the New
@@ -34964,7 +35152,8 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     };
 
 })(jQuery, fluid_2_0_0);
-;/*
+;
+/*
 Copyright 2013-2015 OCAD University
 
 Licensed under the Educational Community License (ECL), Version 2.0 or the New
@@ -35025,11 +35214,11 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
             },
             "theme": {
                 "default": "fl-theme-prefsEditor-default",
-                "bw": "fl-theme-prefsEditor-bw fl-theme-bw",
-                "wb": "fl-theme-prefsEditor-wb fl-theme-wb",
-                "by": "fl-theme-prefsEditor-by fl-theme-by",
-                "yb": "fl-theme-prefsEditor-yb fl-theme-yb",
-                "lgdg": "fl-theme-prefsEditor-lgdg fl-theme-lgdg"
+                "bw": "fl-theme-bw",
+                "wb": "fl-theme-wb",
+                "by": "fl-theme-by",
+                "yb": "fl-theme-yb",
+                "lgdg": "fl-theme-lgdg"
             },
             "links": "fl-link-enhanced",
             "inputsLarger": "fl-text-larger"
@@ -35289,16 +35478,40 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
      */
 
     fluid.defaults("fluid.prefs.starterTemplateLoader", {
-        gradeNames: ["fluid.resourceLoader"],
+        gradeNames: ["fluid.resourceLoader", "fluid.contextAware"],
         resources: {
-            textSize: "%templatePrefix/PrefsEditorTemplate-textSize.html",
             textFont: "%templatePrefix/PrefsEditorTemplate-textFont.html",
-            lineSpace: "%templatePrefix/PrefsEditorTemplate-lineSpace.html",
             contrast: "%templatePrefix/PrefsEditorTemplate-contrast.html",
             layoutControls: "%templatePrefix/PrefsEditorTemplate-layout.html",
             linksControls: "%templatePrefix/PrefsEditorTemplate-linksControls.html",
             emphasizeLinks: "%templatePrefix/PrefsEditorTemplate-emphasizeLinks.html",
             inputsLarger: "%templatePrefix/PrefsEditorTemplate-inputsLarger.html"
+        },
+        contextAwareness: {
+            startTemplateLoaderPrefsWidgetType: {
+                checks: {
+                    jQueryUI: {
+                        contextValue: "{fluid.prefsWidgetType}",
+                        equals: "jQueryUI",
+                        gradeNames: "fluid.prefs.starterTemplateLoader.jQuery"
+                    }
+                },
+                defaultGradeNames: "fluid.prefs.starterTemplateLoader.native"
+            }
+        }
+    });
+
+    fluid.defaults("fluid.prefs.starterTemplateLoader.native", {
+        resources: {
+            textSize: "%templatePrefix/PrefsEditorTemplate-textSize-nativeHTML.html",
+            lineSpace: "%templatePrefix/PrefsEditorTemplate-lineSpace-nativeHTML.html"
+        }
+    });
+
+    fluid.defaults("fluid.prefs.starterTemplateLoader.jQuery", {
+        resources: {
+            textSize: "%templatePrefix/PrefsEditorTemplate-textSize-jQueryUI.html",
+            lineSpace: "%templatePrefix/PrefsEditorTemplate-lineSpace-jQueryUI.html"
         }
     });
 
@@ -35349,7 +35562,8 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     });
 
 })(jQuery, fluid_2_0_0);
-;/*
+;
+/*
 Copyright 2011-2015 OCAD University
 Copyright 2011 Lucendo Development Ltd.
 
@@ -35378,7 +35592,7 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
      *******************************************************/
 
     fluid.defaults("fluid.prefs.separatedPanel", {
-        gradeNames: ["fluid.prefs.prefsEditorLoader"],
+        gradeNames: ["fluid.prefs.prefsEditorLoader", "fluid.contextAware"],
         events: {
             afterRender: null,
             onReady: null,
@@ -35396,16 +35610,28 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
                 }
             }
         },
+        contextAwareness: {
+            separatedPanelPrefsWidgetType: {
+                checks: {
+                    jQueryUI: {
+                        contextValue: "{fluid.prefsWidgetType}",
+                        equals: "jQueryUI",
+                        gradeNames: "fluid.prefs.separatedPanel.jQueryUI"
+                    }
+                },
+                defaultGradeNames: "fluid.prefs.separatedPanel.nativeHTML"
+            }
+        },
         selectors: {
             reset: ".flc-prefsEditor-reset",
             iframe: ".flc-prefsEditor-iframe"
         },
         listeners: {
-            onReady: {
+            "onReady.bindEvents": {
                 listener: "fluid.prefs.separatedPanel.bindEvents",
                 args: ["{separatedPanel}.prefsEditor", "{iframeRenderer}.iframeEnhancer", "{separatedPanel}"]
             },
-            onCreate: {
+            "onCreate.hideReset": {
                 listener: "fluid.prefs.separatedPanel.hideReset",
                 args: ["{separatedPanel}"]
             }
@@ -35460,9 +35686,6 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
                 type: "fluid.prefs.separatedPanel.renderIframe",
                 container: "{separatedPanel}.dom.iframe",
                 options: {
-                    markupProps: {
-                        src: "%templatePrefix/SeparatedPanelPrefsEditorFrame.html"
-                    },
                     events: {
                         afterRender: "{separatedPanel}.events.afterRender"
                     },
@@ -35492,13 +35715,13 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
                         updateEnhancerModel: "{that}.events.modelChanged"
                     },
                     listeners: {
-                        modelChanged: "{that}.save",
-                        onCreate: {
+                        "modelChanged.save": "{that}.save",
+                        "onCreate.bindReset": {
                             listener: "{separatedPanel}.bindReset",
                             args: ["{that}.reset"]
                         },
-                        afterReset: "{that}.applyChanges",
-                        onReady: {
+                        "afterReset.applyChanges": "{that}.applyChanges",
+                        "onReady.boilOnReady": {
                             listener: "{separatedPanel}.events.onReady",
                             args: "{separatedPanel}"
                         }
@@ -35527,6 +35750,32 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
             source: "{that}.options.terms",
             target: "{that > iframeRenderer}.options.terms"
         }]
+    });
+
+    // Used for context-awareness behaviour
+    fluid.defaults("fluid.prefs.separatedPanel.nativeHTML", {
+        components: {
+            iframeRenderer: {
+                options: {
+                    markupProps: {
+                        src: "%templatePrefix/SeparatedPanelPrefsEditorFrame-nativeHTML.html"
+                    }
+                }
+            }
+        }
+    });
+
+    // Used for context-awareness behaviour
+    fluid.defaults("fluid.prefs.separatedPanel.jQueryUI", {
+        components: {
+            iframeRenderer: {
+                options: {
+                    markupProps: {
+                        src: "%templatePrefix/SeparatedPanelPrefsEditorFrame-jQueryUI.html"
+                    }
+                }
+            }
+        }
     });
 
     fluid.prefs.separatedPanel.hideReset = function (separatedPanel) {
@@ -35567,8 +35816,10 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
         that.iframe.load(function () {
             var iframeWindow = that.iframe[0].contentWindow;
             that.iframeDocument = iframeWindow.document;
+            // The iframe should prefer its own version of jQuery if a separate
+            // one is loaded
+            that.jQuery = iframeWindow.jQuery || $;
 
-            that.jQuery = iframeWindow.jQuery;
             that.renderPrefsEditorContainer = that.jQuery("body", that.iframeDocument);
             that.jQuery(that.iframeDocument).ready(that.events.afterRender.fire);
         });
@@ -35648,7 +35899,8 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     };
 
 })(jQuery, fluid_2_0_0);
-;/*
+;
+/*
 Copyright 2011 OCAD University
 Copyright 2011 Lucendo Development Ltd.
 
@@ -35676,12 +35928,14 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
                 container: "{that}.container",
                 options: {
                     listeners: {
-                        afterReset: [{
+                        "afterReset.applyChanges": {
                             listener: "{that}.applyChanges"
-                        }, {
-                            listener: "{that}.save"
-                        }],
-                        onReady: {
+                        },
+                        "afterReset.save": {
+                            listener: "{that}.save",
+                            priority: "after:applyChanges"
+                        },
+                        "onReady.boilOnReady": {
                             listener: "{fullNoPreview}.events.onReady",
                             args: "{fullNoPreview}"
                         }
@@ -35695,7 +35949,8 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     });
 
 })(jQuery, fluid_2_0_0);
-;/*
+;
+/*
 Copyright 2011 OCAD University
 Copyright 2011 Lucendo Development Ltd.
 
@@ -35731,13 +35986,13 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
                             container: "{prefsEditor}.dom.previewFrame",
                             options: {
                                 listeners: {
-                                    onReady: "{fullPreview}.events.onPreviewReady"
+                                    "onReady.boilOnPreviewReady": "{fullPreview}.events.onPreviewReady"
                                 }
                             }
                         }
                     },
                     listeners: {
-                        onReady: "{fullPreview}.events.onPrefsEditorReady"
+                        "onReady.boilOnPrefsEditorReady": "{fullPreview}.events.onPrefsEditorReady"
                     },
                     distributeOptions: {
                         source: "{that}.options.preview",
@@ -35774,7 +36029,8 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     });
 
 })(jQuery, fluid_2_0_0);
-;/*
+;
+/*
 Copyright 2013 OCAD University
 
 Licensed under the Educational Community License (ECL), Version 2.0 or the New
@@ -35903,7 +36159,8 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     });
 
 })(jQuery, fluid_2_0_0);
-;/*
+;
+/*
 Copyright 2013-2015 OCAD University
 
 Licensed under the Educational Community License (ECL), Version 2.0 or the New
@@ -36401,7 +36658,8 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     };
 
 })(jQuery, fluid_2_0_0);
-;/*
+;
+/*
 Copyright 2013-2015 OCAD University
 
 Licensed under the Educational Community License (ECL), Version 2.0 or the New
@@ -36426,17 +36684,10 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
 
     fluid.defaults("fluid.prefs.termsAware");
 
-    fluid.defaults("fluid.prefs.auxSchema.starter", {
-        gradeNames: ["fluid.prefs.auxSchema"],
+    // textSize mixin (base)
+    fluid.defaults("fluid.prefs.auxSchema.starter.textSize", {
+        gradeNames: ["fluid.contextAware"],
         auxiliarySchema: {
-            "loaderGrades": ["fluid.prefs.separatedPanel"],
-            "namespace": "fluid.prefs.constructed", // The author of the auxiliary schema will provide this and will be the component to call to initialize the constructed PrefsEditor.
-            "terms": {
-                "templatePrefix": "../../framework/preferences/html",  // Must match the keyword used below to identify the common path to settings panel templates.
-                "messagePrefix": "../../framework/preferences/messages"  // Must match the keyword used below to identify the common path to message files.
-            },
-            "template": "%templatePrefix/SeparatedPanelPrefsEditor.html",
-            "message": "%messagePrefix/prefsEditor.json",
             "textSize": {
                 "type": "fluid.prefs.textSize",
                 "enactor": {
@@ -36445,10 +36696,48 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
                 "panel": {
                     "type": "fluid.prefs.panel.textSize",
                     "container": ".flc-prefsEditor-text-size",  // the css selector in the template where the panel is rendered
-                    "template": "%templatePrefix/PrefsEditorTemplate-textSize.html",
                     "message": "%messagePrefix/textSize.json"
                 }
-            },
+            }
+        },
+        contextAwareness: {
+            textSizeSliderVariety: {
+                checks: {
+                    jQueryUI: {
+                        contextValue: "{fluid.prefsWidgetType}",
+                        equals: "jQueryUI",
+                        gradeNames: "fluid.prefs.auxSchema.starter.textSize.jQueryUI"
+                    }
+                },
+                defaultGradeNames: "fluid.prefs.auxSchema.starter.textSize.nativeHTML"
+            }
+        }
+    });
+
+    fluid.defaults("fluid.prefs.auxSchema.starter.textSize.nativeHTML", {
+        auxiliarySchema: {
+            "textSize": {
+                "panel": {
+                    "template": "%templatePrefix/PrefsEditorTemplate-textSize-nativeHTML.html"
+                }
+            }
+        }
+    });
+
+    fluid.defaults("fluid.prefs.auxSchema.starter.textSize.jQueryUI", {
+        auxiliarySchema: {
+            "textSize": {
+                "panel": {
+                    "template": "%templatePrefix/PrefsEditorTemplate-textSize-jQueryUI.html"
+                }
+            }
+        }
+    });
+
+    // lineSpace mixin (base)
+    fluid.defaults("fluid.prefs.auxSchema.starter.lineSpace", {
+        gradeNames: ["fluid.contextAware"],
+        auxiliarySchema: {
             "lineSpace": {
                 "type": "fluid.prefs.lineSpace",
                 "enactor": {
@@ -36466,10 +36755,55 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
                 "panel": {
                     "type": "fluid.prefs.panel.lineSpace",
                     "container": ".flc-prefsEditor-line-space",  // the css selector in the template where the panel is rendered
-                    "template": "%templatePrefix/PrefsEditorTemplate-lineSpace.html",
                     "message": "%messagePrefix/lineSpace.json"
                 }
+            }
+        },
+        contextAwareness: {
+            lineSpaceSliderVariety: {
+                checks: {
+                    jQueryUI: {
+                        contextValue: "{fluid.prefsWidgetType}",
+                        equals: "jQueryUI",
+                        gradeNames: "fluid.prefs.auxSchema.starter.lineSpace.jQueryUI"
+                    }
+                },
+                defaultGradeNames: "fluid.prefs.auxSchema.starter.lineSpace.nativeHTML"
+            }
+        }
+    });
+
+    fluid.defaults("fluid.prefs.auxSchema.starter.lineSpace.nativeHTML", {
+        auxiliarySchema: {
+            "lineSpace": {
+                "panel": {
+                    "template": "%templatePrefix/PrefsEditorTemplate-lineSpace-nativeHTML.html"
+                }
+            }
+        }
+    });
+
+    fluid.defaults("fluid.prefs.auxSchema.starter.lineSpace.jQueryUI", {
+        auxiliarySchema: {
+            "lineSpace": {
+                "panel": {
+                    "template": "%templatePrefix/PrefsEditorTemplate-lineSpace-jQueryUI.html"
+                }
+            }
+        }
+    });
+
+    fluid.defaults("fluid.prefs.auxSchema.starter", {
+        gradeNames: ["fluid.prefs.auxSchema", "fluid.prefs.auxSchema.starter.lineSpace", "fluid.prefs.auxSchema.starter.textSize"],
+        auxiliarySchema: {
+            "loaderGrades": ["fluid.prefs.separatedPanel"],
+            "namespace": "fluid.prefs.constructed", // The author of the auxiliary schema will provide this and will be the component to call to initialize the constructed PrefsEditor.
+            "terms": {
+                "templatePrefix": "../../framework/preferences/html",  // Must match the keyword used below to identify the common path to settings panel templates.
+                "messagePrefix": "../../framework/preferences/messages"  // Must match the keyword used below to identify the common path to message files.
             },
+            "template": "%templatePrefix/SeparatedPanelPrefsEditor.html",
+            "message": "%messagePrefix/prefsEditor.json",
             "textFont": {
                 "type": "fluid.prefs.textFont",
                 "classes": {
@@ -36495,11 +36829,11 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
                 "type": "fluid.prefs.contrast",
                 "classes": {
                     "default": "fl-theme-prefsEditor-default",
-                    "bw": "fl-theme-prefsEditor-bw fl-theme-bw",
-                    "wb": "fl-theme-prefsEditor-wb fl-theme-wb",
-                    "by": "fl-theme-prefsEditor-by fl-theme-by",
-                    "yb": "fl-theme-prefsEditor-yb fl-theme-yb",
-                    "lgdg": "fl-theme-prefsEditor-lgdg fl-theme-lgdg"
+                    "bw": "fl-theme-bw",
+                    "wb": "fl-theme-wb",
+                    "by": "fl-theme-by",
+                    "yb": "fl-theme-yb",
+                    "lgdg": "fl-theme-lgdg"
 
                 },
                 "enactor": {
@@ -36650,7 +36984,8 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
         }
     });
 })(fluid_2_0_0);
-;/*
+;
+/*
 Copyright 2015 OCAD University
 
 Licensed under the Educational Community License (ECL), Version 2.0 or the New
@@ -36719,7 +37054,8 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     });
 
 })(fluid_2_0_0);
-;/*
+;
+/*
 Copyright 2013-2015 OCAD University
 
 Licensed under the Educational Community License (ECL), Version 2.0 or the New
@@ -36926,7 +37262,8 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     };
 
 })(jQuery, fluid_2_0_0);
-;/*
+;
+/*
 Copyright 2014 OCAD University
 
 Licensed under the Educational Community License (ECL), Version 2.0 or the New
@@ -37124,7 +37461,8 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     };
 
 })(jQuery, fluid_2_0_0);
-;/*
+;
+/*
 Copyright 2008-2009 University of Cambridge
 Copyright 2008-2010 University of Toronto
 Copyright 2010 Lucendo Development Ltd.
@@ -37308,7 +37646,8 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     });
 
 })(jQuery, fluid_2_0_0);
-;/*
+;
+/*
 Copyright 2010-2015 OCAD University
 
 Licensed under the Educational Community License (ECL), Version 2.0 or the New
@@ -37527,7 +37866,8 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     });
 
 })(jQuery, fluid_2_0_0);
-;/*
+;
+/*
 Copyright 2008-2009 University of Cambridge
 Copyright 2008-2010 University of Toronto
 Copyright 2008-2009 University of California, Berkeley
@@ -38508,7 +38848,8 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
     };
 
 })(jQuery, fluid_2_0_0);
-;/*
+;
+/*
 Copyright 2008-2009 University of Cambridge
 Copyright 2008-2010 University of Toronto
 Copyright 2010-2011 OCAD University
@@ -38932,3 +39273,5 @@ var fluid_2_0_0 = fluid_2_0_0 || {};
         editModeRenderer: fluid.inlineEdit.dropdown.editModeRenderer
     });
 })(jQuery, fluid_2_0_0);
+
+//# sourceMappingURL=infusion-custom.js.map
