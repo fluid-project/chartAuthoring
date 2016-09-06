@@ -130,27 +130,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     });
 
-    fluid.defaults("floe.tests.chartAuthoring.speedySonifier", {
-        gradeNames: ["floe.tests.chartAuthoring.sonifier"],
-        components: {
-            textToSpeech: {
-                options: {
-                    model: {
-                        utteranceOpts: {
-                            "lang": "en-GB",
-                            // Speak fast so test finishes quicker
-                            "rate": 1.9
-                        }
-                    }
-                }
-            }
-        },
-        playbackOptions: {
-            // Play fast so the test finishes quicker
-            zoom: 0.10
-        }
-    });
-
     floe.tests.chartAuthoring.dataSet =
     {
         entry1: {
@@ -238,7 +217,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     jqUnit.test("Test the sonification data conversion", function () {
         jqUnit.expect(1);
 
-        var that = floe.tests.chartAuthoring.sonifier({
+        var that = floe.tests.chartAuthoring.silentSonifier({
             model: {
                 dataSet: floe.tests.chartAuthoring.dataSet
             }
@@ -250,7 +229,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     jqUnit.test("Test the sonification data conversion with zoom", function () {
         jqUnit.expect(1);
 
-        var that = floe.tests.chartAuthoring.sonifier({
+        var that = floe.tests.chartAuthoring.silentSonifier({
             model: {
                 dataSet: floe.tests.chartAuthoring.dataSet
             },

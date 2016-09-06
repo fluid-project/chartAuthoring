@@ -23,10 +23,15 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // IoC tests
     fluid.defaults("floe.tests.chartAuthoring", {
         gradeNames: ["floe.chartAuthoring"],
-
         components: {
-            sonifier: {
-                type: "floe.tests.chartAuthoring.sonifier"
+            chartAuthoringInterface: {
+                options: {
+                    components: {
+                        sonifier: {
+                            type: "floe.tests.chartAuthoring.speedySonifier"
+                        }            
+                    }
+                }
             }
         },
 
