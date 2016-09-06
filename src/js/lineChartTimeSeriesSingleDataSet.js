@@ -35,12 +35,12 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // process it with the same components used for multi datasets, and
     // create a default id for it for object constancy
     floe.chartAuthoring.lineChart.timeSeriesSingleDataSet.wrapSingleDataSet = function (dataSet) {
-            dataSet = [{
-                id: "dataSet",
-                data: dataSet
-            }];
+        dataSet = [{
+            id: "dataSet",
+            data: dataSet
+        }];
 
-            return dataSet;
-        };
+        return dataSet;
+    };
 
 })(jQuery, fluid);
