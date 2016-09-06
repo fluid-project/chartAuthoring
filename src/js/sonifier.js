@@ -213,6 +213,12 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             });
         }
         if (data !== undefined) {
+            // Delete the currently held model on the synths to deal with the
+            // issue described at https://issues.fluidproject.org/browse/FLOE-474
+            synth.midiNoteSynth.applier.change("inputs.noteSequencer", null, "DELETE");
+            synth.pianoEnvelopeSynth.applier.change("inputs.envelopeSequencer", null, "DELETE");
+
+            // Apply the note + envelope values to the synth model
             synth.midiNoteSynth.applier.change("inputs.noteSequencer", data.notes);
             synth.pianoEnvelopeSynth.applier.change("inputs.envelopeSequencer", data.envelope);
         }
