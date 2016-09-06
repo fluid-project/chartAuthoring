@@ -60,11 +60,11 @@ body {
 }
 
 .floe-sonifierControlPlay {
-    background-image: url("/src/images/Play-Transparent.png");
+    background-image: url("../../../src/images/Play-Transparent.png");
 }
 
 .floe-sonifierControlStop {
-    background-image: url("/src/images/Stop-Transparent.png");
+    background-image: url("../../../src/images/Stop-Transparent.png");
 }
 
 .floe-sonifierControl:hover {
