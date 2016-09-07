@@ -7,6 +7,9 @@ Licenses.
 
 You may obtain a copy of the ECL 2.0 License and BSD License at
 https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.txt
+
+TODO: the yAxis & other chart elements should be moved away from being mix-in
+grades to increase composability, per this JIRA: https://issues.fluidproject.org/browse/FLOE-473
 */
 
 (function ($, fluid) {

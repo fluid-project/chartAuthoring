@@ -29,7 +29,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                     components: {
                         sonifier: {
                             type: "floe.tests.chartAuthoring.speedySonifier"
-                        }            
+                        }
                     }
                 }
             }
@@ -342,7 +342,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     };
 
     $(document).ready(function () {
-        if(fluid.textToSpeech.isSupported()) {
+        if (fluid.textToSpeech.isSupported()) {
             fluid.test.runTests([
                 "floe.tests.chartAuthoringTest"
             ]);
