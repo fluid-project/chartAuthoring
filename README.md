@@ -21,7 +21,7 @@ Requirements:
 
 Steps:
 * `npm install`
-    * postinstall should run the `grunt copy:frontEndDependencies` task after installation completes
+    * postinstall should run the `grunt installFrontEnd` task after installation completes
 
 Result:
 * The root directory can now serve up the demos and tests as a static site
