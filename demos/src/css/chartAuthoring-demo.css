@@ -41,9 +41,40 @@ body {
     font-size: 1.7em;
 }
 
+/* Sonifier controls */
+
+.floe-sonifierControls {
+    margin-left: 2em;
+    float:left;
+}
+
+.floe-sonifierPlay, .floe-sonifierStop {
+    display: inline-block;
+}
+
+.floe-sonifierControl {
+    text-indent: -9999px;
+    background-size: 2em;
+    width: 2em;
+    height: 2em;
+}
+
+.floe-sonifierControlPlay {
+    background-image: url("../../../src/images/Play-Transparent.png");
+}
+
+.floe-sonifierControlStop {
+    background-image: url("../../../src/images/Stop-Transparent.png");
+}
+
+.floe-sonifierControl:hover {
+    background-color:#BBB;
+}
+
 /* Pie */
 
 .floe-ca-pieChart-pie {
+    clear: both;
     float: left;
     width: 30em;
     margin-bottom: 1em;
@@ -68,6 +99,10 @@ body {
     stroke-width: 2px;
 }
 
+.floe-ca-pieChart-slice.floe-ca-currently-playing {
+    stroke: #000;
+}
+
 /* Legend */
 
 .floe-ca-pieChart-legend {
@@ -75,6 +110,10 @@ body {
     width: 20em;
     margin: 2em;
     min-height: 5em;
+}
+
+.floe-ca-pieChart-legend-table {
+    border-collapse:collapse;
 }
 
 .floe-ca-pieChart-legend-table thead th {
@@ -89,15 +128,21 @@ body {
 
 .floe-ca-pieChart-legend-table-row {
     height: 2.5em;
+    border-top: 3px solid white;
 }
 
 .floe-ca-pieChart-legend-table-row td {
-    border: 3px solid white;
     padding: 0.5em;
 }
 
 .floe-ca-pieChart-legend-label-cell {
     font-weight: bold;
+}
+
+/* Style to highlight legend table rows when their datapoint is being played */
+
+.floe-ca-pieChart-legend-table-row.floe-ca-currently-playing {
+    border: 3px solid black;
 }
 
 /* Data entry panel */

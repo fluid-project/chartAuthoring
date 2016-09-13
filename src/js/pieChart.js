@@ -1,5 +1,5 @@
 /*
-Copyright 2015 OCAD University
+Copyright 2015-2016 OCAD University
 
 Licensed under the Educational Community License (ECL), Version 2.0 or the New
 BSD license. You may not use this file except in compliance with one these
@@ -15,7 +15,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     // Connects the drawing of the pie (floe.chartAuthoring.pieChart.pie) and the legend (floe.chartAuthoring.pieChart.legend)
     fluid.defaults("floe.chartAuthoring.pieChart", {
-        gradeNames: ["floe.chartAuthoring.templateInjection", "autoInit"],
+        gradeNames: ["floe.chartAuthoring.templateInjection"],
         members: {
             drawingOptions: {
                 expander: {
@@ -31,16 +31,16 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 container: "{that}.dom.pie",
                 options: {
                     pieOptions: "{pieChart}.drawingOptions",
-                    strings: {
-                        pieTitle: "{pieChart}.options.pieChartOptions.pieTitle",
-                        pieDescription: "{pieChart}.options.pieChartOptions.pieDescription"
-                    },
+                    svgOptions: "{pieChart}.options.svgOptions",
                     model: {
-                        dataSet: "{pieChart}.model.dataSet"
+                        dataSet: "{pieChart}.model.dataSet",
+                        svgTitle: "{pieChart}.model.svgTitle",
+                        svgDescription: "{pieChart}.model.svgDescription",
+                        activeSliceId: "{pieChart}.model.activeDataId"
                     },
                     events: {
                         onPieCreated: "{pieChart}.events.onPieCreated",
-                        onPieRedrawn: "{pieChart}.events.onPieRedrawn"
+                        onDraw: "{pieChart}.events.onPieRedrawn"
                     }
                 }
             },
@@ -54,11 +54,12 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                         legendTitle: "{pieChart}.options.pieChartOptions.legendTitle"
                     },
                     model: {
-                        dataSet: "{pieChart}.model.dataSet"
+                        dataSet: "{pieChart}.model.dataSet",
+                        activeRowId: "{pieChart}.model.activeDataId"
                     },
                     events: {
                         onLegendCreated: "{pieChart}.events.onLegendCreated",
-                        onLegendRedrawn: "{pieChart}.events.onLegendRedrawn"
+                        onDraw: "{pieChart}.events.onLegendRedrawn"
                     }
                 }
             }
@@ -66,18 +67,23 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         model: {
             // dataSet accepts an array of objects in a format of
             // [{id: string, value: number, label: string}, ... ]
-            dataSet: []
+            dataSet: [],
+            svgTitle: "Pie Chart",
+            svgDescription: "A pie chart."
+            // activeDataId: relayed to activeRowId/activeSliceId of legend/pie
+
         },
-        pieChartOptions: {
+        svgOptions: {
             // width: number,
             // height: number,
+            // preserveAspectRatio: svg preserveAspectRatio attribute value        
+        },
+        pieChartOptions: {
             // colors: array, // An array of colors to fill slices generated for corresponding values of model.dataSet
             // outerRadius: number,
             // innerRadius: number,
             // animationDuration: number,
             // sort: boolean   // Whether or not to sort the data by values when creating the legend,
-            // pieTitle: string // the accessible title to be applied to the pie chart,
-            // pieDescription: string // the accessible description to be applied to the pie chart,
             // sliceTextDisplayTemplate: string // fluid.stringTemplate to format the pie chart slice text
             // sliceTextPercentageDigits: number // number of digits after decimal for percentages in pie chart slice text
             // labelTextDisplayTemplate: string // fluid.stringTemplate to format the legend label cell

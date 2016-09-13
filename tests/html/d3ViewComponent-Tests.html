@@ -7,7 +7,7 @@
         <link rel="stylesheet" media="screen" href="../lib/infusion/lib/qunit/css/qunit.css" />
 
         <script src="../lib/infusion/lib/qunit/js/qunit.js"></script>
-        <script src="../../src/lib/infusion/infusion-custom.js"></script>
+        <script src="../../src/lib/infusion/infusion-all.js"></script>
         <script src="../../src/lib/d3/d3.js"></script>
         <script src="../lib/infusion/test-core/jqUnit/js/jqUnit.js"></script>
         <script src="../lib/infusion/test-core/jqUnit/js/jqUnit-browser.js"></script>
@@ -15,6 +15,7 @@
 
         <script src="../../src/js/d3Utils.js"></script>
         <script src="../../src/js/d3ViewComponent.js"></script>
+        <script src="../../src/js/svgDrawingArea.js"></script>
         <script src="../js/d3ViewComponentTests.js"></script>
     </head>
 
@@ -26,6 +27,46 @@
         <ol id="qunit-tests"></ol>
 
         <!-- Test HTML -->
-        <div class="floec-d3"></div>
+        <div class="floec-d3-api"></div>
+        <h2>floec-toggleCSSClassByIdTable</h2>
+        <div class="floec-toggleCSSClassById">
+            <table class="floec-toggleCSSClassByIdTable">
+                <tr class="floec-testRow">
+                    <td>
+                        1
+                    </td>
+                </tr>
+                <tr class="floec-testRow">
+                    <td>
+                        2
+                    </td>
+                </tr>
+                <tr class="floec-testRow">
+                    <td>
+                        3
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <h2>floec-dataKey</h2>
+        <div class="floec-dataKey">
+            <table class="floec-dataKeyTable">
+                <tr class="floec-testRow">
+                    <td>
+                        1
+                    </td>
+                </tr>
+                <tr class="floec-testRow">
+                    <td>
+                        2
+                    </td>
+                </tr>
+                <tr class="floec-testRow">
+                    <td>
+                        3
+                    </td>
+                </tr>
+            </table>
+        </div>
     </body>
 </html>

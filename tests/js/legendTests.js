@@ -1,5 +1,5 @@
 /*
-Copyright 2015 OCAD University
+Copyright 2015-2016 OCAD University
 
 Licensed under the Educational Community License (ECL), Version 2.0 or the New
 BSD license. You may not use this file except in compliance with one these
@@ -16,7 +16,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     fluid.registerNamespace("floe.tests.chartAuthoring");
 
     fluid.defaults("floe.tests.chartAuthoring.pieChart.legend", {
-        gradeNames: ["floe.chartAuthoring.pieChart.legend", "autoInit"],
+        gradeNames: ["floe.chartAuthoring.pieChart.legend"],
         legendOptions: {
             colors: ["#000000", "#ff0000", "#00ff00", "#0000ff", "#aabbcc", "#ccbbaa"]
         },
@@ -239,7 +239,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     // convenience function for easing testing of colors (jquery returns only RGB)
     // Based off http://stackoverflow.com/questions/4262417/jquery-hex-to-rgb-calculation-different-between-browsers
-    floe.tests.chartAuthoring.hexToRGB = function (hexStr){
+    floe.tests.chartAuthoring.hexToRGB = function (hexStr) {
         // note: hexStr should be #rrggbb
         var hex = parseInt(hexStr.substring(1), 16);
         var r = (hex & 0xff0000) >> 16;
@@ -248,10 +248,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         return "rgb(" + r + ", " + g + ", " + b + ")";
     };
 
-    floe.tests.chartAuthoring.testLegendSyncWithModelDataSet = function(that, expectedDataSet) {
+    floe.tests.chartAuthoring.testLegendSyncWithModelDataSet = function (that, expectedDataSet) {
         var dataSet = expectedDataSet;
         var rows = floe.d3.jQueryToD3(that.locate("row"));
-        rows.each(function (d,i) {
+        rows.each(function (d, i) {
             var displayedColor = d3.select(this).select(that.options.selectors.colorCell).style("background-color"),
                 expectedColor = dataSet[i].color,
                 displayedLabel = d3.select(this).select(that.options.selectors.labelCell).text(),
@@ -342,7 +342,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 dataSet: floe.tests.chartAuthoring.objectArray
             },
             legendOptions: {
-                sort:false
+                sort: false
             }
         });
 
@@ -358,7 +358,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 dataSet: floe.tests.chartAuthoring.objectArray
             },
             legendOptions: {
-                sort:true,
+                sort: true,
                 colors: null
             }
         });
@@ -367,9 +367,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     });
 
-    floe.tests.chartAuthoring.testCustomDisplay = function(that, message, cellSelector, expectedValuePath) {
+    floe.tests.chartAuthoring.testCustomDisplay = function (that, message, cellSelector, expectedValuePath) {
         var d3Cells = that.jQueryToD3($(that.locate(cellSelector)));
-        d3Cells.each(function (d,i) {
+        d3Cells.each(function (d, i) {
             var expectedLabel = floe.tests.chartAuthoring.expectedCustomDisplay[i][expectedValuePath];
             jqUnit.assertEquals(message, expectedLabel, ($(this).html()));
         });
@@ -383,7 +383,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 dataSet: floe.tests.chartAuthoring.objectArrayForCustomDisplay
             },
             legendOptions: {
-                sort:false,
+                sort: false,
                 colors: null,
                 labelTextDisplayTemplate: "%label (%percentage%)",
                 valueTextDisplayTemplate: "%value (out of %total)"
@@ -394,12 +394,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         floe.tests.chartAuthoring.testCustomDisplay(that, "The custom values are applied correctly in the legend", "valueCell", "expectedValue");
 
-    });
-
-    jqUnit.test("Test ascending sort function", function () {
-        var unsorted = [{value: 5}, {value: 8}, {value: 6}, {value: 1}];
-        var expectedSorted = [{value: 8},  {value: 6}, {value: 5}, {value: 1}];
-        jqUnit.assertDeepEq("Ascending sort function behaving as expected", expectedSorted, unsorted.sort(floe.chartAuthoring.pieChart.legend.sortAscending));
     });
 
     jqUnit.test("Test addValueFromArray function", function () {

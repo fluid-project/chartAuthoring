@@ -8,24 +8,39 @@
         <link rel="stylesheet" type="text/css" href="../src/lib/infusion/src/components/overviewPanel/css/OverviewPanel.css" />
         <link rel="stylesheet" type="text/css" href="../src/lib/infusion/src/components/inlineEdit/css/InlineEdit.css" />
 
-        <script type="text/javascript" src="../src/lib/infusion/infusion-custom.js"></script>
-        <script type="text/javascript" src="../src/lib/d3/d3.js"></script>
-        <script type="text/javascript" src="../src/js/valueBinding.js"></script>
-        <script type="text/javascript" src="../src/js/percentage.js"></script>
-        <script type="text/javascript" src="../src/js/transformations.js"></script>
-        <script type="text/javascript" src="../src/js/templateInjection.js"></script>
-        <script type="text/javascript" src="../src/js/dataEntry.js"></script>
-        <script type="text/javascript" src="../src/js/dataEntryPanel.js"></script>
-        <script type="text/javascript" src="../src/js/chartAuthoring.js"></script>
-        <script type="text/javascript" src="../src/js/d3ViewComponent.js"></script>
-        <script type="text/javascript" src="../src/js/totalRelaying.js"></script>
-        <script type="text/javascript" src="../src/js/legend.js"></script>
-        <script type="text/javascript" src="../src/js/pie.js"></script>
-        <script type="text/javascript" src="../src/js/pieChart.js"></script>
-        <script type="text/javascript" src="../src/js/d3Utils.js"></script>
+        <script src="../src/lib/infusion/infusion-all.js"></script>
+        <script src="../src/lib/d3/d3.js"></script>
 
-        <script type="text/javascript" src="src/js/chartAuthoring-demo-overview.js"></script>
-        <script type="text/javascript" src="src/js/chartAuthoring-demo.js"></script>
+        <script src="../src/lib/flocking/dist/flocking-base.js"></script>
+        <script src="../src/lib/flocking/src/ugens/oscillators.js"></script>
+        <script src="../src/lib/flocking/src/ugens/math.js"></script>
+        <script src="../src/lib/flocking/src/ugens/envelopes.js"></script>
+        <script src="../src/lib/flocking/src/ugens/midi.js"></script>
+        <script src="../src/lib/flocking/src/ugens/scheduling.js"></script>
+
+        <script src="../src/js/flockInit.js"></script>
+        <script src="../src/js/valueBinding.js"></script>
+        <script src="../src/js/percentage.js"></script>
+        <script src="../src/js/transformations.js"></script>
+        <script src="../src/js/templateInjection.js"></script>
+        <script src="../src/js/d3ViewComponent.js"></script>
+        <script src="../src/js/svgDrawingArea.js"></script>
+        <script src="../src/js/totalRelaying.js"></script>
+        <script src="../src/js/legend.js"></script>
+        <script src="../src/js/pie.js"></script>
+        <script src="../src/js/pieChart.js"></script>
+        <script src="../src/js/d3Utils.js"></script>
+        <script src="../src/js/utils.js"></script>
+        <script src="../src/js/dataEntry.js"></script>
+        <script src="../src/js/dataEntryPanel.js"></script>
+        <script src="../src/js/electricPianoBand.js"></script>
+        <script src="../src/js/unitDivisorSonificationStrategy.js"></script>
+
+        <script src="../src/js/sonifier.js"></script>
+        <script src="../src/js/chartAuthoring.js"></script>
+
+        <script src="src/js/chartAuthoring-demo-overview.js"></script>
+        <script src="src/js/chartAuthoring-demo.js"></script>
 
         <link rel="stylesheet" type="text/css" href="src/css/chartAuthoring-demo.css" />
 
@@ -41,30 +56,9 @@
 
                 <div id="floec-chartAuthoring"></div>
 
-                <script type="text/javascript">
-                    floe.chartAuthoring.demo("#floec-chartAuthoring", {
-                        templateLoader: {
-                            terms: {
-                                templatePrefix: "../src/html"
-                            }
-                        },
-                        dataEntryPanel: {
-                            strings: {
-                                dataEntryLabel: "Enter your labels and values"
-                            }
-                        },
-                        pieChart: {
-                            pieChartOptions: {
-                                sliceTextDisplayTemplate: "%percentage%",
-                                labelTextDisplayTemplate: "%label",
-                                valueTextDisplayTemplate: "%percentage% (%value/%total)",
-                                colors: ["#00a59a", "#9bc863", "#1a6b61", "#e9ea7b", "#1b443d"],
-                                width: 400,
-                                height: 400
-                            }
-                        }
-                    });
-                    </script>
+                <script>
+                    floe.chartAuthoring.demo("#floec-chartAuthoring");
+                </script>
             </div>
 
     </body>

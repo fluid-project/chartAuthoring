@@ -1,5 +1,5 @@
 /*
-Copyright 2015 OCAD University
+Copyright 2015-2016 OCAD University
 
 Licensed under the Educational Community License (ECL), Version 2.0 or the New
 BSD license. You may not use this file except in compliance with one these
@@ -21,22 +21,32 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // 4. update the pie when the data set changes, including adding or removing slices
 
     fluid.defaults("floe.chartAuthoring.pieChart.pie", {
-        gradeNames: ["floe.chartAuthoring.totalRelaying", "floe.d3ViewComponent",  "autoInit"],
+        gradeNames: ["floe.chartAuthoring.valueBinding", "floe.chartAuthoring.totalRelaying", "floe.svgDrawingArea"],
         model: {
             // dataSet accepts:
             // 1. an array of primitive values, such as numbers;
             // 2. an array of objects. The "value" element of each object needs to containe the value for drawing each pie slice.
             // Example: [{id: string, value: number} ... ]
-            dataSet: []
+            dataSet: [],
+            svgTitle: "Pie Chart",
+            svgDescription: "A pie chart."
             // Supplied by relaying in floe.chartAuthoring.totalRelaying grade
             // total: {
             //     value: number,
             //     percentage: number
             // }
+            // Tracks active slice
+            // activeRowId:
+        },
+        bindings: {
+            title: "svgTitle",
+            description: "svgDescription"
+        },
+        svgOptions: {
+            width: 300,
+            height: 300
         },
         pieOptions: {
-            width: 300,
-            height: 300,
             // An array of colors to fill slices generated for corresponding values of model.dataSet
             // Or, a d3 color scale that's generated based off an array of colors
             colors: null,
@@ -58,17 +68,14 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             // color of the background circle, if drawn
             pieBackgroundColor: "#F2F2F2"
         },
-        strings: {
-            pieTitle: "Pie Chart",
-            pieDescription: "A pie chart."
-        },
         styles: {
-            pie: "floe-ca-pieChart-pie",
+            svg: "floe-ca-pieChart-pie",
             slice: "floe-ca-pieChart-slice",
-            text: "floe-ca-pieChart-text"
+            text: "floe-ca-pieChart-text",
+            highlight: "floe-ca-currently-playing"
         },
         selectors: {
-            pie: ".floec-ca-pieChart-pie",
+            svg: ".floec-ca-pieChart-pie",
             slice: ".floec-ca-pieChart-slice",
             text: ".floec-ca-pieChart-text",
             title: ".floec-ca-pieChart-title",
@@ -77,18 +84,33 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         },
         events: {
             onPieCreated: null,  // Fire when the pie is created. Ready to register D3 DOM event listeners,
-            onPieRedrawn: null // Fire when the pie is redrawn.
+            onDraw: null // Fire when the pie is redrawn.
         },
         listeners: {
             "onCreate.create": {
                 funcName: "floe.chartAuthoring.pieChart.pie.create",
                 args: ["{that}"]
+            },
+            "onDraw.addSlices": {
+                func: "{that}.addSlices"
+            },
+            "onDraw.updateSlices": {
+                func: "{that}.updateSlices",
+                priority: "after:addSlices"
+            },
+            "onDraw.removeSlices": {
+                func: "{that}.removeSlices",
+                priority: "after:updateSlices"
             }
         },
         modelListeners: {
             dataSet: {
                 funcName: "{that}.draw",
                 excludeSource: "init"
+            },
+            activeSliceId: {
+                func: "floe.d3ViewComponent.toggleCSSClassByDataId",
+                args: ["{that}.model.activeSliceId", "{that}.options.styles.highlight", "{that}"]
             }
         },
         invokers: {
@@ -99,6 +121,18 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             textTransform: {
                 funcName: "floe.chartAuthoring.pieChart.textTransform",
                 args: ["{that}.arc", "{arguments}.0"]
+            },
+            addSlices: {
+                funcName: "floe.chartAuthoring.pieChart.pie.addSlices",
+                args: ["{that}"]
+            },
+            updateSlices: {
+                funcName: "floe.chartAuthoring.pieChart.pie.updateSlices",
+                args: ["{that}"]
+            },
+            removeSlices: {
+                funcName: "floe.chartAuthoring.pieChart.pie.removeSlices",
+                args: ["{that}"]
             }
         }
     });
@@ -113,7 +147,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         that.paths.enter()
             .append("path")
             .attr({
-                "fill": function(d, i) {
+                "fill": function (d, i) {
                     return color(i);
                 },
                 "d": arc,
@@ -149,7 +183,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         that.paths.transition().duration(animationDuration).attrTween("d", function (d) {
             var interpolation = d3.interpolate(this._current, d);
             this._current = interpolation(0);
-            return function(t) {
+            return function (t) {
                 return arc(interpolation(t));
             };
         });
@@ -159,14 +193,24 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             return floe.d3ViewComponent.getTemplatedDisplayValue(totalValue, percentageDigits, sliceTextDisplayTemplate, d);
         });
 
+        that.paths.each(function (d) {
+            that.trackD3BoundElement(d.data.id, this);
+        });
+
+        that.texts.each(function (d) {
+            that.trackD3BoundElement(d.data.id, this);
+        });
+
         that.texts.transition().duration(animationDuration).attr("transform", that.textTransform);
 
     };
 
     floe.chartAuthoring.pieChart.pie.removeSlices = function (that) {
-        that.paths.exit().remove();
+        var removedSlices = that.paths.exit();
+        that.exitD3Elements(removedSlices);
 
-        that.texts.exit().remove();
+        var removedTexts = that.texts.exit();
+        that.exitD3Elements(removedTexts);
     };
 
     floe.chartAuthoring.pieChart.pie.draw = function (that) {
@@ -179,28 +223,17 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         that.texts = pieGroup.selectAll("text")
             .data(pie(dataSet));
 
-        floe.chartAuthoring.pieChart.pie.addSlices(that);
-
-        floe.chartAuthoring.pieChart.pie.updateSlices(that);
-
-        floe.chartAuthoring.pieChart.pie.removeSlices(that);
-
-        that.events.onPieRedrawn.fire();
+        that.events.onDraw.fire();
     };
 
     floe.chartAuthoring.pieChart.pie.create = function (that) {
-        var container = that.container,
-            p = that.options.pieOptions,
-            width = p.width,
-            height = p.height,
+        var p = that.options.pieOptions,
+            width = that.options.svgOptions.width,
             colors = p.colors,
             outerRadius = p.outerRadius || width / 2,
             innerRadius = p.innerRadius || 0,
             displayPieBackground = p.displayPieBackground,
             pieBackgroundColor = p.pieBackgroundColor,
-            pieClass = that.classes.pie,
-            titleClass = that.classes.title,
-            descriptionClass = that.classes.description,
             backgroundClass = that.classes.background;
 
         that.arc = d3.svg.arc()
@@ -212,21 +245,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 return typeof (d) === "object" ? d.value : d;
             });
 
-        that.svg = that.jQueryToD3(container)
-            .append("svg")
-            .attr({
-                "width": width,
-                "height": height,
-                "class": pieClass,
-                "viewBox": floe.chartAuthoring.pieChart.getViewBoxConfiguration(0,0, width, height),
-                // Set aria role to image - this causes the pie to appear as a
-                // static image to AT rather than as a number of separate
-                // images
-                "role": "img"
-            });
+        that.createBaseSVGDrawingArea();
 
         // Draw a background circle for the pie if configured
-        if(displayPieBackground) {
+        if (displayPieBackground) {
             that.svg
                 .append("circle")
                 .attr({
@@ -237,33 +259,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                     "class": backgroundClass
                 });
         }
-
-        that.svg
-            .append("title")
-            .attr({
-                "class": titleClass
-            })
-            .text(that.options.strings.pieTitle);
-
-        // Allocate ID for the title element
-        var pieTitleId = fluid.allocateSimpleId(that.locate("title"));
-
-        that.svg
-            .append("desc")
-            .attr({
-                "class": descriptionClass
-            })
-            .text(that.options.strings.pieDescription);
-
-        // Allocate ID for the desc element
-        var pieDescId = fluid.allocateSimpleId(that.locate("description"));
-
-        // Now that they've been created and have IDs, explicitly associate SVG
-        // title & desc via aria-labelledby
-        that.svg.attr({
-            "aria-labelledby": pieTitleId + " " + pieDescId
-        });
-
 
         that.pieGroup = that.svg.append("g")
             .attr({
@@ -279,10 +274,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     floe.chartAuthoring.pieChart.textTransform = function (arc, d) {
         return "translate(" + arc.centroid(d) + ")";
-    };
-
-    floe.chartAuthoring.pieChart.getViewBoxConfiguration = function (x, y, width, height) {
-        return x + "," + y + "," + width + "," + height;
     };
 
 })(jQuery, fluid);

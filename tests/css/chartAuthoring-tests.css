@@ -1,0 +1,11 @@
+.floe-ca-pieChart-slice.floe-ca-currently-playing {
+    stroke: #000;
+}
+
+.floe-ca-pieChart-legend-table {
+    border-collapse:collapse;
+}
+
+.floe-ca-pieChart-legend-table-row.floe-ca-currently-playing {
+    border: 1px solid black;
+}

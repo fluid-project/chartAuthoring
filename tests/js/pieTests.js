@@ -1,5 +1,5 @@
 /*
-Copyright 2015 OCAD University
+Copyright 2015-2016 OCAD University
 
 Licensed under the Educational Community License (ECL), Version 2.0 or the New
 BSD license. You may not use this file except in compliance with one these
@@ -16,15 +16,17 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     fluid.registerNamespace("floe.tests.chartAuthoring");
 
     fluid.defaults("floe.tests.chartAuthoring.pieChart.pie", {
-        gradeNames: ["floe.chartAuthoring.pieChart.pie", "autoInit"],
+        gradeNames: ["floe.chartAuthoring.pieChart.pie"],
+        svgOptions: {
+            width: 300,
+            height: 300
+        },
         pieOptions: {
-            width: "200",
-            height: "200",
             colors: ["#000000", "#ff0000", "#00ff00", "#0000ff", "#aabbcc", "#ccbbaa"]
         },
-        strings: {
-            pieTitle: "A pie chart used in the unit tests.",
-            pieDescription: "Description of the pie chart used in the unit tests."
+        model: {
+            svgTitle: "A pie chart used in the unit tests.",
+            svgDescription: "Description of the pie chart used in the unit tests."
         },
         listeners: {
             "onPieCreated.addMouseoverListener": {
@@ -37,12 +39,17 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         }
     });
 
+    floe.tests.chartAuthoring.testValueBinding = function (that, modelPath, DOMPath, newValue) {
+        that.applier.change(modelPath, newValue);
+        jqUnit.assertEquals("DOM element value `" + DOMPath + "` is updated when its corresponding model value at `" + modelPath + " `is changed");
+    };
+
     floe.tests.chartAuthoring.mouseOverListener = function (data, i, that) {
         that.mouseOverListenerCalled = true;
     };
 
     floe.tests.chartAuthoring.validatePie = function (that, testSliceDataFunc) {
-        var pie = that.locate("pie"),
+        var pie = that.locate("svg"),
             pieTitleId = that.locate("title").attr("id"),
             pieDescId = that.locate("description").attr("id"),
             pieAriaLabelledByAttr = pie.attr("aria-labelledby");
@@ -51,20 +58,20 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         jqUnit.assertNotEquals("The SVG element is created with the proper selector", 0, pie.length);
 
         // Test the background circle
-        if(that.options.pieOptions.displayPieBackground) {
+        if (that.options.pieOptions.displayPieBackground) {
             var pieBackground = that.locate("background");
             jqUnit.assertNotEquals("The background circle is created", 0, pieBackground.length);
-            jqUnit.assertEquals("The background circle's radius is half the pie width", that.options.pieOptions.width / 2, Number(pieBackground.attr("r")));
+            jqUnit.assertEquals("The background circle's radius is half the pie width", that.options.svgOptions.width / 2, Number(pieBackground.attr("r")));
             jqUnit.assertEquals("The background circle's color is set to the user-supplied color", that.options.pieOptions.pieBackgroundColor, pieBackground.attr("fill"));
         }
 
         // Test the pie
-        jqUnit.assertEquals("The width is set correctly on the pie chart", that.options.pieOptions.width, pie.attr("width"));
-        jqUnit.assertEquals("The height is set correctly on the pie chart", that.options.pieOptions.height, pie.attr("height"));
+        jqUnit.assertEquals("The width is set correctly on the pie chart", that.options.svgOptions.width, Number(pie.attr("width")));
+        jqUnit.assertEquals("The height is set correctly on the pie chart", that.options.svgOptions.height, Number(pie.attr("height")));
         jqUnit.assertEquals("The pie slices have been created with the proper selectors", that.model.dataSet.length, that.locate("slice").length);
         jqUnit.assertEquals("The texts for pie slices have been created with the proper selectors", that.model.dataSet.length, that.locate("text").length);
-        jqUnit.assertEquals("The pie's title has been created", that.options.strings.pieTitle, that.locate("title").text());
-        jqUnit.assertEquals("The pie's description has been created", that.options.strings.pieDescription, that.locate("description").text());
+        jqUnit.assertEquals("The pie's title has been created", that.model.svgTitle, that.locate("title").text());
+        jqUnit.assertEquals("The pie's description has been created", that.model.svgDescription, that.locate("description").text());
         jqUnit.assertDeepEq("The pie's title and description are connected through the aria-labelledby attribute of the pie SVG", pieAriaLabelledByAttr, pieTitleId + " " + pieDescId);
 
         // Test that displayed values are in sync with the current model
@@ -81,6 +88,12 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.tests.chartAuthoring.runCommonTests = function (that, testSliceDataFunc) {
         floe.tests.chartAuthoring.validatePie(that, testSliceDataFunc);
 
+        // Test the description value binding
+        floe.tests.chartAuthoring.testValueBinding(that, "svgDescription", "description", "An updated pie chart description.");
+
+        // Test the title value binding
+        floe.tests.chartAuthoring.testValueBinding(that, "svgTitle", "title", "An updated pie chart title.");
+
         // The D3 DOM event listener is registered
         jqUnit.assertFalse("The mouseover listener for pie slices have not been triggered", that.mouseOverListenerCalled);
         var oneD3Slice = that.jQueryToD3($(that.locate("slice")[0]));
@@ -88,10 +101,10 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         jqUnit.assertTrue("The mouseover listener for pie slices have been registered", that.mouseOverListenerCalled);
     };
 
-    floe.tests.chartAuthoring.testPieTextSyncWithModelDataSet = function(that) {
+    floe.tests.chartAuthoring.testPieTextSyncWithModelDataSet = function (that) {
         var dataSet = that.model.dataSet;
         var d3Elem = floe.d3.jQueryToD3(that.locate("text"));
-        d3Elem.each(function (d,i) {
+        d3Elem.each(function (d, i) {
             var displayedValue = d3.select(this).text();
             var expectedValue = typeof (dataSet[i]) === "object" ? dataSet[i].value : dataSet[i];
             jqUnit.assertEquals("Displayed values are in sync with the current model", expectedValue, Number(displayedValue));
@@ -113,7 +126,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.tests.chartAuthoring.numberArrayTotal = 111;
 
     jqUnit.test("Test the pie chart component created based off an array of numbers", function () {
-        jqUnit.expect(32);
+        jqUnit.expect(34);
 
         var that = floe.tests.chartAuthoring.pieChart.pie(".floec-ca-pieChart-numberArray", {
             model: {
@@ -192,7 +205,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.tests.chartAuthoring.objectArrayChangeInPlaceTotal = 75;
 
     jqUnit.test("Test the pie chart component created based off an array of objects", function () {
-        jqUnit.expect(130);
+        jqUnit.expect(132);
 
         var that = floe.tests.chartAuthoring.pieChart.pie(".floec-ca-pieChart-objectArray", {
             model: {
@@ -235,25 +248,27 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             model: {
                 dataSet: floe.tests.chartAuthoring.percentageArray
             },
-            pieOptions: {
-                sliceTextDisplayTemplate: "%value/%total (%percentage%)",
-                sliceTextPercentageDigits: 2,
+            svgOptions: {
                 width: "400",
                 height: "400"
+            },
+            pieOptions: {
+                sliceTextDisplayTemplate: "%value / %total (%percentage%)",
+                sliceTextPercentageDigits: 2
             }
         });
 
 
         floe.tests.chartAuthoring.expectedDisplayValues = [
-            "20/200 (10.00%)",
-            "100/200 (50.00%)",
-            "80/200 (40.00%)"
+            "20 / 200 (10.00%)",
+            "100 / 200 (50.00%)",
+            "80 / 200 (40.00%)"
         ];
 
 
         var d3Elem = floe.d3.jQueryToD3(that.locate("text"));
 
-        d3Elem.each(function (d,i) {
+        d3Elem.each(function (d, i) {
             var displayedValue = d3.select(this).text();
             jqUnit.assertEquals("Displayed values are in sync with the current model", floe.tests.chartAuthoring.expectedDisplayValues[i], displayedValue);
         });

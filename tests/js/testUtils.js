@@ -24,8 +24,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.tests.utils.matrixTest = function (inputs, testFn) {
         fluid.each(inputs, function (row, rowIdx) {
             fluid.each(inputs, function (col, colIdx) {
-                testFn(col, row, colIdx , rowIdx);
+                testFn(col, row, colIdx, rowIdx);
             });
         });
     };
+
 })(jQuery, fluid);

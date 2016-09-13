@@ -20,6 +20,7 @@
     "unused": true,
     "strict": true,
     "trailing": true,
+    "white": true,
 
     "maxerr": 1000,
 
@@ -31,6 +32,9 @@
         "fluid": true,
         "floe": true,
         "jqUnit": true,
-        "d3": true
+        "d3": true,
+        "flock": true,
+        "SpeechSynthesisUtterance": true,
+        "JSON": true
     }
 }
