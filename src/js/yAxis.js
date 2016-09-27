@@ -12,6 +12,8 @@ TODO: the yAxis & other chart elements should be moved away from being mix-in
 grades to increase composability, per this JIRA: https://issues.fluidproject.org/browse/FLOE-473
 */
 
+/* global fluid, floe, d3 */
+
 (function ($, fluid) {
 
     "use strict";

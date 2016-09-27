@@ -10,6 +10,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
 */
 
+/* global fluid, floe */
+
 (function ($, fluid) {
 
     "use strict";

@@ -10,7 +10,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 */
 
 // Declare dependencies
-/* global JSON */
+/* global fluid, floe, jqUnit */
 
 (function ($, fluid) {
 

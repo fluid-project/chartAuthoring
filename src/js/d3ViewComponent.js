@@ -9,6 +9,8 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.txt
 */
 
+/* global fluid, floe */
+
 (function ($, fluid) {
 
     "use strict";
@@ -16,7 +18,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     // The D3 view component that is able to:
     // 1. Convert jQuery DOM elements to D3 elements;
     // 2. Attach D3 DOM event listeners;
-    // 3. Synthesize that.options.styles and that.options.selectors to combine elements with the same key into that.classes    
+    // 3. Synthesize that.options.styles and that.options.selectors to combine elements with the same key into that.classes
 
     fluid.defaults("floe.d3ViewComponent", {
         gradeNames: ["fluid.viewComponent"],
