@@ -273,8 +273,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             var theadRow = thead.append("tr");
 
             theadRow.attr({
-                    "class": headerRowClass
-                });
+                "class": headerRowClass
+            });
 
             theadRow.append("th")
                 .attr({

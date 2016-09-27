@@ -82,7 +82,7 @@ grades to increase composability, per this JIRA: https://issues.fluidproject.org
             .scale(yScale)
             .tickFormat(that.getYAxisTickFormat())
             .ticks(numberOfYAxisTicks)
-            .innerTickSize(- width + padding * 3)
+            .innerTickSize(-width + padding * 3)
             .outerTickSize(0)
             .tickPadding(10);
 

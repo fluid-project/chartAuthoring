@@ -70,16 +70,18 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     jqUnit.test("Test floe.d3ViewComponent.removeArrayDuplicates()", function () {
         jqUnit.expect(2);
 
-        var cases = [{
-            msg: "An array of unique values is unchanged",
-            input: ["a", "b", "c", "d", 2],
-            expected: ["a", "b", "c", "d", 2]
-        },
-        {
-            msg: "An array containing duplicate values is changed to contain only one instance of each value",
-            input: ["apples", "bananas", "bananas", "clementines"],
-            expected: ["apples", "bananas", "clementines"]
-        }];
+        var cases = [
+            {
+                msg: "An array of unique values is unchanged",
+                input: ["a", "b", "c", "d", 2],
+                expected: ["a", "b", "c", "d", 2]
+            },
+            {
+                msg: "An array containing duplicate values is changed to contain only one instance of each value",
+                input: ["apples", "bananas", "bananas", "clementines"],
+                expected: ["apples", "bananas", "clementines"]
+            }
+        ];
 
         fluid.each(cases, function (oneCase) {
             jqUnit.assertDeepEq(oneCase.msg, oneCase.expected, floe.d3ViewComponent.removeArrayDuplicates(oneCase.input));

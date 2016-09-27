@@ -11,7 +11,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
 /* global fluid */
 
-(function () {
+(function ($, fluid) {
     "use strict";
 
     fluid.defaults("floe.tests.chartAuthoring.silentSonifier", {
@@ -54,4 +54,4 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         }
     });
 
-}());
+})(jQuery, fluid);

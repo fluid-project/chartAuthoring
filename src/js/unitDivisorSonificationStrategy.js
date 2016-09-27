@@ -140,7 +140,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         var numberRemainders = value % unitDivisor;
         var divisorArray = [];
         var remainderArray = [];
-        for (var i = 0; i < numberDivisors; i++) {
+        var i;
+        for (i = 0; i < numberDivisors; i++) {
             divisorArray.push(unitDivisor);
         }
         for (i = 0; i < numberRemainders; i++) {
@@ -230,8 +231,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     floe.chartAuthoring.sonifier.unitDivisorSonificationStrategy.multiplierTransform = function (object, multiplier) {
         if (fluid.isPlainObject(object)) {
             var transformed = fluid.transform(object, function (v) {
-                    return floe.chartAuthoring.sonifier.unitDivisorSonificationStrategy.multiplierTransform(v, multiplier);
-                });
+                return floe.chartAuthoring.sonifier.unitDivisorSonificationStrategy.multiplierTransform(v, multiplier);
+            });
             return transformed;
         } else {
             return typeof object === "number" ? object * multiplier : object;

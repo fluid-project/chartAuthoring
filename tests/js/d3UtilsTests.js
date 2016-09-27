@@ -74,21 +74,23 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     jqUnit.test("Test floe.d3.idExtractor()", function () {
         jqUnit.expect(3);
 
-        var cases = [{
-            msg: "Handle d.id scenario",
-            input: {id: "id1"},
-            expected: "id1"
-        },
-        {
-            msg: "Handle d.data.id scenario",
-            input: {data: {id: "id2"}},
-            expected: "id2"
-        },
-        {
-            msg: "Handle no id scenario",
-            input: {title: "oh gosh, I am not actually a D3 'd' object"},
-            expected: undefined
-        }];
+        var cases = [
+            {
+                msg: "Handle d.id scenario",
+                input: {id: "id1"},
+                expected: "id1"
+            },
+            {
+                msg: "Handle d.data.id scenario",
+                input: {data: {id: "id2"}},
+                expected: "id2"
+            },
+            {
+                msg: "Handle no id scenario",
+                input: {title: "oh gosh, I am not actually a D3 'd' object"},
+                expected: undefined
+            }
+        ];
 
         fluid.each(cases, function (oneCase) {
             var extractedId = floe.d3.idExtractor(oneCase.input);

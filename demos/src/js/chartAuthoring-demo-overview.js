@@ -9,6 +9,8 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.txt
 */
 
+/* global fluid, floe */
+
 var demo = demo || {};
 
 (function ($, fluid) {
@@ -18,58 +20,58 @@ var demo = demo || {};
     fluid.registerNamespace("demo.chartAuthoring");
 
     fluid.defaults("floe.chartAuthoring.demo.overview", {
-            gradeNames: ["fluid.viewComponent"],
-            components: {
-                overviewPanel: {
-                    type: "fluid.overviewPanel",
-                    container: "{overview}.container",
-                    options: {
-                        model: {
-                            showPanel: "{storeModel}.model.showPanel"
-                        },
-                        modelListeners: {
-                            "": {
-                                funcName: "{storeModel}.set",
-                                args: "{change}.value",
-                                excludeSource: "init"
-                            }
-                        }
-                    }
-                },
-                storeModel: {
-                    type: "fluid.modelComponent",
-                    options: {
-                        gradeNames: ["fluid.prefs.cookieStore"],
-                        model: {
-                            expander: {
-                                funcName: "{that}.get"
-                            }
+        gradeNames: ["fluid.viewComponent"],
+        components: {
+            overviewPanel: {
+                type: "fluid.overviewPanel",
+                container: "{overview}.container",
+                options: {
+                    model: {
+                        showPanel: "{storeModel}.model.showPanel"
+                    },
+                    modelListeners: {
+                        "": {
+                            funcName: "{storeModel}.set",
+                            args: "{change}.value",
+                            excludeSource: "init"
                         }
                     }
                 }
             },
-            distributeOptions: [{
-                source: "{that}.options.overviewPanelTemplate",
-                removeSource: true,
-                target: "{that > overviewPanel}.options.resources.template.href"
-            }, {
-                source: "{that}.options.strings",
-                removeSource: true,
-                target: "{that > overviewPanel}.options.strings"
-            }, {
-                source: "{that}.options.markup",
-                removeSource: true,
-                target: "{that > overviewPanel}.options.markup"
-            }, {
-                source: "{that}.options.links",
-                removeSource: true,
-                target: "{that > overviewPanel}.options.links"
-            }, {
-                source: "{that}.options.cookieName",
-                removeSource: true,
-                target: "{that > storeModel}.options.cookie.name"
-            }]
-        });
+            storeModel: {
+                type: "fluid.modelComponent",
+                options: {
+                    gradeNames: ["fluid.prefs.cookieStore"],
+                    model: {
+                        expander: {
+                            funcName: "{that}.get"
+                        }
+                    }
+                }
+            }
+        },
+        distributeOptions: [{
+            source: "{that}.options.overviewPanelTemplate",
+            removeSource: true,
+            target: "{that > overviewPanel}.options.resources.template.href"
+        }, {
+            source: "{that}.options.strings",
+            removeSource: true,
+            target: "{that > overviewPanel}.options.strings"
+        }, {
+            source: "{that}.options.markup",
+            removeSource: true,
+            target: "{that > overviewPanel}.options.markup"
+        }, {
+            source: "{that}.options.links",
+            removeSource: true,
+            target: "{that > overviewPanel}.options.links"
+        }, {
+            source: "{that}.options.cookieName",
+            removeSource: true,
+            target: "{that > storeModel}.options.cookie.name"
+        }]
+    });
 
     $(document).ready(function () {
         floe.chartAuthoring.demo.overview("#floec-overviewPanel", {

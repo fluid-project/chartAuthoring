@@ -126,8 +126,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
             var circles = currentGroup.selectAll("circle")
                     .data(d.data, function (currentData, index) {
-                    return d.id + "-" + index;
-                });
+                        return d.id + "-" + index;
+                    });
 
             // Create new circles
             circles.enter()
