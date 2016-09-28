@@ -14,6 +14,8 @@ Varied#3: colors: ["#f15e4e", "#acdee4", "#73c163", "#ffc74a", "#41beae"]
 
 */
 
+/* global fluid */
+
 (function ($, fluid) {
 
     "use strict";
@@ -66,5 +68,5 @@ Varied#3: colors: ["#f15e4e", "#acdee4", "#73c163", "#ffc74a", "#41beae"]
                 label: "Other",
                 value: 2
             }]
-        });
+    });
 })(jQuery, fluid);

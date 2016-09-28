@@ -9,7 +9,9 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.txt
 */
 
-(function () {
+/* global fluid */
+
+(function ($, fluid) {
     "use strict";
 
     fluid.defaults("floe.tests.chartAuthoring.silentSonifier", {
@@ -52,4 +54,4 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         }
     });
 
-}());
+})(jQuery, fluid);

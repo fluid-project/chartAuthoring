@@ -9,6 +9,8 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.txt
 */
 
+/* global fluid, floe */
+
 (function ($, fluid) {
 
     "use strict";
@@ -63,7 +65,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     };
 
     floe.chartAuthoring.transforms.reduce.valueExtractor = function (obj) {
-        // Returns obj.value if it exists, or obj if it doesn't    
+        // Returns obj.value if it exists, or obj if it doesn't
         return obj.value ? obj.value : obj;
     };
 

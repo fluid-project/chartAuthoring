@@ -6,9 +6,9 @@
   "bugs": "https://issues.fluidproject.org/issues/?jql=project+%3D+FLOE+AND+component+%3D+%22Chart+Authoring+Tool%22",
   "homepage": "http://www.fluidproject.org/",
   "dependencies": {
-      "d3": "3.5.17",
-      "flocking": "colinbdclark/Flocking#6749bee2b7041b76f494bd188b755d568332eda0",
-      "infusion": "2.0.0-dev.20160902T155354Z.b963420"
+    "d3": "3.5.17",
+    "flocking": "colinbdclark/Flocking#6749bee2b7041b76f494bd188b755d568332eda0",
+    "infusion": "2.0.0-dev.20160902T155354Z.b963420"
   },
   "license": "(BSD-3-Clause OR ECL-2.0)",
   "keywords": [
@@ -25,12 +25,13 @@
     "node": ">=4.2.1"
   },
   "devDependencies": {
+    "eslint-config-fluid": "1.0.0",
+    "fluid-grunt-eslint": "18.1.2",
     "grunt": "1.0.1",
-    "grunt-contrib-jshint": "1.0.0",
-    "grunt-jsonlint": "1.1.0",
     "grunt-contrib-copy": "1.0.0",
-    "grunt-exec": "1.0.0"
-},
+    "grunt-exec": "1.0.0",
+    "grunt-jsonlint": "1.1.0"
+  },
   "scripts": {
     "postinstall": "grunt installFrontEnd"
   }

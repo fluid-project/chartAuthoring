@@ -9,6 +9,8 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.txt
 */
 
+/* global fluid, floe, d3 */
+
 (function ($, fluid) {
 
     "use strict";
@@ -271,8 +273,8 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             var theadRow = thead.append("tr");
 
             theadRow.attr({
-                    "class": headerRowClass
-                });
+                "class": headerRowClass
+            });
 
             theadRow.append("th")
                 .attr({

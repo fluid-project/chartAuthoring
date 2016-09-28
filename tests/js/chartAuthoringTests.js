@@ -9,6 +9,8 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.txt
 */
 
+/* global fluid, floe, jqUnit */
+
 (function ($, fluid) {
 
     "use strict";
@@ -214,11 +216,11 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
     floe.tests.chartAuthoringTester.verifyAriaConnections = function (that) {
         var legendTableId = that.chartAuthoringInterface.pieChart.legend.locate("table").attr("id"),
-        pieChartPieId = that.chartAuthoringInterface.pieChart.pie.locate("svg").attr("id"),
-        dataEntryFormTotalId = that.chartAuthoringInterface.dataEntryPanel.locate("totalValue").attr("id"),
-        dataEntryFormAriaControlsAttr = that.chartAuthoringInterface.dataEntryPanel.locate("dataEntryForm").attr("aria-controls"),
-        dataEntryFormId = that.chartAuthoringInterface.dataEntryPanel.locate("dataEntryForm").attr("id"),
-        resetAriaControlsAttr = that.chartAuthoringInterface.locate("reset").attr("aria-controls");
+            pieChartPieId = that.chartAuthoringInterface.pieChart.pie.locate("svg").attr("id"),
+            dataEntryFormTotalId = that.chartAuthoringInterface.dataEntryPanel.locate("totalValue").attr("id"),
+            dataEntryFormAriaControlsAttr = that.chartAuthoringInterface.dataEntryPanel.locate("dataEntryForm").attr("aria-controls"),
+            dataEntryFormId = that.chartAuthoringInterface.dataEntryPanel.locate("dataEntryForm").attr("id"),
+            resetAriaControlsAttr = that.chartAuthoringInterface.locate("reset").attr("aria-controls");
 
         jqUnit.assertDeepEq("The data entry form has an aria-controls attribute properly referencing the pie, legend and total", dataEntryFormAriaControlsAttr, legendTableId + " " + pieChartPieId + " " + dataEntryFormTotalId);
         jqUnit.assertDeepEq("The reset has an aria-controls attribute properly referencing the form, pie, legend and total", resetAriaControlsAttr, dataEntryFormId + " " + legendTableId + " " + pieChartPieId + " " + dataEntryFormTotalId);
@@ -295,26 +297,28 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
 
         var matchingSonifiedData = that.chartAuthoringInterface.sonifier.model.sonifiedData[idx];
 
-        var cases = [{
-            msg: "ActiveRowId is the id of the currently playing data in the sonifier",
-            input: that.chartAuthoringInterface.pieChart.legend.model.activeRowId,
-            expected: that.chartAuthoringInterface.sonifier.model.currentlyPlayingData.id
-        },
-        {
-            msg: "activeSliceId is the id of the currently playing data in the sonifier",
-            input: that.chartAuthoringInterface.pieChart.pie.model.activeSliceId,
-            expected: that.chartAuthoringInterface.sonifier.model.currentlyPlayingData.id
-        },
-        {
-            msg: "activeRowId on play #" + idx + " is the id the sonified dataset has at position " + idx,
-            input: that.chartAuthoringInterface.pieChart.legend.model.activeRowId,
-            expected: matchingSonifiedData.id
-        },
-        {
-            msg: "activeSliceId on play #" + idx + "is the id the sonified dataset has at position " + idx,
-            input: that.chartAuthoringInterface.pieChart.pie.model.activeSliceId,
-            expected: matchingSonifiedData.id
-        }];
+        var cases = [
+            {
+                msg: "ActiveRowId is the id of the currently playing data in the sonifier",
+                input: that.chartAuthoringInterface.pieChart.legend.model.activeRowId,
+                expected: that.chartAuthoringInterface.sonifier.model.currentlyPlayingData.id
+            },
+            {
+                msg: "activeSliceId is the id of the currently playing data in the sonifier",
+                input: that.chartAuthoringInterface.pieChart.pie.model.activeSliceId,
+                expected: that.chartAuthoringInterface.sonifier.model.currentlyPlayingData.id
+            },
+            {
+                msg: "activeRowId on play #" + idx + " is the id the sonified dataset has at position " + idx,
+                input: that.chartAuthoringInterface.pieChart.legend.model.activeRowId,
+                expected: matchingSonifiedData.id
+            },
+            {
+                msg: "activeSliceId on play #" + idx + "is the id the sonified dataset has at position " + idx,
+                input: that.chartAuthoringInterface.pieChart.pie.model.activeSliceId,
+                expected: matchingSonifiedData.id
+            }
+        ];
 
         fluid.each(cases, function (oneCase) {
             jqUnit.assertEquals(oneCase.msg, oneCase.expected, oneCase.input);

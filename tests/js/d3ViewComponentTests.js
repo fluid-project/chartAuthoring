@@ -9,6 +9,8 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.txt
 */
 
+/* global fluid, floe, jqUnit, d3 */
+
 (function ($, fluid) {
 
     "use strict";
@@ -68,16 +70,18 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     jqUnit.test("Test floe.d3ViewComponent.removeArrayDuplicates()", function () {
         jqUnit.expect(2);
 
-        var cases = [{
-            msg: "An array of unique values is unchanged",
-            input: ["a", "b", "c", "d", 2],
-            expected: ["a", "b", "c", "d", 2]
-        },
-        {
-            msg: "An array containing duplicate values is changed to contain only one instance of each value",
-            input: ["apples", "bananas", "bananas", "clementines"],
-            expected: ["apples", "bananas", "clementines"]
-        }];
+        var cases = [
+            {
+                msg: "An array of unique values is unchanged",
+                input: ["a", "b", "c", "d", 2],
+                expected: ["a", "b", "c", "d", 2]
+            },
+            {
+                msg: "An array containing duplicate values is changed to contain only one instance of each value",
+                input: ["apples", "bananas", "bananas", "clementines"],
+                expected: ["apples", "bananas", "clementines"]
+            }
+        ];
 
         fluid.each(cases, function (oneCase) {
             jqUnit.assertDeepEq(oneCase.msg, oneCase.expected, floe.d3ViewComponent.removeArrayDuplicates(oneCase.input));
