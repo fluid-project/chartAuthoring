@@ -9,11 +9,29 @@ You may obtain a copy of the ECL 2.0 License and BSD License at
 https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.txt
 */
 
-// Declare dependencies
-/* global module */
+/* eslint-env node */
+
+"use strict";
+
+var resolve = require("fluid-resolve");
 
 module.exports = function (grunt) {
-    "use strict";
+    // The grunt developers do not understand how node's module resolution algorithm works and do not use it
+    // to resolve npm modules. See https://github.com/gruntjs/grunt/issues/232 - this function loads the
+    // contents of a grunt plugin from wherever npm has put it in the tree, in order to allow a project's
+    // grunt tasks to be invoked by projects which depend on it without having to explicitly call npm install on it.
+    grunt.loadNpmTasksProperly = function (name) {
+        var resolved = resolve.sync(name, {
+            // Stupid function require to fake out resolve's algorithm which actually attempts to resolve "main", which does
+            // not exist for grunt plugins. Instead we resolve onto the one file we are absolutely sure is there
+            packageFilter: function (pkg) {
+                pkg.main = "package.json";
+                return pkg;
+            }
+        });
+        resolved = resolved.substring(0, resolved.length - "package.json".length);
+        grunt.loadTasks(resolved + "/tasks");
+    };
 
     // Project configuration.
     grunt.initConfig({
@@ -53,10 +71,10 @@ module.exports = function (grunt) {
     });
 
     // Load the plugin(s):
-    grunt.loadNpmTasks("fluid-grunt-eslint");
-    grunt.loadNpmTasks("grunt-jsonlint");
-    grunt.loadNpmTasks("grunt-contrib-copy");
-    grunt.loadNpmTasks("grunt-exec");
+    grunt.loadNpmTasksProperly("fluid-grunt-eslint");
+    grunt.loadNpmTasksProperly("grunt-jsonlint");
+    grunt.loadNpmTasksProperly("grunt-contrib-copy");
+    grunt.loadNpmTasksProperly("grunt-exec");
 
     // Custom tasks:
 
