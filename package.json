@@ -7,8 +7,8 @@
   "homepage": "http://www.fluidproject.org/",
   "dependencies": {
     "d3": "3.5.17",
-    "flocking": "colinbdclark/Flocking#6749bee2b7041b76f494bd188b755d568332eda0",
-    "infusion": "2.0.0-dev.20160902T155354Z.b963420"
+    "flocking": "colinbdclark/Flocking#18e94e6fb7a51f0b37c8e69063eb00ff6d1badce",
+    "infusion": "2.0.0"
   },
   "license": "(BSD-3-Clause OR ECL-2.0)",
   "keywords": [
