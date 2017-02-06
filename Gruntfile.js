@@ -33,8 +33,10 @@ module.exports = function (grunt) {
                     {expand: true, cwd: "./node_modules/d3/", src: "**", dest: "./src/lib/d3/"},
                     // Flocking
                     {expand: true, cwd: "./node_modules/flocking/", src: "**", dest: "./src/lib/flocking/"},
-                    // Infusion
-                    {expand: true, cwd: "./node_modules/infusion/dist", src: "**", dest: "./src/lib/infusion"},
+                    // Infusion distribution files
+                    {expand: true, cwd: "./node_modules/infusion/dist", src: "**", dest: "./src/lib/infusion/dist"},
+                    // Infusion source
+                    {expand: true, cwd: "./node_modules/infusion/src", src: "**", dest: "./src/lib/infusion/src"},
                     // Infusion testing framework
                     {expand: true, cwd: "./node_modules/infusion/tests", src: "**", dest: "./tests/lib/infusion"}
                 ]
