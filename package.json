@@ -7,7 +7,7 @@
   "homepage": "http://www.fluidproject.org/",
   "dependencies": {
     "d3": "3.5.17",
-    "flocking": "colinbdclark/Flocking#5644a8a93df8461ec2596679f51754512f185f8e",
+    "flocking": "0.2.0-dev.20170206T221943Z.fb09a52",
     "infusion": "2.0.0"
   },
   "license": "(BSD-3-Clause OR ECL-2.0)",
@@ -33,6 +33,7 @@
     "grunt-jsonlint": "1.1.0"
   },
   "scripts": {
-    "postinstall": "grunt installFrontEnd"
+    "postinstall": "grunt installFrontEnd",
+    "test": "testem ci --file tests/testem.json"
   }
 }
