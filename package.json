@@ -8,7 +8,7 @@
   "dependencies": {
     "d3": "3.5.17",
     "flocking": "0.2.0-dev.20170206T221943Z.fb09a52",
-    "infusion": "2.0.0"
+    "infusion": "3.0.0-dev.20170214T161720Z.6126724"
   },
   "license": "(BSD-3-Clause OR ECL-2.0)",
   "keywords": [
