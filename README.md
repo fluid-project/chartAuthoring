@@ -25,3 +25,11 @@ Steps:
 
 Result:
 * The root directory can now serve up the demos and tests as a static site
+
+##Testing
+
+If you have `testem` installed, you can run the tests as follows:
+
+```
+testem ci --file tests/testem.json
+```
