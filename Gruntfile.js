@@ -41,6 +41,11 @@ module.exports = function (grunt) {
                     {expand: true, cwd: "./node_modules/infusion/tests", src: "**", dest: "./tests/lib/infusion"}
                 ]
             }
+        },
+        clean: {
+            frontEndDependencies: {
+                src: ["src/lib", "tests/lib"]
+            }
         }
     });
 
@@ -48,11 +53,12 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks("fluid-grunt-eslint");
     grunt.loadNpmTasks("grunt-jsonlint");
     grunt.loadNpmTasks("grunt-contrib-copy");
+    grunt.loadNpmTasks("grunt-contrib-clean");
     grunt.loadNpmTasks("grunt-exec");
 
     // Custom tasks:
 
     grunt.registerTask("default", ["lint"]);
     grunt.registerTask("lint", "Apply eslint and jsonlint", ["eslint", "jsonlint"]);
-    grunt.registerTask("installFrontEnd", "Install front-end dependencies from the node_modules directory after 'npm install'", ["copy:frontEndDependencies"]);
+    grunt.registerTask("installFrontEnd", "Install front-end dependencies from the node_modules directory after 'npm install'", ["clean:frontEndDependencies", "copy:frontEndDependencies"]);
 };
