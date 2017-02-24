@@ -28,8 +28,4 @@ Result:
 
 ##Testing
 
-If you have `testem` installed ([details here for installing testem](https://github.com/testem/testem/#installation)), you can run the unit tests as follows:
-
-```
-testem ci --file tests/testem.json
-```
+If you have `testem` installed ([details here for installing testem](https://github.com/testem/testem/#installation)), you can run the unit tests with `npm test`.
