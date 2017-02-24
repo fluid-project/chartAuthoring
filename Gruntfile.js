@@ -30,11 +30,11 @@ module.exports = function (grunt) {
             frontEndDependencies: {
                 files: [
                     // D3
-                    {expand: true, cwd: "./node_modules/d3/", src: "**", dest: "./src/lib/d3/"},
+                    {src: "./node_modules/d3/d3.js", dest: "./src/lib/d3/d3.js"},
                     // Flocking
                     {expand: true, cwd: "./node_modules/flocking/", src: "**", dest: "./src/lib/flocking/"},
-                    // Infusion distribution files
-                    {expand: true, cwd: "./node_modules/infusion/dist", src: "**", dest: "./src/lib/infusion/dist"},
+                    // infusion-all.js from dist directory
+                    {src: "./node_modules/infusion/dist/infusion-all.js", dest: "./src/lib/infusion/dist/infusion-all.js"},
                     // Infusion source
                     {expand: true, cwd: "./node_modules/infusion/src", src: "**", dest: "./src/lib/infusion/src"},
                     // Infusion testing framework
