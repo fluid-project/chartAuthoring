@@ -28,7 +28,7 @@ Result:
 
 ##Testing
 
-If you have `testem` installed, you can run the tests as follows:
+If you have `testem` installed ([details here for installing testem](https://github.com/testem/testem/#installation)), you can run the unit tests as follows:
 
 ```
 testem ci --file tests/testem.json
