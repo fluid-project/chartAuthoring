@@ -48,24 +48,21 @@ module.exports = function (grunt) {
             frontEndDependencies: {
                 files: [
                     // D3
-                    {expand: true, cwd: "./node_modules/d3/", src: "**", dest: "./src/lib/d3/"},
+                    {src: "./node_modules/d3/d3.js", dest: "./src/lib/d3/d3.js"},
                     // Flocking
                     {expand: true, cwd: "./node_modules/flocking/", src: "**", dest: "./src/lib/flocking/"},
-                    // Infusion
-                    {expand: true, cwd: "./node_modules/infusion/build", src: "**", dest: "./src/lib/infusion"},
+                    // infusion-all.js from dist directory
+                    {src: "./node_modules/infusion/dist/infusion-all.js", dest: "./src/lib/infusion/dist/infusion-all.js"},
+                    // Infusion source
+                    {expand: true, cwd: "./node_modules/infusion/src", src: "**", dest: "./src/lib/infusion/src"},
                     // Infusion testing framework
-                    {expand: true, cwd: "./node_modules/infusion/build/tests", src: "**", dest: "./tests/lib/infusion"}
+                    {expand: true, cwd: "./node_modules/infusion/tests", src: "**", dest: "./tests/lib/infusion"}
                 ]
             }
         },
-        exec: {
-            infusionInstall: {
-                command: "npm install",
-                cwd: "./node_modules/infusion"
-            },
-            infusionBuild: {
-                command: "grunt build",
-                cwd: "./node_modules/infusion"
+        clean: {
+            frontEndDependencies: {
+                src: ["src/lib", "tests/lib"]
             }
         }
     });
@@ -74,11 +71,12 @@ module.exports = function (grunt) {
     grunt.loadNpmTasksProperly("fluid-grunt-eslint");
     grunt.loadNpmTasksProperly("grunt-jsonlint");
     grunt.loadNpmTasksProperly("grunt-contrib-copy");
+    grunt.loadNpmTasksProperly("grunt-contrib-clean");
     grunt.loadNpmTasksProperly("grunt-exec");
 
     // Custom tasks:
 
     grunt.registerTask("default", ["lint"]);
     grunt.registerTask("lint", "Apply eslint and jsonlint", ["eslint", "jsonlint"]);
-    grunt.registerTask("installFrontEnd", "Install front-end dependencies from the node_modules directory after 'npm install'", ["exec:infusionInstall", "exec:infusionBuild", "copy:frontEndDependencies"]);
+    grunt.registerTask("installFrontEnd", "Install front-end dependencies from the node_modules directory after 'npm install'", ["clean:frontEndDependencies", "copy:frontEndDependencies"]);
 };
