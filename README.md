@@ -25,3 +25,7 @@ Steps:
 
 Result:
 * The root directory can now serve up the demos and tests as a static site
+
+##Testing
+
+If you have `testem` installed ([details here for installing testem](https://github.com/testem/testem/#installation)), you can run the unit tests with `npm test`.

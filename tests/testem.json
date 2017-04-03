@@ -1,0 +1,7 @@
+{
+    "test_page": "tests/all-tests.html",
+    "timeout": 300,
+    "skip": "IE",
+    "reporter": "tap",
+    "report_file": "report.tap"
+}

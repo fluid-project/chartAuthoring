@@ -68,7 +68,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             // boolean to configure drawing a background circle for the pie
             displayPieBackground: true,
             // color of the background circle, if drawn
-            pieBackgroundColor: "#F2F2F2"
+            pieBackgroundColor: "#f2f2f2"
         },
         styles: {
             svg: "floe-ca-pieChart-pie",
