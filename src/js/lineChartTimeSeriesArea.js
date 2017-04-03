@@ -63,6 +63,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             removeArea: {
                 funcName: "floe.chartAuthoring.lineChart.timeSeries.area.removeArea",
                 args: ["{that}"]
+            },
+            transitionArea: {
+                funcName: "floe.chartAuthoring.lineChart.timeSeries.area.updateArea.paginateTransition"
             }
         }
     });
@@ -113,7 +116,11 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             ),
             width = that.options.svgOptions.width;
 
-        that.chartLineAreaPaths
+        that.transitionArea(that.chartLineAreaPaths, area, width, transitionLength);
+    };
+
+    floe.chartAuthoring.lineChart.timeSeries.area.updateArea.paginateTransition = function (chartLineAreaPaths, area, width, transitionLength) {
+        chartLineAreaPaths
         .transition()
         .duration(transitionLength / 2)
         .attr({
@@ -132,7 +139,6 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                 "transform": "translate(0)"
             });
         });
-
     };
 
     floe.chartAuthoring.lineChart.timeSeries.area.removeArea = function (that) {

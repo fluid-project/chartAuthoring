@@ -126,14 +126,12 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             transitionLength = that.options.lineOptions.transitionLength,
             width = that.options.svgOptions.width;
 
-        var chartLinePaths = that.chartLinePaths;
-
-        that.transitionChartLine(chartLinePaths, line, transitionLength, width);
+        that.transitionChartLine(that.chartLinePaths, line, width, transitionLength);
     };
 
 
     // Transitions a chart line in a left-sliding "page browse" style
-    floe.chartAuthoring.lineChart.timeSeries.line.updateChartLine.paginateTransition = function (chartLinePaths, line, transitionLength, width) {
+    floe.chartAuthoring.lineChart.timeSeries.line.updateChartLine.paginateTransition = function (chartLinePaths, line, width, transitionLength) {
         chartLinePaths
         .transition()
         .duration(transitionLength / 2)
