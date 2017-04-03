@@ -77,6 +77,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             updatePoints: {
                 funcName: "floe.chartAuthoring.lineChart.timeSeries.points.updatePoints",
                 args: ["{that}"]
+            },
+            transitionPoints: {
+                funcName: "floe.chartAuthoring.lineChart.timeSeries.points.updatePoints.paginateTransition"
             }
         }
     });
@@ -158,8 +161,13 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             yScale = that.getYScale(),
             xScale = that.getXScale(),
             width = that.options.svgOptions.width;
-            // Transition circles
-        that.chartLinePointGroups.each(function () {
+
+        that.transitionPoints(that.chartLinePointGroups, yScale, xScale, width, transitionLength);
+    };
+
+    floe.chartAuthoring.lineChart.timeSeries.points.updatePoints.paginateTransition = function (chartLinePointGroups, yScale, xScale, width, transitionLength) {
+        // Transition circles
+        chartLinePointGroups.each(function () {
             var currentGroup = d3.select(this);
 
             currentGroup.selectAll("circle")
@@ -184,9 +192,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
                     "transform": "translate(0)"
                 });
             });
-
-
         });
-
     };
+
 })(jQuery, fluid);
