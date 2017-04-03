@@ -119,6 +119,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         that.transitionArea(that.chartLineAreaPaths, area, width, transitionLength);
     };
 
+    // Transitions a chart line in a left-sliding "page browse" style
     floe.chartAuthoring.lineChart.timeSeries.area.updateArea.paginateTransition = function (chartLineAreaPaths, area, width, transitionLength) {
         chartLineAreaPaths
         .transition()
@@ -137,6 +138,22 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             .transition()
             .attr({
                 "transform": "translate(0)"
+            });
+        });
+    };
+
+    // Uses D3's default transition; this results in the
+    // "wriggle" described at https://bost.ocks.org/mike/path/
+    floe.chartAuthoring.lineChart.timeSeries.area.updateArea.defaultTransition = function (chartLineAreaPaths, area, width, transitionLength) {
+        chartLineAreaPaths
+        .each(function () {
+            d3.select(this)
+            .transition()
+            .duration(transitionLength)
+            .attr({
+                "d": function (d) {
+                    return area(d.data);
+                }
             });
         });
     };
