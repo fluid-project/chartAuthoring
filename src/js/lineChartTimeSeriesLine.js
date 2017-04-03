@@ -153,6 +153,22 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         });
     };
 
+    // Uses D3's default transition; this results in the
+    // "wriggle" described at https://bost.ocks.org/mike/path/
+    floe.chartAuthoring.lineChart.timeSeries.line.updateChartLine.defaultTransition = function (chartLinePaths, line, width, transitionLength) {
+        chartLinePaths
+        .each(function () {
+            d3.select(this)
+            .transition()
+            .duration(transitionLength)
+            .attr({
+                "d": function (d) {
+                    return line(d.data);
+                }
+            });
+        });
+    };
+
     floe.chartAuthoring.lineChart.timeSeries.line.removeChartLine = function (that) {
         // Remove any removed lines
         var removedPaths = that.chartLinePaths.exit();
