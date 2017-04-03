@@ -71,6 +71,9 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             removeChartLine: {
                 funcName: "floe.chartAuthoring.lineChart.timeSeries.line.removeChartLine",
                 args: ["{that}"]
+            },
+            transitionChartLine: {
+                funcName: "floe.chartAuthoring.lineChart.timeSeries.line.updateChartLine.paginateTransition"
             }
         }
     });
@@ -118,11 +121,20 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
     };
 
     floe.chartAuthoring.lineChart.timeSeries.line.updateChartLine = function (that) {
+
         var line = floe.chartAuthoring.lineChart.timeSeries.line.getLineGenerator(that),
             transitionLength = that.options.lineOptions.transitionLength,
             width = that.options.svgOptions.width;
 
-        that.chartLinePaths
+        var chartLinePaths = that.chartLinePaths;
+
+        that.transitionChartLine(chartLinePaths, line, transitionLength, width);
+    };
+
+
+    // Transitions a chart line in a left-sliding "page browse" style
+    floe.chartAuthoring.lineChart.timeSeries.line.updateChartLine.paginateTransition = function (chartLinePaths, line, transitionLength, width) {
+        chartLinePaths
         .transition()
         .duration(transitionLength / 2)
         .attr({
