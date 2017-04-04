@@ -38,7 +38,7 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
             // with the exception that 'month' uses the 3-character
             // month name shorthand rather than the full name
             XAxisTimeSeriesTickFormats: {
-                milliseconds: "%.L",
+                milliseconds: ".%L",
                 seconds: ":%S",
                 minute: "%I:%M",
                 hour: "%I %p",
