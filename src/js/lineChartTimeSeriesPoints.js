@@ -195,4 +195,26 @@ https://raw.githubusercontent.com/fluid-project/chartAuthoring/master/LICENSE.tx
         });
     };
 
+    floe.chartAuthoring.lineChart.timeSeries.points.updatePoints.defaultTransition = function (chartLinePointGroups, yScale, xScale, width, transitionLength) {
+        // Transition circles
+        chartLinePointGroups.each(function () {
+            var currentGroup = d3.select(this);
+
+            currentGroup.selectAll("circle")
+            .each(function () {
+                d3.select(this)
+                .transition()
+                .duration(transitionLength)
+                .attr({
+                    "cy": function (d) {
+                        return yScale(d.value);
+                    },
+                    "cx": function (d) {
+                        return xScale(new Date(d.date));
+                    }
+                });
+            });
+        });
+    };
+
 })(jQuery, fluid);
