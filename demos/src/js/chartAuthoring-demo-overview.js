@@ -19,6 +19,22 @@ var demo = demo || {};
 
     fluid.registerNamespace("demo.chartAuthoring");
 
+    // TODO: This code is pretty sketchy, but we have no easy way
+    // to reuse the affordances of the OverviewPanel component
+    // while we're outside of Infusion. This is due to a number of
+    // reasons:
+    // 1. The OverviewPanel's template has to be cut and pasted
+    //    in order to configure which buttons appear within it
+    // 2. There is a "magic file" for including the OverviewPanel
+    //    in demos that are part of Infusion, which we can't access
+    //    since it is pruned out of the Infusion npm module.
+    //
+    // In addition, for some reason, the Chart Authoring Tool adds
+    // an additional (probably quite useful?) feature where the state
+    // of the OverviewPanel is persisted in a cookie, so that if the
+    // user dismisses it, the panel won't reappear the next time they
+    // visit the demo. Perhaps this is a feature that could be
+    // exposed to all users of the OverviewPanel?
     fluid.defaults("floe.chartAuthoring.demo.overview", {
         gradeNames: ["fluid.viewComponent"],
         components: {
@@ -41,7 +57,10 @@ var demo = demo || {};
             storeModel: {
                 type: "fluid.modelComponent",
                 options: {
-                    gradeNames: ["fluid.prefs.cookieStore"],
+                    gradeNames: [
+                        "fluid.prefs.cookieStore",
+                        "fluid.prefs.cookieStore.writable"
+                    ],
                     model: {
                         expander: {
                             funcName: "{that}.get"

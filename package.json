@@ -1,14 +1,14 @@
 {
-  "name": "chartAuthoring",
+  "name": "infusion-chart-authoring",
   "description": "A tool for authoring accessible charts for the web.",
-  "version": "0.1.0-SNAPSHOT",
+  "version": "0.2.0",
   "author": "Fluid Project",
   "bugs": "https://issues.fluidproject.org/issues/?jql=project+%3D+FLOE+AND+component+%3D+%22Chart+Authoring+Tool%22",
   "homepage": "http://www.fluidproject.org/",
   "dependencies": {
     "d3": "3.5.17",
-    "flocking": "0.2.0-dev.20170206T221943Z.fb09a52",
-    "infusion": "3.0.0-dev.20170214T161720Z.6126724"
+    "flocking": "2.0.1",
+    "infusion": "3.0.0-dev.20200213T130945Z.c3c22dc4c"
   },
   "license": "(BSD-3-Clause OR ECL-2.0)",
   "keywords": [
@@ -21,19 +21,17 @@
   ],
   "repository": "https://github.com/fluid-project/chartAuthoring.git",
   "main": "",
-  "engines": {
-    "node": ">=4.2.1"
-  },
   "devDependencies": {
-    "eslint-config-fluid": "1.0.0",
+    "eslint-config-fluid": "1.4.0",
     "fluid-grunt-eslint": "18.1.2",
     "grunt": "1.0.1",
     "grunt-contrib-copy": "1.0.0",
-    "grunt-contrib-clean": "1.0.0",
-    "grunt-exec": "1.0.0",
-    "grunt-jsonlint": "1.1.0"
+    "grunt-contrib-clean": "2.0.0",
+    "grunt-exec": "3.0.0",
+    "grunt-jsonlint": "2.1.2",
+    "testem": "3.0.3"
   },
   "scripts": {
-    "test": "testem ci --file tests/testem.json"
+    "test": "node_modules/.bin/testem ci --file tests/testem.json"
   }
 }

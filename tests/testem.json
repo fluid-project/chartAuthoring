@@ -1,7 +1,12 @@
 {
     "test_page": "tests/all-tests.html",
     "timeout": 300,
-    "skip": "IE",
+    "skip": "IE,Headless Chrome",
     "reporter": "tap",
-    "report_file": "report.tap"
+    "report_file": "report.tap",
+    "browser_args": {
+        "Chrome": [
+            "--autoplay-policy=no-user-gesture-required"
+        ]
+    }
 }
