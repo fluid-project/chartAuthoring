@@ -1,0 +1,5 @@
+.git
+node_modules
+src/lib
+tests/lib
+report.tap
