@@ -1,0 +1,40 @@
+html, body, #editor {
+    height: 100%;
+    width: 100%;
+    background: #272822;
+    font-size: 110%;
+    margin-left: 0;
+    color: #fff;
+    font-family: sans-serif;
+}
+
+#content-type {
+    text-align: center;
+    position: relative;
+    top: -1.5em;
+    height: 0px;
+}
+
+h1 {
+    width: 100%;
+    margin: 0;
+    font-size: 100%;
+
+    padding: 1em 1em 1em 0.5em;
+    border-bottom: 1px solid #49483e;
+}
+
+.CodeMirror {
+    height: 100%;
+    width: 100%;
+}
+
+.CodeMirror-scroll {
+    overflow: auto;
+}
+
+.cm-s-monokai .CodeMirror-gutters {
+    background-color: #49483e;
+    border-right: 1px solid #75715e;
+    padding-right: 0.25%;
+}
